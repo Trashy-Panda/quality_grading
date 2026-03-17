@@ -1,0 +1,102 @@
+[
+  {
+    "id": "custom-1773716362629",
+    "imageName": "Western National #1",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/1-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_AVG"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716390960",
+    "imageName": "Western National #2",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/2-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_LO"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716438586",
+    "imageName": "Western National #3",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/3-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_AVG"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716457886",
+    "imageName": "Western National #4",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/4-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "SE_HI"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716500218",
+    "imageName": "SALE #1",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/1-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "SE_HI"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716519706",
+    "imageName": "SALE #2",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/2-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_LO"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716554203",
+    "imageName": "SALE #3",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/3-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_AVG"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716615160",
+    "imageName": "SALE #4",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/4-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_LO"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716646439",
+    "imageName": "SALE #5",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/5-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "SE_LO"
+    },
+    "notes": ""
+  },
+  {
+    "id": "custom-1773716667230",
+    "imageName": "SALE #6",
+    "imageUrl": "https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/6-00001.png?width=500",
+    "source": "User-added",
+    "correct": {
+      "qualityGrade": "CH_LO"
+    },
+    "notes": ""
+  }
+]
