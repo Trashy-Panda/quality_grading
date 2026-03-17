@@ -149,3 +149,24 @@ const DEFAULT_CARCASSES = [
     notes: 'Practically devoid of marbling — Standard grade.',
   },
 ];
+
+// ------------------------------------------------------------------
+//  COMMUNITY SET CONFIG
+//
+//  This connects the app to a shared JSONBin.io database so your
+//  whole team can submit and drill from the same image set.
+//
+//  Setup (one-time, done by team admin):
+//    1. Create a free account at https://jsonbin.io
+//    2. Click "Create Bin" — paste [] as the content — click Save
+//    3. Copy the Bin ID from the URL bar
+//    4. Go to Account Settings → API Keys → copy your Master Key
+//    5. Paste both values below, then re-upload this file to GitHub
+//
+//  Once configured, the "Community Set" option appears on the home
+//  screen and the "Submit to Community" button works in Manage Photos.
+// ------------------------------------------------------------------
+const COMMUNITY_CONFIG = {
+  BIN_ID:     '69b8e443c3097a1dd530c354',   // e.g. '507f1f77bcf86cd799439011'
+  MASTER_KEY: '$2a$10$MaoIxHqiGwGV/2tpIxFVtuScTZkt23AmckGzc6CxxBl04amCEcGSu',   // e.g. '$2b$10$...' — keep this file private or use a restricted key
+};

@@ -993,6 +993,24 @@ html, body {
   font-size: 0.82rem;
 }
 
+/* URL status dot shown next to each carcass in custom/community lists */
+.url-dot {
+  font-size: 9px;
+  line-height: 1;
+  margin-right: 6px;
+  flex-shrink: 0;
+  cursor: default;
+}
+.url-checking { color: #aaa; }
+.url-ok       { color: #3a7d44; }
+.url-broken   { color: #c0392b; }
+
+.community-status-msg {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
 .json-textarea {
   width: 100%;
   min-height: 75px;

@@ -22,6 +22,7 @@ const state = {
   sessionActive: false,
   selectedFamily: null,
   selectedKey: null,
+  communitySet: [],
 };
 
 // ------------------------------------------------------------------
@@ -147,9 +148,14 @@ function cacheElements() {
   el.addCustomBtn   = document.getElementById('add-custom-btn');
   el.cancelEditBtn  = document.getElementById('cancel-edit-btn');
   el.customList     = document.getElementById('custom-list');
-  el.importJson     = document.getElementById('import-json');
-  el.importBtn      = document.getElementById('import-btn');
-  el.exportJsonBtn  = document.getElementById('export-json-btn');
+  el.importJson          = document.getElementById('import-json');
+  el.importBtn           = document.getElementById('import-btn');
+  el.exportJsonBtn       = document.getElementById('export-json-btn');
+  el.submitCommunityBtn  = document.getElementById('submit-community-btn');
+  el.communitySetSub     = document.getElementById('community-set-sub');
+  el.refreshCommunityBtn = document.getElementById('refresh-community-btn');
+  el.communityStatus     = document.getElementById('community-status');
+  el.communityList       = document.getElementById('community-list');
 }
 
 // ------------------------------------------------------------------
@@ -434,6 +440,7 @@ function renderCustomList() {
     const qg = GRADE_MAP[c.correct.qualityGrade];
     const gradeLabel = qg ? qg.label : c.correct.qualityGrade;
     html += `<li>
+      <span class="url-dot url-checking" data-url="${c.imageUrl}" title="Checking…">●</span>
       <span class="custom-item-info">
         <span class="custom-item-name">${c.imageName}</span>
         <span class="custom-item-grade">${gradeLabel}</span>
@@ -468,6 +475,8 @@ function renderCustomList() {
       renderCustomList();
     });
   });
+
+  attachUrlDotChecks(el.customList);
 }
 
 function startEdit(index) {
@@ -543,6 +552,148 @@ function onSaveCustom() {
   cancelEdit();
 }
 
+// ------------------------------------------------------------------
+//  URL VALIDATION
+// ------------------------------------------------------------------
+
+function checkImageUrl(url) {
+  return new Promise(resolve => {
+    if (!url) { resolve(false); return; }
+    const img = new Image();
+    const timer = setTimeout(() => { img.src = ''; resolve(false); }, 5000);
+    img.onload  = () => { clearTimeout(timer); resolve(true); };
+    img.onerror = () => { clearTimeout(timer); resolve(false); };
+    img.src = url;
+  });
+}
+
+function attachUrlDotChecks(container) {
+  container.querySelectorAll('.url-dot').forEach(dot => {
+    checkImageUrl(dot.dataset.url).then(ok => {
+      dot.classList.remove('url-checking');
+      dot.classList.add(ok ? 'url-ok' : 'url-broken');
+      dot.title = ok ? 'Image loads OK' : 'Image URL is broken or blocked';
+    });
+  });
+}
+
+// ------------------------------------------------------------------
+//  COMMUNITY SET
+// ------------------------------------------------------------------
+
+function updateCommunityLabel() {
+  if (!el.communitySetSub) return;
+  if (!COMMUNITY_CONFIG.BIN_ID) {
+    el.communitySetSub.textContent = 'Not configured — see data.js to set up';
+  } else if (!state.communitySet.length) {
+    el.communitySetSub.textContent = 'No carcasses yet — be the first to submit!';
+  } else {
+    el.communitySetSub.textContent = state.communitySet.length + ' carcasses from the team';
+  }
+}
+
+async function loadCommunitySet() {
+  if (!COMMUNITY_CONFIG.BIN_ID || !COMMUNITY_CONFIG.MASTER_KEY) {
+    updateCommunityLabel();
+    renderCommunityList();
+    return;
+  }
+  if (el.communityStatus) el.communityStatus.textContent = 'Loading…';
+  try {
+    const res = await fetch(
+      'https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID + '/latest',
+      { headers: { 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY } }
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    state.communitySet = Array.isArray(data.record)
+      ? data.record.filter(r => r.imageUrl && r.correct && r.correct.qualityGrade)
+      : [];
+  } catch (e) {
+    state.communitySet = [];
+    if (el.communityStatus) el.communityStatus.textContent = 'Could not load community set: ' + e.message;
+  }
+  updateCommunityLabel();
+  renderCommunityList();
+}
+
+async function onSubmitToCommunity() {
+  if (!COMMUNITY_CONFIG.BIN_ID || !COMMUNITY_CONFIG.MASTER_KEY) {
+    alert('Community set is not configured.\nAsk your team admin to fill in COMMUNITY_CONFIG in data.js.');
+    return;
+  }
+  const url   = el.customUrl.value.trim();
+  const name  = el.customName.value.trim() || 'Community Carcass';
+  const qKey  = el.customQuality.value;
+  const notes = el.customNotes.value.trim();
+  if (!url)  { alert('Please enter an image URL.'); return; }
+  if (!qKey) { alert('Please select a quality grade.'); return; }
+
+  const record = {
+    id: 'community-' + Date.now(),
+    imageName: name,
+    imageUrl: url,
+    source: 'Community',
+    correct: { qualityGrade: qKey },
+    notes,
+  };
+
+  el.submitCommunityBtn.disabled = true;
+  el.submitCommunityBtn.textContent = 'Submitting…';
+  try {
+    const updated = [...state.communitySet, record];
+    const res = await fetch(
+      'https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY },
+        body: JSON.stringify(updated),
+      }
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    state.communitySet = updated;
+    updateCommunityLabel();
+    renderCommunityList();
+    cancelEdit();
+    alert('Submitted to community set! (' + state.communitySet.length + ' total)');
+  } catch (e) {
+    alert('Failed to submit: ' + e.message);
+  } finally {
+    el.submitCommunityBtn.disabled = false;
+    el.submitCommunityBtn.textContent = 'Submit to Community';
+  }
+}
+
+function renderCommunityList() {
+  if (!el.communityList) return;
+  if (!COMMUNITY_CONFIG.BIN_ID) {
+    el.communityStatus.textContent = 'Not configured — fill in COMMUNITY_CONFIG in data.js to get started.';
+    el.communityList.innerHTML = '';
+    return;
+  }
+  if (!state.communitySet.length) {
+    el.communityStatus.textContent = 'No community carcasses yet — use "Submit to Community" to add the first one!';
+    el.communityList.innerHTML = '';
+    return;
+  }
+  el.communityStatus.textContent = state.communitySet.length + ' carcasses in the community set.';
+  let html = '<ul>';
+  state.communitySet.forEach(c => {
+    const qg = GRADE_MAP[c.correct.qualityGrade];
+    const gradeLabel = qg ? qg.label : c.correct.qualityGrade;
+    html += `<li>
+      <span class="url-dot url-checking" data-url="${c.imageUrl}" title="Checking…">●</span>
+      <span class="custom-item-info">
+        <span class="custom-item-name">${c.imageName}</span>
+        <span class="custom-item-grade">${gradeLabel}</span>
+      </span>
+    </li>`;
+  });
+  html += '</ul>';
+  el.communityList.innerHTML = html;
+  attachUrlDotChecks(el.communityList);
+}
+
 function buildCustomQualitySelector() {
   el.customQuality.innerHTML = '';
   QUALITY_GRADES.forEach(g => {
@@ -556,6 +707,7 @@ function buildCustomQualitySelector() {
 function openSettings() {
   cancelEdit();
   renderCustomList();
+  renderCommunityList();
   el.settingsModal.classList.remove('hidden');
 }
 
@@ -568,6 +720,7 @@ function init() {
   loadPrefs();
   initImageModal();
   buildCustomQualitySelector();
+  loadCommunitySet();
 
   // Image URL preview
   el.customUrl.addEventListener('input', () => {
@@ -585,9 +738,16 @@ function init() {
     const setVal = document.querySelector('input[name="image-set"]:checked').value;
     const custom = getCustomList();
     let deck;
-    if (setVal === 'default')     deck = DEFAULT_CARCASSES;
-    else if (setVal === 'custom') deck = custom.length ? custom : DEFAULT_CARCASSES;
-    else                          deck = loadAllCarcasses();
+    if (setVal === 'default')         deck = DEFAULT_CARCASSES;
+    else if (setVal === 'custom')     deck = custom.length ? custom : DEFAULT_CARCASSES;
+    else if (setVal === 'community') {
+      if (!state.communitySet.length) {
+        alert('Community set is empty or not configured.\nSee data.js to set up COMMUNITY_CONFIG.');
+        return;
+      }
+      deck = state.communitySet;
+    }
+    else                              deck = loadAllCarcasses();
 
     if (!deck.length) { alert('No carcasses available. Please add images in Manage Photos.'); return; }
     startSession(deck);
@@ -612,6 +772,8 @@ function init() {
 
   el.addCustomBtn.addEventListener('click', onSaveCustom);
   el.cancelEditBtn.addEventListener('click', cancelEdit);
+  el.submitCommunityBtn.addEventListener('click', onSubmitToCommunity);
+  el.refreshCommunityBtn.addEventListener('click', loadCommunitySet);
 
   // Import / Export JSON
   el.importBtn.addEventListener('click', () => {

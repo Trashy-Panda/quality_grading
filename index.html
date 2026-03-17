@@ -85,6 +85,13 @@
             <span class="radio-label-sub">Default + custom combined</span>
           </span>
         </label>
+        <label class="radio-option">
+          <input type="radio" name="image-set" value="community" />
+          <span class="radio-content">
+            <span class="radio-label-main">Community Set</span>
+            <span id="community-set-sub" class="radio-label-sub">Loading…</span>
+          </span>
+        </label>
       </div>
     </div>
 
@@ -254,6 +261,7 @@
 
       <div class="form-btn-row">
         <button id="add-custom-btn" class="btn-primary btn-add">Add to My Set</button>
+        <button id="submit-community-btn" class="btn-secondary">Submit to Community</button>
         <button id="cancel-edit-btn" class="btn-secondary hidden">Cancel Edit</button>
       </div>
 
@@ -268,6 +276,14 @@
         <button id="import-btn" class="btn-secondary">Import JSON</button>
         <button id="export-json-btn" class="btn-secondary">Export My Set</button>
       </div>
+
+      <!-- Community Set -->
+      <h3 class="settings-section-label">
+        Community Set
+        <button id="refresh-community-btn" class="card-label-action">Refresh</button>
+      </h3>
+      <p id="community-status" class="community-status-msg"></p>
+      <div id="community-list"></div>
 
     </div>
   </div>
