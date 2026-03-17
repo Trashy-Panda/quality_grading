@@ -285,8 +285,28 @@ function renderCarcass(index) {
   const max = state.answers.length * 10;
   el.headerScore.textContent = `Score: ${earned}/${max} pts`;
 
-  el.carcassImage.src = c.imageUrl;
+  const imgWrap = el.carcassImage.parentElement;
+  imgWrap.classList.add('img-loading');
+  el.carcassImage.style.opacity = '0';
   el.carcassImage.alt = c.imageName;
+  el.carcassImage.src = '';
+
+  const _onLoad = () => {
+    imgWrap.classList.remove('img-loading');
+    el.carcassImage.style.opacity = '1';
+    el.carcassImage.removeEventListener('load',  _onLoad);
+    el.carcassImage.removeEventListener('error', _onError);
+  };
+  const _onError = () => {
+    imgWrap.classList.remove('img-loading');
+    el.carcassImage.style.opacity = '0.25';
+    el.carcassImage.removeEventListener('load',  _onLoad);
+    el.carcassImage.removeEventListener('error', _onError);
+  };
+  el.carcassImage.addEventListener('load',  _onLoad);
+  el.carcassImage.addEventListener('error', _onError);
+  el.carcassImage.src = c.imageUrl;
+
   el.carcassName.textContent = c.imageName;
   el.imageSource.textContent = c.source ? 'Source: ' + c.source : '';
 

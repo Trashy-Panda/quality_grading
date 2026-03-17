@@ -17,6 +17,10 @@
       <span class="brand-name">Beef Grading Drill</span>
     </div>
     <div class="header-right">
+      <button id="back-to-setup-btn" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Setup
+      </button>
       <span id="header-rule-label" class="rule-chip">FFA Rules</span>
       <span id="header-score" class="score-display">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
@@ -26,9 +30,49 @@
   </header>
 
   <!-- ===================================================
+       LANDING HERO
+       =================================================== -->
+  <section id="landing-hero">
+    <!-- Right-side carcass image at 35% opacity -->
+    <div class="landing-bg-img" aria-hidden="true">
+      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" />
+    </div>
+
+    <div class="landing-content">
+      <div class="landing-stamp-bar">Quality Grading &nbsp;·&nbsp; Est. USDA AMS</div>
+      <div class="landing-eyebrow">FFA &nbsp;·&nbsp; Collegiate &nbsp;·&nbsp; AMSA-IMS</div>
+
+      <h1 class="landing-headline">Quality Grading<br>Drills.</h1>
+
+      <p class="landing-sub">
+        Competition-style beef carcass grading. Sharpen your eye,
+        track your score, and drill like it's show day.
+      </p>
+
+      <div class="landing-cta-row">
+        <button class="landing-cta-btn" id="landing-cta">Start Drilling Free &rarr;</button>
+      </div>
+
+      <div class="landing-proof">FFA &nbsp;·&nbsp; AMSA-IMS &nbsp;·&nbsp; Collegiate Meat Judging</div>
+    </div>
+  </section>
+
+  <!-- ===================================================
        HOME SCREEN
        =================================================== -->
-  <main id="home-screen" class="screen">
+  <main id="home-screen" class="screen hidden">
+
+    <!-- Settings page top nav -->
+    <div class="page-nav">
+      <button class="page-nav-back" id="back-to-landing-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Home
+      </button>
+      <span class="page-nav-brand">
+        <span class="page-nav-emoji">🥩</span>
+        <span class="page-nav-label">Session Setup</span>
+      </span>
+    </div>
 
     <div class="hero">
       <div class="hero-eyebrow">USDA Grading Practice</div>
@@ -292,6 +336,34 @@
   <script src="app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const landing   = document.getElementById('landing-hero');
+      const homeScreen = document.getElementById('home-screen');
+
+      // app.js init() shows home-screen — re-hide it so landing shows first
+      homeScreen.classList.add('hidden');
+
+      // Landing CTA → fade out landing, show setup page
+      document.getElementById('landing-cta').addEventListener('click', () => {
+        landing.classList.add('landing-exit');
+        setTimeout(() => {
+          landing.classList.add('hidden');
+          homeScreen.classList.remove('hidden');
+        }, 260);
+      });
+
+      // Setup page → back to landing
+      document.getElementById('back-to-landing-btn').addEventListener('click', () => {
+        homeScreen.classList.add('hidden');
+        landing.classList.remove('hidden', 'landing-exit');
+        landing.style.opacity = '';
+      });
+
+      // Drill header → back to setup
+      document.getElementById('back-to-setup-btn').addEventListener('click', () => {
+        renderHomeScreen();
+      });
+
+      // Show/hide drill header based on drill screen visibility
       const header = document.getElementById('app-header');
       const observer = new MutationObserver(() => {
         const drillVisible = !document.getElementById('drill-screen').classList.contains('hidden');
