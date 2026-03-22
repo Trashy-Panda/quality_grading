@@ -408,7 +408,7 @@ function loadWeeklyTab() {
     ? _db.collection(DB_COLLECTIONS.community_carcasses)
         .orderBy('submittedAt', 'desc').limit(100).get()
         .then(function(snap) {
-          return snap.docs.map(function(d) { return d.data(); })
+          return snap.docs.map(function(d) { return Object.assign({ id: d.id }, d.data()); })
             .filter(function(r) { return r.imageUrl && r.correct && r.correct.qualityGrade; });
         })
         .catch(function() { return []; })
