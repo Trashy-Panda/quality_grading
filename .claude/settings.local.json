@@ -4,7 +4,9 @@
       "Bash(claude mcp:*)",
       "Bash(start \"\" \"c:\\\\Users\\\\gunny\\\\code\\\\index.html\")",
       "Bash(cmd.exe /c \"where node 2>&1 & where npm 2>&1 & where npx 2>&1\")",
-      "Bash(del \"c:\\\\Users\\\\gunny\\\\code\\\\_brutalist_section.css\")"
+      "Bash(del \"c:\\\\Users\\\\gunny\\\\code\\\\_brutalist_section.css\")",
+      "Bash(wc -l /c/Users/gunny/code/*.js /c/Users/gunny/code/*.css /c/Users/gunny/code/*.html)",
+      "Bash(grep -n \"_escapeAttr\\\\|escapeAttr\" /c/Users/gunny/code/*.js)"
     ]
   }
 }
