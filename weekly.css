@@ -1,250 +1,316 @@
-/* ============================================================
-   BEEF CARCASS GRADING DRILL — Weekly Challenge Styles
-   weekly.css
-   ============================================================ */
+/* weekly.css — Federal Grade Record design system
+   Weekly Challenge Card — USDA field report sub-form layout */
 
-/* ------------------------------------------------------------------
-   WEEKLY CHALLENGE CARD
-   ------------------------------------------------------------------ */
+/* ── Weekly Challenge Card ───────────────────────────────────────────────── */
 
-/* Rule set toggle inside card */
+.weekly-card {
+  background: var(--paper);
+  border: 1px solid var(--rule-heavy);
+  border-top: 3px solid var(--accent);  /* strong accent top rule = important document */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header strip — always visible, shows program identity */
+.weekly-card-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--paper-alt);
+  border-bottom: 1px solid var(--rule-heavy);
+  gap: 12px;
+}
+
+/* "WEEKLY CHALLENGE" stamp — bordered label, not bare text */
+.weekly-stamp {
+  font-family: var(--font-ui);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+  display: inline-block;
+  line-height: 1.5;
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+/* Countdown — right side, monospace, tabular */
+.weekly-countdown {
+  font-family: var(--font-data);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── Card Body: Form Block Layout ────────────────────────────────────────── */
+
+.weekly-card-body {
+  padding: 0;
+}
+
+/* Week label — key record value, treated as a typed field */
+.weekly-week-label {
+  font-family: var(--font-data);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--rule);
+  display: block;
+}
+
+/* Rule set toggle — field row format */
 .weekly-ruleset-toggle {
   display: flex;
   gap: 0;
-  margin-bottom: 0.85rem;
-  border: 2px solid rgba(255,255,255,0.4);
-  width: fit-content;
-}
-.weekly-rule-btn {
-  padding: 0.35rem 1rem;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: none;
-  background: transparent;
-  color: rgba(255,255,255,0.55);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-.weekly-rule-btn.active {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-}
-.weekly-rule-btn:hover:not(.active) {
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.8);
-}
-
-.weekly-card {
-  background: var(--primary);
-  color: #fff;
-  border: 2.5px solid var(--border);
-  box-shadow: var(--shadow-lg);
-  padding: 1.5rem 1.35rem;
-  margin-bottom: 1.25rem;
-}
-
-.weekly-card-header {
-  display: flex;
-  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 16px;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
-/* Brutalist stamp element */
-.weekly-stamp {
-  background: #fff;
-  color: var(--primary);
-  font-size: 0.58rem;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-  padding: 0.2rem 0.6rem;
+.weekly-rule-btn {
+  padding: 5px 16px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.4;
+  border: 1px solid var(--rule-heavy);
+  background: var(--paper-alt);
+  color: var(--ink-tertiary);
+  cursor: pointer;
+  transition: background 80ms ease, color 80ms ease;
+  border-radius: 0;
+  margin-right: -1px;  /* overlap borders */
 }
 
-.weekly-countdown {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
+.weekly-rule-btn.active {
+  background: var(--accent);
+  color: var(--paper);
+  border-color: var(--accent);
+  position: relative;
+  z-index: 1;
 }
 
-.weekly-card-body {
-  /* body layout */
+.weekly-rule-btn:hover:not(.active) {
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.weekly-week-label {
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 0.35rem;
-  line-height: 1.1;
+.weekly-rule-btn:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
 }
+
+/* ── Card Meta ───────────────────────────────────────────────────────────── */
 
 .weekly-card-meta {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 1rem;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--ink-tertiary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-alt);
 }
+
+/* ── User Status Area ────────────────────────────────────────────────────── */
 
 .weekly-user-status {
-  margin-bottom: 0.75rem;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule);
 }
 
-/* Score display when already submitted */
+/* Score display when user has submitted */
 .weekly-score-display {
-  font-size: 2rem;
-  font-weight: 900;
-  color: #fff;
+  font-family: var(--font-data);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
   line-height: 1;
-  margin-bottom: 0.2rem;
+  margin-bottom: 2px;
 }
 
 .weekly-score-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink-tertiary);
   text-transform: uppercase;
-  margin-bottom: 0.15rem;
 }
 
 .weekly-rank {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 0.25rem;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  margin-top: 3px;
 }
 
 .weekly-rank strong {
-  color: #fff;
+  font-family: var(--font-data);
+  color: var(--ink);
   font-weight: 700;
 }
 
-/* ------------------------------------------------------------------
-   BUTTONS INSIDE WEEKLY CARD
-   ------------------------------------------------------------------ */
+/* Status stamp variants */
+.weekly-status-confirmed {
+  font-family: var(--font-ui);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+  display: inline-block;
+  border-radius: 0;
+}
+
+.weekly-status-pending {
+  font-family: var(--font-ui);
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1.5px solid var(--pending);
+  color: var(--pending);
+  background: var(--pending-light);
+  display: inline-block;
+  border-radius: 0;
+}
+
+/* ── Card Actions ────────────────────────────────────────────────────────── */
 
 .weekly-card-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0;
+  padding: 12px 16px;
 }
 
+.weekly-card-actions .btn-weekly-primary,
+.weekly-card-actions .btn-weekly-secondary {
+  margin-right: 8px;
+  margin-bottom: 4px;
+}
+
+/* ── Action Buttons inside Weekly Card ──────────────────────────────────── */
+
 .btn-weekly-primary {
-  background: #fff;
-  color: var(--primary);
-  border: 2px solid #fff;
-  font-weight: 800;
-  font-size: 0.85rem;
-  padding: 0.7rem 1.4rem;
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+  background: var(--accent);
+  color: var(--paper);
+  border: 1px solid var(--accent);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 18px;
   cursor: pointer;
-  letter-spacing: 0.02em;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  text-transform: none;
-  border-radius: var(--radius);
-  line-height: 1.2;
+  gap: 6px;
+  border-radius: 0;
+  transition: background 80ms ease;
+  min-height: 36px;
 }
 
 .btn-weekly-primary:hover,
 .btn-weekly-primary:focus-visible {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  background: #6a1010;
+  border-color: #6a1010;
   outline: none;
 }
 
 .btn-weekly-primary:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+  opacity: 0.9;
 }
 
 .btn-weekly-secondary {
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-  font-weight: 800;
-  font-size: 0.85rem;
-  padding: 0.7rem 1.4rem;
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+  background: var(--paper-alt);
+  color: var(--ink);
+  border: 1px solid var(--rule-heavy);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 18px;
   cursor: pointer;
-  letter-spacing: 0.02em;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  border-radius: var(--radius);
-  line-height: 1.2;
+  gap: 6px;
+  border-radius: 0;
+  transition: background 80ms ease, color 80ms ease;
+  min-height: 36px;
 }
 
 .btn-weekly-secondary:hover,
 .btn-weekly-secondary:focus-visible {
-  background: rgba(255, 255, 255, 0.12);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  background: var(--ink);
+  color: var(--paper);
   outline: none;
 }
 
 .btn-weekly-secondary:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+  opacity: 0.9;
 }
 
-/* ------------------------------------------------------------------
-   WEEKLY SUBMIT BUTTON (on summary screen)
-   ------------------------------------------------------------------ */
+/* ── Weekly Submit Button (on summary screen) ────────────────────────────── */
 
 .weekly-submit-btn {
-  background: var(--green);
-  color: #fff;
-  border: 2px solid var(--green);
-  font-weight: 800;
-  font-size: 0.9rem;
-  padding: 0.75rem 1.5rem;
-  box-shadow: var(--shadow);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  background: var(--accent);
+  color: var(--paper);
+  border: 1px solid var(--accent);
   cursor: pointer;
-  letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  border-radius: var(--radius);
-  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
+  gap: 6px;
   line-height: 1.2;
+  border-radius: 0;
+  transition: background 80ms ease;
 }
 
 .weekly-submit-btn:hover,
 .weekly-submit-btn:focus-visible {
-  transform: translate(-1px, -1px);
-  box-shadow: var(--shadow-lg);
+  background: #6a1010;
+  border-color: #6a1010;
   outline: none;
 }
 
 .weekly-submit-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: var(--shadow-sm);
+  opacity: 0.9;
 }
 
 .weekly-submit-btn:disabled {
-  opacity: 0.65;
+  opacity: 0.45;
   cursor: not-allowed;
-  transform: none;
 }
 
 .weekly-submit-btn.weekly-submit-success {
-  background: var(--green);
-  border-color: var(--green);
-  opacity: 0.8;
+  opacity: 0.7;
   cursor: default;
-  transform: none;
 }
 
-/* Utility: hidden */
 .weekly-submit-btn.hidden {
   display: none;
 }

@@ -6,6 +6,26 @@
 'use strict';
 
 // ------------------------------------------------------------------
+//  XSS ESCAPE UTILITIES
+// ------------------------------------------------------------------
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+function escapeAttr(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ------------------------------------------------------------------
 //  GRADE POSITION MAP
 // ------------------------------------------------------------------
 const GRADE_POSITIONS = {};
@@ -420,7 +440,7 @@ function renderSummary() {
     const cls = a.score === 10 ? 'row-good' : a.score >= 5 ? 'row-ok' : 'row-bad';
     html += `<tr class="${cls}">
       <td>${i + 1}</td>
-      <td>${a.carcassName}</td>
+      <td>${escapeHtml(a.carcassName)}</td>
       <td>${a.userQualityLabel}</td>
       <td>${a.correctQualityLabel}</td>
       <td><strong>${a.score}/10</strong></td>
@@ -469,10 +489,10 @@ function renderCustomList() {
     const qg = GRADE_MAP[c.correct.qualityGrade];
     const gradeLabel = qg ? qg.label : c.correct.qualityGrade;
     html += `<li>
-      <span class="url-dot url-checking" data-url="${c.imageUrl}" title="Checking…">●</span>
+      <span class="url-dot url-checking" data-url="${escapeAttr(c.imageUrl)}" title="Checking…">●</span>
       <span class="custom-item-info">
-        <span class="custom-item-name">${c.imageName}</span>
-        <span class="custom-item-grade">${gradeLabel}</span>
+        <span class="custom-item-name">${escapeHtml(c.imageName)}</span>
+        <span class="custom-item-grade">${escapeHtml(gradeLabel)}</span>
       </span>
       <span class="custom-item-actions">
         <button class="edit-btn" data-index="${i}" title="Edit">
@@ -699,10 +719,10 @@ function renderCommunityList() {
     const qg = GRADE_MAP[c.correct.qualityGrade];
     const gradeLabel = qg ? qg.label : c.correct.qualityGrade;
     html += `<li>
-      <span class="url-dot url-checking" data-url="${c.imageUrl}" title="Checking…">●</span>
+      <span class="url-dot url-checking" data-url="${escapeAttr(c.imageUrl)}" title="Checking…">●</span>
       <span class="custom-item-info">
-        <span class="custom-item-name">${c.imageName}</span>
-        <span class="custom-item-grade">${gradeLabel}</span>
+        <span class="custom-item-name">${escapeHtml(c.imageName)}</span>
+        <span class="custom-item-grade">${escapeHtml(gradeLabel)}</span>
       </span>
     </li>`;
   });

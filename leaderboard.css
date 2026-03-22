@@ -1,105 +1,136 @@
-/* ============================================================
-   LEADERBOARD SCREEN — Neo-brutalist styles
-   ============================================================ */
+/* leaderboard.css — Federal Grade Record design system
+   Weekly Grading Rankings — federal record table pattern */
 
-/* ── Screen container ──────────────────────────────────────── */
+/* ── Leaderboard Screen ──────────────────────────────────────────────────── */
+
 #leaderboard-screen {
-  background: var(--bg);
+  background: var(--paper);
   min-height: 100vh;
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 1.25rem 3rem;
+  color: var(--ink);
 }
 
-/* ── Hero ──────────────────────────────────────────────────── */
+/* Page nav inherits from global .page-nav styles in style.css */
+#leaderboard-screen .page-nav {
+  background: var(--paper-alt);
+  border-bottom: 1px solid var(--rule);
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Leaderboard Hero Header ─────────────────────────────────────────────── */
+
 .leaderboard-hero {
-  padding: 2rem 0 1.5rem;
-  border-bottom: 2px solid var(--border);
+  background: var(--paper-alt);
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 16px 14px;
 }
 
 .leaderboard-hero-stamp {
-  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: normal;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 0.25em;
-  font-size: 0.58rem;
-  font-weight: 900;
-  color: var(--primary);
-  border: 1.5px solid var(--primary);
-  padding: 0.2rem 0.6rem;
-  margin-bottom: 0.75rem;
+  color: var(--ink-tertiary);
+  margin-bottom: 6px;
 }
 
 .leaderboard-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 900;
-  line-height: 1;
-  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+  line-height: 1.1;
 }
 
 .leaderboard-week-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 0.4rem;
+  font-family: var(--font-data);
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--ink-tertiary);
+  letter-spacing: 0.04em;
 }
 
-/* ── Tabs ──────────────────────────────────────────────────── */
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+
 .leaderboard-tabs {
   display: flex;
+  background: var(--paper-alt);
+  border-bottom: 1px solid var(--rule);
   gap: 0;
-  border-bottom: 2.5px solid var(--border);
-  margin: 1.5rem 0 0;
 }
 
 .leaderboard-tab {
-  padding: 0.65rem 1.4rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: normal;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: var(--ink-tertiary);
+  background: var(--paper-alt);
   border: none;
-  background: none;
+  border-right: 1px solid var(--rule);
+  padding: 9px 20px;
   cursor: pointer;
-  border-bottom: 3px solid transparent;
-  color: var(--text-muted);
-  transition: color 0.15s, border-bottom-color 0.15s;
-  margin-bottom: -2.5px;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.1s, background 0.1s;
+}
+
+.leaderboard-tab:last-child {
+  border-right: none;
 }
 
 .leaderboard-tab:hover {
-  color: var(--text);
+  color: var(--ink);
+  background: var(--paper);
 }
 
 .leaderboard-tab.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+  color: var(--accent);
+  background: var(--paper);
+  border-bottom: 2px solid var(--accent);
 }
 
-/* ── Table wrapper ─────────────────────────────────────────── */
+.leaderboard-tab:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* ── Table Wrapper ───────────────────────────────────────────────────────── */
+
 .leaderboard-table-wrap {
-  margin-top: 0;
+  padding: 16px;
   overflow-x: auto;
 }
 
-/* ── Table ─────────────────────────────────────────────────── */
+/* ── Data Table ──────────────────────────────────────────────────────────── */
+
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-  border: 2px solid var(--border);
-}
-
-.leaderboard-table thead {
-  background: var(--primary);
-  color: white;
+  font-size: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 0;
 }
 
 .leaderboard-table th {
-  padding: 0.7rem 0.9rem;
-  text-align: left;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: normal;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  padding: 7px 12px;
+  text-align: left;
   border-right: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
 }
 
 .leaderboard-table th:last-child {
@@ -107,136 +138,219 @@
 }
 
 .leaderboard-table td {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-mid);
-  font-size: 0.88rem;
+  padding: 7px 12px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-secondary);
   vertical-align: middle;
+  font-family: var(--font-ui);
+  font-size: 12px;
 }
 
-.leaderboard-table tbody tr:last-child td {
+.leaderboard-table td:last-child {
+  border-right: none;
+}
+
+.leaderboard-table tr:nth-child(odd) td {
+  background: var(--paper);
+}
+
+.leaderboard-table tr:nth-child(even) td {
+  background: var(--paper-alt);
+}
+
+.leaderboard-table tr:last-child td {
   border-bottom: none;
 }
 
-.leaderboard-table tbody tr:hover {
-  background: var(--bg-alt);
-}
+/* ── Rank Column ─────────────────────────────────────────────────────────── */
 
-/* ── My row highlight ──────────────────────────────────────── */
-.leaderboard-row-me {
-  background: var(--accent-pale) !important;
-  border-left: 3px solid var(--primary);
-}
-
-.leaderboard-row-me:hover {
-  background: var(--accent-pale) !important;
-}
-
-/* ── Column widths ─────────────────────────────────────────── */
 .col-rank {
-  width: 60px;
+  width: 48px;
+  text-align: center;
 }
 
-.col-pct {
-  font-weight: 800;
-  color: var(--primary);
+.leaderboard-table td.col-rank {
+  font-family: var(--font-data);
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--ink);
+  text-align: center;
 }
 
-/* ── Rank badges ───────────────────────────────────────────── */
-.rank-badge {
-  display: inline-block;
-  font-size: 0.6rem;
-  font-weight: 900;
-  letter-spacing: 0.15em;
-  padding: 0.15rem 0.4rem;
-  text-transform: uppercase;
-  border: 1.5px solid currentColor;
-}
-
-.rank-1st {
-  color: #7A5A00;
-  border-color: #7A5A00;
-  background: #FFF4C8;
-}
-
-.rank-2nd {
-  color: #555555;
-  border-color: #aaaaaa;
-  background: #f0f0f0;
-}
-
-.rank-3rd {
-  color: var(--orange);
-  border-color: var(--orange);
-  background: var(--orange-lt);
-}
-
-/* ── Avatar ────────────────────────────────────────────────── */
-.leaderboard-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border-mid);
-  object-fit: cover;
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
+/* ── Name Column ─────────────────────────────────────────────────────────── */
 
 .leaderboard-name-cell {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
-/* ── Skeleton loading rows ─────────────────────────────────── */
+.leaderboard-table td.col-name {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* ── Score Column ────────────────────────────────────────────────────────── */
+
+.col-score {
+  text-align: right;
+}
+
+.leaderboard-table td.col-score {
+  font-family: var(--font-data);
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--ink);
+  text-align: right;
+}
+
+/* ── Pct Column ──────────────────────────────────────────────────────────── */
+
+.col-pct {
+  text-align: right;
+}
+
+.leaderboard-table td.col-pct {
+  font-family: var(--font-data);
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--ink-secondary);
+  text-align: right;
+}
+
+.leaderboard-table td.col-pct.high-score {
+  color: var(--accent);
+}
+
+/* ── Date Column ─────────────────────────────────────────────────────────── */
+
+.col-date {
+  white-space: nowrap;
+}
+
+.leaderboard-table td.col-date {
+  font-family: var(--font-data);
+  font-size: 10px;
+  color: var(--ink-tertiary);
+}
+
+/* ── My Row Highlight ────────────────────────────────────────────────────── */
+
+.leaderboard-row-me td {
+  background: var(--accent-light) !important;
+}
+
+.leaderboard-row-me td.col-rank,
+.leaderboard-row-me td.col-score,
+.leaderboard-row-me td.col-pct {
+  color: var(--accent);
+}
+
+/* ── Avatar ──────────────────────────────────────────────────────────────── */
+
+.leaderboard-avatar {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  object-fit: cover;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ── Rank Badges ─────────────────────────────────────────────────────────── */
+
+.rank-badge {
+  display: inline-block;
+  font-family: var(--font-data);
+  font-size: 10px;
+  font-weight: normal;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 0;
+}
+
+.rank-1st {
+  color: var(--pending);
+  border-color: var(--pending);
+  background: var(--pending-light);
+}
+
+.rank-2nd {
+  color: var(--ink-secondary);
+  border-color: var(--rule-heavy);
+  background: var(--paper-alt);
+}
+
+.rank-3rd {
+  color: var(--ink-tertiary);
+  border-color: var(--rule);
+  background: var(--paper-alt);
+}
+
+/* ── Skeleton Loading Rows ───────────────────────────────────────────────── */
+
 @keyframes leaderboard-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.8; }
+  100% { opacity: 0.4; }
 }
 
 .leaderboard-skeleton td {
-  padding: 0.75rem 0.9rem;
-  border-bottom: 1px solid var(--border-mid);
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .leaderboard-skeleton td > span {
   display: block;
   height: 0.85rem;
-  border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--bg-alt) 25%,
-    var(--border-mid) 50%,
-    var(--bg-alt) 75%
-  );
-  background-size: 600px 100%;
-  animation: leaderboard-shimmer 1.4s infinite linear;
+  background: var(--rule);
+  animation: leaderboard-shimmer 1.6s ease-in-out infinite;
+  border-radius: 0;
 }
 
-/* ── Empty state ───────────────────────────────────────────── */
+/* ── Loading / Empty States ──────────────────────────────────────────────── */
+
 .leaderboard-empty {
   text-align: center;
-  padding: 3rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  padding: 32px 16px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--ink-tertiary);
+  background: var(--paper);
 }
 
 .leaderboard-empty strong {
   display: block;
-  font-size: 1.05rem;
-  margin-bottom: 0.4rem;
-  color: var(--text);
+  font-family: var(--font-data);
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 6px;
+  color: var(--ink-secondary);
 }
 
-/* ── Sign-in prompt ────────────────────────────────────────── */
+/* ── Sign-in Prompt ──────────────────────────────────────────────────────── */
+
 .leaderboard-signin {
   text-align: center;
-  padding: 3rem 1rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  padding: 32px 16px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--ink-tertiary);
+  background: var(--paper);
 }
 
 .leaderboard-signin strong {
   display: block;
-  font-size: 1.05rem;
-  margin-bottom: 0.4rem;
-  color: var(--text);
+  font-family: var(--font-data);
+  font-size: 12px;
+  font-weight: normal;
+  margin-bottom: 6px;
+  color: var(--ink-secondary);
 }
