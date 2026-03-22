@@ -1838,9 +1838,14 @@ body {
 }
 
 @media (max-width: 600px) {
-  .hero-title { font-size: 1.5rem; }
+  .hero-title { font-size: 1.5rem; white-space: normal; }
   .brand-name { display: none; }
-  #app-header { height: 50px; }
+  #app-header { height: auto; min-height: 50px; padding: 0.4rem 0.75rem; flex-wrap: wrap; }
+  .header-right { flex-wrap: wrap; gap: 0.4rem; }
+  .rule-chip { font-size: 0.6rem; padding: 2px 7px; }
+  .score-display { font-size: 0.8rem; }
+  .auth-signin-btn { font-size: 0.72rem; padding: 4px 8px; }
+  .auth-display-name { display: none; }
   .summary-pct { font-size: 2.5rem; }
   .screen { padding: 1.25rem 1rem 3rem; }
 }

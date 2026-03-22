@@ -273,12 +273,10 @@ function loadLeaderboard() {
   if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="admin-loading">Loading\u2026</td></tr>';
   if (stats) stats.textContent = '';
 
-  _db.enableNetwork().catch(function () {}).then(function () {
-    return _db.collection(DB_COLLECTIONS.submissions)
-      .where('weekId', '==', _lbWeekId)
-      .where('ruleSet', '==', _lbRuleSet)
-      .get();
-  })
+  _db.collection(DB_COLLECTIONS.submissions)
+    .where('weekId', '==', _lbWeekId)
+    .where('ruleSet', '==', _lbRuleSet)
+    .get()
     .then(function (snapshot) {
       if (!tbody) return;
 
@@ -416,15 +414,10 @@ function loadWeeklyTab() {
         .catch(function() { return []; })
     : Promise.resolve([]);
 
-  // Force network reconnect before Firestore queries (prevents "client is offline" error)
-  _db.enableNetwork()
-    .catch(function () { /* ignore — still try queries */ })
-    .then(function () {
-      var overrideQuery   = _db.collection('weeks').doc(_wcWeekId).get();
-      var ffaQuery        = _db.collection(DB_COLLECTIONS.submissions).where('weekId', '==', _wcWeekId).where('ruleSet', '==', 'ffa').get();
-      var collegiateQuery = _db.collection(DB_COLLECTIONS.submissions).where('weekId', '==', _wcWeekId).where('ruleSet', '==', 'collegiate').get();
-      return Promise.all([overrideQuery, ffaQuery, collegiateQuery, communityPromise]);
-    })
+  var overrideQuery   = _db.collection('weeks').doc(_wcWeekId).get();
+  var ffaQuery        = _db.collection(DB_COLLECTIONS.submissions).where('weekId', '==', _wcWeekId).where('ruleSet', '==', 'ffa').get();
+  var collegiateQuery = _db.collection(DB_COLLECTIONS.submissions).where('weekId', '==', _wcWeekId).where('ruleSet', '==', 'collegiate').get();
+  Promise.all([overrideQuery, ffaQuery, collegiateQuery, communityPromise])
     .then(function (results) {
       var overrideDoc    = results[0];
       var ffaSnap        = results[1];
@@ -468,7 +461,7 @@ function loadWeeklyTab() {
       _wcAllCarcasses = defaultPool.concat(validCommunity);
 
       _renderWeeklyUI();
-      loadCommunityForAdmin();
+      _renderCommunityForAdmin(communitySet);
     })
     .catch(function (err) {
       if (weekInfoEl) {
@@ -648,68 +641,57 @@ function addCarcassByUrl() {
 //  Load Community Submissions for Admin
 // ============================================================
 
-function loadCommunityForAdmin() {
+function _renderCommunityForAdmin(set) {
   var container = document.getElementById('wc-community-list');
   if (!container) return;
-  if (!_db) {
-    container.innerHTML = '<p class="admin-empty">Database not available.</p>';
-    return;
-  }
-  container.innerHTML = '<p class="admin-empty">Loading…</p>';
-  _db.collection(DB_COLLECTIONS.community_carcasses)
-    .orderBy('submittedAt', 'desc').limit(100).get()
-  .then(function(snap) {
-    var set = snap.docs.map(function(d) { return Object.assign({ id: d.id }, d.data()); })
-      .filter(function(r) { return r.imageUrl && r.correct && r.correct.qualityGrade; });
-    if (!set.length) { container.innerHTML = '<p class="admin-empty">No community carcasses yet.</p>'; return; }
-    container.innerHTML = '';
-    set.forEach(function(c) {
-      var docId = c.id;
-      var gradeObj = GRADE_MAP[c.correct && c.correct.qualityGrade];
-      var gradeLabel = gradeObj ? gradeObj.label : (c.correct && c.correct.qualityGrade) || '';
-      var checked = _selectedCarcassIds.has(docId);
+  set = set || [];
+  if (!set.length) { container.innerHTML = '<p class="admin-empty">No community carcasses yet.</p>'; return; }
+  container.innerHTML = '';
+  set.forEach(function(c) {
+    var docId = c.id;
+    var gradeObj = GRADE_MAP[c.correct && c.correct.qualityGrade];
+    var gradeLabel = gradeObj ? gradeObj.label : (c.correct && c.correct.qualityGrade) || '';
+    var checked = _selectedCarcassIds.has(docId);
 
-      var row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;';
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;';
 
-      var label = document.createElement('label');
-      label.className = 'admin-carcass-item' + (checked ? ' selected' : '');
-      label.style.flex = '1';
+    var label = document.createElement('label');
+    label.className = 'admin-carcass-item' + (checked ? ' selected' : '');
+    label.style.flex = '1';
 
-      var cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.dataset.id = docId;
-      cb.checked = checked;
-      cb.addEventListener('change', function() {
-        if (this.checked) { _selectedCarcassIds.add(this.dataset.id); label.classList.add('selected'); }
-        else              { _selectedCarcassIds.delete(this.dataset.id); label.classList.remove('selected'); }
-      });
-
-      var info = document.createElement('span');
-      info.innerHTML = '<span class="admin-carcass-name">' + escapeHtml(c.imageName || 'Unnamed') + '</span>' +
-                       '<span class="admin-carcass-grade">' + escapeHtml(gradeLabel) + '</span>';
-
-      label.appendChild(cb);
-      label.appendChild(info);
-
-      var delBtn = document.createElement('button');
-      delBtn.className = 'admin-btn-danger admin-btn-sm';
-      delBtn.textContent = 'Delete';
-      delBtn.dataset.id = docId;
-      delBtn.addEventListener('click', function() {
-        var id = this.dataset.id;
-        if (!confirm('Delete ' + escapeHtml(c.imageName || 'this carcass') + '?')) return;
-        _db.collection(DB_COLLECTIONS.community_carcasses).doc(id).delete()
-          .then(function() { loadCommunityForAdmin(); })
-          .catch(function(err) { alert('Error deleting: ' + err.message); });
-      });
-
-      row.appendChild(label);
-      row.appendChild(delBtn);
-      container.appendChild(row);
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.dataset.id = docId;
+    cb.checked = checked;
+    cb.addEventListener('change', function() {
+      if (this.checked) { _selectedCarcassIds.add(this.dataset.id); label.classList.add('selected'); }
+      else              { _selectedCarcassIds.delete(this.dataset.id); label.classList.remove('selected'); }
     });
-  })
-  .catch(function(e) { container.innerHTML = '<p class="admin-empty">Failed to load: ' + escapeHtml(e.message) + '</p>'; });
+
+    var info = document.createElement('span');
+    info.innerHTML = '<span class="admin-carcass-name">' + escapeHtml(c.imageName || 'Unnamed') + '</span>' +
+                     '<span class="admin-carcass-grade">' + escapeHtml(gradeLabel) + '</span>';
+
+    label.appendChild(cb);
+    label.appendChild(info);
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'admin-btn-danger admin-btn-sm';
+    delBtn.textContent = 'Delete';
+    delBtn.dataset.id = docId;
+    delBtn.addEventListener('click', function() {
+      var id = this.dataset.id;
+      if (!confirm('Delete ' + escapeHtml(c.imageName || 'this carcass') + '?')) return;
+      _db.collection(DB_COLLECTIONS.community_carcasses).doc(id).delete()
+        .then(function() { loadWeeklyTab(); })
+        .catch(function(err) { alert('Error deleting: ' + err.message); });
+    });
+
+    row.appendChild(label);
+    row.appendChild(delBtn);
+    container.appendChild(row);
+  });
 }
 
 // ============================================================

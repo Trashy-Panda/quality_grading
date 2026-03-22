@@ -755,8 +755,7 @@ function init() {
     const setVal = document.querySelector('input[name="image-set"]:checked').value;
     const custom = getCustomList();
     let deck;
-    if (setVal === 'default')         deck = state.communitySet.length ? state.communitySet : DEFAULT_CARCASSES;
-    else if (setVal === 'custom')     deck = custom.length ? custom : DEFAULT_CARCASSES;
+    if (setVal === 'custom')          deck = custom.length ? custom : DEFAULT_CARCASSES;
     else if (setVal === 'community') {
       if (!state.communitySet.length) {
         if (window._db) {
