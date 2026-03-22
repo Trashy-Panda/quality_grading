@@ -842,6 +842,147 @@ select:focus {
 }
 
 /* ============================================================
+   COMMUNITY TAB — CARCASS LIST
+   ============================================================ */
+
+.community-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border-mid);
+  background: var(--card);
+  transition: background 0.1s;
+}
+
+.community-row:last-child {
+  border-bottom: none;
+}
+
+.community-row:hover {
+  background: var(--bg-alt);
+}
+
+.community-thumb {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  display: block;
+  background: #0D0A07;
+}
+
+.community-row-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.community-row-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.community-row-grade {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.community-row-source {
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+.community-row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* Add New form */
+.community-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.community-add-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.community-add-fields input[type="url"],
+.community-add-fields input[type="text"] {
+  border: 2px solid var(--border);
+  padding: 0.45rem 0.7rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  background: var(--card);
+  color: var(--text);
+  border-radius: 0;
+  min-width: 0;
+  flex: 1 1 160px;
+}
+
+.community-add-fields input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Inline edit form */
+.community-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border-mid);
+  background: var(--accent-pale);
+  border-left: 3px solid var(--primary);
+}
+
+.community-edit-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.community-edit-input {
+  border: 2px solid var(--border);
+  padding: 0.4rem 0.65rem;
+  font-size: 0.82rem;
+  font-family: inherit;
+  background: var(--card);
+  color: var(--text);
+  border-radius: 0;
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.community-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.community-edit-select {
+  flex: 0 0 auto;
+}
+
+.community-edit-btns {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 
