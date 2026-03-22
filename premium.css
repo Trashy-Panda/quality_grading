@@ -18,13 +18,17 @@ html, body {
 }
 
 /* Display elements → Barlow Condensed */
-.landing-headline,
-.hero-title,
 .summary-score,
 .summary-pct,
 .leaderboard-title,
 .carcass-name {
   font-family: 'Barlow Condensed', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Landing + setup headings → original Helvetica Neue (user preference) */
+.landing-headline,
+.hero-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* UI chrome → Barlow Condensed */
@@ -262,13 +266,13 @@ html, body {
   margin-bottom: 1.75rem;
 }
 
-/* Headline — massive, authoritative */
+/* Headline — original sizing, Helvetica weight */
 .landing-headline {
-  font-size: clamp(4rem, 9vw, 7.2rem);
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
   font-weight: 900;
   letter-spacing: -0.025em;
-  line-height: 0.9;
-  margin-bottom: 2rem;
+  line-height: 1.0;
+  margin-bottom: 1.6rem;
 }
 
 /* Body copy — more breathing room */
@@ -310,10 +314,10 @@ html, body {
   letter-spacing: 0.26em;
 }
 .hero-title {
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  font-weight: 900;
+  font-size: 1.9rem;
+  font-weight: 700;
   letter-spacing: -0.025em;
-  line-height: 1.1;
+  line-height: 1.18;
 }
 .hero-subtitle {
   font-size: 0.95rem;
