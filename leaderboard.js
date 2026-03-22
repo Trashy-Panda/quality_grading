@@ -227,7 +227,13 @@ function renderLeaderboardRows(docs) {
     const displayName = _escapeHtml(d.displayName || d.userName || 'Anonymous');
     let avatarHtml   = '';
     if (avatarSrc) {
-      avatarHtml = `<img class="leaderboard-avatar" src="${_escapeAttr(avatarSrc)}" alt="" loading="lazy" onerror="this.style.display='none'" />`;
+      const avatarImg = document.createElement('img');
+      avatarImg.className = 'leaderboard-avatar';
+      avatarImg.src = _escapeAttr(avatarSrc);
+      avatarImg.alt = '';
+      avatarImg.loading = 'lazy';
+      avatarImg.onerror = function() { this.style.display = 'none'; };
+      avatarHtml = avatarImg.outerHTML;
     } else {
       // Initials fallback rendered as inline SVG circle
       const initials = _getInitials(displayName);
@@ -318,7 +324,12 @@ function _escapeHtml(str) {
 }
 
 function _escapeAttr(str) {
-  return String(str).replace(/"/g, '&quot;');
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function _getInitials(name) {

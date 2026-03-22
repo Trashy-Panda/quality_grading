@@ -1,0 +1,808 @@
+/* ============================================================
+   BEEF GRADING DRILL — Premium Design Layer
+   Font System: Barlow Condensed (display) + Barlow (body)
+   Loads after style.css — overrides visual properties only
+   Preserves all layout, functional classes, and JS hooks
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ─────────────────────────────────────────────────────────────
+   FONT SYSTEM
+   ───────────────────────────────────────────────────────────── */
+
+html, body {
+  font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Display elements → Barlow Condensed */
+.summary-score,
+.summary-pct,
+.leaderboard-title,
+.carcass-name {
+  font-family: 'Barlow Condensed', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Landing + setup headings → original Helvetica Neue (user preference) */
+.landing-headline,
+.hero-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* UI chrome → Barlow Condensed */
+.card-label,
+.panel-label,
+.panel-label-sub,
+.landing-stamp-bar,
+.landing-eyebrow,
+.landing-proof,
+.hero-eyebrow,
+.summary-hero-label,
+.progress-label,
+.brand-name,
+.rule-chip,
+.btn-primary,
+.btn-secondary,
+.btn-accent,
+.landing-cta-btn,
+.grade-btn,
+.page-nav-label,
+.page-nav-back,
+.weekly-stamp,
+.weekly-rule-btn,
+.weekly-countdown,
+.leaderboard-hero-stamp,
+.leaderboard-tab,
+.home-signin-btn,
+.auth-signin-btn,
+.settings-title,
+.settings-section-label,
+.form-row label,
+.pts-badge,
+.scoring-row span:first-child {
+  font-family: 'Barlow Condensed', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Body copy → Barlow regular */
+.landing-sub,
+.hero-subtitle,
+.radio-label-sub,
+.scoring-note,
+.settings-description,
+.feedback-panel p,
+.radio-label-main,
+.scoring-row,
+.auth-modal-sub,
+.auth-modal-disclaimer {
+  font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   KEYFRAME ANIMATIONS
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes p-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes p-slideLeft {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes p-stampDrop {
+  0%   { opacity: 0; transform: scale(1.06) translateY(-8px); }
+  55%  { transform: scale(0.97) translateY(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes p-scorePop {
+  0%   { opacity: 0; transform: scale(0.86); }
+  65%  { transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes p-progressShimmer {
+  0%   { left: -100%; }
+  100% { left: 220%; }
+}
+
+@keyframes p-feedbackSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes p-cardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes p-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOTION — LANDING HERO (always runs on load)
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-stamp-bar {
+    animation: p-slideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+  }
+  .landing-eyebrow {
+    animation: p-slideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+  }
+  .landing-headline {
+    animation: p-fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+  .landing-sub {
+    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.44s both;
+  }
+  .landing-cta-row {
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.56s both;
+  }
+  .landing-proof {
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  }
+  .landing-bg-img {
+    animation: p-fadeUp 1s ease 0.1s both;
+  }
+
+  /* ── Home screen — cards enter when screen becomes visible ── */
+  #home-screen:not(.hidden) .hero {
+    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
+  }
+  #home-screen:not(.hidden) #weekly-challenge-card {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+  }
+  #home-screen:not(.hidden) .home-card:nth-of-type(1) {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+  }
+  #home-screen:not(.hidden) .home-card:nth-of-type(2) {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.19s both;
+  }
+  #home-screen:not(.hidden) .home-card:nth-of-type(3) {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
+  }
+  #home-screen:not(.hidden) #start-btn {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+  }
+
+  /* ── Summary screen ───────────────────────────────────────── */
+  #summary-screen:not(.hidden) .summary-hero {
+    animation: p-stampDrop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+  }
+  #summary-screen:not(.hidden) .summary-pct {
+    animation: p-scorePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  #summary-screen:not(.hidden) .summary-actions {
+    animation: p-fadeUp 0.4s ease 0.35s both;
+  }
+  #summary-screen:not(.hidden) .summary-table-wrap {
+    animation: p-fadeUp 0.4s ease 0.45s both;
+  }
+
+  /* ── Leaderboard screen ───────────────────────────────────── */
+  #leaderboard-screen:not(.hidden) .leaderboard-hero {
+    animation: p-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+  }
+  #leaderboard-screen:not(.hidden) .leaderboard-table-wrap {
+    animation: p-fadeUp 0.4s ease 0.2s both;
+  }
+
+  /* ── Feedback panel ───────────────────────────────────────── */
+  .feedback-panel:not(.hidden) {
+    animation: p-feedbackSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  }
+
+  /* ── Card hover lift ──────────────────────────────────────── */
+  .home-card {
+    transition: box-shadow 0.14s ease, transform 0.14s ease;
+  }
+  .home-card:hover {
+    box-shadow: 7px 7px 0 #1A1008;
+    transform: translate(-2px, -2px);
+  }
+
+  /* ── Grade btn press feel ─────────────────────────────────── */
+  .grade-btn {
+    transition: box-shadow 0.08s ease, transform 0.08s ease, background 0.12s ease, color 0.12s ease;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LANDING HERO
+   ───────────────────────────────────────────────────────────── */
+
+#landing-hero {
+  background-color: #0A0705;
+  padding: 5rem 2rem 5rem clamp(2rem, 8vw, 7rem);
+}
+
+/* Background image — gradient mask so it bleeds in from right */
+.landing-bg-img {
+  width: 54%;
+}
+.landing-bg-img img {
+  opacity: 0.24;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.15) 20%,
+    rgba(0,0,0,0.75) 55%,
+    black 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.15) 20%,
+    rgba(0,0,0,0.75) 55%,
+    black 100%
+  );
+}
+
+/* Stamp bar — refined registry feel */
+.landing-stamp-bar {
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  color: rgba(184, 147, 90, 0.75);
+  border: 1.5px solid rgba(184, 147, 90, 0.4);
+  padding: 5px 16px;
+  margin-bottom: 1rem;
+}
+
+/* Eyebrow badge */
+.landing-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  border-width: 2px;
+  padding: 5px 14px;
+  margin-bottom: 1.75rem;
+}
+
+/* Headline — original sizing, Helvetica weight */
+.landing-headline {
+  font-size: clamp(3.2rem, 7vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+  margin-bottom: 1.6rem;
+}
+
+/* Body copy — more breathing room */
+.landing-sub {
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.78;
+  max-width: 440px;
+  color: rgba(238, 229, 210, 0.8);
+  margin-bottom: 2.75rem;
+}
+
+/* CTA button — bigger + more drama */
+.landing-cta-btn {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 1.05rem 2.6rem;
+  border-width: 2.5px;
+}
+
+/* Proof line */
+.landing-proof {
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HOME SCREEN
+   ───────────────────────────────────────────────────────────── */
+
+/* Hero section — official judging scorecard treatment */
+.hero {
+  position: relative;
+  padding: 2.75rem 2rem 2.5rem;
+  border: 2px solid #2A2018;
+  border-top: 5px solid #8C1A1A;
+  box-shadow: 5px 5px 0 #2A2018;
+  background: #FDFAF5;
+  margin-bottom: 1.5rem;
+  overflow: visible;
+}
+
+/* Thin crimson rule below the title, centered */
+.hero-title::after {
+  content: '';
+  display: block;
+  width: 52px;
+  height: 3px;
+  background: #8C1A1A;
+  margin: 1rem auto 0;
+}
+
+/* Thin separator rule above the subtitle */
+.hero-subtitle::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(42, 32, 24, 0.12);
+  margin-bottom: 0.85rem;
+}
+
+.hero-eyebrow {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  margin-bottom: 1.25rem;
+}
+.hero-title {
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.18;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+.hero-subtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: #6B5C42;
+  margin-top: 1.25rem;
+}
+
+/* Card labels — bigger, more authority */
+.card-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+/* Radio options — better typography */
+.radio-label-main {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.radio-label-sub {
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Scoring */
+.pts-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 11px;
+}
+.scoring-row {
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+.scoring-note {
+  font-size: 0.76rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Begin session button */
+#start-btn {
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DRILL SCREEN
+   ───────────────────────────────────────────────────────────── */
+
+/* Image panel — cinematic dark */
+.drill-left {
+  background-color: #080604;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 47px, rgba(255,255,255,0.018) 47px, rgba(255,255,255,0.018) 48px),
+    repeating-linear-gradient(90deg, transparent, transparent 47px, rgba(255,255,255,0.018) 47px, rgba(255,255,255,0.018) 48px);
+}
+
+/* Carcass image — slight vignette on the container */
+.carcass-image-wrap {
+  background: #050402;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.6);
+}
+#carcass-image {
+  transition: opacity 0.25s ease;
+}
+
+/* Zoom hint — more readable */
+.zoom-hint {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35);
+  background: rgba(0,0,0,0.4);
+  padding: 4px 10px;
+  border-radius: 0;
+}
+
+/* Drill right panel */
+.drill-right {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 31px,
+    rgba(42,32,24,0.06) 31px, rgba(42,32,24,0.06) 32px
+  );
+}
+
+/* Meta section */
+.carcass-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Progress bar — thicker with shimmer */
+.progress-wrap {
+  height: 7px;
+  border: 1.5px solid #2A2018;
+}
+#progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+    animation: p-progressShimmer 2.2s ease-in-out infinite;
+  }
+}
+
+.progress-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+/* Grade panel */
+.panel-label {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+.panel-label-sub {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+/* Grade buttons — bigger, more tactile */
+.grade-btn {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.52rem 1.05rem;
+  min-height: 44px;
+  text-transform: uppercase;
+}
+
+/* Grade display — Barlow Condensed, more presence */
+.grade-display {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  min-height: 2.6rem;
+  text-transform: uppercase;
+}
+.grade-display.unset {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.84rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Action buttons */
+.btn-primary {
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.btn-primary.btn-lg {
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+}
+.btn-primary.btn-submit {
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+}
+.btn-secondary {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.btn-accent {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Feedback panel */
+.feedback-panel {
+  border-left-width: 5px;
+}
+.feedback-panel p {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.62;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SUMMARY SCREEN
+   ───────────────────────────────────────────────────────────── */
+
+.summary-hero-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.36em;
+}
+.summary-score {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.summary-pct {
+  font-size: 5.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+#summary-table th {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+#summary-table td {
+  font-size: 0.84rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────────────────────── */
+
+.brand-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.rule-chip {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.score-display {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LEADERBOARD
+   ───────────────────────────────────────────────────────────── */
+
+.leaderboard-hero-stamp {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.38em;
+}
+.leaderboard-title {
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.leaderboard-week-label {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 400;
+}
+.leaderboard-tab {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.leaderboard-table th {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+.leaderboard-table td {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.88rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   WEEKLY CHALLENGE CARD
+   ───────────────────────────────────────────────────────────── */
+
+.weekly-stamp {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+}
+.weekly-countdown {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.weekly-week-label {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.88rem;
+}
+.weekly-rule-btn {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MODALS
+   ───────────────────────────────────────────────────────────── */
+
+.settings-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.settings-section-label {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+}
+.settings-description {
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1.65;
+}
+.form-row label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.form-row input[type="text"],
+.form-row input[type="url"],
+.form-row select,
+.form-row textarea {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.9rem;
+}
+
+/* Auth modal */
+.auth-modal-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+.auth-modal-sub {
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.auth-provider-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PAGE NAV
+   ───────────────────────────────────────────────────────────── */
+
+.page-nav-back {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.page-nav-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   UTILITY / MISC
+   ───────────────────────────────────────────────────────────── */
+
+.delete-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.empty-msg {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 400;
+  font-style: italic;
+}
+.community-status-msg {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.84rem;
+}
+.auth-display-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.auth-signout-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.json-textarea {
+  font-size: 0.8rem;
+}
+.image-source {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+}
+.bmaturity-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.card-label-action {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.submit-error {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FOCUS STATES — brand-consistent
+   ───────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2.5px solid #8C1A1A;
+  outline-offset: 2px;
+}
+.btn-primary:focus-visible,
+.btn-accent:focus-visible,
+.btn-secondary:focus-visible,
+.landing-cta-btn:focus-visible {
+  outline: 2.5px solid #8C1A1A;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(140, 26, 26, 0.16);
+}

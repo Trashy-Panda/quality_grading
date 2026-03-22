@@ -193,6 +193,17 @@
           </div>
           <div id="wc-added-list" style="font-size:0.8rem;color:var(--text-muted);"></div>
         </div>
+
+        <!-- ── COMMUNITY SET ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Community Carcasses</h3>
+          <p class="admin-card-sub">Manage community-submitted carcasses stored in Firestore. Use the seed button to pre-populate the collection with the default Western National / SALE set. Re-running is safe — existing docs are merged, not duplicated.</p>
+          <div class="admin-toolbar-controls" style="margin-bottom:1rem;">
+            <button id="seed-community-btn" class="admin-btn-secondary">Seed Community Set</button>
+            <span id="seed-community-status" style="font-size:0.8rem;color:var(--text-muted);margin-left:0.25rem;"></span>
+          </div>
+          <div id="wc-community-list"></div>
+        </div>
       </div>
 
       <!-- =============================================

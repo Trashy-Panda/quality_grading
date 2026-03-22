@@ -612,9 +612,7 @@ function attachUrlDotChecks(container) {
 
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
-  if (!COMMUNITY_CONFIG.BIN_ID) {
-    el.communitySetSub.textContent = 'Not configured — see data.js to set up';
-  } else if (!state.communitySet.length) {
+  if (!state.communitySet.length) {
     el.communitySetSub.textContent = 'No carcasses yet — be the first to submit!';
   } else {
     el.communitySetSub.textContent = state.communitySet.length + ' carcasses from the team';
@@ -622,22 +620,21 @@ function updateCommunityLabel() {
 }
 
 async function loadCommunitySet() {
-  if (!COMMUNITY_CONFIG.BIN_ID || !COMMUNITY_CONFIG.MASTER_KEY) {
+  if (!window._db) {
     updateCommunityLabel();
     renderCommunityList();
     return;
   }
   if (el.communityStatus) el.communityStatus.textContent = 'Loading…';
   try {
-    const res = await fetch(
-      'https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID + '/latest',
-      { headers: { 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY } }
-    );
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    state.communitySet = Array.isArray(data.record)
-      ? data.record.filter(r => r.imageUrl && r.correct && r.correct.qualityGrade)
-      : [];
+    const snap = await window._db
+      .collection(DB_COLLECTIONS.community_carcasses)
+      .orderBy('submittedAt', 'desc')
+      .limit(100)
+      .get();
+    state.communitySet = snap.docs
+      .map(d => d.data())
+      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
   } catch (e) {
     state.communitySet = [];
     if (el.communityStatus) el.communityStatus.textContent = 'Could not load community set: ' + e.message;
@@ -647,8 +644,12 @@ async function loadCommunitySet() {
 }
 
 async function onSubmitToCommunity() {
-  if (!COMMUNITY_CONFIG.BIN_ID || !COMMUNITY_CONFIG.MASTER_KEY) {
-    alert('Community set is not configured.\nAsk your team admin to fill in COMMUNITY_CONFIG in data.js.');
+  if (!window._currentUser) {
+    alert('Please sign in to submit to the community set.');
+    return;
+  }
+  if (!window._db) {
+    alert('Database not available. Please refresh and try again.');
     return;
   }
   const url   = el.customUrl.value.trim();
@@ -656,6 +657,7 @@ async function onSubmitToCommunity() {
   const qKey  = el.customQuality.value;
   const notes = el.customNotes.value.trim();
   if (!url)  { alert('Please enter an image URL.'); return; }
+  if (!url.startsWith('https://')) { alert('Image URL must start with https://'); return; }
   if (!qKey) { alert('Please select a quality grade.'); return; }
 
   const record = {
@@ -664,25 +666,16 @@ async function onSubmitToCommunity() {
     imageUrl: url,
     source: 'Community',
     correct: { qualityGrade: qKey },
-    notes,
+    notes: notes,
+    submittedBy: window._currentUser.uid,
+    submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
   el.submitCommunityBtn.disabled = true;
   el.submitCommunityBtn.textContent = 'Submitting…';
   try {
-    const updated = [...state.communitySet, record];
-    const res = await fetch(
-      'https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID,
-      {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY },
-        body: JSON.stringify(updated),
-      }
-    );
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    state.communitySet = updated;
-    updateCommunityLabel();
-    renderCommunityList();
+    await window._db.collection(DB_COLLECTIONS.community_carcasses).add(record);
+    await loadCommunitySet();
     cancelEdit();
     alert('Submitted to community set! (' + state.communitySet.length + ' total)');
   } catch (e) {
@@ -695,11 +688,6 @@ async function onSubmitToCommunity() {
 
 function renderCommunityList() {
   if (!el.communityList) return;
-  if (!COMMUNITY_CONFIG.BIN_ID) {
-    el.communityStatus.textContent = 'Not configured — fill in COMMUNITY_CONFIG in data.js to get started.';
-    el.communityList.innerHTML = '';
-    return;
-  }
   if (!state.communitySet.length) {
     el.communityStatus.textContent = 'No community carcasses yet — use "Submit to Community" to add the first one!';
     el.communityList.innerHTML = '';
@@ -767,14 +755,20 @@ function init() {
     const setVal = document.querySelector('input[name="image-set"]:checked').value;
     const custom = getCustomList();
     let deck;
-    if (setVal === 'default')         deck = DEFAULT_CARCASSES;
+    if (setVal === 'default')         deck = state.communitySet.length ? state.communitySet : DEFAULT_CARCASSES;
     else if (setVal === 'custom')     deck = custom.length ? custom : DEFAULT_CARCASSES;
     else if (setVal === 'community') {
       if (!state.communitySet.length) {
-        alert('Community set is empty or not configured.\nSee data.js to set up COMMUNITY_CONFIG.');
-        return;
+        if (window._db) {
+          alert('Community set is still loading. Please wait a moment and try again.');
+        } else {
+          alert('Community set is empty — falling back to default carcasses.');
+          deck = DEFAULT_CARCASSES;
+        }
+        if (!deck) return;
+      } else {
+        deck = state.communitySet;
       }
-      deck = state.communitySet;
     }
     else                              deck = loadAllCarcasses();
 
