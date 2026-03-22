@@ -1,0 +1,7 @@
+product_type,recommended_style,color_mood,typography_mood,key_effects,anti_patterns,severity
+SaaS (General),Hero + Features + CTA,Trust blue + Orange CTA,Clean
+geometric,Glassmorphism cards hover lift,Cluttered hero with too many CTAs,HIGH
+Fintech/Crypto,Conversion-Optimized,Deep purple + Amber accents,Modern sans-serif,Dark
+mode glassmorphism,Light backgrounds reduce trust,MEDIUM
+Restaurant/Food,Menu-First Visual,Warm red + Gold accents,Friendly rounded,Food
+photography parallax,Stock photos instead of real food,HIGH

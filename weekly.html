@@ -1,0 +1,44 @@
+<!-- ============================================================
+     WEEKLY CHALLENGE — HTML SNIPPETS
+     weekly.html
+
+     This file documents the two HTML snippets that must be
+     inserted into index.html to wire up the weekly feature.
+     ============================================================ -->
+
+
+<!-- ===========================================================
+     SNIPPET 1: WEEKLY CHALLENGE CARD
+     Insert this BEFORE the first .home-card in #home-screen
+     (i.e., before the "Contest Rules" <div class="home-card">)
+     =========================================================== -->
+
+<div id="weekly-challenge-card" class="weekly-card">
+  <div class="weekly-card-header">
+    <span class="weekly-stamp">Weekly Challenge</span>
+    <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
+  </div>
+  <div class="weekly-card-body">
+    <div class="weekly-week-label" id="weekly-week-label">Week of Mar 17 &ndash; Mar 23</div>
+    <div class="weekly-card-meta" id="weekly-card-meta">
+      <!-- Dynamically filled: carcass count, rule set -->
+    </div>
+    <div id="weekly-user-status" class="weekly-user-status">
+      <!-- Dynamically filled based on auth state -->
+    </div>
+    <div class="weekly-card-actions" id="weekly-card-actions">
+      <!-- Buttons injected dynamically by weekly.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===========================================================
+     SNIPPET 2: WEEKLY SUBMIT BUTTON
+     Insert this inside #summary-screen .summary-actions,
+     after the existing #export-btn button.
+     =========================================================== -->
+
+<button id="weekly-submit-btn" class="btn-primary weekly-submit-btn hidden">
+  Submit to Leaderboard &rarr;
+</button>

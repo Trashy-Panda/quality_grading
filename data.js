@@ -1,4 +1,26 @@
 // ============================================================
+//  FIREBASE CONFIG
+//
+//  Follow the setup guide in NOTES.md to get these values.
+//  1. Go to console.firebase.google.com → your project
+//  2. Project Settings → Your apps → Web app → Config
+//  3. Paste the values below.
+// ============================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAYOHyHewalDzPBXG1TB5jI9Jr-wan2zEU",
+  authDomain: "beef-grading-drill.firebaseapp.com",
+  projectId: "beef-grading-drill",
+  storageBucket: "beef-grading-drill.firebasestorage.app",
+  messagingSenderId: "165385647296",
+  appId: "1:165385647296:web:b97cc997f58fae7d5fa925"
+};
+
+const DB_COLLECTIONS = {
+  users:       'users',
+  submissions: 'submissions',
+};
+
+// ============================================================
 //  BEEF CARCASS GRADING DRILL — Data Layer
 //  data.js
 //

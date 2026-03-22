@@ -30,12 +30,21 @@ const state = {
 // ------------------------------------------------------------------
 
 function scoreQuality(userKey, correctKey) {
-  const diff = Math.abs(GRADE_POSITIONS[userKey] - GRADE_POSITIONS[correctKey]);
-  if (diff === 0) return 10;  // exact
-  if (diff === 1) return 9;   // 1/3 grade off  (-1)
-  if (diff === 2) return 7;   // 2/3 grade off  (-3)
-  if (diff === 3) return 4;   // 1 full grade off (-6)
-  return 0;                   // more than 1 full grade (-10)
+  if (userKey === correctKey) return 10;
+  // Count steps between the two grades using only grades active in the current rule set.
+  // This means FFA mode (no Average Select) correctly scores Low Choice ↔ Low Select as
+  // 2 steps (7 pts) instead of 3 steps (4 pts).
+  const activeGrades = QUALITY_GRADES
+    .filter(g => state.ruleSet === 'ffa' ? !g.collegiateOnly : true)
+    .sort((a, b) => a.position - b.position);
+  const userIdx    = activeGrades.findIndex(g => g.key === userKey);
+  const correctIdx = activeGrades.findIndex(g => g.key === correctKey);
+  const diff = Math.abs(userIdx - correctIdx);
+  if (diff === 0) return 10;
+  if (diff === 1) return 9;
+  if (diff === 2) return 7;
+  if (diff === 3) return 4;
+  return 0;
 }
 
 // ------------------------------------------------------------------

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beef Carcass Grading Drill</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <link rel="stylesheet" href="weekly.css" />
+  <link rel="stylesheet" href="leaderboard.css" />
 </head>
 <body>
 
@@ -13,19 +16,24 @@
        =================================================== -->
   <header id="app-header" class="hidden">
     <div class="brand">
-      <span class="brand-badge">🥩</span>
-      <span class="brand-name">Beef Grading Drill</span>
+      <button id="brand-home-btn" class="brand-home-btn" title="Home" aria-label="Go to home screen">
+        <span class="brand-badge">🥩</span>
+        <span class="brand-name">Beef Grading Drill</span>
+      </button>
     </div>
     <div class="header-right">
-      <button id="back-to-setup-btn" class="back-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Setup
-      </button>
-      <span id="header-rule-label" class="rule-chip">FFA Rules</span>
+<span id="header-rule-label" class="rule-chip">FFA Rules</span>
       <span id="header-score" class="score-display">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
+      <!-- AUTH HEADER CONTROLS -->
+      <button id="auth-signin-btn" class="auth-signin-btn">Sign In</button>
+      <div id="auth-user-area" class="auth-user-area hidden">
+        <img id="auth-avatar" class="auth-avatar" src="" alt="" />
+        <span id="auth-display-name" class="auth-display-name"></span>
+        <button id="auth-signout-btn" class="auth-signout-btn">Sign Out</button>
+      </div>
     </div>
   </header>
 
@@ -64,20 +72,49 @@
 
     <!-- Settings page top nav -->
     <div class="page-nav">
-      <button class="page-nav-back" id="back-to-landing-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Home
-      </button>
-      <span class="page-nav-brand">
+      <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
         <span class="page-nav-emoji">🥩</span>
         <span class="page-nav-label">Session Setup</span>
-      </span>
+      </button>
+      <div class="page-nav-auth">
+        <button id="home-signin-btn" class="home-signin-btn hidden">Sign In</button>
+        <div id="home-user-area" class="home-user-area hidden">
+          <img id="home-avatar" class="auth-avatar" src="" alt="" />
+          <span id="home-display-name" class="auth-display-name"></span>
+          <button id="home-signout-btn" class="auth-signout-btn">Sign Out</button>
+        </div>
+      </div>
     </div>
 
     <div class="hero">
       <div class="hero-eyebrow">USDA Grading Practice</div>
       <h1 class="hero-title">Beef Carcass Grading Drill</h1>
       <p class="hero-subtitle">Competition-style quality grade scoring. Sharpen your eye before the show ring.</p>
+    </div>
+
+    <!-- Weekly Challenge Card -->
+    <div id="weekly-challenge-card" class="weekly-card">
+      <div class="weekly-card-header">
+        <span class="weekly-stamp">Weekly Challenge</span>
+        <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
+      </div>
+      <div class="weekly-card-body">
+        <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
+        <!-- Rule set toggle — independent from free drill -->
+        <div class="weekly-ruleset-toggle">
+          <button id="weekly-rule-ffa" class="weekly-rule-btn active">FFA</button>
+          <button id="weekly-rule-collegiate" class="weekly-rule-btn">Collegiate</button>
+        </div>
+        <div class="weekly-card-meta" id="weekly-card-meta">
+          <!-- Dynamically filled: carcass count, rule set -->
+        </div>
+        <div id="weekly-user-status" class="weekly-user-status">
+          <!-- Dynamically filled based on auth state -->
+        </div>
+        <div class="weekly-card-actions" id="weekly-card-actions">
+          <!-- Buttons injected dynamically by weekly.js -->
+        </div>
+      </div>
     </div>
 
     <!-- Contest Rules -->
@@ -244,6 +281,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
         Export Results
       </button>
+      <button id="weekly-submit-btn" class="btn-primary weekly-submit-btn hidden">
+        Submit to Leaderboard &rarr;
+      </button>
     </div>
 
     <div class="summary-table-wrap">
@@ -332,8 +372,78 @@
     </div>
   </div>
 
+  <!-- LEADERBOARD SCREEN -->
+  <main id="leaderboard-screen" class="screen hidden">
+    <div class="page-nav">
+      <button class="page-nav-back" id="leaderboard-back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Home
+      </button>
+      <span class="page-nav-brand">
+        <span class="page-nav-emoji">🏆</span>
+        <span class="page-nav-label">Weekly Leaderboard</span>
+      </span>
+    </div>
+    <div class="leaderboard-hero">
+      <div class="leaderboard-hero-stamp">WEEK RANKINGS</div>
+      <h1 class="leaderboard-title">Leaderboard</h1>
+      <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
+    </div>
+    <div class="leaderboard-tabs">
+      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">FFA Rules</button>
+      <button id="leaderboard-tab-collegiate" class="leaderboard-tab">Collegiate</button>
+    </div>
+    <div class="leaderboard-table-wrap">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th class="col-rank">Rank</th>
+            <th class="col-name">Grader</th>
+            <th class="col-score">Score</th>
+            <th class="col-pct">%</th>
+            <th class="col-date">Date</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" class="auth-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-heading">
+    <div id="auth-modal-panel" class="auth-modal-panel">
+      <button id="auth-modal-close" class="auth-modal-close" aria-label="Close sign-in dialog">&#x2715;</button>
+      <div class="auth-modal-stamp">Weekly Challenge</div>
+      <h2 id="auth-modal-heading" class="auth-modal-title">Sign In to Compete</h2>
+      <p class="auth-modal-sub">Your score goes on the leaderboard. Sign in once, drill forever.</p>
+      <button id="auth-google-btn" class="auth-provider-btn auth-google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M17.64 9.2045c0-.638-.0573-1.2518-.1636-1.8409H9v3.4814h4.8436c-.2086 1.125-.8427 2.0782-1.7959 2.7164v2.2581h2.9087C16.6582 14.0127 17.64 11.8045 17.64 9.2045z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.4673-.8059 5.9564-2.1805l-2.9087-2.2581c-.8059.5405-1.8368.8591-3.0477.8591-2.3441 0-4.3282-1.5832-5.036-3.71H.9574v2.3318C2.4382 15.9832 5.4818 18 9 18z" fill="#34A853"/>
+          <path d="M3.964 10.71A5.41 5.41 0 0 1 3.6818 9c0-.5905.1014-1.1645.2823-1.71V4.9582H.9574A9.0057 9.0057 0 0 0 0 9c0 1.4523.3477 2.8268.9574 4.0418L3.964 10.71z" fill="#FBBC05"/>
+          <path d="M9 3.5795c1.3214 0 2.5077.4541 3.4405 1.346l2.5814-2.5814C13.4632.8918 11.43 0 9 0 5.4818 0 2.4382 2.0168.9574 4.9582L3.964 7.29C4.6718 5.1627 6.6559 3.5795 9 3.5795z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+      <button id="auth-github-btn" class="auth-provider-btn auth-github-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.3724 0 0 5.3724 0 12c0 5.3028 3.438 9.8004 8.2068 11.3876.6.1104.8196-.2604.8196-.5784 0-.2856-.0108-1.0428-.0156-2.0472-3.3384.7248-4.0416-1.608-4.0416-1.608-.5472-1.3884-1.332-1.7592-1.332-1.7592-1.092-.744.0816-.7284.0816-.7284 1.2036.0852 1.836 1.2348 1.836 1.2348 1.0728 1.836 2.8128 1.3056 3.4992 1.0008.1068-.7788.42-1.3056.7608-1.6056-2.664-.3024-5.4672-1.332-5.4672-5.9304 0-1.3092.468-2.3808 1.2348-3.2208-.12-.3036-.5364-1.524.1188-3.176 0 0 1.008-.3228 3.3 1.2312a11.496 11.496 0 0 1 3.0048-.4044c1.02.0048 2.0472.138 3.0048.4044 2.2908-1.554 3.2964-1.2312 3.2964-1.2312.6564 1.6524.2436 2.8728.12 3.176.768.84 1.2348 1.9116 1.2348 3.2208 0 4.608-2.808 5.6232-5.4816 5.9208.432.372.816 1.1016.816 2.2188 0 1.6032-.0144 2.8944-.0144 3.2868 0 .3204.2148.6936.8268.576C20.5656 21.7968 24 17.2968 24 12c0-6.6276-5.3724-12-12-12z"/>
+        </svg>
+        Continue with GitHub
+      </button>
+      <p class="auth-modal-disclaimer">No password needed. We only store your display name and score.</p>
+    </div>
+  </div>
+
   <script src="data.js"></script>
+  <!-- Firebase compat SDKs — must load before auth.js -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="auth.js"></script>
   <script src="app.js"></script>
+  <script src="weekly.js"></script>
+  <script src="leaderboard.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const landing   = document.getElementById('landing-hero');
@@ -358,8 +468,9 @@
         landing.style.opacity = '';
       });
 
-      // Drill header → back to setup
-      document.getElementById('back-to-setup-btn').addEventListener('click', () => {
+      // Brand emoji → home screen
+      document.getElementById('brand-home-btn').addEventListener('click', () => {
+        window._isWeeklySession = false;
         renderHomeScreen();
       });
 

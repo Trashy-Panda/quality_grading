@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude mcp:*)",
+      "Bash(start \"\" \"c:\\\\Users\\\\gunny\\\\code\\\\index.html\")",
+      "Bash(cmd.exe /c \"where node 2>&1 & where npm 2>&1 & where npx 2>&1\")",
+      "Bash(del \"c:\\\\Users\\\\gunny\\\\code\\\\_brutalist_section.css\")"
+    ]
+  }
+}

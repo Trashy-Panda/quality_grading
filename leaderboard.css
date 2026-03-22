@@ -1,0 +1,242 @@
+/* ============================================================
+   LEADERBOARD SCREEN — Neo-brutalist styles
+   ============================================================ */
+
+/* ── Screen container ──────────────────────────────────────── */
+#leaderboard-screen {
+  background: var(--bg);
+  min-height: 100vh;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3rem;
+}
+
+/* ── Hero ──────────────────────────────────────────────────── */
+.leaderboard-hero {
+  padding: 2rem 0 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.leaderboard-hero-stamp {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.58rem;
+  font-weight: 900;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+  padding: 0.2rem 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.leaderboard-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text);
+}
+
+.leaderboard-week-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────── */
+.leaderboard-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2.5px solid var(--border);
+  margin: 1.5rem 0 0;
+}
+
+.leaderboard-tab {
+  padding: 0.65rem 1.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  transition: color 0.15s, border-bottom-color 0.15s;
+  margin-bottom: -2.5px;
+}
+
+.leaderboard-tab:hover {
+  color: var(--text);
+}
+
+.leaderboard-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ── Table wrapper ─────────────────────────────────────────── */
+.leaderboard-table-wrap {
+  margin-top: 0;
+  overflow-x: auto;
+}
+
+/* ── Table ─────────────────────────────────────────────────── */
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid var(--border);
+}
+
+.leaderboard-table thead {
+  background: var(--primary);
+  color: white;
+}
+
+.leaderboard-table th {
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.leaderboard-table th:last-child {
+  border-right: none;
+}
+
+.leaderboard-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-mid);
+  font-size: 0.88rem;
+  vertical-align: middle;
+}
+
+.leaderboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table tbody tr:hover {
+  background: var(--bg-alt);
+}
+
+/* ── My row highlight ──────────────────────────────────────── */
+.leaderboard-row-me {
+  background: var(--accent-pale) !important;
+  border-left: 3px solid var(--primary);
+}
+
+.leaderboard-row-me:hover {
+  background: var(--accent-pale) !important;
+}
+
+/* ── Column widths ─────────────────────────────────────────── */
+.col-rank {
+  width: 60px;
+}
+
+.col-pct {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* ── Rank badges ───────────────────────────────────────────── */
+.rank-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  padding: 0.15rem 0.4rem;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+}
+
+.rank-1st {
+  color: #7A5A00;
+  border-color: #7A5A00;
+  background: #FFF4C8;
+}
+
+.rank-2nd {
+  color: #555555;
+  border-color: #aaaaaa;
+  background: #f0f0f0;
+}
+
+.rank-3rd {
+  color: var(--orange);
+  border-color: var(--orange);
+  background: var(--orange-lt);
+}
+
+/* ── Avatar ────────────────────────────────────────────────── */
+.leaderboard-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-mid);
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.leaderboard-name-cell {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Skeleton loading rows ─────────────────────────────────── */
+@keyframes leaderboard-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.leaderboard-skeleton td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-mid);
+}
+
+.leaderboard-skeleton td > span {
+  display: block;
+  height: 0.85rem;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-alt) 25%,
+    var(--border-mid) 50%,
+    var(--bg-alt) 75%
+  );
+  background-size: 600px 100%;
+  animation: leaderboard-shimmer 1.4s infinite linear;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.leaderboard-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.leaderboard-empty strong {
+  display: block;
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+
+/* ── Sign-in prompt ────────────────────────────────────────── */
+.leaderboard-signin {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.leaderboard-signin strong {
+  display: block;
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}

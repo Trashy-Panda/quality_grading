@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Beef Grading Drill</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- ===================================================
+       HEADER
+       =================================================== -->
+  <header id="admin-header">
+    <div class="admin-brand">
+      <span>🥩</span>
+      <span>Admin Panel</span>
+    </div>
+    <div class="admin-header-right">
+      <!-- Shown when signed in -->
+      <span class="admin-header-user hidden" id="admin-header-user"></span>
+      <button class="admin-header-btn hidden" id="admin-signout-btn">Sign Out</button>
+      <a class="admin-header-btn" href="index.html">&#8592; App</a>
+      <!-- Shown when signed out -->
+      <button class="admin-header-btn admin-signin-btn" id="admin-signin-btn">Sign In with Google</button>
+    </div>
+  </header>
+
+  <!-- ===================================================
+       SIGN-IN GATE (shown when not authenticated)
+       =================================================== -->
+  <div id="admin-signin-gate" class="admin-signin-gate">
+    <div class="admin-access-denied" style="border-color: var(--border); background: var(--card);">
+      <div style="font-size:2.5rem; margin-bottom:1rem;">🥩</div>
+      <h2 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:900; letter-spacing:0.05em; text-transform:uppercase;">Admin Panel</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;">Sign in with your Google account to continue.</p>
+      <button class="admin-btn-primary" id="admin-signin-gate-btn">Sign In with Google</button>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       ACCESS DENIED (shown when signed in but not admin)
+       =================================================== -->
+  <div id="access-denied" class="hidden" style="padding:2rem 1.5rem;">
+    <div class="admin-access-denied">
+      <div style="font-size:2rem; margin-bottom:1rem;">&#128683;</div>
+      <h2 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:900; letter-spacing:0.05em; text-transform:uppercase; color:var(--primary);">Access Denied</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted);">Your account does not have admin privileges. Contact the app owner to request access.</p>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       MAIN ADMIN UI (shown when signed in + admin)
+       =================================================== -->
+  <div id="admin-ui" class="hidden">
+
+    <!-- Tab navigation -->
+    <nav class="admin-tabs" id="admin-tabs">
+      <button class="admin-tab active" id="tab-btn-leaderboard" data-tab="leaderboard">Leaderboard</button>
+      <button class="admin-tab" id="tab-btn-weekly" data-tab="weekly">Weekly Challenge</button>
+      <button class="admin-tab" id="tab-btn-users" data-tab="users">Users</button>
+    </nav>
+
+    <!-- Tab content -->
+    <div class="admin-content">
+
+      <!-- =============================================
+           LEADERBOARD TAB
+           ============================================= -->
+      <div class="admin-section" id="tab-leaderboard">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Submissions</h2>
+          <div class="admin-toolbar-controls">
+            <select id="lb-week-select">
+              <!-- week options injected by JS -->
+            </select>
+            <select id="lb-ruleset-select">
+              <option value="ffa">FFA</option>
+              <option value="collegiate">Collegiate</option>
+            </select>
+            <button id="lb-refresh-btn" class="admin-btn-secondary">Refresh</button>
+            <button id="lb-clear-all-btn" class="admin-btn-danger">Clear All Scores</button>
+          </div>
+        </div>
+
+        <div class="admin-stats-row" id="lb-stats">
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="lb-stat-total">—</div>
+            <div class="stat-label">Total Submissions</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="lb-stat-top">—</div>
+            <div class="stat-label">Top Score</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="lb-stat-avg">—</div>
+            <div class="stat-label">Avg Score</div>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="lb-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Score</th>
+                <th>%</th>
+                <th>Rule Set</th>
+                <th>Submitted</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lb-tbody">
+              <tr>
+                <td colspan="7" class="admin-empty">Loading submissions...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- =============================================
+           WEEKLY CHALLENGE TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-weekly">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Weekly Challenge</h2>
+          <div class="admin-toolbar-controls">
+            <select id="wc-week-select">
+              <!-- week options injected by JS -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Week info bar -->
+        <div class="wc-info-bar" id="wc-week-info">Loading…</div>
+
+        <!-- ── SELECTED SET PANEL ── -->
+        <div class="admin-card wc-selected-panel">
+          <div class="wc-selected-header">
+            <div class="wc-selected-title-row">
+              <h3 class="admin-card-label" style="margin-bottom:0;">This Week's Set</h3>
+              <span id="wc-selected-count" class="wc-count-badge">0 selected</span>
+            </div>
+            <div class="admin-toolbar-controls">
+              <button id="wc-reset-btn" class="admin-btn-secondary">Reset to Auto</button>
+              <button id="wc-save-btn" class="admin-btn-primary">Save Override</button>
+            </div>
+          </div>
+          <div id="wc-override-notice" style="margin:0.5rem 0 0.75rem;padding:0.5rem 0.75rem;font-size:0.82rem;font-weight:700;border:2px solid var(--border);background:var(--bg-alt);">
+            Users will grade <strong id="wc-notice-count">0</strong> carcasses this week.
+            <span id="wc-notice-status" style="margin-left:0.5rem;font-weight:400;color:var(--text-muted);">Save to apply.</span>
+          </div>
+          <p class="admin-card-sub" style="margin-top:0;">Click ✕ to remove. Any number is valid.</p>
+          <div id="wc-selected-grid" class="wc-selected-grid">
+            <div class="admin-empty" style="grid-column:1/-1;">No carcasses selected — pick from the pool below.</div>
+          </div>
+          <div id="wc-save-status" style="margin-top:0.75rem;font-size:0.82rem;"></div>
+        </div>
+
+        <!-- ── AVAILABLE POOL ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Available Carcasses</h3>
+          <p class="admin-card-sub">Click any carcass to add it to this week's set. Already-selected carcasses are highlighted.</p>
+          <div id="wc-pool-grid" class="wc-pool-grid">
+            <div class="admin-empty" style="grid-column:1/-1;">Loading…</div>
+          </div>
+        </div>
+
+        <!-- ── ADD CUSTOM IMAGE BY URL ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Add Custom Image by URL</h3>
+          <p class="admin-card-sub">Paste a direct image URL to add a one-off carcass to this week's set.</p>
+          <div class="admin-toolbar-controls" style="flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;">
+            <input type="url" id="wc-add-url" placeholder="https://…" style="flex:1;min-width:200px;border:2px solid var(--border);padding:0.45rem 0.7rem;font-size:0.82rem;background:var(--card);" />
+            <input type="text" id="wc-add-name" placeholder="Label (e.g. Carcass A)" style="width:160px;border:2px solid var(--border);padding:0.45rem 0.7rem;font-size:0.82rem;background:var(--card);" />
+            <select id="wc-add-grade" style="border:2px solid var(--border);padding:0.45rem 0.7rem;font-size:0.82rem;background:var(--card);">
+              <option value="">— Grade —</option>
+              <option value="PR_HI">High Prime</option>
+              <option value="PR_AVG">Average Prime</option>
+              <option value="PR_LO">Low Prime</option>
+              <option value="CH_HI">High Choice</option>
+              <option value="CH_AVG">Average Choice</option>
+              <option value="CH_LO">Low Choice</option>
+              <option value="SE_HI">High Select</option>
+              <option value="SE_AVG">Average Select</option>
+              <option value="SE_LO">Low Select</option>
+              <option value="STD">Standard</option>
+              <option value="COM">Commercial</option>
+            </select>
+            <button id="wc-add-url-btn" class="admin-btn-secondary">Add to Set</button>
+          </div>
+          <div id="wc-added-list" style="font-size:0.8rem;color:var(--text-muted);"></div>
+        </div>
+      </div>
+
+      <!-- =============================================
+           USERS TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-users">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Users</h2>
+          <div class="admin-toolbar-controls">
+            <button id="users-refresh-btn" class="admin-btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="users-table">
+            <thead>
+              <tr>
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr>
+                <td colspan="4" class="admin-empty">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /.admin-content -->
+  </div><!-- /#admin-ui -->
+
+  <!-- Script loading order -->
+  <script src="data.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>

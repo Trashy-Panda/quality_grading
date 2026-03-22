@@ -1,0 +1,43 @@
+<!-- LEADERBOARD SCREEN — add as new <main> element before </body> -->
+<main id="leaderboard-screen" class="screen hidden">
+
+  <div class="page-nav">
+    <button class="page-nav-back" id="leaderboard-back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Home
+    </button>
+    <span class="page-nav-brand">
+      <span class="page-nav-emoji">🏆</span>
+      <span class="page-nav-label">Weekly Leaderboard</span>
+    </span>
+  </div>
+
+  <div class="leaderboard-hero">
+    <div class="leaderboard-hero-stamp">WEEK RANKINGS</div>
+    <h1 class="leaderboard-title">Leaderboard</h1>
+    <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
+  </div>
+
+  <div class="leaderboard-tabs">
+    <button id="leaderboard-tab-ffa" class="leaderboard-tab active">FFA Rules</button>
+    <button id="leaderboard-tab-collegiate" class="leaderboard-tab">Collegiate</button>
+  </div>
+
+  <div class="leaderboard-table-wrap">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th class="col-rank">Rank</th>
+          <th class="col-name">Grader</th>
+          <th class="col-score">Score</th>
+          <th class="col-pct">%</th>
+          <th class="col-date">Date</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-tbody">
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+  </div>
+
+</main>

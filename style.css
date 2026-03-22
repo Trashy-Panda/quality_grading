@@ -108,6 +108,12 @@ body {
 }
 
 .brand { display: flex; align-items: center; gap: 0.6rem; }
+.brand-home-btn {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: inherit; font: inherit;
+}
+.brand-home-btn:hover { opacity: 0.8; }
 
 .brand-badge {
   display: inline-flex;
@@ -350,6 +356,16 @@ body {
   align-items: center;
   gap: 0.45rem;
 }
+.page-nav-brand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+}
+.page-nav-brand-btn:hover { opacity: 1; }
 .page-nav-emoji { font-size: 1.1rem; line-height: 1; }
 .page-nav-label {
   font-size: 0.72rem;
@@ -1791,8 +1807,9 @@ body {
   }
   .carcass-image-wrap {
     flex: unset;
-    aspect-ratio: 4 / 5;
-    max-height: 72vw;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    max-height: 65vw;
   }
   .drill-right {
     height: auto;

@@ -1,0 +1,250 @@
+/* ============================================================
+   BEEF CARCASS GRADING DRILL — Weekly Challenge Styles
+   weekly.css
+   ============================================================ */
+
+/* ------------------------------------------------------------------
+   WEEKLY CHALLENGE CARD
+   ------------------------------------------------------------------ */
+
+/* Rule set toggle inside card */
+.weekly-ruleset-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0.85rem;
+  border: 2px solid rgba(255,255,255,0.4);
+  width: fit-content;
+}
+.weekly-rule-btn {
+  padding: 0.35rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.weekly-rule-btn.active {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+.weekly-rule-btn:hover:not(.active) {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8);
+}
+
+.weekly-card {
+  background: var(--primary);
+  color: #fff;
+  border: 2.5px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem 1.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.weekly-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Brutalist stamp element */
+.weekly-stamp {
+  background: #fff;
+  color: var(--primary);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  padding: 0.2rem 0.6rem;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+.weekly-countdown {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekly-card-body {
+  /* body layout */
+}
+
+.weekly-week-label {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 0.35rem;
+  line-height: 1.1;
+}
+
+.weekly-card-meta {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 1rem;
+}
+
+.weekly-user-status {
+  margin-bottom: 0.75rem;
+}
+
+/* Score display when already submitted */
+.weekly-score-display {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.weekly-score-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.weekly-rank {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.25rem;
+}
+
+.weekly-rank strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------------
+   BUTTONS INSIDE WEEKLY CARD
+   ------------------------------------------------------------------ */
+
+.weekly-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.btn-weekly-primary {
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.7rem 1.4rem;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-transform: none;
+  border-radius: var(--radius);
+  line-height: 1.2;
+}
+
+.btn-weekly-primary:hover,
+.btn-weekly-primary:focus-visible {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.btn-weekly-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-weekly-secondary {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.7rem 1.4rem;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: var(--radius);
+  line-height: 1.2;
+}
+
+.btn-weekly-secondary:hover,
+.btn-weekly-secondary:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.btn-weekly-secondary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* ------------------------------------------------------------------
+   WEEKLY SUBMIT BUTTON (on summary screen)
+   ------------------------------------------------------------------ */
+
+.weekly-submit-btn {
+  background: var(--green);
+  color: #fff;
+  border: 2px solid var(--green);
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: var(--radius);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
+  line-height: 1.2;
+}
+
+.weekly-submit-btn:hover,
+.weekly-submit-btn:focus-visible {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-lg);
+  outline: none;
+}
+
+.weekly-submit-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.weekly-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.weekly-submit-btn.weekly-submit-success {
+  background: var(--green);
+  border-color: var(--green);
+  opacity: 0.8;
+  cursor: default;
+  transform: none;
+}
+
+/* Utility: hidden */
+.weekly-submit-btn.hidden {
+  display: none;
+}
