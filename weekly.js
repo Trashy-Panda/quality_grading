@@ -173,7 +173,7 @@ async function submitWeeklyScore(scoreData) {
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-function formatWeekRange(start, end) {
+function _formatWeekDates(start, end) {
   const startStr = MONTH_NAMES[start.getUTCMonth()] + ' ' + start.getUTCDate();
   const endStr   = MONTH_NAMES[end.getUTCMonth()]   + ' ' + end.getUTCDate();
   return startStr + ' \u2013 ' + endStr;
@@ -207,7 +207,7 @@ async function renderWeeklyCard() {
   const bounds = getWeekBounds();
   const weekLabel = document.getElementById('weekly-week-label');
   if (weekLabel) {
-    weekLabel.textContent = 'Week of ' + formatWeekRange(bounds.start, bounds.end);
+    weekLabel.textContent = 'Week of ' + _formatWeekDates(bounds.start, bounds.end);
   }
 
   const ruleSet = _weeklyRuleSet;
