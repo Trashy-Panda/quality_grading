@@ -167,6 +167,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // 20. Community add-new form
   var communityAddBtn = document.getElementById('community-add-btn');
   if (communityAddBtn) communityAddBtn.addEventListener('click', addCommunityRecord);
+
+  // 21. Community JSON import
+  var communityImportBtn = document.getElementById('community-import-btn');
+  if (communityImportBtn) communityImportBtn.addEventListener('click', importCommunityJson);
+  var communityImportClearBtn = document.getElementById('community-import-clear-btn');
+  if (communityImportClearBtn) communityImportClearBtn.addEventListener('click', function() {
+    var ta = document.getElementById('community-import-json');
+    if (ta) ta.value = '';
+    var st = document.getElementById('community-import-status');
+    if (st) st.textContent = '';
+  });
 });
 
 // ============================================================
@@ -962,6 +973,119 @@ function addCommunityRecord() {
     if (statusEl) statusEl.textContent = 'Error: ' + err.message;
     if (addBtn) addBtn.disabled = false;
   });
+}
+
+
+// ============================================================
+//  Import Community JSON
+// ============================================================
+
+function importCommunityJson() {
+  var VALID_GRADES = {
+    PR_HI: true, PR_AVG: true, PR_LO: true,
+    CH_HI: true, CH_AVG: true, CH_LO: true,
+    SE_HI: true, SE_AVG: true, SE_LO: true,
+    STD: true, COM: true
+  };
+
+  var statusEl = document.getElementById('community-import-status');
+  var ta       = document.getElementById('community-import-json');
+
+  if (!_currentUser || !_db) {
+    if (statusEl) statusEl.textContent = 'Not signed in.';
+    return;
+  }
+
+  if (!ta || !ta.value.trim()) {
+    if (statusEl) statusEl.textContent = 'Paste a JSON array first.';
+    return;
+  }
+
+  var parsed;
+  try {
+    parsed = JSON.parse(ta.value.trim());
+  } catch (e) {
+    if (statusEl) statusEl.textContent = 'Invalid JSON: ' + e.message;
+    return;
+  }
+
+  if (!Array.isArray(parsed) || parsed.length === 0) {
+    if (statusEl) statusEl.textContent = 'JSON must be a non-empty array.';
+    return;
+  }
+
+  var valid   = [];
+  var skipped = 0;
+
+  for (var i = 0; i < parsed.length; i++) {
+    var item = parsed[i];
+    if (!item || typeof item !== 'object') { skipped++; continue; }
+
+    var name  = item.imageName;
+    var url   = item.imageUrl;
+    var grade = item.correct && item.correct.qualityGrade;
+
+    if (typeof name !== 'string' || !name.trim() || name.length > 100) { skipped++; continue; }
+    if (typeof url !== 'string' || url.indexOf('https://') !== 0 || url.length > 2000) { skipped++; continue; }
+    if (!grade || !VALID_GRADES[grade]) { skipped++; continue; }
+
+    valid.push({
+      imageName:   name.trim(),
+      imageUrl:    url,
+      notes:       (typeof item.notes === 'string') ? item.notes : '',
+      correct:     { qualityGrade: grade },
+      source:      'Admin Import',
+      submittedBy: _currentUser.uid,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  if (valid.length === 0) {
+    if (statusEl) statusEl.textContent = 'No valid records found. ' + skipped + ' skipped.';
+    return;
+  }
+
+  var BATCH_SIZE = 10;
+  var total      = valid.length;
+  var batches    = [];
+
+  for (var b = 0; b < total; b += BATCH_SIZE) {
+    batches.push(valid.slice(b, b + BATCH_SIZE));
+  }
+
+  var importBtn = document.getElementById('community-import-btn');
+  if (importBtn) importBtn.disabled = true;
+
+  var imported = 0;
+
+  function runBatch(idx) {
+    if (idx >= batches.length) {
+      if (ta) ta.value = '';
+      if (statusEl) statusEl.textContent = 'Imported ' + imported + ' carcasses (' + skipped + ' skipped).';
+      if (importBtn) importBtn.disabled = false;
+      loadCommunityTab();
+      return;
+    }
+
+    var batch    = batches[idx];
+    var start    = idx * BATCH_SIZE + 1;
+    var end      = Math.min(start + batch.length - 1, total);
+    if (statusEl) statusEl.textContent = 'Importing ' + start + '\u2013' + end + ' of ' + total + '\u2026';
+
+    var writes = batch.map(function(doc) {
+      return _db.collection(DB_COLLECTIONS.community_carcasses).add(doc);
+    });
+
+    Promise.all(writes).then(function() {
+      imported += batch.length;
+      runBatch(idx + 1);
+    }).catch(function(err) {
+      if (statusEl) statusEl.textContent = 'Error during import: ' + err.message;
+      if (importBtn) importBtn.disabled = false;
+    });
+  }
+
+  runBatch(0);
 }
 
 
