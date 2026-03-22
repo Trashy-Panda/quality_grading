@@ -1,6 +1,12 @@
 // ============================================================
 //  FIREBASE CONFIG
 //
+//  The Firebase web config below is intentionally public.
+//  It is a project identifier, not a secret. Real security is
+//  enforced by Firestore Security Rules + Firebase Auth domain
+//  restrictions in the Firebase Console.
+//  See: https://firebase.google.com/docs/projects/api-keys
+//
 //  Follow the setup guide in NOTES.md to get these values.
 //  1. Go to console.firebase.google.com → your project
 //  2. Project Settings → Your apps → Web app → Config
@@ -16,8 +22,9 @@ const FIREBASE_CONFIG = {
 };
 
 const DB_COLLECTIONS = {
-  users:       'users',
-  submissions: 'submissions',
+  users:                'users',
+  submissions:          'submissions',
+  community_carcasses:  'community_carcasses',
 };
 
 // ============================================================
@@ -173,22 +180,31 @@ const DEFAULT_CARCASSES = [
 ];
 
 // ------------------------------------------------------------------
-//  COMMUNITY SET CONFIG
+//  COMMUNITY SET
 //
-//  This connects the app to a shared JSONBin.io database so your
-//  whole team can submit and drill from the same image set.
+//  Community carcasses are stored in the Firestore collection
+//  'community_carcasses'. No API keys needed — Firebase Auth +
+//  Firestore Security Rules handle access control.
 //
-//  Setup (one-time, done by team admin):
-//    1. Create a free account at https://jsonbin.io
-//    2. Click "Create Bin" — paste [] as the content — click Save
-//    3. Copy the Bin ID from the URL bar
-//    4. Go to Account Settings → API Keys → copy your Master Key
-//    5. Paste both values below, then re-upload this file to GitHub
-//
-//  Once configured, the "Community Set" option appears on the home
-//  screen and the "Submit to Community" button works in Manage Photos.
+//  Authenticated users can submit images via the app.
+//  Admin can delete any community image from the admin panel.
 // ------------------------------------------------------------------
-const COMMUNITY_CONFIG = {
-  BIN_ID:     '69b8e443c3097a1dd530c354',   // e.g. '507f1f77bcf86cd799439011'
-  MASTER_KEY: '$2a$10$MaoIxHqiGwGV/2tpIxFVtuScTZkt23AmckGzc6CxxBl04amCEcGSu',   // e.g. '$2b$10$...' — keep this file private or use a restricted key
-};
+
+// ------------------------------------------------------------------
+//  SEED CARCASSES
+//  Used by the admin "Seed Community Set" button to pre-populate
+//  Firestore community_carcasses with a known-good starting set.
+//  Each document is keyed by `id` so re-running is idempotent.
+// ------------------------------------------------------------------
+const SEED_CARCASSES = [
+  { id: 'community-seed-1',  imageName: 'Western National #1', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/1-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-2',  imageName: 'Western National #2', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/2-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-3',  imageName: 'Western National #3', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/3-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-4',  imageName: 'Western National #4', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/4-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_HI'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-5',  imageName: 'SALE #1',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/1-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_HI'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-6',  imageName: 'SALE #2',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/2-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-7',  imageName: 'SALE #3',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/3-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-8',  imageName: 'SALE #4',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/4-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-9',  imageName: 'SALE #5',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/5-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_LO'  }, notes: '', submittedBy: 'admin-seed' },
+  { id: 'community-seed-10', imageName: 'SALE #6',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/6-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
+];

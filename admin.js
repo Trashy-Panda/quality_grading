@@ -72,6 +72,13 @@ document.addEventListener('DOMContentLoaded', function () {
   // 4. Auth state listener
   _auth.onAuthStateChanged(onAuthStateChanged);
 
+  // 4b. Handle redirect result from signInWithRedirect (runs on page load after Google redirect)
+  _auth.getRedirectResult().catch(function(e) {
+    if (e.code !== 'auth/cancelled-popup-request') {
+      console.error('[admin] Redirect sign-in error:', e.message);
+    }
+  });
+
   // 5. Tab buttons
   const tabLeaderboard = document.getElementById('tab-btn-leaderboard');
   const tabWeekly = document.getElementById('tab-btn-weekly');
@@ -80,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabWeekly) tabWeekly.addEventListener('click', function () { switchTab('weekly'); });
   if (tabUsers) tabUsers.addEventListener('click', function () { switchTab('users'); });
 
-  // 6. Sign-in / sign-out
+  // 6. Sign-in / sign-out — use redirect (more reliable than popup in modern Chrome)
   const signinBtn = document.getElementById('admin-signin-btn');
   const signoutBtn = document.getElementById('admin-signout-btn');
   function doSignIn() {
-    _auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e) {
+    _auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider()).catch(function(e) {
       console.error('[admin] Sign-in error:', e.message);
     });
   }
@@ -149,6 +156,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 17. Populate week selects
   populateWeekSelects();
+
+  // 18. Seed Community Set button
+  var seedBtn = document.getElementById('seed-community-btn');
+  if (seedBtn) seedBtn.addEventListener('click', seedCommunitySet);
 });
 
 // ============================================================
@@ -304,7 +315,12 @@ function loadLeaderboard() {
 
         var avatarHtml;
         if (d.photoURL) {
-          avatarHtml = '<img src="' + escapeHtml(d.photoURL) + '" alt="" class="admin-avatar" onerror="this.style.display=\'none\'">';
+          var avatarImg = document.createElement('img');
+          avatarImg.src = escapeHtml(d.photoURL);
+          avatarImg.alt = '';
+          avatarImg.className = 'admin-avatar';
+          avatarImg.onerror = function() { this.style.display = 'none'; };
+          avatarHtml = avatarImg.outerHTML;
         } else {
           var initials = getInitials(d.displayName || d.email || '?');
           avatarHtml = '<span class="admin-avatar admin-avatar-initials">' + escapeHtml(initials) + '</span>';
@@ -372,14 +388,15 @@ function loadWeeklyTab() {
   if (poolGrid)     poolGrid.innerHTML     = '';
   if (saveStatus)   saveStatus.textContent = '';
 
-  // Community fetch runs in parallel — auto-populate pool from JSONbin
-  var communityPromise = (typeof COMMUNITY_CONFIG !== 'undefined' && COMMUNITY_CONFIG.BIN_ID)
-    ? fetch('https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID + '/latest', {
-        headers: { 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY }
-      })
-      .then(function (r) { return r.json(); })
-      .then(function (d) { return Array.isArray(d.record) ? d.record : []; })
-      .catch(function () { return []; })
+  // Community fetch runs in parallel — load from Firestore community_carcasses collection
+  var communityPromise = _db
+    ? _db.collection(DB_COLLECTIONS.community_carcasses)
+        .orderBy('submittedAt', 'desc').limit(100).get()
+        .then(function(snap) {
+          return snap.docs.map(function(d) { return d.data(); })
+            .filter(function(r) { return r.imageUrl && r.correct && r.correct.qualityGrade; });
+        })
+        .catch(function() { return []; })
     : Promise.resolve([]);
 
   // Force network reconnect before Firestore queries (prevents "client is offline" error)
@@ -434,12 +451,16 @@ function loadWeeklyTab() {
       _wcAllCarcasses = defaultPool.concat(validCommunity);
 
       _renderWeeklyUI();
+      loadCommunityForAdmin();
     })
     .catch(function (err) {
       if (weekInfoEl) {
-        weekInfoEl.innerHTML =
-          'Error loading weekly data: ' + escapeHtml(err.message) +
-          ' &nbsp;<button onclick="loadWeeklyTab()" style="padding:0.2rem 0.6rem;font-size:0.8rem;cursor:pointer;">Retry</button>';
+        weekInfoEl.textContent = 'Error loading weekly data: ' + err.message + ' ';
+        var retryBtn = document.createElement('button');
+        retryBtn.textContent = 'Retry';
+        retryBtn.style.cssText = 'padding:0.2rem 0.6rem;font-size:0.8rem;cursor:pointer;';
+        retryBtn.addEventListener('click', loadWeeklyTab);
+        weekInfoEl.appendChild(retryBtn);
       }
       console.error('[admin] loadWeeklyTab error:', err);
     });
@@ -613,30 +634,34 @@ function addCarcassByUrl() {
 function loadCommunityForAdmin() {
   var container = document.getElementById('wc-community-list');
   if (!container) return;
-  if (!COMMUNITY_CONFIG || !COMMUNITY_CONFIG.BIN_ID || !COMMUNITY_CONFIG.MASTER_KEY) {
-    container.innerHTML = '<p class="admin-empty">Community set not configured (COMMUNITY_CONFIG in data.js).</p>';
+  if (!_db) {
+    container.innerHTML = '<p class="admin-empty">Database not available.</p>';
     return;
   }
   container.innerHTML = '<p class="admin-empty">Loading…</p>';
-  fetch('https://api.jsonbin.io/v3/b/' + COMMUNITY_CONFIG.BIN_ID + '/latest', {
-    headers: { 'X-Master-Key': COMMUNITY_CONFIG.MASTER_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    var set = Array.isArray(data.record) ? data.record : [];
+  _db.collection(DB_COLLECTIONS.community_carcasses)
+    .orderBy('submittedAt', 'desc').limit(100).get()
+  .then(function(snap) {
+    var set = snap.docs.map(function(d) { return Object.assign({ id: d.id }, d.data()); })
+      .filter(function(r) { return r.imageUrl && r.correct && r.correct.qualityGrade; });
     if (!set.length) { container.innerHTML = '<p class="admin-empty">No community carcasses yet.</p>'; return; }
     container.innerHTML = '';
     set.forEach(function(c) {
+      var docId = c.id;
       var gradeObj = GRADE_MAP[c.correct && c.correct.qualityGrade];
       var gradeLabel = gradeObj ? gradeObj.label : (c.correct && c.correct.qualityGrade) || '';
-      var checked = _selectedCarcassIds.has(c.id);
+      var checked = _selectedCarcassIds.has(docId);
+
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;';
 
       var label = document.createElement('label');
       label.className = 'admin-carcass-item' + (checked ? ' selected' : '');
+      label.style.flex = '1';
 
       var cb = document.createElement('input');
       cb.type = 'checkbox';
-      cb.dataset.id = c.id;
+      cb.dataset.id = docId;
       cb.checked = checked;
       cb.addEventListener('change', function() {
         if (this.checked) { _selectedCarcassIds.add(this.dataset.id); label.classList.add('selected'); }
@@ -649,10 +674,65 @@ function loadCommunityForAdmin() {
 
       label.appendChild(cb);
       label.appendChild(info);
-      container.appendChild(label);
+
+      var delBtn = document.createElement('button');
+      delBtn.className = 'admin-btn-danger admin-btn-sm';
+      delBtn.textContent = 'Delete';
+      delBtn.dataset.id = docId;
+      delBtn.addEventListener('click', function() {
+        var id = this.dataset.id;
+        if (!confirm('Delete ' + escapeHtml(c.imageName || 'this carcass') + '?')) return;
+        _db.collection(DB_COLLECTIONS.community_carcasses).doc(id).delete()
+          .then(function() { loadCommunityForAdmin(); })
+          .catch(function(err) { alert('Error deleting: ' + err.message); });
+      });
+
+      row.appendChild(label);
+      row.appendChild(delBtn);
+      container.appendChild(row);
     });
   })
   .catch(function(e) { container.innerHTML = '<p class="admin-empty">Failed to load: ' + escapeHtml(e.message) + '</p>'; });
+}
+
+// ============================================================
+//  Seed Community Set
+// ============================================================
+
+function seedCommunitySet() {
+  if (!_currentUser || _currentUser.uid !== ADMIN_UID) {
+    alert('Admin access required.');
+    return;
+  }
+
+  var btn = document.getElementById('seed-community-btn');
+  var status = document.getElementById('seed-community-status');
+  if (btn) btn.disabled = true;
+  if (status) status.textContent = 'Seeding 0/' + SEED_CARCASSES.length + '\u2026';
+
+  var seeded = 0;
+  var promises = SEED_CARCASSES.map(function(c) {
+    var doc = Object.assign({}, c, {
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    return _db.collection(DB_COLLECTIONS.community_carcasses)
+      .doc(c.id).set(doc, { merge: true })
+      .then(function() {
+        seeded++;
+        if (status) status.textContent = 'Seeding ' + seeded + '/' + SEED_CARCASSES.length + '\u2026';
+      });
+  });
+
+  Promise.all(promises)
+    .then(function() {
+      if (status) status.textContent = 'Done! ' + seeded + ' carcasses seeded.';
+      if (btn) btn.disabled = false;
+    })
+    .catch(function(err) {
+      if (status) status.textContent = 'Error: ' + err.message;
+      if (btn) btn.disabled = false;
+      console.error('[admin] seedCommunitySet error:', err);
+    });
 }
 
 // ============================================================
@@ -744,7 +824,12 @@ function loadUsers() {
 
         var avatarHtml;
         if (d.photoURL) {
-          avatarHtml = '<img src="' + escapeHtml(d.photoURL) + '" alt="" class="admin-avatar" onerror="this.style.display=\'none\'">';
+          var avatarImg = document.createElement('img');
+          avatarImg.src = escapeHtml(d.photoURL);
+          avatarImg.alt = '';
+          avatarImg.className = 'admin-avatar';
+          avatarImg.onerror = function() { this.style.display = 'none'; };
+          avatarHtml = avatarImg.outerHTML;
         } else {
           var initials = getInitials(d.displayName || d.email || '?');
           avatarHtml = '<span class="admin-avatar admin-avatar-initials">' + escapeHtml(initials) + '</span>';

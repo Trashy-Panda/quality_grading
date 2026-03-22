@@ -133,6 +133,13 @@ async function checkUserSubmission(uid, ruleSet) {
 async function submitWeeklyScore(scoreData) {
   if (!window._currentUser || !window._db) return false;
 
+  // Client-side pre-validation (defense-in-depth — Firestore rules enforce the same checks server-side)
+  if (typeof scoreData.earned !== 'number' || scoreData.earned < 0) return false;
+  if (typeof scoreData.max !== 'number' || scoreData.max <= 0) return false;
+  if (typeof scoreData.pct !== 'number' || scoreData.pct < 0 || scoreData.pct > 100) return false;
+  const expectedPct = (scoreData.earned / scoreData.max) * 100;
+  if (Math.abs(scoreData.pct - expectedPct) > 0.5) return false;
+
   const uid = window._currentUser.uid;
   const ruleSet = scoreData.ruleSet || _weeklyRuleSet;
   const docId = getWeeklySubmissionId(uid, ruleSet);
