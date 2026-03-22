@@ -277,6 +277,18 @@
           </div>
         </div>
 
+        <!-- JSON Import -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Import JSON</h3>
+          <p class="admin-card-sub">Paste a JSON array to bulk-import carcasses. Each object needs <code>imageName</code>, <code>imageUrl</code> (https://), and <code>correct.qualityGrade</code>. Optional: <code>notes</code>.</p>
+          <textarea id="community-import-json" rows="6" style="width:100%;box-sizing:border-box;border:2px solid var(--border);padding:0.5rem 0.7rem;font-size:0.8rem;font-family:monospace;background:var(--card);resize:vertical;" placeholder='[{"imageName":"Carcass A","imageUrl":"https://...","correct":{"qualityGrade":"CH_AVG"},"notes":""}]'></textarea>
+          <div style="margin-top:0.5rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+            <button id="community-import-btn" class="admin-btn-primary">Import</button>
+            <button id="community-import-clear-btn" class="admin-btn-secondary">Clear</button>
+            <span id="community-import-status" style="font-size:0.82rem;"></span>
+          </div>
+        </div>
+
         <!-- Carcass list -->
         <div class="admin-card">
           <h3 class="admin-card-label">All Community Carcasses</h3>
