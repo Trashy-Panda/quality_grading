@@ -633,7 +633,7 @@ async function loadCommunitySet() {
       .limit(100)
       .get();
     state.communitySet = snap.docs
-      .map(d => d.data())
+      .map(d => Object.assign({ id: d.id }, d.data()))
       .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
   } catch (e) {
     state.communitySet = [];
