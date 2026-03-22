@@ -11,6 +11,8 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- ===================================================
        GLOBAL HEADER (visible on drill screen only)
        =================================================== -->
@@ -40,7 +42,8 @@
   <!-- ===================================================
        LANDING HERO
        =================================================== -->
-  <section id="landing-hero">
+  <section id="landing-hero" aria-label="Welcome">
+    <span id="main-content" aria-hidden="true"></span>
     <!-- Right-side carcass image at 35% opacity -->
     <div class="landing-bg-img" aria-hidden="true">
       <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" />
@@ -54,7 +57,7 @@
 
       <p class="landing-sub">
         Competition-style beef carcass grading. Sharpen your eye,
-        track your score, and drill like it's show day.
+        track your score, and drill like it's spring of your sophomore year.
       </p>
 
       <div class="landing-cta-row">
@@ -77,7 +80,7 @@
         <span class="page-nav-label">Session Setup</span>
       </button>
       <div class="page-nav-auth">
-        <button id="home-signin-btn" class="home-signin-btn hidden">Sign In</button>
+        <button id="home-signin-btn" class="home-signin-btn">Sign In</button>
         <div id="home-user-area" class="home-user-area hidden">
           <img id="home-avatar" class="auth-avatar" src="" alt="" />
           <span id="home-display-name" class="auth-display-name"></span>
@@ -89,7 +92,7 @@
     <div class="hero">
       <div class="hero-eyebrow">USDA Grading Practice</div>
       <h1 class="hero-title">Beef Carcass Grading Drill</h1>
-      <p class="hero-subtitle">Competition-style quality grade scoring. Sharpen your eye before the show ring.</p>
+      <p class="hero-subtitle">Competition-style quality grade scoring. Sharpen your eye before the grading rail.</p>
     </div>
 
     <!-- Weekly Challenge Card -->

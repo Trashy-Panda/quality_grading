@@ -228,7 +228,13 @@ async function renderWeeklyCard() {
     const signinBtn = document.getElementById('weekly-signin-btn');
     if (signinBtn) {
       signinBtn.addEventListener('click', () => {
-        if (typeof openAuthModal === 'function') openAuthModal();
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal();
+        } else {
+          // Fallback: show modal element directly
+          const m = document.getElementById('auth-modal');
+          if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        }
       });
     }
     return;
@@ -294,7 +300,11 @@ function _escapeHtml(str) {
 async function startWeeklyChallenge() {
   const user = window._currentUser || null;
   if (!user) {
-    if (typeof openAuthModal === 'function') openAuthModal();
+    if (typeof window.openAuthModal === 'function') window.openAuthModal();
+    else {
+      const m = document.getElementById('auth-modal');
+      if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    }
     return;
   }
   window._isWeeklySession = true;
@@ -321,7 +331,11 @@ async function handleWeeklySubmit() {
 
   const user = window._currentUser || null;
   if (!user) {
-    if (typeof openAuthModal === 'function') openAuthModal();
+    if (typeof window.openAuthModal === 'function') window.openAuthModal();
+    else {
+      const m = document.getElementById('auth-modal');
+      if (m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    }
     return;
   }
 

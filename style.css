@@ -262,11 +262,11 @@ body {
 
 .landing-sub {
   font-size: 1.05rem;
-  color: rgba(240, 232, 213, 0.55);
+  color: rgba(240, 232, 213, 0.88);
   line-height: 1.75;
   max-width: 440px;
   margin-bottom: 2.5rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.01em;
 }
 
@@ -309,7 +309,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(240, 232, 213, 0.22);
+  color: rgba(240, 232, 213, 0.45);
 }
 
 /* Landing exit transition */
@@ -404,7 +404,6 @@ body {
 .hero-subtitle,
 .radio-label-sub,
 .scoring-note,
-.landing-sub,
 .settings-description { font-weight: 300; }
 
 /* Heavy weight for labels and UI chrome */
@@ -1749,6 +1748,24 @@ body {
 
 .feedback-panel:not(.hidden) {
   animation: feedback-reveal 0.22s ease forwards;
+}
+
+/* ── Skip link ──────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 9999;
+  border: 2px solid #fff;
+}
+.skip-link:focus {
+  top: 1rem;
 }
 
 /* ── Focus states — accessible brand styling ────────────────── */
