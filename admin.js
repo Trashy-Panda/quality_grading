@@ -72,13 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // 4. Auth state listener
   _auth.onAuthStateChanged(onAuthStateChanged);
 
-  // 4b. Handle redirect result from signInWithRedirect (runs on page load after Google redirect)
-  _auth.getRedirectResult().catch(function(e) {
-    if (e.code !== 'auth/cancelled-popup-request') {
-      console.error('[admin] Redirect sign-in error:', e.message);
-    }
-  });
-
   // 5. Tab buttons
   const tabLeaderboard = document.getElementById('tab-btn-leaderboard');
   const tabWeekly = document.getElementById('tab-btn-weekly');
@@ -89,12 +82,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const tabCommunity = document.getElementById('tab-btn-community');
   if (tabCommunity) tabCommunity.addEventListener('click', function () { switchTab('community'); });
 
-  // 6. Sign-in / sign-out — use redirect (more reliable than popup in modern Chrome)
+  // 6. Sign-in / sign-out
   const signinBtn = document.getElementById('admin-signin-btn');
   const signoutBtn = document.getElementById('admin-signout-btn');
   function doSignIn() {
-    _auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider()).catch(function(e) {
-      console.error('[admin] Sign-in error:', e.message);
+    var provider = new firebase.auth.GoogleAuthProvider();
+    _auth.signInWithPopup(provider).catch(function(e) {
+      if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+        console.error('[admin] Sign-in error:', e.code, e.message);
+        alert('Sign-in failed: ' + e.message);
+      }
     });
   }
   if (signinBtn) signinBtn.addEventListener('click', doSignIn);
