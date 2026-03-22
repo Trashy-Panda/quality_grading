@@ -59,6 +59,7 @@
       <button class="admin-tab active" id="tab-btn-leaderboard" data-tab="leaderboard">Leaderboard</button>
       <button class="admin-tab" id="tab-btn-weekly" data-tab="weekly">Weekly Challenge</button>
       <button class="admin-tab" id="tab-btn-users" data-tab="users">Users</button>
+      <button class="admin-tab" id="tab-btn-community" data-tab="community">Community</button>
     </nav>
 
     <!-- Tab content -->
@@ -194,16 +195,7 @@
           <div id="wc-added-list" style="font-size:0.8rem;color:var(--text-muted);"></div>
         </div>
 
-        <!-- ── COMMUNITY SET ── -->
-        <div class="admin-card">
-          <h3 class="admin-card-label">Community Carcasses</h3>
-          <p class="admin-card-sub">Manage community-submitted carcasses stored in Firestore. Use the seed button to pre-populate the collection with the default Western National / SALE set. Re-running is safe — existing docs are merged, not duplicated.</p>
-          <div class="admin-toolbar-controls" style="margin-bottom:1rem;">
-            <button id="seed-community-btn" class="admin-btn-secondary">Seed Community Set</button>
-            <span id="seed-community-status" style="font-size:0.8rem;color:var(--text-muted);margin-left:0.25rem;"></span>
-          </div>
-          <div id="wc-community-list"></div>
-        </div>
+        <!-- Community carcasses are managed in the Community tab -->
       </div>
 
       <!-- =============================================
@@ -233,6 +225,73 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- =============================================
+           COMMUNITY TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-community">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Community Carcasses</h2>
+          <div class="admin-toolbar-controls">
+            <button id="community-refresh-btn" class="admin-btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <!-- Count stat -->
+        <div class="admin-stats-row">
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="community-stat-count">—</div>
+            <div class="stat-label">Total Carcasses</div>
+          </div>
+        </div>
+
+        <!-- Seed button -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Seed Community Set</h3>
+          <p class="admin-card-sub">Pre-populate the community collection with the default Western National / SALE set. Re-running is safe — existing docs are merged, not duplicated.</p>
+          <div class="admin-toolbar-controls">
+            <button id="seed-community-btn" class="admin-btn-secondary">Seed Community Set</button>
+            <span id="seed-community-status" style="font-size:0.8rem;color:var(--text-muted);margin-left:0.25rem;"></span>
+          </div>
+        </div>
+
+        <!-- Add New form -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Add New Carcass</h3>
+          <p class="admin-card-sub">Add a carcass directly to the community collection.</p>
+          <div class="community-add-form" id="community-add-form">
+            <div class="community-add-fields">
+              <input type="url" id="community-add-url" placeholder="Image URL (https://…)" />
+              <input type="text" id="community-add-name" placeholder="Name (e.g. Carcass A)" />
+              <select id="community-add-grade">
+                <option value="">— Grade —</option>
+                <option value="PR_HI">High Prime</option>
+                <option value="PR_AVG">Average Prime</option>
+                <option value="PR_LO">Low Prime</option>
+                <option value="CH_HI">High Choice</option>
+                <option value="CH_AVG">Average Choice</option>
+                <option value="CH_LO">Low Choice</option>
+                <option value="SE_HI">High Select</option>
+                <option value="SE_AVG">Average Select</option>
+                <option value="SE_LO">Low Select</option>
+                <option value="STD">Standard</option>
+                <option value="COM">Commercial</option>
+              </select>
+              <input type="text" id="community-add-notes" placeholder="Notes (optional)" />
+              <button id="community-add-btn" class="admin-btn-primary">Add to Community</button>
+            </div>
+            <div id="community-add-status" style="margin-top:0.5rem;font-size:0.82rem;"></div>
+          </div>
+        </div>
+
+        <!-- Carcass list -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">All Community Carcasses</h3>
+          <div id="community-list">
+            <div class="admin-empty">Loading…</div>
+          </div>
         </div>
       </div>
 

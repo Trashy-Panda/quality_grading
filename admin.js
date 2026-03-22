@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabLeaderboard) tabLeaderboard.addEventListener('click', function () { switchTab('leaderboard'); });
   if (tabWeekly) tabWeekly.addEventListener('click', function () { switchTab('weekly'); });
   if (tabUsers) tabUsers.addEventListener('click', function () { switchTab('users'); });
+  const tabCommunity = document.getElementById('tab-btn-community');
+  if (tabCommunity) tabCommunity.addEventListener('click', function () { switchTab('community'); });
 
   // 6. Sign-in / sign-out — use redirect (more reliable than popup in modern Chrome)
   const signinBtn = document.getElementById('admin-signin-btn');
@@ -157,9 +159,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // 17. Populate week selects
   populateWeekSelects();
 
-  // 18. Seed Community Set button
+  // 18. Seed Community Set button (now in Community tab)
   var seedBtn = document.getElementById('seed-community-btn');
   if (seedBtn) seedBtn.addEventListener('click', seedCommunitySet);
+
+  // 19. Community tab refresh
+  var communityRefreshBtn = document.getElementById('community-refresh-btn');
+  if (communityRefreshBtn) communityRefreshBtn.addEventListener('click', loadCommunityTab);
+
+  // 20. Community add-new form
+  var communityAddBtn = document.getElementById('community-add-btn');
+  if (communityAddBtn) communityAddBtn.addEventListener('click', addCommunityRecord);
 });
 
 // ============================================================
@@ -216,7 +226,7 @@ function switchTab(name) {
   _currentTab = name;
 
   // Update tab button active states
-  ['leaderboard', 'weekly', 'users'].forEach(function (t) {
+  ['leaderboard', 'weekly', 'users', 'community'].forEach(function (t) {
     const btn = document.getElementById('tab-btn-' + t);
     const section = document.getElementById('tab-' + t);
     if (btn) {
@@ -242,6 +252,8 @@ function switchTab(name) {
     loadWeeklyTab();
   } else if (name === 'users') {
     loadUsers();
+  } else if (name === 'community') {
+    loadCommunityTab();
   }
 }
 
@@ -693,6 +705,266 @@ function loadCommunityForAdmin() {
     });
   })
   .catch(function(e) { container.innerHTML = '<p class="admin-empty">Failed to load: ' + escapeHtml(e.message) + '</p>'; });
+}
+
+// ============================================================
+//  Community Tab
+// ============================================================
+
+// NOTE: The edit feature below requires updating the Firestore security rule for
+// community_carcasses from `allow update: if false` to `allow update: if isAdmin()`.
+// Without this rule change, save operations will be rejected by Firestore.
+
+function loadCommunityTab() {
+  var listEl    = document.getElementById('community-list');
+  var countEl   = document.getElementById('community-stat-count');
+
+  if (listEl) listEl.innerHTML = '<div class="admin-empty">Loading\u2026</div>';
+  if (countEl) countEl.textContent = '\u2026';
+
+  if (!_db) {
+    if (listEl) listEl.innerHTML = '<div class="admin-empty">Database not available.</div>';
+    return;
+  }
+
+  _db.collection(DB_COLLECTIONS.community_carcasses)
+    .orderBy('submittedAt', 'desc')
+    .get()
+    .then(function(snap) {
+      var docs = snap.docs.map(function(d) { return Object.assign({ _docId: d.id }, d.data()); });
+
+      if (countEl) countEl.textContent = docs.length;
+      if (!listEl) return;
+
+      if (!docs.length) {
+        listEl.innerHTML = '<div class="admin-empty">No community carcasses yet. Use the Seed button above to get started.</div>';
+        return;
+      }
+
+      listEl.innerHTML = '';
+      docs.forEach(function(c) {
+        listEl.appendChild(_buildCommunityRow(c));
+      });
+    })
+    .catch(function(err) {
+      if (listEl) listEl.innerHTML = '<div class="admin-empty">Error loading: ' + escapeHtml(err.message) + '</div>';
+      console.error('[admin] loadCommunityTab error:', err);
+    });
+}
+
+function _buildCommunityRow(c) {
+  var docId      = c._docId;
+  var gradeObj   = GRADE_MAP[c.correct && c.correct.qualityGrade];
+  var gradeLabel = gradeObj ? gradeObj.label : (c.correct && c.correct.qualityGrade) || '—';
+
+  var row = document.createElement('div');
+  row.className    = 'community-row';
+  row.dataset.docId = docId;
+
+  var thumb = document.createElement('img');
+  thumb.className = 'community-thumb';
+  thumb.src       = c.imageUrl || '';
+  thumb.alt       = '';
+  thumb.loading   = 'lazy';
+  thumb.onerror   = function() { this.style.display = 'none'; };
+
+  var info = document.createElement('div');
+  info.className = 'community-row-info';
+  info.innerHTML =
+    '<span class="community-row-name">' + escapeHtml(c.imageName || 'Unnamed') + '</span>' +
+    '<span class="community-row-grade">' + escapeHtml(gradeLabel) + '</span>' +
+    '<span class="community-row-source">' + escapeHtml(c.source || '') + '</span>';
+
+  var actions = document.createElement('div');
+  actions.className = 'community-row-actions';
+
+  var editBtn = document.createElement('button');
+  editBtn.className   = 'admin-btn-secondary admin-btn-sm';
+  editBtn.textContent = 'Edit';
+  editBtn.addEventListener('click', function() {
+    _showCommunityEditForm(row, c);
+  });
+
+  var delBtn = document.createElement('button');
+  delBtn.className   = 'admin-btn-danger admin-btn-sm';
+  delBtn.textContent = 'Delete';
+  delBtn.addEventListener('click', function() {
+    if (!_currentUser || _currentUser.uid !== ADMIN_UID) {
+      alert('Admin access required.');
+      return;
+    }
+    if (!confirm('Delete "' + escapeHtml(c.imageName || 'this carcass') + '"?')) return;
+    _db.collection(DB_COLLECTIONS.community_carcasses).doc(docId).delete()
+      .then(function() { loadCommunityTab(); })
+      .catch(function(err) { alert('Error deleting: ' + err.message); });
+  });
+
+  actions.appendChild(editBtn);
+  actions.appendChild(delBtn);
+
+  row.appendChild(thumb);
+  row.appendChild(info);
+  row.appendChild(actions);
+
+  return row;
+}
+
+function _showCommunityEditForm(row, c) {
+  var docId = c._docId;
+
+  var form = document.createElement('div');
+  form.className = 'community-edit-form';
+
+  // Build grade options HTML
+  var gradeOptions = '<option value="">— Grade —</option>';
+  QUALITY_GRADES.forEach(function(g) {
+    var sel = (c.correct && c.correct.qualityGrade === g.key) ? ' selected' : '';
+    gradeOptions += '<option value="' + escapeHtml(g.key) + '"' + sel + '>' + escapeHtml(g.label) + '</option>';
+  });
+
+  var nameInput  = document.createElement('input');
+  nameInput.type  = 'text';
+  nameInput.value = c.imageName || '';
+  nameInput.placeholder = 'Name';
+  nameInput.className = 'community-edit-input';
+
+  var urlInput  = document.createElement('input');
+  urlInput.type  = 'url';
+  urlInput.value = c.imageUrl || '';
+  urlInput.placeholder = 'Image URL';
+  urlInput.className = 'community-edit-input';
+
+  var gradeSelect = document.createElement('select');
+  gradeSelect.className = 'community-edit-select';
+  gradeSelect.innerHTML = gradeOptions;
+
+  var notesInput  = document.createElement('input');
+  notesInput.type  = 'text';
+  notesInput.value = c.notes || '';
+  notesInput.placeholder = 'Notes';
+  notesInput.className = 'community-edit-input';
+
+  var saveBtn = document.createElement('button');
+  saveBtn.className   = 'admin-btn-primary admin-btn-sm';
+  saveBtn.textContent = 'Save';
+
+  var cancelBtn = document.createElement('button');
+  cancelBtn.className   = 'admin-btn-secondary admin-btn-sm';
+  cancelBtn.textContent = 'Cancel';
+
+  var statusSpan = document.createElement('span');
+  statusSpan.style.cssText = 'font-size:0.8rem;color:var(--text-muted);';
+
+  saveBtn.addEventListener('click', function() {
+    var newName  = nameInput.value.trim();
+    var newUrl   = urlInput.value.trim();
+    var newGrade = gradeSelect.value;
+
+    if (!newName) { alert('Name is required.'); return; }
+    if (!newUrl)  { alert('Image URL is required.'); return; }
+    if (!newGrade){ alert('Grade is required.'); return; }
+
+    saveBtn.disabled = true;
+    statusSpan.textContent = 'Saving\u2026';
+
+    // NOTE: This update requires the Firestore rule to allow updates by admin.
+    // Change `allow update: if false` to `allow update: if isAdmin()` in your rules.
+    _db.collection(DB_COLLECTIONS.community_carcasses).doc(docId).update({
+      imageName: newName,
+      imageUrl:  newUrl,
+      notes:     notesInput.value.trim(),
+      correct:   { qualityGrade: newGrade }
+    })
+    .then(function() {
+      loadCommunityTab();
+    })
+    .catch(function(err) {
+      statusSpan.textContent = 'Error: ' + err.message;
+      saveBtn.disabled = false;
+    });
+  });
+
+  cancelBtn.addEventListener('click', function() {
+    // Restore original row
+    var parent = form.parentNode;
+    if (parent) parent.replaceChild(_buildCommunityRow(c), form);
+  });
+
+  var fields = document.createElement('div');
+  fields.className = 'community-edit-fields';
+  fields.appendChild(nameInput);
+  fields.appendChild(urlInput);
+  fields.appendChild(gradeSelect);
+  fields.appendChild(notesInput);
+
+  var btns = document.createElement('div');
+  btns.className = 'community-edit-btns';
+  btns.appendChild(saveBtn);
+  btns.appendChild(cancelBtn);
+  btns.appendChild(statusSpan);
+
+  form.appendChild(fields);
+  form.appendChild(btns);
+
+  row.parentNode.replaceChild(form, row);
+}
+
+function addCommunityRecord() {
+  var urlInput   = document.getElementById('community-add-url');
+  var nameInput  = document.getElementById('community-add-name');
+  var gradeInput = document.getElementById('community-add-grade');
+  var notesInput = document.getElementById('community-add-notes');
+  var statusEl   = document.getElementById('community-add-status');
+  var addBtn     = document.getElementById('community-add-btn');
+
+  var url   = (urlInput   ? urlInput.value.trim()   : '');
+  var name  = (nameInput  ? nameInput.value.trim()  : '');
+  var grade = (gradeInput ? gradeInput.value        : '');
+  var notes = (notesInput ? notesInput.value.trim() : '');
+
+  if (!url || !url.startsWith('https://')) {
+    if (statusEl) statusEl.textContent = 'Image URL is required and must start with https://';
+    return;
+  }
+  if (!name) {
+    if (statusEl) statusEl.textContent = 'Name is required.';
+    return;
+  }
+  if (!grade) {
+    if (statusEl) statusEl.textContent = 'Grade is required.';
+    return;
+  }
+
+  if (!_currentUser) {
+    if (statusEl) statusEl.textContent = 'You must be signed in.';
+    return;
+  }
+
+  if (addBtn) addBtn.disabled = true;
+  if (statusEl) statusEl.textContent = 'Adding\u2026';
+
+  _db.collection(DB_COLLECTIONS.community_carcasses).add({
+    imageUrl:    url,
+    imageName:   name,
+    source:      'Admin',
+    notes:       notes,
+    correct:     { qualityGrade: grade },
+    submittedBy: _currentUser.uid,
+    submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function() {
+    if (statusEl) statusEl.textContent = 'Added successfully.';
+    if (urlInput)   urlInput.value   = '';
+    if (nameInput)  nameInput.value  = '';
+    if (gradeInput) gradeInput.value = '';
+    if (notesInput) notesInput.value = '';
+    if (addBtn) addBtn.disabled = false;
+    loadCommunityTab();
+  })
+  .catch(function(err) {
+    if (statusEl) statusEl.textContent = 'Error: ' + err.message;
+    if (addBtn) addBtn.disabled = false;
+  });
 }
 
 // ============================================================
