@@ -806,3 +806,7 @@ html, body {
   outline-offset: 3px;
   box-shadow: 0 0 0 5px rgba(140, 26, 26, 0.16);
 }
+
+@media (max-width: 600px) {
+  .hero-title { white-space: normal; }
+}
