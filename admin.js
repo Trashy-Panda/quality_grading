@@ -392,6 +392,7 @@ function clearAllSubmissions() {
 function loadWeeklyTab() {
   _selectedCarcassIds = new Set();
   _wcAllCarcasses = [];
+  window._adminAddedCarcasses = [];
 
   var weekInfoEl   = document.getElementById('wc-week-info');
   var selectedGrid = document.getElementById('wc-selected-grid');
@@ -667,6 +668,7 @@ function _renderCommunityForAdmin(set) {
     cb.addEventListener('change', function() {
       if (this.checked) { _selectedCarcassIds.add(this.dataset.id); label.classList.add('selected'); }
       else              { _selectedCarcassIds.delete(this.dataset.id); label.classList.remove('selected'); }
+      _renderWeeklyUI();
     });
 
     var info = document.createElement('span');
