@@ -713,6 +713,7 @@ function seedCommunitySet() {
   var seeded = 0;
   var promises = SEED_CARCASSES.map(function(c) {
     var doc = Object.assign({}, c, {
+      submittedBy: _currentUser.uid,
       submittedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     return _db.collection(DB_COLLECTIONS.community_carcasses)
