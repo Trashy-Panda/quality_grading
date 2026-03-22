@@ -190,21 +190,134 @@ const DEFAULT_CARCASSES = [
 //  Admin can delete any community image from the admin panel.
 // ------------------------------------------------------------------
 
+
+// Quick lookup map: key → grade object
+const GRADE_MAP = {};
+QUALITY_GRADES.forEach(g => { GRADE_MAP[g.key] = g; });
+
+// Grade families for the button matrix Row 1
+const GRADE_FAMILIES = ['Prime', 'Choice', 'Select', 'Standard', 'Commercial'];
+
 // ------------------------------------------------------------------
-//  SEED CARCASSES
-//  Used by the admin "Seed Community Set" button to pre-populate
-//  Firestore community_carcasses with a known-good starting set.
-//  Each document is keyed by `id` so re-running is idempotent.
+//  DEFAULT CARCASS IMAGE SET
+//
+//  Images are sourced from publicly accessible USDA and university
+//  extension publications. Replace imageUrl values with your own
+//  URLs (e.g., from your livestockjudging.com subscription) for a
+//  full-featured drill.
+//
+//  Fields:
+//    id          — unique string identifier
+//    imageName   — short label shown in the UI
+//    imageUrl    — direct URL to the image
+//    source      — attribution text
+//    correct     — { qualityGrade: KEY, yieldGrade: float }
+//    bMaturity   — true if this is a B-Maturity carcass (FFA rule applies)
+//    notes       — optional tip shown in Study mode
 // ------------------------------------------------------------------
-const SEED_CARCASSES = [
-  { id: 'community-seed-1',  imageName: 'Western National #1', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/1-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-2',  imageName: 'Western National #2', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/2-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-3',  imageName: 'Western National #3', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/3-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-4',  imageName: 'Western National #4', imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/NWMeats/8/4-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_HI'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-5',  imageName: 'SALE #1',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/1-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_HI'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-6',  imageName: 'SALE #2',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/2-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-7',  imageName: 'SALE #3',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/3-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_AVG' }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-8',  imageName: 'SALE #4',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/4-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-9',  imageName: 'SALE #5',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/5-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'SE_LO'  }, notes: '', submittedBy: 'admin-seed' },
-  { id: 'community-seed-10', imageName: 'SALE #6',             imageUrl: 'https://aoijekjsyq.cloudimg.io/v7/https://s3-us-west-2.amazonaws.com/livestock.thumbs/2025/SAMeats/Grading/6-00001.png?width=500', source: 'Community', correct: { qualityGrade: 'CH_LO'  }, notes: '', submittedBy: 'admin-seed' },
+// ------------------------------------------------------------------
+//  PLACEHOLDER HELPER
+//  Generates a labeled placeholder image via placehold.co.
+//  Replace any imageUrl below with a real direct image URL —
+//  e.g., right-click a photo on livestockjudging.com → Copy image address.
+// ------------------------------------------------------------------
+function _ph(label, bg, fg) {
+  bg = (bg || '4a1a1a').replace('#', '');
+  fg = (fg || 'ffffff').replace('#', '');
+  return 'https://placehold.co/800x560/' + bg + '/' + fg + '?text=' + encodeURIComponent(label);
+}
+
+const DEFAULT_CARCASSES = [
+  {
+    id: 'sample-01',
+    imageName: 'Carcass 1',
+    imageUrl: _ph('Replace with real image\n\nAverage Choice', '2d5a1b', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'CH_AVG' },
+    notes: 'Moderate marbling consistent with Average Choice. Fat cover is thin but even.',
+  },
+  {
+    id: 'sample-02',
+    imageName: 'Carcass 2',
+    imageUrl: _ph('Replace with real image\n\nHigh Select', '1a3a5a', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'SE_HI' },
+    notes: 'Slight+ marbling at the upper end of Select.',
+  },
+  {
+    id: 'sample-03',
+    imageName: 'Carcass 3',
+    imageUrl: _ph('Replace with real image\n\nHigh Choice', '2d5a1b', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'CH_HI' },
+    notes: 'Small+ to modest marbling at the top end of Choice.',
+  },
+  {
+    id: 'sample-04',
+    imageName: 'Carcass 4',
+    imageUrl: _ph('Replace with real image\n\nLow Prime', '6b4700', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'PR_LO' },
+    notes: 'Abundant marbling qualifies for Prime at the lower end.',
+  },
+  {
+    id: 'sample-05',
+    imageName: 'Carcass 5',
+    imageUrl: _ph('Replace with real image\n\nLow Select', '1a3a5a', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'SE_LO' },
+    notes: 'Traces to slight marbling — lower end of Select.',
+  },
+  {
+    id: 'sample-06',
+    imageName: 'Carcass 6',
+    imageUrl: _ph('Replace with real image\n\nLow Choice', '2d5a1b', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'CH_LO' },
+    notes: 'Slight marbling at the lower boundary of Choice.',
+  },
+  {
+    id: 'sample-07',
+    imageName: 'Carcass 7',
+    imageUrl: _ph('Replace with real image\n\nCommercial', '5a2d00', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'COM' },
+    notes: 'Older animal — ossification and lean color indicate Commercial grade.',
+  },
+  {
+    id: 'sample-08',
+    imageName: 'Carcass 8',
+    imageUrl: _ph('Replace with real image\n\nAverage Prime', '6b4700', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'PR_AVG' },
+    notes: 'Abundant+ marbling clearly in the middle of the Prime range.',
+  },
+  {
+    id: 'sample-09',
+    imageName: 'Carcass 9',
+    imageUrl: _ph('Replace with real image\n\nHigh Choice', '2d5a1b', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'CH_HI' },
+    notes: 'Modest marbling in the upper Choice range.',
+  },
+  {
+    id: 'sample-10',
+    imageName: 'Carcass 10',
+    imageUrl: _ph('Replace with real image\n\nStandard', '3a3a3a', 'ffffff'),
+    source: 'Placeholder — add real image via ⚙ Settings',
+    correct: { qualityGrade: 'STD' },
+    notes: 'Practically devoid of marbling — Standard grade.',
+  },
 ];
+
+// ------------------------------------------------------------------
+//  COMMUNITY SET
+//
+//  Community carcasses are stored in the Firestore collection
+//  'community_carcasses'. No API keys needed — Firebase Auth +
+//  Firestore Security Rules handle access control.
+//
+//  Authenticated users can submit images via the app.
+//  Admin can delete any community image from the admin panel.
+// ------------------------------------------------------------------
+
