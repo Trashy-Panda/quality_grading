@@ -83,7 +83,22 @@ async function getWeeklyCarcasses(ruleSet) {
     if (doc && doc.exists && Array.isArray(doc.data().carcassIds) && doc.data().carcassIds.length > 0) {
       const ids = doc.data().carcassIds;
       const adminExtras = Array.isArray(doc.data().adminCarcasses) ? doc.data().adminCarcasses : [];
-      const pool = [...DEFAULT_CARCASSES, ...(state.communitySet || []), ...adminExtras];
+      // Use state.communitySet if available; otherwise fetch from Firestore so
+      // override decks that include community carcasses can resolve correctly.
+      let communitySet = (typeof state !== 'undefined' && Array.isArray(state.communitySet) && state.communitySet.length > 0)
+        ? state.communitySet
+        : [];
+      if (communitySet.length === 0 && window._db && typeof DB_COLLECTIONS !== 'undefined') {
+        try {
+          const cSnap = await window._db.collection(DB_COLLECTIONS.community_carcasses)
+            .orderBy('submittedAt', 'desc').limit(100).get();
+          communitySet = cSnap.docs
+            .map(function(d) { return Object.assign({ id: d.id }, d.data()); })
+            .filter(function(r) { return r.imageUrl && r.correct && r.correct.qualityGrade; });
+          if (typeof state !== 'undefined') state.communitySet = communitySet;
+        } catch (_) {}
+      }
+      const pool = [...DEFAULT_CARCASSES, ...communitySet, ...adminExtras];
       const overrideDeck = ids.map(id => pool.find(c => c.id === id)).filter(Boolean);
       if (overrideDeck.length > 0) {
         // Cache the confirmed override so card count and session always match
