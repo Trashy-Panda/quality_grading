@@ -159,9 +159,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // 17. Populate week selects
   populateWeekSelects();
 
-  // 18. Seed Community Set button (now in Community tab)
-  var seedBtn = document.getElementById('seed-community-btn');
-  if (seedBtn) seedBtn.addEventListener('click', seedCommunitySet);
 
   // 19. Community tab refresh
   var communityRefreshBtn = document.getElementById('community-refresh-btn');
@@ -967,46 +964,6 @@ function addCommunityRecord() {
   });
 }
 
-// ============================================================
-//  Seed Community Set
-// ============================================================
-
-function seedCommunitySet() {
-  if (!_currentUser || _currentUser.uid !== ADMIN_UID) {
-    alert('Admin access required.');
-    return;
-  }
-
-  var btn = document.getElementById('seed-community-btn');
-  var status = document.getElementById('seed-community-status');
-  if (btn) btn.disabled = true;
-  if (status) status.textContent = 'Seeding 0/' + SEED_CARCASSES.length + '\u2026';
-
-  var seeded = 0;
-  var promises = SEED_CARCASSES.map(function(c) {
-    var doc = Object.assign({}, c, {
-      submittedBy: _currentUser.uid,
-      submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    return _db.collection(DB_COLLECTIONS.community_carcasses)
-      .doc(c.id).set(doc, { merge: true })
-      .then(function() {
-        seeded++;
-        if (status) status.textContent = 'Seeding ' + seeded + '/' + SEED_CARCASSES.length + '\u2026';
-      });
-  });
-
-  Promise.all(promises)
-    .then(function() {
-      if (status) status.textContent = 'Done! ' + seeded + ' carcasses seeded.';
-      if (btn) btn.disabled = false;
-    })
-    .catch(function(err) {
-      if (status) status.textContent = 'Error: ' + err.message;
-      if (btn) btn.disabled = false;
-      console.error('[admin] seedCommunitySet error:', err);
-    });
-}
 
 // ============================================================
 //  Save / Reset Week Override
