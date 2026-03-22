@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beef Carcass Grading Drill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
@@ -41,28 +44,44 @@
   <!-- ===================================================
        LANDING HERO
        =================================================== -->
-  <section id="landing-hero">
-    <!-- Right-side carcass image at 35% opacity -->
-    <div class="landing-bg-img" aria-hidden="true">
-      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" />
-    </div>
+  <section id="landing-hero" aria-label="Welcome">
+    <span id="main-content" aria-hidden="true"></span>
 
     <div class="landing-content">
-      <div class="landing-stamp-bar">Quality Grading &nbsp;·&nbsp; Est. USDA AMS</div>
-      <div class="landing-eyebrow">FFA &nbsp;·&nbsp; Collegiate &nbsp;·&nbsp; AMSA-IMS</div>
-
-      <h1 class="landing-headline">Quality Grading<br>Drills.</h1>
-
-      <p class="landing-sub">
-        Competition-style beef carcass grading. Sharpen your eye,
-        track your score, and drill like it's the spring of your sophomore year.
-      </p>
-
-      <div class="landing-cta-row">
-        <button class="landing-cta-btn" id="landing-cta">Start Drilling Free &rarr;</button>
+      <div class="landing-stamp-bar">
+        <span>U.S. Department of Agriculture · AMS</span>
+        <span>Form BGDRILL–2024</span>
       </div>
 
-      <div class="landing-proof">FFA &nbsp;·&nbsp; AMSA-IMS &nbsp;·&nbsp; Collegiate Meat Judging</div>
+      <div class="landing-eyebrow">Quality Grading Practice</div>
+
+      <h1 class="landing-headline">Beef Carcass<br>Quality Grading</h1>
+
+      <div class="landing-field-block">
+        <div class="landing-field-row">
+          <span class="landing-field-label">Program</span>
+          <span class="landing-field-value">Competition-style quality grade practice</span>
+        </div>
+        <div class="landing-field-row">
+          <span class="landing-field-label">Authority</span>
+          <span class="landing-field-value">FFA · AMSA-IMS · Collegiate Meat Judging</span>
+        </div>
+        <div class="landing-field-row">
+          <span class="landing-field-label">Scoring</span>
+          <span class="landing-field-value">10 pts per carcass · Instant feedback</span>
+        </div>
+      </div>
+
+      <div class="landing-cta-row">
+        <button class="landing-cta-btn" id="landing-cta">Begin Session →</button>
+      </div>
+
+      <div class="landing-proof">FFA · AMSA-IMS · Collegiate Meat Judging</div>
+    </div>
+
+    <!-- Right-side carcass image panel -->
+    <div class="landing-bg-img" aria-hidden="true">
+      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" />
     </div>
   </section>
 
@@ -88,107 +107,127 @@
     </div>
 
     <div class="hero">
-      <div class="hero-eyebrow">USDA Grading Practice</div>
-      <h1 class="hero-title">Beef Carcass Grading Drill</h1>
-      <p class="hero-subtitle">Competition-style quality grade scoring.<br>Sharpen your eye before the grading rail.</p>
+      <div>
+        <div class="hero-eyebrow">USDA Grading Practice</div>
+        <h1 class="hero-title">Beef Carcass Grading Drill</h1>
+      </div>
     </div>
 
-    <!-- Weekly Challenge Card -->
-    <div id="weekly-challenge-card" class="weekly-card">
-      <div class="weekly-card-header">
-        <span class="weekly-stamp">Weekly Challenge</span>
-        <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
-      </div>
-      <div class="weekly-card-body">
-        <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
-        <!-- Rule set toggle — independent from free drill -->
-        <div class="weekly-ruleset-toggle">
-          <button id="weekly-rule-ffa" class="weekly-rule-btn active">FFA</button>
-          <button id="weekly-rule-collegiate" class="weekly-rule-btn">Collegiate</button>
+    <div class="home-form-grid">
+
+      <!-- LEFT SIDEBAR: Weekly card + Scoring -->
+      <div class="home-sidebar">
+        <div class="home-panel-header">Weekly Challenge</div>
+
+        <!-- Weekly Challenge Card -->
+        <div id="weekly-challenge-card" class="weekly-card">
+          <div class="weekly-card-header">
+            <span class="weekly-stamp">Weekly Challenge</span>
+            <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
+          </div>
+          <div class="weekly-card-body">
+            <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
+            <!-- Rule set toggle — independent from free drill -->
+            <div class="weekly-ruleset-toggle">
+              <button id="weekly-rule-ffa" class="weekly-rule-btn active">FFA</button>
+              <button id="weekly-rule-collegiate" class="weekly-rule-btn">Collegiate</button>
+            </div>
+            <div class="weekly-card-meta" id="weekly-card-meta">
+              <!-- Dynamically filled: carcass count, rule set -->
+            </div>
+            <div id="weekly-user-status" class="weekly-user-status">
+              <!-- Dynamically filled based on auth state -->
+            </div>
+            <div class="weekly-card-actions" id="weekly-card-actions">
+              <!-- Buttons injected dynamically by weekly.js -->
+            </div>
+            <div class="weekly-leaderboard-link">
+              <button id="weekly-view-leaderboard-btn" class="weekly-lb-link-btn">View Rankings &rarr;</button>
+            </div>
+          </div>
         </div>
-        <div class="weekly-card-meta" id="weekly-card-meta">
-          <!-- Dynamically filled: carcass count, rule set -->
+
+        <!-- Scoring Reference -->
+        <div class="home-card">
+          <h2 class="card-label">Scoring — 10 pts per carcass</h2>
+          <div class="scoring-section">
+            <div class="scoring-row"><span>Exact match</span><span class="pts-badge pts-perfect">10</span></div>
+            <div class="scoring-row"><span>&#x2153; grade off (1 subdivision)</span><span class="pts-badge pts-good">9</span></div>
+            <div class="scoring-row"><span>&#x2154; grade off (2 subdivisions)</span><span class="pts-badge pts-good">7</span></div>
+            <div class="scoring-row"><span>1 full grade off (3 subdivisions)</span><span class="pts-badge pts-partial">4</span></div>
+            <div class="scoring-row"><span>More than 1 full grade off</span><span class="pts-badge pts-zero">0</span></div>
+          </div>
+          <p class="scoring-note">
+            One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).
+          </p>
         </div>
-        <div id="weekly-user-status" class="weekly-user-status">
-          <!-- Dynamically filled based on auth state -->
+
+      </div><!-- /.home-sidebar -->
+
+      <!-- RIGHT FORM AREA: Contest Rules + Image Set + Begin -->
+      <div class="home-form-area">
+        <div class="home-panel-header">Practice Drill Setup</div>
+
+        <!-- Contest Rules -->
+        <div class="home-card">
+          <h2 class="card-label">Contest Rules</h2>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="rule-set" id="rule-ffa" value="ffa" checked />
+              <span class="radio-content">
+                <span class="radio-label-main">FFA / National FFA Organization</span>
+                <span class="radio-label-sub">4 carcasses per class &middot; No Average Select subdivision</span>
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="rule-set" id="rule-collegiate" value="collegiate" />
+              <span class="radio-content">
+                <span class="radio-label-main">Collegiate / AMSA-IMS</span>
+                <span class="radio-label-sub">15 carcasses per class &middot; Full subdivisions including Average Select</span>
+              </span>
+            </label>
+          </div>
         </div>
-        <div class="weekly-card-actions" id="weekly-card-actions">
-          <!-- Buttons injected dynamically by weekly.js -->
+
+        <!-- Image Set -->
+        <div class="home-card">
+          <h2 class="card-label">
+            Image Set
+            <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
+          </h2>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="image-set" value="custom" />
+              <span class="radio-content">
+                <span class="radio-label-main">Custom Set Only</span>
+                <span class="radio-label-sub">Images you&#x2019;ve added via Manage Photos</span>
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="image-set" value="all" />
+              <span class="radio-content">
+                <span class="radio-label-main">All Images</span>
+                <span class="radio-label-sub">Default + custom combined</span>
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="image-set" value="community" checked />
+              <span class="radio-content">
+                <span class="radio-label-main">Community Set</span>
+                <span id="community-set-sub" class="radio-label-sub">Loading&hellip;</span>
+              </span>
+            </label>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Contest Rules -->
-    <div class="home-card">
-      <h2 class="card-label">Contest Rules</h2>
-      <div class="radio-group">
-        <label class="radio-option">
-          <input type="radio" name="rule-set" id="rule-ffa" value="ffa" checked />
-          <span class="radio-content">
-            <span class="radio-label-main">FFA / National FFA Organization</span>
-            <span class="radio-label-sub">4 carcasses per class · No Average Select subdivision</span>
-          </span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="rule-set" id="rule-collegiate" value="collegiate" />
-          <span class="radio-content">
-            <span class="radio-label-main">Collegiate / AMSA-IMS</span>
-            <span class="radio-label-sub">15 carcasses per class · Full subdivisions including Average Select</span>
-          </span>
-        </label>
-      </div>
-    </div>
+        <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
+          Begin Session
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
 
-    <!-- Image Set -->
-    <div class="home-card">
-      <h2 class="card-label">
-        Image Set
-        <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
-      </h2>
-      <div class="radio-group">
-        <label class="radio-option">
-          <input type="radio" name="image-set" value="custom" />
-          <span class="radio-content">
-            <span class="radio-label-main">Custom Set Only</span>
-            <span class="radio-label-sub">Images you've added via Manage Photos</span>
-          </span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="image-set" value="all" />
-          <span class="radio-content">
-            <span class="radio-label-main">All Images</span>
-            <span class="radio-label-sub">Default + custom combined</span>
-          </span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="image-set" value="community" checked />
-          <span class="radio-content">
-            <span class="radio-label-main">Community Set</span>
-            <span id="community-set-sub" class="radio-label-sub">Loading…</span>
-          </span>
-        </label>
-      </div>
-    </div>
+      </div><!-- /.home-form-area -->
 
-    <!-- Scoring Reference -->
-    <div class="home-card">
-      <h2 class="card-label">Scoring — 10 pts per carcass</h2>
-      <div class="scoring-section">
-        <div class="scoring-row"><span>Exact match</span><span class="pts-badge pts-perfect">10</span></div>
-        <div class="scoring-row"><span>⅓ grade off (1 subdivision)</span><span class="pts-badge pts-good">9</span></div>
-        <div class="scoring-row"><span>⅔ grade off (2 subdivisions)</span><span class="pts-badge pts-good">7</span></div>
-        <div class="scoring-row"><span>1 full grade off (3 subdivisions)</span><span class="pts-badge pts-partial">4</span></div>
-        <div class="scoring-row"><span>More than 1 full grade off</span><span class="pts-badge pts-zero">0</span></div>
-      </div>
-      <p class="scoring-note">
-        One subdivision = one-third of a grade. High Choice → Low Prime counts as 1 subdivision off (9 pts).
-      </p>
-    </div>
-
-    <button id="start-btn" class="btn-primary btn-lg">
-      Begin Session
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
+    </div><!-- /.home-form-grid -->
 
   </main>
 
@@ -467,6 +506,14 @@
         window._isWeeklySession = false;
         renderHomeScreen();
       });
+
+      // Weekly challenge → View Rankings button (always visible)
+      const weeklyLbBtn = document.getElementById('weekly-view-leaderboard-btn');
+      if (weeklyLbBtn) {
+        weeklyLbBtn.addEventListener('click', () => {
+          if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
+        });
+      }
 
       // Show/hide drill header based on drill screen visibility
       const header = document.getElementById('app-header');
