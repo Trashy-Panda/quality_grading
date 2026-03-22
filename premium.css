@@ -304,14 +304,43 @@ html, body {
    HOME SCREEN
    ───────────────────────────────────────────────────────────── */
 
-/* Hero section */
+/* Hero section — official judging scorecard treatment */
 .hero {
-  padding: 2.75rem 1rem 2.25rem;
+  position: relative;
+  padding: 2.75rem 2rem 2.5rem;
+  border: 2px solid #2A2018;
+  border-top: 5px solid #8C1A1A;
+  box-shadow: 5px 5px 0 #2A2018;
+  background: #FDFAF5;
+  margin-bottom: 1.5rem;
+  overflow: visible;
 }
+
+/* Thin crimson rule below the title, centered */
+.hero-title::after {
+  content: '';
+  display: block;
+  width: 52px;
+  height: 3px;
+  background: #8C1A1A;
+  margin: 1rem auto 0;
+}
+
+/* Thin separator rule above the subtitle */
+.hero-subtitle::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(42, 32, 24, 0.12);
+  margin-bottom: 0.85rem;
+}
+
 .hero-eyebrow {
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.26em;
+  margin-bottom: 1.25rem;
 }
 .hero-title {
   font-size: 1.9rem;
@@ -319,12 +348,14 @@ html, body {
   letter-spacing: -0.03em;
   line-height: 1.18;
   white-space: nowrap;
+  margin-bottom: 0;
 }
 .hero-subtitle {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  line-height: 1.72;
+  line-height: 1.75;
   color: #6B5C42;
+  margin-top: 1.25rem;
 }
 
 /* Card labels — bigger, more authority */
@@ -560,9 +591,9 @@ html, body {
    ───────────────────────────────────────────────────────────── */
 
 .brand-name {
-  font-size: 0.96rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 .rule-chip {
   font-size: 0.62rem;
