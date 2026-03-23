@@ -371,11 +371,11 @@ body {
   transition: opacity 0.2s ease;
 }
 
-/* Right column — image behind, folder stack on top */
+/* Left column — image behind, folder stack on top */
 .landing-bg-img {
   display: none;
   position: relative;
-  border-left: 2px solid var(--rule-heavy);
+  border-right: 2px solid var(--rule-heavy);
   overflow: visible;
 }
 .landing-bg-img img {
@@ -394,7 +394,7 @@ body {
 .landing-bg-img .folder-stack-wrap {
   position: absolute;
   top: 50%;
-  left: calc(50% + 20px);
+  left: calc(50% - 24px);
   transform: translateX(-50%) translateY(-50%);
   margin: 0;
   z-index: 1;
@@ -412,6 +412,7 @@ body {
   }
   .landing-bg-img {
     display: block;
+    order: -1;
   }
   .landing-headline {
     font-size: clamp(2.2rem, 3.5vw, 3.4rem);
