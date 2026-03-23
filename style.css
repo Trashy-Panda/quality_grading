@@ -371,11 +371,11 @@ body {
   transition: opacity 0.2s ease;
 }
 
-/* Left column — image behind, folder stack on top */
+/* Right column — image behind, folder stack on top */
 .landing-bg-img {
   display: none;
   position: relative;
-  border-right: 2px solid var(--rule-heavy);
+  border-left: 2px solid var(--rule-heavy);
   overflow: visible;
 }
 .landing-bg-img img {
@@ -412,7 +412,6 @@ body {
   }
   .landing-bg-img {
     display: block;
-    order: -1;
   }
   .landing-headline {
     font-size: clamp(2.2rem, 3.5vw, 3.4rem);
