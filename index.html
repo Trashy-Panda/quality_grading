@@ -74,16 +74,40 @@
         </div>
       </div>
 
-      <div class="landing-cta-row">
-        <button class="landing-cta-btn" id="landing-cta">Begin Session →</button>
-      </div>
-
-      <div class="landing-proof">FFA · AMSA-IMS · Collegiate Meat Judging</div>
     </div>
 
-    <!-- Right-side carcass image panel -->
-    <div class="landing-bg-img" aria-hidden="true">
-      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" />
+    <!-- Right column: image + folder stack overlaid -->
+    <div class="landing-bg-img">
+      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" aria-hidden="true" />
+
+      <!-- ── Manila Folder Stack ── -->
+      <div id="manila-folder-stack" class="folder-stack-wrap" role="group" aria-label="Navigation options">
+
+        <!-- Folder: SETUP (back, index 2) -->
+        <button class="folder-card folder-card--back" id="folder-drills"
+          tabindex="0" role="button" aria-label="Open Setup section">
+          <span class="folder-tab" aria-hidden="true">
+            <span class="folder-tab-label">Setup</span>
+          </span>
+        </button>
+
+        <!-- Folder: WEEKLY CHALLENGE (middle, index 1) -->
+        <button class="folder-card folder-card--mid" id="folder-weekly"
+          tabindex="0" role="button" aria-label="Open Weekly Challenge section">
+          <span class="folder-tab" aria-hidden="true">
+            <span class="folder-tab-label">Weekly</span>
+          </span>
+        </button>
+
+        <!-- Folder: SIGN ON (front, index 0) -->
+        <button class="folder-card folder-card--front" id="folder-signon"
+          tabindex="0" role="button" aria-label="Open Sign On section">
+          <span class="folder-tab" aria-hidden="true">
+            <span class="folder-tab-label">Sign On</span>
+          </span>
+        </button>
+
+      </div>
     </div>
   </section>
 
@@ -487,13 +511,70 @@
       // app.js init() shows home-screen — re-hide it so landing shows first
       homeScreen.classList.add('hidden');
 
-      // Landing CTA → fade out landing, show setup page
-      document.getElementById('landing-cta').addEventListener('click', () => {
+      // ── Manila Folder Stack ─────────────────────────────────────
+      function folderNavigateTo(action) {
         landing.classList.add('landing-exit');
         setTimeout(() => {
           landing.classList.add('hidden');
-          homeScreen.classList.remove('hidden');
+          landing.classList.remove('landing-exit');
+          action();
         }, 260);
+      }
+
+      // SIGN ON folder
+      const folderSignon = document.getElementById('folder-signon');
+      if (folderSignon) {
+        folderSignon.addEventListener('click', () => {
+          if (window._currentUser) {
+            // Already signed in — go to home screen
+            folderNavigateTo(() => {
+              homeScreen.classList.remove('hidden');
+            });
+          } else {
+            if (typeof openAuthModal === 'function') openAuthModal();
+          }
+        });
+        folderSignon.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderSignon.click(); }
+        });
+      }
+
+      // WEEKLY CHALLENGE folder
+      const folderWeekly = document.getElementById('folder-weekly');
+      if (folderWeekly) {
+        folderWeekly.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof renderHomeScreen === 'function') renderHomeScreen();
+          });
+        });
+        folderWeekly.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderWeekly.click(); }
+        });
+      }
+
+      // DRILLS folder
+      const folderDrills = document.getElementById('folder-drills');
+      if (folderDrills) {
+        folderDrills.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof renderHomeScreen === 'function') renderHomeScreen();
+          });
+        });
+        folderDrills.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderDrills.click(); }
+        });
+      }
+
+      // Auth state → update SIGN ON folder sublabel
+      document.addEventListener('authStateChanged', () => {
+        const sublabel = document.getElementById('folder-signon-sublabel');
+        if (!sublabel) return;
+        if (window._currentUser) {
+          const name = escapeHtml(window._currentUser.displayName || window._currentUser.email || 'User');
+          sublabel.innerHTML = 'Signed in as <strong>' + name + '</strong>';
+        } else {
+          sublabel.textContent = 'Student identification & session entry';
+        }
       });
 
       // Setup page → back to landing

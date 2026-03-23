@@ -236,7 +236,7 @@ body {
   overflow: hidden;
 }
 
-/* Skip-link anchor span — pull out of grid flow */
+/* Skip-link anchor span — pull out of layout flow */
 #landing-hero > span#main-content {
   position: absolute;
   width: 0;
@@ -252,7 +252,8 @@ body {
   justify-content: center;
   min-height: 0;
   border-top: 3px solid var(--accent);
-  overflow: hidden;
+  overflow: visible;
+  background: var(--paper);
 }
 
 /* Agency header strip */
@@ -370,53 +371,62 @@ body {
   transition: opacity 0.2s ease;
 }
 
-/* Right image panel — hidden on mobile, fills grid cell on desktop */
+/* Left column — image behind, folder stack on top */
 .landing-bg-img {
   display: none;
   position: relative;
-  border-left: 2px solid var(--rule-heavy);
-  overflow: hidden;
-  height: 100%;
+  border-right: 2px solid var(--rule-heavy);
+  overflow: visible;
 }
 .landing-bg-img img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: 60% 20%;
   opacity: 0.28;
   filter: grayscale(100%) contrast(1.15);
   display: block;
 }
 
-/* ── Desktop (768px+): two-column split, image visible ───── */
+/* Folder stack — centered in the image column, breathing room from right border */
+.landing-bg-img .folder-stack-wrap {
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 24px);
+  transform: translateX(-50%) translateY(-50%);
+  margin: 0;
+  z-index: 1;
+}
+
+/* ── Desktop (768px+): two-column split ── */
 @media (min-width: 768px) {
   #landing-hero {
-    grid-template-columns: 55fr 45fr;
+    grid-template-columns: 48fr 52fr;
     height: 100vh;
   }
   .landing-content {
     padding: 48px 48px 48px 64px;
+    justify-content: center;
   }
   .landing-bg-img {
     display: block;
+    order: -1;
   }
   .landing-headline {
     font-size: clamp(2.2rem, 3.5vw, 3.4rem);
   }
 }
 
-/* ── Mobile (<768px): single column, no image, compact ────── */
+/* ── Mobile (<768px): single column, image hidden ── */
 @media (max-width: 767px) {
   #landing-hero {
     height: auto;
     min-height: 100svh;
-    grid-template-columns: 1fr;
-    /* Thin accent stripe at top already from border-top on .landing-content */
   }
   .landing-content {
-    padding: 32px 24px 40px;
-    justify-content: flex-start;
-    padding-top: 48px;
+    padding: 36px 24px 40px;
   }
   .landing-stamp-bar {
     font-size: 8px;
@@ -2813,6 +2823,246 @@ body {
   }
   .auth-modal-title {
     font-size: 1rem;
+  }
+}
+
+/* ── Manila Folder Stack ──────────────────────────────────── */
+
+/* Outer wrapper — sits in place of the old .landing-cta-row */
+.folder-stack-wrap {
+  margin-top: 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: 20px;
+}
+
+/* Every folder flows in the column; negative margin-top creates the overlap */
+.folder-card {
+  position: relative;
+  width: 280px;
+  min-height: 130px;
+  background: #D4A853;
+  border: 2px solid #C49A3C;
+  border-left-width: 4px;
+  border-radius: 0;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  transform-origin: left top;
+  transition: transform 300ms ease-out, filter 300ms ease-out, box-shadow 300ms ease-out;
+  box-shadow: 3px 3px 0 #A07830, 4px 4px 0 rgba(0,0,0,0.15);
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  font-family: var(--font-data);
+}
+
+.folder-card:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Stack offsets — DRILLS top, WEEKLY middle, SIGN ON front */
+/* translateX handles progressive right-step; negative margin-top creates partial overlap */
+.folder-card--back {
+  transform: skewY(-4deg) translateX(0);
+  z-index: 1;
+  filter: grayscale(15%) brightness(0.93);
+  margin-left: 0;
+}
+.folder-card--mid {
+  transform: skewY(-4deg) translateX(12px);
+  z-index: 2;
+  filter: grayscale(8%) brightness(0.97);
+  margin-top: -96px;
+  margin-left: 0;
+}
+.folder-card--front {
+  transform: skewY(-4deg) translateX(24px);
+  z-index: 3;
+  margin-top: -96px;
+  margin-left: 0;
+}
+
+/* Recede overlay for non-front cards */
+.folder-card--mid::after,
+.folder-card--back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.08);
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+
+/* Hover — lift up */
+.folder-card--back:hover,
+.folder-card--back:focus-visible {
+  transform: skewY(-4deg) translateX(0) translateY(-20px);
+  filter: grayscale(0%) brightness(1);
+  box-shadow: 4px 6px 0 #A07830, 6px 8px 0 rgba(0,0,0,0.18);
+}
+.folder-card--mid:hover,
+.folder-card--mid:focus-visible {
+  transform: skewY(-4deg) translateX(12px) translateY(-20px);
+  filter: grayscale(0%) brightness(1);
+  box-shadow: 4px 6px 0 #A07830, 6px 8px 0 rgba(0,0,0,0.18);
+}
+.folder-card--front:hover,
+.folder-card--front:focus-visible {
+  transform: skewY(-4deg) translateX(24px) translateY(-20px);
+  box-shadow: 4px 6px 0 #A07830, 6px 8px 0 rgba(0,0,0,0.18);
+}
+.folder-card--mid:hover::after,
+.folder-card--back:hover::after,
+.folder-card--mid:focus-visible::after,
+.folder-card--back:focus-visible::after {
+  opacity: 0;
+}
+
+/* ── Folder Tab (protruding top-left) ── */
+.folder-tab {
+  position: absolute;
+  top: -19px;
+  left: 0;
+  width: 108px;
+  height: 21px;
+  background: #C49A3C;
+  border: 2px solid #A07830;
+  border-bottom: none;
+  clip-path: polygon(0% 100%, 0% 30%, 8% 0%, 92% 0%, 100% 30%, 100% 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 2px;
+  transition: border-left-color 200ms ease;
+}
+
+/* Active-state accent on tab — applied by JS when folder is active */
+.folder-card--active .folder-tab {
+  border-left: 2px solid var(--accent);
+}
+
+.folder-tab-label {
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1A1A16;
+  line-height: 1;
+}
+
+/* ── Folder Face (inner content area) ── */
+.folder-face {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 12px 16px;
+  gap: 0;
+  /* Highlight strip at top of face (paper thickness illusion) */
+  border-top: 2px solid #E8C068;
+}
+
+.folder-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.folder-agency {
+  font-family: var(--font-ui);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6A4A10;
+}
+
+.folder-status-dot {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
+}
+.folder-status-dot--empty      { color: #8A6A20; }
+.folder-status-dot--signed-in  { color: #2A6A20; }
+.folder-status-dot--clock      { color: #7A5C10; font-size: 13px; }
+.folder-status-dot--target     { color: #8A6A20; font-size: 12px; }
+
+/* Ruled separator lines */
+.folder-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #C8C5B8;
+  margin: 0 0 8px 0;
+  flex-shrink: 0;
+}
+.folder-rule--bottom {
+  margin: 8px 0 6px 0;
+}
+
+.folder-title {
+  display: block;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1A16;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.folder-sublabel {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: #6A5020;
+  line-height: 1.35;
+}
+
+.folder-footer {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 8.5px;
+  color: #8A6830;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Mobile adjustments (≤ 480px) ── */
+@media (max-width: 480px) {
+  .folder-stack-wrap {
+    margin-top: 20px;
+    padding-bottom: 16px;
+  }
+  .folder-card {
+    width: 100%;
+    max-width: 300px;
+    min-height: 116px;
+  }
+  .folder-card--mid {
+    margin-top: -88px;
+    transform: skewY(-4deg) translateX(10px);
+  }
+  .folder-card--front {
+    margin-top: -88px;
+    transform: skewY(-4deg) translateX(20px);
+  }
+  .folder-card--back:hover,
+  .folder-card--back:focus-visible {
+    transform: skewY(-4deg) translateX(0) translateY(-22px);
+  }
+  .folder-card--mid:hover,
+  .folder-card--mid:focus-visible {
+    transform: skewY(-4deg) translateX(10px) translateY(-22px);
+  }
+  .folder-card--front:hover,
+  .folder-card--front:focus-visible {
+    transform: skewY(-4deg) translateX(20px) translateY(-22px);
   }
 }
 
