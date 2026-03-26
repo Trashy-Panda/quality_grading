@@ -208,6 +208,9 @@ def main():
                         help='Firebase Storage bucket name')
     parser.add_argument('--batch',  type=int, default=32, help='Inference batch size')
     parser.add_argument('--limit',  type=int, default=0,  help='Max images to process (0 = all)')
+    parser.add_argument('--class-order', choices=['a', 'b'], default='a',
+                        help='Classification label order: a=Select/LowChoice/Upper2-3Choice/Prime '
+                             'b=Prime/Upper2-3Choice/LowChoice/Select (default: a)')
     args = parser.parse_args()
 
     # Validate required files
@@ -256,9 +259,19 @@ def main():
     # --- Step 2: Load model ---
     model = load_model_tf(args.model)
 
-    from model_utils import detect_output_type, build_image_name
+    from model_utils import detect_output_type, build_image_name, CLASS_INDEX_TO_GRADE_A, CLASS_INDEX_TO_GRADE_B
+    import model_utils
     output_type = detect_output_type(model)
-    print(f'Output type detected: {output_type}\n')
+    print(f'Output type detected: {output_type}')
+    if output_type == 'classification':
+        if args.class_order == 'b':
+            model_utils.CLASS_INDEX_TO_GRADE = CLASS_INDEX_TO_GRADE_B
+            print('Class order: B (Prime / Upper2/3 Choice / Low Choice / Select)')
+        else:
+            model_utils.CLASS_INDEX_TO_GRADE = CLASS_INDEX_TO_GRADE_A
+            print('Class order: A (Select / Low Choice / Upper2/3 Choice / Prime)')
+        print('  Tip: if grades look wrong after --limit 5, re-run with --class-order b\n')
+    print()
 
     # --- Step 3: Run inference (all images, batched) ---
     print('Running inference...')

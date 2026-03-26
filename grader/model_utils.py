@@ -32,13 +32,38 @@ SCORE_THRESHOLDS = [
     (0,   'STD'),
 ]
 
-# Fallback for 4-class classification models (argmax index → grade key)
-CLASS_INDEX_TO_GRADE = {
+# ----------------------------------------------------------------
+#  Classification model label mapping
+#
+#  best_model.py uses: label_mapping = {label: idx for idx, label in
+#    enumerate(df['Grade Category'].unique())}
+#  The order depends on which grade appears FIRST in the CSV.
+#
+#  The most common CSV orderings observed in the hackathon data:
+#    Option A (grades appear in ascending quality order):
+#      0=Select, 1=Low Choice, 2=Upper 2/3 Choice, 3=Prime
+#    Option B (grades appear in descending order):
+#      0=Prime, 1=Upper 2/3 Choice, 2=Low Choice, 3=Select
+#
+#  We default to Option A. If grades look wrong after a test run,
+#  pass --class-order reverse on the CLI to flip to Option B.
+# ----------------------------------------------------------------
+CLASS_INDEX_TO_GRADE_A = {
     0: 'SE_AVG',   # Select
     1: 'CH_LO',    # Low Choice
     2: 'CH_HI',    # Upper 2/3 Choice
     3: 'PR_AVG',   # Prime
 }
+
+CLASS_INDEX_TO_GRADE_B = {
+    0: 'PR_AVG',   # Prime
+    1: 'CH_HI',    # Upper 2/3 Choice
+    2: 'CH_LO',    # Low Choice
+    3: 'SE_AVG',   # Select
+}
+
+# Default
+CLASS_INDEX_TO_GRADE = CLASS_INDEX_TO_GRADE_A
 
 GRADE_LABELS = {
     'PR_HI':  'High Prime',
