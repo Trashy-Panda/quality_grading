@@ -1,0 +1,155 @@
+// ============================================================
+//  GradeThisMeat — Firestore Security Rules
+//
+//  Paste the entire content of this file into:
+//  Firebase Console → Firestore Database → Rules → Publish
+//
+//  Documentation references used to write these rules:
+//  - https://firebase.google.com/docs/firestore/security/rules-conditions
+//  - https://firebase.google.com/docs/firestore/security/rules-data-validation
+//  - https://firebase.google.com/docs/firestore/security/insecure-rules
+//
+//  Admin UID: KLoBqbA2P9UkQ83urzmgpxT4Oit1
+//  Last updated: 2026-03-28
+// ============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------
+    //  Helper: admin check
+    // ----------------------------------------------------------
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == 'KLoBqbA2P9UkQ83urzmgpxT4Oit1';
+    }
+
+    // ----------------------------------------------------------
+    //  users/{uid}
+    //  read:   public
+    //  create: owner only (uid match)
+    //  update: owner only (uid match)
+    //  delete: never
+    // ----------------------------------------------------------
+    match /users/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+                            && request.auth.uid == uid;
+      allow delete: if false;
+    }
+
+    // ----------------------------------------------------------
+    //  submissions/{docId}
+    //  DocId pattern: {uid}_{weekId}_{ruleSet}  (dedup key)
+    //  read:   public
+    //  create: owner only, all fields validated
+    //  update: never
+    //  delete: owner OR admin
+    // ----------------------------------------------------------
+    match /submissions/{docId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.earned is int
+        && request.resource.data.earned >= 0
+        && request.resource.data.max is int
+        && request.resource.data.max > 0
+        && request.resource.data.pct is number
+        && request.resource.data.pct >= 0
+        && request.resource.data.pct <= 100
+        && math.abs(
+             request.resource.data.pct
+             - (request.resource.data.earned / request.resource.data.max * 100)
+           ) < 0.5;
+      allow update: if false;
+      allow delete: if request.auth != null
+        && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // ----------------------------------------------------------
+    //  weeks/{weekId}
+    //  read:   public
+    //  create: admin only
+    //  update: admin only
+    //  delete: admin only
+    // ----------------------------------------------------------
+    match /weeks/{weekId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------
+    //  community_carcasses/{docId}
+    //  read:   public
+    //  create: any authenticated user, imageUrl must be HTTPS
+    //  update: never
+    //  delete: admin only
+    // ----------------------------------------------------------
+    match /community_carcasses/{docId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.matches('https://.*')
+        && request.resource.data.grade is string
+        && request.resource.data.grade.size() > 0;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------
+    //  ai_carcasses/{docId}
+    //  read:   public (used by grading drill + crowdsource voting)
+    //  write:  admin only (populated by grader pipeline)
+    // ----------------------------------------------------------
+    match /ai_carcasses/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------
+    //  grading_votes/{docId}
+    //  Crowdsource grading votes on ai_carcasses images.
+    //
+    //  Recommended client docId pattern: {uid}_{imageId}
+    //  (enforces one vote per user per image via collision)
+    //
+    //  read:   authenticated user may read their own votes only
+    //  create: authenticated user, all fields validated
+    //  update: never
+    //  delete: admin only
+    //
+    //  Valid grade keys:
+    //    PR_HI, PR_AVG, PR_LO, CH_HI, CH_AVG, CH_LO,
+    //    SE_HI, SE_LO, STD
+    // ----------------------------------------------------------
+    match /grading_votes/{docId} {
+      allow read: if isAdmin()
+        || (request.auth != null && resource.data.userId == request.auth.uid);
+
+      allow create: if request.auth != null
+        // ownership
+        && request.resource.data.userId == request.auth.uid
+        // imageId: non-empty string
+        && request.resource.data.imageId is string
+        && request.resource.data.imageId.size() > 0
+        // imageUrl: HTTPS only
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.matches('https://.*')
+        // grade: must be one of the 9 valid keys
+        && request.resource.data.grade in [
+             'PR_HI', 'PR_AVG', 'PR_LO',
+             'CH_HI', 'CH_AVG', 'CH_LO',
+             'SE_HI', 'SE_LO',
+             'STD'
+           ]
+        // submittedAt: server timestamp only — never trust client time
+        && request.resource.data.submittedAt == request.time;
+
+      allow update: if false;
+
+      allow delete: if isAdmin();
+    }
+
+  }
+}

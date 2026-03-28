@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabUsers) tabUsers.addEventListener('click', function () { switchTab('users'); });
   const tabCommunity = document.getElementById('tab-btn-community');
   if (tabCommunity) tabCommunity.addEventListener('click', function () { switchTab('community'); });
+  const tabGradingVotes = document.getElementById('tab-btn-grading-votes');
+  if (tabGradingVotes) tabGradingVotes.addEventListener('click', function () { switchTab('grading-votes'); });
 
   // 6. Sign-in / sign-out
   const signinBtn = document.getElementById('admin-signin-btn');
@@ -165,6 +167,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var communityAddBtn = document.getElementById('community-add-btn');
   if (communityAddBtn) communityAddBtn.addEventListener('click', addCommunityRecord);
 
+  // 22. Grading Votes refresh
+  var gvRefreshBtn = document.getElementById('gv-refresh-btn');
+  if (gvRefreshBtn) gvRefreshBtn.addEventListener('click', loadGradingVotesTab);
+
   // 21. Community JSON import
   var communityImportBtn = document.getElementById('community-import-btn');
   if (communityImportBtn) communityImportBtn.addEventListener('click', importCommunityJson);
@@ -231,7 +237,7 @@ function switchTab(name) {
   _currentTab = name;
 
   // Update tab button active states
-  ['leaderboard', 'weekly', 'users', 'community'].forEach(function (t) {
+  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes'].forEach(function (t) {
     const btn = document.getElementById('tab-btn-' + t);
     const section = document.getElementById('tab-' + t);
     if (btn) {
@@ -259,6 +265,8 @@ function switchTab(name) {
     loadUsers();
   } else if (name === 'community') {
     loadCommunityTab();
+  } else if (name === 'grading-votes') {
+    loadGradingVotesTab();
   }
 }
 
@@ -1212,6 +1220,180 @@ function populateWeekSelects() {
       s.el.appendChild(opt);
     });
   });
+}
+
+// ============================================================
+//  Grading Votes Tab
+// ============================================================
+
+const GRADE_LABELS_GV = {
+  PR_HI:'High Prime', PR_AVG:'Avg Prime', PR_LO:'Low Prime',
+  CH_HI:'High Choice', CH_AVG:'Avg Choice', CH_LO:'Low Choice',
+  SE_HI:'High Select', SE_LO:'Low Select', STD:'Standard',
+};
+
+async function loadGradingVotesTab() {
+  var listEl   = document.getElementById('gv-card-list');
+  var statImgs = document.getElementById('gv-stat-images');
+  var statVotes= document.getElementById('gv-stat-votes');
+  var statProm = document.getElementById('gv-stat-promoted');
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="admin-empty">Loading votes…</div>';
+
+  try {
+    // Fetch all votes
+    var votesSnap = await _db.collection('grading_votes').get();
+    var allVotes  = votesSnap.docs.map(function(d) { return Object.assign({ id: d.id }, d.data()); });
+
+    // Group by imageId
+    var byImage = {};
+    allVotes.forEach(function(v) {
+      if (!byImage[v.imageId]) byImage[v.imageId] = [];
+      byImage[v.imageId].push(v);
+    });
+
+    var imageIds = Object.keys(byImage);
+    if (!imageIds.length) {
+      listEl.innerHTML = '<div class="admin-empty">No votes yet.</div>';
+      if (statImgs)  statImgs.textContent  = '0';
+      if (statVotes) statVotes.textContent = '0';
+      if (statProm)  statProm.textContent  = '0';
+      return;
+    }
+
+    // Fetch ai_carcasses docs for each imageId (batched, max 10 per in-query)
+    var imageData = {};
+    var promoted  = 0;
+    var batches = [];
+    for (var i = 0; i < imageIds.length; i += 10) {
+      batches.push(imageIds.slice(i, i + 10));
+    }
+    for (var b = 0; b < batches.length; b++) {
+      var snap = await _db.collection('ai_carcasses')
+        .where(firebase.firestore.FieldPath.documentId(), 'in', batches[b]).get();
+      snap.docs.forEach(function(d) { imageData[d.id] = d.data(); });
+    }
+
+    // Sort by vote count desc
+    imageIds.sort(function(a, b) { return byImage[b].length - byImage[a].length; });
+
+    // Stats
+    if (statImgs)  statImgs.textContent  = imageIds.length;
+    if (statVotes) statVotes.textContent = allVotes.length;
+
+    listEl.innerHTML = '';
+
+    imageIds.forEach(function(imageId) {
+      var votes = byImage[imageId];
+      var data  = imageData[imageId] || {};
+      var imageUrl = data.imageUrl || (votes[0] && votes[0].imageUrl) || '';
+      var aiGrade  = (data.correct && data.correct.qualityGrade) || '—';
+      var isPromoted = data.promoted === true;
+      if (isPromoted) promoted++;
+
+      // Tally votes per grade
+      var tally = {};
+      votes.forEach(function(v) { tally[v.grade] = (tally[v.grade] || 0) + 1; });
+      var consensusGrade = Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; })[0];
+      var totalVotes = votes.length;
+
+      // Build card
+      var card = document.createElement('div');
+      card.className = 'gv-card' + (isPromoted ? ' gv-card-promoted' : '');
+
+      // Image
+      var imgEl = document.createElement('img');
+      imgEl.className = 'gv-card-img';
+      imgEl.alt = 'ribeye';
+      imgEl.src = escapeHtml(imageUrl);
+      imgEl.onerror = function() { this.style.opacity = '0.2'; };
+      card.appendChild(imgEl);
+
+      // Body
+      var body = document.createElement('div');
+      body.className = 'gv-card-body';
+
+      // Grade rows
+      var gradesHtml = '<div class="gv-grade-rows">';
+      Object.keys(tally).sort(function(a,b){return tally[b]-tally[a];}).forEach(function(g) {
+        var pct = Math.round(tally[g] / totalVotes * 100);
+        var isWinner = g === consensusGrade;
+        gradesHtml += '<div class="gv-grade-row' + (isWinner ? ' gv-winner' : '') + '">'
+          + '<span class="gv-grade-key">' + escapeHtml(g) + '</span>'
+          + '<span class="gv-grade-bar"><span class="gv-grade-fill" style="width:' + pct + '%"></span></span>'
+          + '<span class="gv-grade-count">' + tally[g] + '</span>'
+          + '</div>';
+      });
+      gradesHtml += '</div>';
+
+      var metaHtml = '<div class="gv-meta">'
+        + '<span>AI grade: <strong>' + escapeHtml(aiGrade) + '</strong></span>'
+        + '<span>Consensus: <strong>' + escapeHtml(consensusGrade) + '</strong></span>'
+        + '<span>' + totalVotes + ' vote' + (totalVotes !== 1 ? 's' : '') + '</span>'
+        + '</div>';
+
+      body.innerHTML = metaHtml + gradesHtml;
+
+      // Push button
+      if (!isPromoted) {
+        var pushBtn = document.createElement('button');
+        pushBtn.className = 'admin-btn-primary gv-push-btn';
+        pushBtn.textContent = 'Push to References as ' + escapeHtml(consensusGrade);
+        pushBtn.addEventListener('click', function() {
+          pushToReferences(imageId, imageUrl, consensusGrade, tally, totalVotes, card, pushBtn);
+        });
+        body.appendChild(pushBtn);
+      } else {
+        var badge = document.createElement('div');
+        badge.className = 'gv-promoted-badge';
+        badge.textContent = '✓ Promoted';
+        body.appendChild(badge);
+      }
+
+      card.appendChild(body);
+      listEl.appendChild(card);
+    });
+
+    if (statProm) statProm.textContent = promoted;
+
+    // Wire refresh button
+    var refreshBtn = document.getElementById('gv-refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.onclick = null;
+      refreshBtn.addEventListener('click', loadGradingVotesTab);
+    }
+
+  } catch(e) {
+    listEl.innerHTML = '<div class="admin-empty">Error: ' + escapeHtml(e.message) + '</div>';
+  }
+}
+
+async function pushToReferences(imageId, imageUrl, consensusGrade, tally, totalVotes, cardEl, btnEl) {
+  btnEl.disabled = true;
+  btnEl.textContent = 'Pushing…';
+  try {
+    await _db.collection('community_carcasses').add({
+      imageUrl:      imageUrl,
+      correct:       { qualityGrade: consensusGrade },
+      source:        'Crowdsourced — ' + totalVotes + ' votes',
+      submittedBy:   'admin',
+      submittedAt:   firebase.firestore.FieldValue.serverTimestamp(),
+      voteBreakdown: tally,
+    });
+    await _db.collection('ai_carcasses').doc(imageId).update({ promoted: true });
+    cardEl.classList.add('gv-card-promoted');
+    btnEl.style.display = 'none';
+    var badge = document.createElement('div');
+    badge.className = 'gv-promoted-badge';
+    badge.textContent = '✓ Promoted as ' + escapeHtml(consensusGrade);
+    btnEl.parentNode.appendChild(badge);
+    var statProm = document.getElementById('gv-stat-promoted');
+    if (statProm) statProm.textContent = String((parseInt(statProm.textContent,10)||0) + 1);
+  } catch(e) {
+    btnEl.disabled = false;
+    btnEl.textContent = 'Push to References as ' + escapeHtml(consensusGrade);
+    alert('Push failed: ' + e.message);
+  }
 }
 
 // ============================================================

@@ -43,6 +43,7 @@ const state = {
   selectedFamily: null,
   selectedKey: null,
   communitySet: [],
+  aiSet: [],
 };
 
 // ------------------------------------------------------------------
@@ -182,6 +183,7 @@ function cacheElements() {
   el.exportJsonBtn       = document.getElementById('export-json-btn');
   el.submitCommunityBtn  = document.getElementById('submit-community-btn');
   el.communitySetSub     = document.getElementById('community-set-sub');
+  el.aiSetSub            = document.getElementById('ai-set-sub');
   el.refreshCommunityBtn = document.getElementById('refresh-community-btn');
   el.communityStatus     = document.getElementById('community-status');
   el.communityList       = document.getElementById('community-list');
@@ -663,6 +665,41 @@ async function loadCommunitySet() {
   renderCommunityList();
 }
 
+// ------------------------------------------------------------------
+//  AI SET
+// ------------------------------------------------------------------
+
+function updateAiLabel() {
+  if (!el.aiSetSub) return;
+  if (!state.aiSet.length) {
+    el.aiSetSub.textContent = 'No AI-graded carcasses available';
+  } else {
+    el.aiSetSub.textContent = state.aiSet.length + ' AI-graded carcasses';
+  }
+}
+
+async function loadAiSet() {
+  if (!window._db) {
+    updateAiLabel();
+    return;
+  }
+  try {
+    const snap = await window._db
+      .collection(DB_COLLECTIONS.ai_carcasses)
+      .orderBy('submittedAt', 'desc')
+      .limit(500)
+      .get();
+    state.aiSet = snap.docs
+      .map(d => Object.assign({ id: d.id }, d.data()))
+      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
+  } catch (e) {
+    state.aiSet = [];
+    if (el.aiSetSub) el.aiSetSub.textContent = 'Could not load AI set';
+    return;
+  }
+  updateAiLabel();
+}
+
 async function onSubmitToCommunity() {
   if (!window._currentUser) {
     alert('Please sign in to submit to the community set.');
@@ -749,6 +786,212 @@ function openSettings() {
 }
 
 // ------------------------------------------------------------------
+//  CONTRIBUTE — Crowdsource Grading Feature
+// ------------------------------------------------------------------
+
+// Grade definitions for the contribute grid (all 9 grades shown always)
+const CONTRIBUTE_GRADES = [
+  { key: 'PR_HI',  label: 'High Prime',    family: 'prime'    },
+  { key: 'PR_AVG', label: 'Avg Prime',     family: 'prime'    },
+  { key: 'PR_LO',  label: 'Low Prime',     family: 'prime'    },
+  { key: 'CH_HI',  label: 'High Choice',   family: 'choice'   },
+  { key: 'CH_AVG', label: 'Avg Choice',    family: 'choice'   },
+  { key: 'CH_LO',  label: 'Low Choice',    family: 'choice'   },
+  { key: 'SE_HI',  label: 'High Select',   family: 'select'   },
+  { key: 'SE_LO',  label: 'Low Select',    family: 'select'   },
+  { key: 'STD',    label: 'Standard',      family: 'standard' },
+];
+
+// Tracks current image in the modal
+const _contributeState = {
+  currentImageId:  null,
+  currentImageUrl: null,
+  sessionCount:    0,
+};
+
+function _buildContributeGradeGrid() {
+  const grid = document.getElementById('contribute-grade-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  CONTRIBUTE_GRADES.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className = 'contribute-grade-btn';
+    btn.dataset.key = g.key;
+    btn.dataset.family = g.family;
+    btn.setAttribute('aria-label', g.label);
+    btn.tabIndex = 0;
+
+    const keyEl = document.createElement('span');
+    keyEl.className = 'contribute-grade-key';
+    keyEl.textContent = g.key;
+
+    const nameEl = document.createElement('span');
+    nameEl.className = 'contribute-grade-name';
+    nameEl.textContent = g.label;
+
+    btn.appendChild(keyEl);
+    btn.appendChild(nameEl);
+    grid.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      if (!_contributeState.currentImageId) return;
+      submitContributeGrade(
+        _contributeState.currentImageId,
+        _contributeState.currentImageUrl,
+        g.key
+      );
+    });
+  });
+}
+
+function openContributeModal() {
+  const modal = document.getElementById('contribute-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+
+  const authPrompt   = document.getElementById('contribute-auth-prompt');
+  const gradingArea  = document.getElementById('contribute-grading-area');
+  const emptyState   = document.getElementById('contribute-empty');
+
+  if (!window._currentUser) {
+    authPrompt.classList.remove('hidden');
+    gradingArea.classList.add('hidden');
+    emptyState.classList.add('hidden');
+  } else {
+    authPrompt.classList.add('hidden');
+    emptyState.classList.add('hidden');
+    gradingArea.classList.remove('hidden');
+    _buildContributeGradeGrid();
+    loadContributeImage();
+  }
+}
+
+function closeContributeModal() {
+  const modal = document.getElementById('contribute-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+async function loadContributeImage() {
+  if (!window._db) return;
+
+  const loadingEl = document.getElementById('contribute-img-loading');
+  const img       = document.getElementById('contribute-img');
+  const emptyEl   = document.getElementById('contribute-empty');
+  const gradingEl = document.getElementById('contribute-grading-area');
+
+  if (loadingEl) loadingEl.style.display = 'flex';
+  if (img)       img.style.opacity = '0';
+
+  try {
+    // Fetch up to 20 lowest-vote images, then pick a random one
+    const snap = await window._db
+      .collection(DB_COLLECTIONS.ai_carcasses)
+      .orderBy('voteCount', 'asc')
+      .limit(20)
+      .get();
+
+    if (snap.empty) {
+      if (gradingEl)  gradingEl.classList.add('hidden');
+      if (emptyEl)    emptyEl.classList.remove('hidden');
+      if (loadingEl)  loadingEl.style.display = 'none';
+      return;
+    }
+
+    const docs = snap.docs;
+    const randomDoc = docs[Math.floor(Math.random() * docs.length)];
+    const data = randomDoc.data();
+
+    _contributeState.currentImageId  = randomDoc.id;
+    _contributeState.currentImageUrl = data.imageUrl;
+
+    if (img && data.imageUrl) {
+      img.onload = () => {
+        img.style.opacity = '1';
+        if (loadingEl) loadingEl.style.display = 'none';
+      };
+      img.onerror = () => {
+        img.style.opacity = '0.3';
+        if (loadingEl) {
+          loadingEl.textContent = 'Image could not be loaded';
+          loadingEl.style.display = 'flex';
+        }
+      };
+      img.src = data.imageUrl;
+      img.alt = 'Ribeye carcass for grading';
+    } else {
+      if (loadingEl) loadingEl.style.display = 'none';
+    }
+
+  } catch (e) {
+    if (loadingEl) {
+      loadingEl.textContent = 'Could not load image: ' + escapeHtml(e.message);
+      loadingEl.style.display = 'flex';
+    }
+  }
+}
+
+async function submitContributeGrade(imageId, imageUrl, gradeKey) {
+  if (!window._currentUser) return;
+  if (!window._db) return;
+
+  // Disable all grade buttons while submitting
+  const grid = document.getElementById('contribute-grade-grid');
+  const btns = grid ? grid.querySelectorAll('.contribute-grade-btn') : [];
+  btns.forEach(b => { b.disabled = true; });
+
+  try {
+    await window._db.collection(DB_COLLECTIONS.grading_votes).add({
+      imageId:     imageId,
+      imageUrl:    imageUrl,
+      userId:      window._currentUser.uid,
+      grade:       gradeKey,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    _contributeState.sessionCount++;
+    const progressEl = document.getElementById('contribute-progress-text');
+    if (progressEl) {
+      progressEl.textContent =
+        'You\u2019ve graded ' + _contributeState.sessionCount +
+        ' image' + (_contributeState.sessionCount === 1 ? '' : 's');
+    }
+
+    // Update the home card counter optimistically
+    const numEl = document.getElementById('contribute-counter-num');
+    if (numEl && !isNaN(parseInt(numEl.textContent, 10))) {
+      numEl.textContent = String(parseInt(numEl.textContent, 10) + 1);
+    }
+
+    // Load next image then re-enable buttons
+    await loadContributeImage();
+    btns.forEach(b => { b.disabled = false; });
+
+  } catch (e) {
+    // Re-enable buttons on failure so user can retry
+    btns.forEach(b => { b.disabled = false; });
+    alert('Could not save grade: ' + e.message);
+  }
+}
+
+async function loadContributeStats() {
+  if (!window._db) return;
+  const numEl = document.getElementById('contribute-counter-num');
+  if (!numEl) return;
+  try {
+    // Count all documents in grading_votes using a lightweight query
+    const snap = await window._db
+      .collection(DB_COLLECTIONS.grading_votes)
+      .get();
+    numEl.textContent = String(snap.size);
+  } catch (e) {
+    numEl.textContent = '—';
+  }
+}
+
+// ------------------------------------------------------------------
 //  INITIALIZATION
 // ------------------------------------------------------------------
 
@@ -758,6 +1001,7 @@ function init() {
   initImageModal();
   buildCustomQualitySelector();
   loadCommunitySet();
+  loadAiSet();
 
   // Image URL preview
   el.customUrl.addEventListener('input', () => {
@@ -788,6 +1032,13 @@ function init() {
       } else {
         deck = state.communitySet;
       }
+    }
+    else if (setVal === 'ai') {
+      if (!state.aiSet.length) {
+        alert('AI set is still loading — please wait a moment and try again.');
+        return;
+      }
+      deck = state.aiSet;
     }
     else                              deck = loadAllCarcasses();
 
@@ -834,6 +1085,57 @@ function init() {
   el.exportJsonBtn.addEventListener('click', () => {
     el.importJson.value = JSON.stringify(getCustomList(), null, 2);
   });
+
+  // ── Contribute feature ──────────────────────────────────────
+  const contributeStartBtn = document.getElementById('contribute-start-btn');
+  if (contributeStartBtn) {
+    contributeStartBtn.addEventListener('click', openContributeModal);
+  }
+
+  const contributeCloseBtn = document.getElementById('contribute-modal-close');
+  if (contributeCloseBtn) {
+    contributeCloseBtn.addEventListener('click', closeContributeModal);
+  }
+
+  const contributeModal = document.getElementById('contribute-modal');
+  if (contributeModal) {
+    // Close on Escape key
+    contributeModal.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeContributeModal();
+    });
+  }
+
+  const contributeSigninBtn = document.getElementById('contribute-signin-btn');
+  if (contributeSigninBtn) {
+    contributeSigninBtn.addEventListener('click', () => {
+      closeContributeModal();
+      if (typeof openAuthModal === 'function') openAuthModal();
+    });
+  }
+
+  const contributeSkipBtn = document.getElementById('contribute-skip-btn');
+  if (contributeSkipBtn) {
+    contributeSkipBtn.addEventListener('click', loadContributeImage);
+  }
+
+  // Re-check auth in modal when auth state changes (user signs in while modal open)
+  document.addEventListener('authStateChanged', () => {
+    const modal = document.getElementById('contribute-modal');
+    if (!modal || modal.classList.contains('hidden')) return;
+    const authPrompt  = document.getElementById('contribute-auth-prompt');
+    const gradingArea = document.getElementById('contribute-grading-area');
+    const emptyEl     = document.getElementById('contribute-empty');
+    if (window._currentUser) {
+      if (authPrompt)  authPrompt.classList.add('hidden');
+      if (emptyEl)     emptyEl.classList.add('hidden');
+      if (gradingArea) gradingArea.classList.remove('hidden');
+      _buildContributeGradeGrid();
+      loadContributeImage();
+    }
+  });
+
+  // Load the community grade count for the home card
+  loadContributeStats();
 
   renderHomeScreen();
 }
