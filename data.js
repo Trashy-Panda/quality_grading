@@ -25,6 +25,7 @@ const DB_COLLECTIONS = {
   users:                'users',
   submissions:          'submissions',
   community_carcasses:  'community_carcasses',
+  ai_carcasses:         'ai_carcasses',
 };
 
 // ============================================================

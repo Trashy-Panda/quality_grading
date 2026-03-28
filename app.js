@@ -43,6 +43,7 @@ const state = {
   selectedFamily: null,
   selectedKey: null,
   communitySet: [],
+  aiSet: [],
 };
 
 // ------------------------------------------------------------------
@@ -182,6 +183,7 @@ function cacheElements() {
   el.exportJsonBtn       = document.getElementById('export-json-btn');
   el.submitCommunityBtn  = document.getElementById('submit-community-btn');
   el.communitySetSub     = document.getElementById('community-set-sub');
+  el.aiSetSub            = document.getElementById('ai-set-sub');
   el.refreshCommunityBtn = document.getElementById('refresh-community-btn');
   el.communityStatus     = document.getElementById('community-status');
   el.communityList       = document.getElementById('community-list');
@@ -663,6 +665,41 @@ async function loadCommunitySet() {
   renderCommunityList();
 }
 
+// ------------------------------------------------------------------
+//  AI SET
+// ------------------------------------------------------------------
+
+function updateAiLabel() {
+  if (!el.aiSetSub) return;
+  if (!state.aiSet.length) {
+    el.aiSetSub.textContent = 'No AI-graded carcasses available';
+  } else {
+    el.aiSetSub.textContent = state.aiSet.length + ' AI-graded carcasses';
+  }
+}
+
+async function loadAiSet() {
+  if (!window._db) {
+    updateAiLabel();
+    return;
+  }
+  try {
+    const snap = await window._db
+      .collection(DB_COLLECTIONS.ai_carcasses)
+      .orderBy('submittedAt', 'desc')
+      .limit(500)
+      .get();
+    state.aiSet = snap.docs
+      .map(d => Object.assign({ id: d.id }, d.data()))
+      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
+  } catch (e) {
+    state.aiSet = [];
+    if (el.aiSetSub) el.aiSetSub.textContent = 'Could not load AI set';
+    return;
+  }
+  updateAiLabel();
+}
+
 async function onSubmitToCommunity() {
   if (!window._currentUser) {
     alert('Please sign in to submit to the community set.');
@@ -758,6 +795,7 @@ function init() {
   initImageModal();
   buildCustomQualitySelector();
   loadCommunitySet();
+  loadAiSet();
 
   // Image URL preview
   el.customUrl.addEventListener('input', () => {
@@ -788,6 +826,13 @@ function init() {
       } else {
         deck = state.communitySet;
       }
+    }
+    else if (setVal === 'ai') {
+      if (!state.aiSet.length) {
+        alert('AI set is still loading — please wait a moment and try again.');
+        return;
+      }
+      deck = state.aiSet;
     }
     else                              deck = loadAllCarcasses();
 

@@ -5,6 +5,7 @@
 secrets/
 config.local.js
 grader/firebase-service-account.json
+grader/api_key.txt
 grader/tmp/
 *.keras
 *.h5

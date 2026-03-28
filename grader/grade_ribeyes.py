@@ -6,7 +6,7 @@ intramuscular fat segmentation (no model file needed), then uploads
 BOTH the image AND its predicted grade to Firebase.
 
 Every Firestore document contains:
-  imageUrl  → Firebase Storage public URL (the actual image)
+  imageUrl  → Cloudinary public URL (the actual image)
   correct   → { qualityGrade: 'CH_HI' }  (the AI-predicted grade)
 
 Grading technique: measures intramuscular fat ratio via HSV pixel
@@ -14,9 +14,9 @@ segmentation, maps ratio to USDA marbling score (0–1100), then to
 grade key. Same core approach as USDA's Computer Vision System.
 
 Usage:
-  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json
-  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --limit 5
-  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --zip Ribeyes.zip
+  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --cloud-name NAME --api-key KEY --api-secret SECRET
+  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --cloud-name NAME --api-key KEY --api-secret SECRET --limit 5
+  python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --cloud-name NAME --api-key KEY --api-secret SECRET --zip Ribeyes.zip
 """
 
 import argparse
@@ -37,8 +37,8 @@ warnings.filterwarnings('ignore')
 
 RIBEYES_ZIP_URL = 'https://www.depts.ttu.edu/meatscience/judging/docs/Ribeyes.zip'
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'}
-STORAGE_PREFIX = 'ribeyes'
-FIRESTORE_COLLECTION = 'community_carcasses'
+CLOUDINARY_FOLDER = 'ribeyes'
+FIRESTORE_COLLECTION = 'ai_carcasses'
 
 
 # ----------------------------------------------------------------
@@ -82,33 +82,50 @@ def collect_images(directory):
 
 
 # ----------------------------------------------------------------
-#  Firebase helpers
+#  Cloudinary helpers
 # ----------------------------------------------------------------
 
-def init_firebase(sa_path, bucket_name):
-    import firebase_admin
-    from firebase_admin import credentials, firestore, storage
-    cred = credentials.Certificate(sa_path)
-    firebase_admin.initialize_app(cred, {'storageBucket': bucket_name})
-    db = firestore.client()
-    bucket = storage.bucket()
-    print(f'Firebase initialized. Bucket: {bucket_name}')
-    return db, bucket
+def init_cloudinary(cloud_name, api_key, api_secret):
+    import cloudinary
+    import cloudinary.uploader
+    cloudinary.config(
+        cloud_name=cloud_name,
+        api_key=api_key,
+        api_secret=api_secret,
+        secure=True,
+    )
+    print(f'Cloudinary initialized. Cloud: {cloud_name}')
 
 
-def upload_image(bucket, local_path, storage_filename):
-    """Upload to Firebase Storage, return public URL."""
-    storage_path = f'{STORAGE_PREFIX}/{storage_filename}'
-    blob = bucket.blob(storage_path)
-
+def upload_image_cloudinary(local_path, public_id):
+    """Upload to Cloudinary, return secure public URL."""
+    import cloudinary.uploader
     img = Image.open(local_path).convert('RGB')
     buf = io.BytesIO()
     img.save(buf, format='JPEG', quality=85, optimize=True)
     buf.seek(0)
 
-    blob.upload_from_file(buf, content_type='image/jpeg')
-    blob.make_public()
-    return blob.public_url
+    result = cloudinary.uploader.upload(
+        buf,
+        public_id=f'{CLOUDINARY_FOLDER}/{public_id}',
+        resource_type='image',
+        overwrite=False,
+    )
+    return result['secure_url']
+
+
+# ----------------------------------------------------------------
+#  Firebase helpers
+# ----------------------------------------------------------------
+
+def init_firebase(sa_path):
+    import firebase_admin
+    from firebase_admin import credentials, firestore
+    cred = credentials.Certificate(sa_path)
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    print('Firebase (Firestore) initialized.')
+    return db
 
 
 def write_firestore_doc(db, image_name, image_url, grade_key, confidence, score, original_filename):
@@ -147,16 +164,22 @@ def _grade_label(key):
 # ----------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description='Grade ribeye images using color analysis.')
-    parser.add_argument('--sa',     required=True,  help='Path to firebase-service-account.json')
-    parser.add_argument('--zip',    default=None,   help='Path to Ribeyes.zip (auto-downloads if omitted)')
-    parser.add_argument('--images', default=None,   help='Path to a folder of extracted images (skips ZIP)')
-    parser.add_argument('--bucket', default='beef-grading-drill.appspot.com',
-                        help='Firebase Storage bucket name')
-    parser.add_argument('--limit',  type=int, default=0, help='Max images (0 = all)')
-    parser.add_argument('--dry-run', action='store_true',
-                        help='Grade images but skip Firebase upload (for testing grades locally)')
+    parser = argparse.ArgumentParser(description='Grade ribeye images and upload to Cloudinary + Firestore.')
+    parser.add_argument('--sa',          required=True,  help='Path to firebase-service-account.json')
+    parser.add_argument('--cloud-name',  required=True,  help='Cloudinary cloud name')
+    parser.add_argument('--api-key',     required=True,  help='Cloudinary API key')
+    parser.add_argument('--api-secret',  required=True,  help='Cloudinary API secret')
+    parser.add_argument('--zip',         default=None,   help='Path to Ribeyes.zip (auto-downloads if omitted)')
+    parser.add_argument('--images',      default=None,   help='Path to a folder of extracted images (skips ZIP)')
+    parser.add_argument('--limit',       type=int, default=0, help='Max images (0 = all)')
+    parser.add_argument('--dry-run',     action='store_true',
+                        help='Grade images but skip all uploads (for testing grades locally)')
+    parser.add_argument('--anthropic-key', default=None,
+                        help='Anthropic API key (overrides ANTHROPIC_API_KEY env var)')
     args = parser.parse_args()
+
+    if args.anthropic_key:
+        os.environ['ANTHROPIC_API_KEY'] = args.anthropic_key.strip()
 
     if not args.dry_run and not os.path.isfile(args.sa):
         sys.exit(f'ERROR: Service account not found: {args.sa}\n'
@@ -196,15 +219,29 @@ def main():
 
     print(f'{len(image_paths)} images to grade.\n')
 
-    # --- Step 2: Init Firebase (skip for dry-run) ---
-    db = bucket = None
+    # --- Step 2: Init services (skip for dry-run) ---
+    db = None
     if not args.dry_run:
-        db, bucket = init_firebase(args.sa, args.bucket)
+        db = init_firebase(args.sa)
+        init_cloudinary(args.cloud_name, args.api_key, args.api_secret)
     else:
-        print('DRY RUN — no Firebase uploads.\n')
+        # Still need Firebase to fetch reference images
+        if os.path.isfile(args.sa):
+            db = init_firebase(args.sa)
+        print('DRY RUN — no uploads.\n')
 
-    # --- Step 3: Grade + upload ---
-    from model_utils import analyze_marbling, build_image_name
+    # --- Step 2b: Fetch reference images from community_carcasses ---
+    from model_utils import analyze_marbling, build_image_name, load_reference_images, set_api_key
+    if args.anthropic_key:
+        set_api_key(args.anthropic_key)
+    reference_images = {}
+    if db is not None:
+        print('Loading reference images from community_carcasses...')
+        reference_images = load_reference_images(db)
+        if reference_images:
+            print(f'Loaded {len(reference_images)} reference grades: {", ".join(sorted(reference_images.keys()))}\n')
+        else:
+            print('No reference images found — grading without examples.\n')
 
     print('Grading and uploading...')
     t0 = time.time()
@@ -214,11 +251,11 @@ def main():
 
     for i, image_path in enumerate(tqdm(image_paths, desc='Processing', unit='img')):
         filename = os.path.basename(image_path)
-        storage_filename = f'ribeye_{i:04d}_{filename}'
+        public_id = f'ribeye_{i:04d}_{os.path.splitext(filename)[0]}'
         image_name = build_image_name(filename, i)
 
         try:
-            grade_key, confidence, score = analyze_marbling(image_path)
+            grade_key, confidence, score = analyze_marbling(image_path, reference_images)
 
             if args.dry_run:
                 grade_counter[grade_key] += 1
@@ -228,7 +265,7 @@ def main():
                     )
                 continue
 
-            image_url = upload_image(bucket, image_path, storage_filename)
+            image_url = upload_image_cloudinary(image_path, public_id)
             write_firestore_doc(db, image_name, image_url, grade_key, confidence, score, filename)
             grade_counter[grade_key] += 1
 

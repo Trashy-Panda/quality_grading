@@ -1,44 +1,28 @@
 """
-model_utils.py — color-analysis marbling grader + grade mapping helpers.
+model_utils.py — Claude Vision API ribeye grader + grade mapping helpers.
 
-No training data or model file required. Uses pixel-level fat/lean
-segmentation in HSV color space to estimate intramuscular fat ratio,
-then maps it to a USDA marbling score and website grade key.
+Uses Claude claude-sonnet-4-6 vision to analyze ribeye cross-section images and assign
+USDA quality grades. When reference images (from community_carcasses) are
+available they are included as few-shot examples so Claude grades relative
+to known-good human-graded samples rather than from text descriptions alone.
 
-Technique: same core approach as USDA's Computer Vision System (CVS)
-and MatthewSchimmel's hackathon entry — identify fat pixels vs lean
-pixels, compute ratio, convert to grade.
+Set ANTHROPIC_API_KEY environment variable before running, or pass
+--anthropic-key to grade_ribeyes.py.
 """
 
-import numpy as np
+import base64
+import io
+import json
+import os
+import re
+import time
+
+import requests
 from PIL import Image
 
-
 # ----------------------------------------------------------------
-#  Grade mapping: marbling score (0–1100) → website grade key
-#  Based on USDA marbling score scale:
-#    Practically Devoid: 100–199  → STD
-#    Traces:             200–299  → SE_LO
-#    Slight:             300–399  → SE range
-#    Small:              400–499  → CH_LO
-#    Modest:             500–599  → CH_AVG
-#    Moderate:           600–699  → CH_HI
-#    Slightly Abundant:  700–799  → PR_LO
-#    Moderately Abundant:800–899  → PR_AVG
-#    Abundant:           900–1100 → PR_HI
+#  Grade mapping
 # ----------------------------------------------------------------
-SCORE_THRESHOLDS = [
-    (900, 'PR_HI'),
-    (800, 'PR_AVG'),
-    (700, 'PR_LO'),
-    (600, 'CH_HI'),
-    (500, 'CH_AVG'),
-    (400, 'CH_LO'),
-    (350, 'SE_HI'),
-    (300, 'SE_AVG'),
-    (200, 'SE_LO'),
-    (0,   'STD'),
-]
 
 GRADE_LABELS = {
     'PR_HI':  'High Prime',    'PR_AVG': 'Average Prime', 'PR_LO':  'Low Prime',
@@ -47,159 +31,242 @@ GRADE_LABELS = {
     'STD':    'Standard',      'COM':    'Commercial',
 }
 
+_GRADE_MAP = {
+    'high prime':       'PR_HI',
+    'average prime':    'PR_AVG',
+    'low prime':        'PR_LO',
+    'prime':            'PR_AVG',
+    'high choice':      'CH_HI',
+    'average choice':   'CH_AVG',
+    'low choice':       'CH_LO',
+    'upper 2/3 choice': 'CH_HI',
+    'choice':           'CH_AVG',
+    'high select':      'SE_HI',
+    'average select':   'SE_AVG',
+    'low select':       'SE_LO',
+    'select':           'SE_AVG',
+    'standard':         'STD',
+    'commercial':       'COM',
+}
 
-def score_to_grade_key(score):
-    """Convert a marbling score (0–1100) to a website grade key."""
-    score = float(score)
-    for threshold, key in SCORE_THRESHOLDS:
-        if score >= threshold:
-            return key
-    return 'STD'
+_DESCRIPTOR_SCORE = {
+    'abundant':               950,
+    'moderately abundant':    850,
+    'slightly abundant':      750,
+    'moderate':               650,
+    'modest':                 550,
+    'small':                  450,
+    'slight':                 350,
+    'traces':                 250,
+    'practically devoid':     150,
+}
+
+# Which grades to try to fetch as reference examples (one per tier)
+_REFERENCE_GRADES = ['PR_AVG', 'CH_HI', 'CH_AVG', 'CH_LO', 'SE_AVG', 'STD']
+
+_SYSTEM_PROMPT_BASE = """You are a certified USDA beef grader with 20 years of experience grading ribeye cross-sections.
+
+Grade the LAST image in this message using official USDA quality grade standards based on marbling (intramuscular fat flecks within the lean muscle).
+
+USDA marbling descriptors:
+- Abundant → High Prime
+- Moderately Abundant → Average Prime
+- Slightly Abundant → Low Prime
+- Moderate → High Choice
+- Modest → Average Choice
+- Small → Low Choice
+- Slight+ → High Select
+- Slight → Average Select
+- Slight- → Low Select
+- Traces / Practically Devoid → Standard
+
+Focus on: marbling fleck SIZE and DENSITY within the longissimus (eye) muscle. Ignore external fat cap and bone.
+
+Respond ONLY with valid JSON (no markdown):
+{
+  "grade": "High Choice",
+  "marbling_descriptor": "Moderate",
+  "marbling_score": 650,
+  "confidence": "high",
+  "reasoning": "one sentence"
+}
+
+grade must be one of: High Prime, Average Prime, Low Prime, High Choice, Average Choice, Low Choice, High Select, Average Select, Low Select, Standard
+confidence must be one of: high, medium, low"""
+
+_SYSTEM_PROMPT_NO_REF = _SYSTEM_PROMPT_BASE.replace(
+    'Grade the LAST image in this message',
+    'Grade the image'
+)
 
 
-def _marbling_ratio_to_score(ratio):
+def _img_to_b64(path_or_url, from_url=False):
+    """Load an image from a local path or URL, resize to max 800px, return base64 JPEG."""
+    if from_url:
+        r = requests.get(path_or_url, timeout=15)
+        r.raise_for_status()
+        img = Image.open(io.BytesIO(r.content)).convert('RGB')
+    else:
+        img = Image.open(path_or_url).convert('RGB')
+
+    img.thumbnail((800, 800), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, format='JPEG', quality=82)
+    return base64.standard_b64encode(buf.getvalue()).decode()
+
+
+def load_reference_images(db):
     """
-    Map intramuscular fat ratio (0.0–1.0) to USDA marbling score (0–1100).
-    Piecewise linear interpolation calibrated to USDA marbling descriptions.
+    Fetch one example image per grade tier from community_carcasses.
+    Returns dict: { 'CH_HI': <base64_str>, 'SE_AVG': <base64_str>, ... }
     """
-    breakpoints = [
-        (0.00,  100),   # Practically devoid
-        (0.02,  200),   # Traces
-        (0.045, 300),   # Slight—
-        (0.07,  400),   # Slight+  / Small—
-        (0.10,  500),   # Small+   / Modest—
-        (0.145, 600),   # Modest+  / Moderate—
-        (0.185, 700),   # Moderate+/ Slightly Abundant—
-        (0.245, 800),   # Slightly Abundant+ / Mod. Abundant—
-        (0.305, 900),   # Mod. Abundant+ / Abundant—
-        (0.40,  1100),  # Abundant+
-    ]
-    for i in range(len(breakpoints) - 1):
-        r0, s0 = breakpoints[i]
-        r1, s1 = breakpoints[i + 1]
-        if ratio <= r1:
-            t = (ratio - r0) / (r1 - r0)
-            return round(s0 + t * (s1 - s0), 1)
-    return 1100.0
+    refs = {}
+    try:
+        snap = db.collection('community_carcasses').limit(200).get()
+        docs = [d.data() for d in snap]
+    except Exception as e:
+        print(f'  Warning: could not fetch community_carcasses: {e}')
+        return refs
+
+    # Build a pool of docs per grade
+    by_grade = {}
+    for doc in docs:
+        grade = (doc.get('correct') or {}).get('qualityGrade')
+        url = doc.get('imageUrl', '')
+        if grade and url.startswith('https://'):
+            by_grade.setdefault(grade, []).append(url)
+
+    for grade in _REFERENCE_GRADES:
+        if grade not in by_grade:
+            continue
+        url = by_grade[grade][0]
+        try:
+            refs[grade] = _img_to_b64(url, from_url=True)
+        except Exception as e:
+            print(f'  Warning: could not load reference for {grade}: {e}')
+
+    return refs
 
 
-def analyze_marbling(image_path):
+def _get_client():
+    try:
+        import anthropic
+    except ImportError:
+        raise ImportError('Run: pip install anthropic')
+    key = (_api_key or os.environ.get('ANTHROPIC_API_KEY', '')).strip()
+    # Fall back to api_key.txt next to this file
+    if not key:
+        key_file = os.path.join(os.path.dirname(__file__), 'api_key.txt')
+        if os.path.isfile(key_file):
+            key = open(key_file).read().strip()
+    if not key:
+        raise ValueError('No API key found. Add it to grader/api_key.txt')
+    return anthropic.Anthropic(api_key=key)
+
+
+_client = None
+_api_key = None
+
+
+def set_api_key(key):
+    """Call this before analyze_marbling to set the key directly."""
+    global _api_key, _client
+    _api_key = key.strip()
+    _client = None  # force re-init with new key
+
+
+def _parse_grade_response(text):
+    try:
+        data = json.loads(text.strip())
+    except json.JSONDecodeError:
+        m = re.search(r'\{.*\}', text, re.DOTALL)
+        if m:
+            data = json.loads(m.group())
+        else:
+            return 'SE_AVG', 0.4, 350.0
+
+    grade_key = _GRADE_MAP.get(data.get('grade', '').lower().strip(), 'SE_AVG')
+    confidence = {'high': 0.90, 'medium': 0.70, 'low': 0.50}.get(
+        data.get('confidence', 'medium').lower(), 0.70
+    )
+    score = float(data.get('marbling_score', 0))
+    if score == 0:
+        score = float(_DESCRIPTOR_SCORE.get(
+            data.get('marbling_descriptor', '').lower().strip(), 350
+        ))
+    return grade_key, confidence, score
+
+
+def analyze_marbling(image_path, reference_images=None, max_retries=3):
     """
     Analyze a ribeye image and return (grade_key, confidence, marbling_score).
 
-    Algorithm:
-    1. Load image → convert to both RGB and HSV
-    2. Remove background: dark pixels (V < 35) and very bright background (V > 240, S < 20)
-    3. Within the ribeye area:
-       - Lean meat: red-pink pixels (Hue 0–20, S > 50)
-       - Intramuscular fat: cream/white pixels (S < 55, V > 140)
-    4. Marbling ratio = fat / (fat + lean)
-    5. Map ratio → score → grade key
+    reference_images: dict of { grade_key: base64_jpeg_str } from load_reference_images().
+    When provided, they are prepended to the prompt as few-shot examples.
     """
-    try:
-        pil_img = Image.open(image_path).convert('RGB')
-    except Exception as e:
-        raise ValueError(f'Cannot open image {image_path}: {e}')
+    global _client
+    if _client is None:
+        _client = _get_client()
 
-    img_rgb = np.array(pil_img, dtype=np.float32)
+    target_b64 = _img_to_b64(image_path)
 
-    # Convert to HSV using numpy (avoid cv2 dependency)
-    img_hsv = _rgb_to_hsv(img_rgb)
-    H = img_hsv[:, :, 0]   # 0–360
-    S = img_hsv[:, :, 1]   # 0–1
-    V = img_hsv[:, :, 2]   # 0–255
+    # Build message content
+    content = []
 
-    # --- Step 1: foreground mask (exclude background) ---
-    # Dark background: V < 35
-    dark_bg = V < 35
-    # Very bright / desaturated background (white backdrop, if any): V > 235 and S < 0.08
-    bright_bg = (V > 235) & (S < 0.08)
-    foreground = ~(dark_bg | bright_bg)
+    if reference_images:
+        content.append({
+            'type': 'text',
+            'text': (
+                'Below are reference ribeye images with their known USDA grades. '
+                'Use these as your calibration standard, then grade the FINAL image.\n'
+            )
+        })
+        for grade_key, b64 in reference_images.items():
+            label = GRADE_LABELS.get(grade_key, grade_key)
+            content.append({'type': 'text', 'text': f'REFERENCE — {label} ({grade_key}):'})
+            content.append({
+                'type': 'image',
+                'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': b64}
+            })
+        content.append({'type': 'text', 'text': '\nNow grade this ribeye:'})
+    else:
+        content.append({'type': 'text', 'text': 'Grade this ribeye cross-section.'})
 
-    # --- Step 2: lean meat mask ---
-    # Red-pink: Hue 0–22 or 340–360 (wraps), moderate-high saturation, moderate value
-    red_hue = ((H <= 22) | (H >= 340))
-    lean_mask = foreground & red_hue & (S > 0.18) & (V > 50) & (V < 235)
+    content.append({
+        'type': 'image',
+        'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': target_b64}
+    })
 
-    # --- Step 3: intramuscular fat mask ---
-    # Cream/white: low saturation, high brightness, within foreground
-    # Slightly warm (yellow-cream): Hue 15–55, S 0.05–0.40, V > 140
-    fat_hue = (H >= 10) & (H <= 60)
-    fat_mask = foreground & (
-        ((S < 0.38) & (V > 140) & fat_hue) |       # cream/yellow fat
-        ((S < 0.22) & (V > 155))                    # near-white fat
-    ) & ~lean_mask  # don't double-count
+    system = _SYSTEM_PROMPT_BASE if reference_images else _SYSTEM_PROMPT_NO_REF
 
-    fat_pixels  = int(np.sum(fat_mask))
-    lean_pixels = int(np.sum(lean_mask))
-    total_muscle = fat_pixels + lean_pixels
+    for attempt in range(max_retries):
+        try:
+            import anthropic
+            response = _client.messages.create(
+                model='claude-sonnet-4-6',
+                max_tokens=250,
+                system=system,
+                messages=[{'role': 'user', 'content': content}]
+            )
+            return _parse_grade_response(response.content[0].text)
+        except Exception as e:
+            err = str(e)
+            if 'overloaded' in err.lower() or 'rate' in err.lower():
+                time.sleep(2 ** attempt)
+                continue
+            raise
 
-    if total_muscle < 200:
-        # Too few pixels found — image may be background-only or very dark
-        return 'SE_AVG', 0.3, 350.0
-
-    ratio = fat_pixels / total_muscle
-    score = _marbling_ratio_to_score(ratio)
-    grade_key = score_to_grade_key(score)
-
-    # Confidence: how far the ratio is from the nearest grade boundary
-    confidence = _ratio_confidence(ratio)
-
-    return grade_key, round(confidence, 4), round(score, 1)
-
-
-def _ratio_confidence(ratio):
-    """Estimate confidence 0.5–1.0 based on distance from nearest grade boundary."""
-    # Boundaries in ratio space (correspond to score thresholds)
-    boundaries = [0.02, 0.045, 0.07, 0.10, 0.145, 0.185, 0.245, 0.305]
-    if not boundaries:
-        return 0.7
-    min_dist = min(abs(ratio - b) for b in boundaries)
-    band = 0.025  # typical half-bandwidth between boundaries
-    return round(0.5 + 0.5 * min(min_dist / band, 1.0), 4)
-
-
-def _rgb_to_hsv(img_rgb):
-    """
-    Convert an (H, W, 3) float32 RGB array (0–255) to HSV.
-    Returns H: 0–360, S: 0–1, V: 0–255.
-    Pure numpy — no OpenCV required.
-    """
-    r = img_rgb[:, :, 0] / 255.0
-    g = img_rgb[:, :, 1] / 255.0
-    b = img_rgb[:, :, 2] / 255.0
-
-    cmax = np.maximum(np.maximum(r, g), b)
-    cmin = np.minimum(np.minimum(r, g), b)
-    delta = cmax - cmin
-
-    # Value
-    V = cmax * 255.0
-
-    # Saturation
-    S = np.where(cmax > 0, delta / cmax, 0.0)
-
-    # Hue
-    H = np.zeros_like(r)
-    mask_r = (cmax == r) & (delta > 0)
-    mask_g = (cmax == g) & (delta > 0)
-    mask_b = (cmax == b) & (delta > 0)
-    H[mask_r] = 60.0 * (((g[mask_r] - b[mask_r]) / delta[mask_r]) % 6)
-    H[mask_g] = 60.0 * (((b[mask_g] - r[mask_g]) / delta[mask_g]) + 2)
-    H[mask_b] = 60.0 * (((r[mask_b] - g[mask_b]) / delta[mask_b]) + 4)
-
-    return np.stack([H, S, V], axis=2)
+    return 'SE_AVG', 0.4, 350.0
 
 
 def preprocess_image(image_path, target_size=(224, 224)):
-    """Load and resize image for display/storage use (not needed for analysis)."""
     img = Image.open(image_path).convert('RGB')
     img = img.resize(target_size, Image.LANCZOS)
-    return np.array(img, dtype=np.float32) / 255.0
+    import numpy as np
+    return np.array(img, dtype=float) / 255.0
 
 
 def build_image_name(filename, index):
-    """Generate a human-readable image name from the filename."""
     stem = filename.rsplit('.', 1)[0]
     stem = stem.replace('_', ' ').replace('-', ' ')
     return stem if stem.strip() else f'Ribeye {index + 1:04d}'

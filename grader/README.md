@@ -1,19 +1,21 @@
 # AI Ribeye Grading Pipeline
 
-Grades ~2,000 TTU ribeye images using the 1st-place USDA/CSU hackathon model
-(ResNet50 transfer learning), then uploads every image + its predicted grade to
-Firebase so they appear live on gradethismeat.xyz.
+Grades ~2,857 TTU ribeye images using color-based intramuscular fat segmentation,
+then uploads every image + its predicted grade to Cloudinary (image hosting) +
+Firebase Firestore (database) so they appear live on gradethismeat.xyz.
 
 ---
 
 ## How it works
 
-1. Downloads TTU Ribeyes.zip (~2,000 images)
-2. Runs each image through the pre-trained ResNet50 model
-3. Converts the predicted marbling score to a USDA grade key (`CH_HI`, `PR_LO`, etc.)
-4. Uploads the image to **Firebase Storage** → gets a permanent public URL
+1. Downloads TTU Ribeyes.zip (~2,857 images) automatically
+2. Analyzes each image using HSV pixel segmentation to measure intramuscular fat ratio
+3. Maps fat ratio → USDA marbling score (0–1100) → grade key (`CH_HI`, `PR_LO`, etc.)
+4. Uploads the image to **Cloudinary** → gets a permanent public HTTPS URL
 5. Writes a document to **Firestore `community_carcasses`** with the image URL + grade
 6. Images appear immediately in the Community Set and Weekly Challenge pool on the site
+
+No ML model needed — uses the same color analysis technique as USDA's Computer Vision System.
 
 ---
 
@@ -25,13 +27,11 @@ Firebase so they appear live on gradethismeat.xyz.
 pip install -r grader/requirements.txt
 ```
 
-### 2. Download the pre-trained model
+### 2. Get a Cloudinary account (free, no credit card)
 
-Download `best_model.keras` from the 1st-place hackathon team's Google Drive:
-
-**https://drive.google.com/file/d/1suQxD6kJ8wviCNpbCZZRWIENzsGF6him/view**
-
-Save it anywhere — you'll pass the path via `--model`.
+1. Sign up at **https://cloudinary.com** (free tier: 25GB storage, 25GB bandwidth/month)
+2. After signing in, go to your **Dashboard**
+3. Note your **Cloud Name**, **API Key**, and **API Secret**
 
 ### 3. Get a Firebase service account key
 
@@ -43,12 +43,6 @@ Save it anywhere — you'll pass the path via `--model`.
 > Keep this file secret — it has admin access to your Firebase project.
 > It is already in `.gitignore`.
 
-### 4. Enable Firebase Storage
-
-1. Firebase Console → **Storage** → Get started
-2. Choose a region (us-central1 is fine) → Done
-3. The free Spark plan includes 5 GB — enough for ~2,000 JPEG images
-
 ---
 
 ## Running
@@ -57,33 +51,48 @@ Save it anywhere — you'll pass the path via `--model`.
 
 ```bash
 python grader/grade_ribeyes.py \
-  --model best_model.keras \
   --sa grader/firebase-service-account.json \
+  --cloud-name YOUR_CLOUD_NAME \
+  --api-key YOUR_API_KEY \
+  --api-secret YOUR_API_SECRET \
   --limit 5
 ```
 
 After this runs, check:
-- Firebase Console → Storage → `ribeyes/` folder has 5 images
+- Cloudinary Dashboard → Media Library → `ribeyes/` folder has 5 images
 - Firestore → `community_carcasses` collection has 5 new docs with `imageUrl` + `correct.qualityGrade`
-- Open one `imageUrl` in your browser → image loads
-- gradethismeat.xyz → Settings → Community Set → new images appear
+- Open one `imageUrl` in your browser → image loads from `res.cloudinary.com`
+- gradethismeat.xyz → community carcasses → new images appear
 
-### Full run (all ~2,000 images)
+### Dry run (grade only, no uploads)
 
 ```bash
 python grader/grade_ribeyes.py \
-  --model best_model.keras \
-  --sa grader/firebase-service-account.json
+  --sa grader/firebase-service-account.json \
+  --cloud-name x --api-key x --api-secret x \
+  --dry-run
 ```
 
-Takes ~15–30 minutes depending on your internet speed and GPU.
+### Full run (all ~2,857 images)
+
+```bash
+python grader/grade_ribeyes.py \
+  --sa grader/firebase-service-account.json \
+  --cloud-name YOUR_CLOUD_NAME \
+  --api-key YOUR_API_KEY \
+  --api-secret YOUR_API_SECRET
+```
+
+Takes ~30–60 minutes depending on your internet speed (2,857 image uploads).
 
 ### If you already have the ZIP downloaded
 
 ```bash
 python grader/grade_ribeyes.py \
-  --model best_model.keras \
   --sa grader/firebase-service-account.json \
+  --cloud-name YOUR_CLOUD_NAME \
+  --api-key YOUR_API_KEY \
+  --api-secret YOUR_API_SECRET \
   --zip path/to/Ribeyes.zip
 ```
 
@@ -93,19 +102,20 @@ python grader/grade_ribeyes.py \
 
 | Flag | Default | Description |
 |---|---|---|
-| `--model` | (required) | Path to `best_model.keras` |
 | `--sa` | (required) | Path to `firebase-service-account.json` |
+| `--cloud-name` | (required) | Cloudinary cloud name |
+| `--api-key` | (required) | Cloudinary API key |
+| `--api-secret` | (required) | Cloudinary API secret |
 | `--zip` | auto-download | Path to `Ribeyes.zip` (skips download if provided) |
-| `--bucket` | `beef-grading-drill.appspot.com` | Firebase Storage bucket |
-| `--batch` | `32` | Inference batch size (reduce to `8` if you get OOM errors) |
+| `--images` | — | Path to folder of extracted images (skips ZIP entirely) |
 | `--limit` | `0` (all) | Max images to process (useful for testing) |
+| `--dry-run` | false | Grade images but skip all uploads |
 
 ---
 
 ## Grade mapping
 
-The model predicts a marbling score on the USDA 0–1100 scale.
-The script maps it to the website's 11-grade system:
+The script measures intramuscular fat ratio and maps it to the website's 11-grade system:
 
 | Score range | Grade key | Label |
 |---|---|---|
@@ -122,9 +132,13 @@ The script maps it to the website's 11-grade system:
 
 ---
 
-## Model source
+## Grading technique
 
-- Team: coenpetto (1st place, USDA/CSU Hackathon, April 2024)
-- Architecture: ResNet50 (ImageNet pretrained, frozen) + regression head
-- Training data: ~1,401 labeled ribeye images, Path1 Challenge dataset (USDA-AMS)
-- Repo: https://github.com/coenpetto/USDA-Hackathon-4-6-24
+Same core approach as USDA's Computer Vision System:
+1. Convert image to HSV color space (pure numpy, no OpenCV required)
+2. Exclude background (dark pixels V < 35)
+3. Identify lean meat (red-pink hue, H 0–22°, moderate saturation)
+4. Identify intramuscular fat (cream/white, low saturation S < 0.38, high brightness V > 140)
+5. Compute fat ratio = fat pixels / (fat + lean pixels)
+6. Map ratio → USDA marbling score via piecewise linear interpolation
+7. Map score → grade key
