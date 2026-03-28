@@ -1,0 +1,5 @@
+cloud_name=dhzgmfako
+api_key=763382349599767
+api_secret=gYY5zSm3mHYM_XP0I9iZ4lRTPPI
+
+
