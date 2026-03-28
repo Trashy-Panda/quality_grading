@@ -32,21 +32,21 @@ GRADE_LABELS = {
 }
 
 _GRADE_MAP = {
-    'high prime':       'PR_HI',
-    'average prime':    'PR_AVG',
-    'low prime':        'PR_LO',
-    'prime':            'PR_AVG',
-    'high choice':      'CH_HI',
-    'average choice':   'CH_AVG',
-    'low choice':       'CH_LO',
-    'upper 2/3 choice': 'CH_HI',
-    'choice':           'CH_AVG',
-    'high select':      'SE_HI',
-    'average select':   'SE_AVG',
-    'low select':       'SE_LO',
-    'select':           'SE_AVG',
-    'standard':         'STD',
-    'commercial':       'COM',
+    'high prime':           'PR_HI',
+    'average prime':        'PR_AVG',
+    'low prime':            'PR_LO',
+    'prime':                'PR_AVG',
+    'high choice':          'CH_HI',
+    'average choice':       'CH_AVG',
+    'low choice':           'CH_LO',
+    'upper 2/3 choice':     'CH_HI',
+    'choice':               'CH_AVG',
+    'high select':          'SE_HI',
+    'average select':       'SE_HI',  # map old SE_AVG → SE_HI (upper slight)
+    'low select':           'SE_LO',
+    'select':               'SE_HI',
+    'standard':             'STD',
+    'commercial':           'COM',
 }
 
 _DESCRIPTOR_SCORE = {
@@ -56,31 +56,38 @@ _DESCRIPTOR_SCORE = {
     'moderate':               650,
     'modest':                 550,
     'small':                  450,
-    'slight':                 350,
+    'slight+':                385,   # upper half of Slight → SE_HI
+    'slight':                 350,   # midpoint — defaults to SE_HI boundary
+    'slight-':                315,   # lower half of Slight → SE_LO
     'traces':                 250,
     'practically devoid':     150,
 }
 
 # Which grades to try to fetch as reference examples (one per tier)
-_REFERENCE_GRADES = ['PR_AVG', 'CH_HI', 'CH_AVG', 'CH_LO', 'SE_AVG', 'STD']
+_REFERENCE_GRADES = ['PR_AVG', 'CH_HI', 'CH_AVG', 'CH_LO', 'SE_HI', 'SE_LO', 'STD']
 
 _SYSTEM_PROMPT_BASE = """You are a certified USDA beef grader with 20 years of experience grading ribeye cross-sections.
 
-Grade the LAST image in this message using official USDA quality grade standards based on marbling (intramuscular fat flecks within the lean muscle).
+Grade the LAST image in this message using official USDA quality grade standards.
 
-USDA marbling descriptors:
-- Abundant → High Prime
-- Moderately Abundant → Average Prime
-- Slightly Abundant → Low Prime
-- Moderate → High Choice
-- Modest → Average Choice
-- Small → Low Choice
-- Slight+ → High Select
-- Slight → Average Select
-- Slight- → Low Select
-- Traces / Practically Devoid → Standard
+GRADE SCALE (8 grades, highest to lowest):
+- Abundant (900-999)           → High Prime
+- Moderately Abundant (800-899) → Average Prime
+- Slightly Abundant (700-799)  → Low Prime
+- Moderate (600-699)           → High Choice
+- Modest (500-599)             → Average Choice
+- Small (400-499)              → Low Choice
+- Slight upper half (350-399)  → High Select   ← USE THIS, it is a real grade
+- Slight lower half (300-349)  → Low Select
+- Traces/Practically Devoid (<300) → Standard
 
-Focus on: marbling fleck SIZE and DENSITY within the longissimus (eye) muscle. Ignore external fat cap and bone.
+CRITICAL — FINE vs COARSE MARBLING:
+- Fine marbling = many small, diffuse flecks distributed evenly across the entire muscle = HIGHER grade
+- Coarse marbling = fewer large clumps or streaks = LOWER grade for same apparent percentage
+- A ribeye with fine, evenly distributed marbling grades ONE LEVEL HIGHER than one with the same fat percentage in coarse deposits
+- Look at fleck SIZE (small dots vs large blobs), DISTRIBUTION (even vs patchy), and DENSITY (count of flecks per cm²)
+
+WHAT TO IGNORE: external fat cap, seam fat between muscle groups, bone. Grade ONLY the longissimus dorsi (the large central eye muscle).
 
 Respond ONLY with valid JSON (no markdown):
 {
@@ -88,10 +95,10 @@ Respond ONLY with valid JSON (no markdown):
   "marbling_descriptor": "Moderate",
   "marbling_score": 650,
   "confidence": "high",
-  "reasoning": "one sentence"
+  "reasoning": "one sentence describing fleck size, distribution, and density"
 }
 
-grade must be one of: High Prime, Average Prime, Low Prime, High Choice, Average Choice, Low Choice, High Select, Average Select, Low Select, Standard
+grade must be EXACTLY one of: High Prime, Average Prime, Low Prime, High Choice, Average Choice, Low Choice, High Select, Low Select, Standard
 confidence must be one of: high, medium, low"""
 
 _SYSTEM_PROMPT_NO_REF = _SYSTEM_PROMPT_BASE.replace(
@@ -123,7 +130,7 @@ def load_reference_images(db):
     refs = {}
     try:
         snap = db.collection('community_carcasses').limit(200).get()
-        docs = [d.data() for d in snap]
+        docs = [d.to_dict() for d in snap]
     except Exception as e:
         print(f'  Warning: could not fetch community_carcasses: {e}')
         return refs
@@ -185,7 +192,7 @@ def _parse_grade_response(text):
         else:
             return 'SE_AVG', 0.4, 350.0
 
-    grade_key = _GRADE_MAP.get(data.get('grade', '').lower().strip(), 'SE_AVG')
+    grade_key = _GRADE_MAP.get(data.get('grade', '').lower().strip(), 'SE_HI')
     confidence = {'high': 0.90, 'medium': 0.70, 'low': 0.50}.get(
         data.get('confidence', 'medium').lower(), 0.70
     )

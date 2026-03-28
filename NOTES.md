@@ -100,6 +100,30 @@ Click **Publish**.
 
 ---
 
+# Firestore Collections Schema
+
+## grading_votes
+Crowdsource grading votes submitted by authenticated users on `ai_carcasses` images.
+
+| Field | Type | Constraints |
+|---|---|---|
+| `imageId` | string | non-empty; doc ID from `ai_carcasses` collection |
+| `imageUrl` | string | must start with `https://` |
+| `userId` | string | must equal `request.auth.uid` |
+| `grade` | string | one of: `PR_HI`, `PR_AVG`, `PR_LO`, `CH_HI`, `CH_AVG`, `CH_LO`, `SE_HI`, `SE_LO`, `STD` |
+| `submittedAt` | timestamp | server timestamp only (`request.time`) |
+
+**Access rules:**
+- read: authenticated users can read their own votes only (`resource.data.userId == request.auth.uid`)
+- create: authenticated users only, all fields validated (see above)
+- update: never
+- delete: admin only (`KLoBqbA2P9UkQ83urzmgpxT4Oit1`)
+
+**Note:** No unique-vote deduplication enforced at docId level (unlike submissions). If
+one-vote-per-image-per-user is needed, use docId pattern `{uid}_{imageId}` in the client.
+
+---
+
 # Dev Workflow Cheat Sheet
 
 ## The Two Branches

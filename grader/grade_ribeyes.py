@@ -146,6 +146,8 @@ def write_firestore_doc(db, image_name, image_url, grade_key, confidence, score,
         'aiScore':      float(score),
         'aiConfidence': float(confidence),
         'sourceFile':   original_filename,
+        'voteCount':    0,
+        'promoted':     False,
     }
     db.collection(FIRESTORE_COLLECTION).add(doc)
 
@@ -163,23 +165,47 @@ def _grade_label(key):
 #  Main
 # ----------------------------------------------------------------
 
+def _load_creds_file(path):
+    """Load key=value pairs from a credentials file."""
+    creds = {}
+    if os.path.isfile(path):
+        for line in open(path).read().splitlines():
+            line = line.strip()
+            if '=' in line and not line.startswith('#'):
+                k, v = line.split('=', 1)
+                creds[k.strip()] = v.strip()
+    return creds
+
+
 def main():
     parser = argparse.ArgumentParser(description='Grade ribeye images and upload to Cloudinary + Firestore.')
     parser.add_argument('--sa',          required=True,  help='Path to firebase-service-account.json')
-    parser.add_argument('--cloud-name',  required=True,  help='Cloudinary cloud name')
-    parser.add_argument('--api-key',     required=True,  help='Cloudinary API key')
-    parser.add_argument('--api-secret',  required=True,  help='Cloudinary API secret')
+    parser.add_argument('--cloud-name',  default=None,   help='Cloudinary cloud name (or set in cloudinary_creds.txt)')
+    parser.add_argument('--api-key',     default=None,   help='Cloudinary API key (or set in cloudinary_creds.txt)')
+    parser.add_argument('--api-secret',  default=None,   help='Cloudinary API secret (or set in cloudinary_creds.txt)')
     parser.add_argument('--zip',         default=None,   help='Path to Ribeyes.zip (auto-downloads if omitted)')
     parser.add_argument('--images',      default=None,   help='Path to a folder of extracted images (skips ZIP)')
     parser.add_argument('--limit',       type=int, default=0, help='Max images (0 = all)')
     parser.add_argument('--dry-run',     action='store_true',
                         help='Grade images but skip all uploads (for testing grades locally)')
     parser.add_argument('--anthropic-key', default=None,
-                        help='Anthropic API key (overrides ANTHROPIC_API_KEY env var)')
+                        help='Anthropic API key (overrides api_key.txt)')
     args = parser.parse_args()
 
     if args.anthropic_key:
         os.environ['ANTHROPIC_API_KEY'] = args.anthropic_key.strip()
+
+    # Load Cloudinary creds from file if not passed on CLI
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    creds_file = os.path.join(script_dir, 'cloudinary_creds.txt')
+    file_creds = _load_creds_file(creds_file)
+    cloud_name = args.cloud_name or file_creds.get('cloud_name')
+    api_key    = args.api_key    or file_creds.get('api_key')
+    api_secret = args.api_secret or file_creds.get('api_secret')
+
+    if not args.dry_run and not (cloud_name and api_key and api_secret):
+        sys.exit('ERROR: Cloudinary credentials missing.\n'
+                 'Edit grader/cloudinary_creds.txt with your cloud_name, api_key, api_secret.')
 
     if not args.dry_run and not os.path.isfile(args.sa):
         sys.exit(f'ERROR: Service account not found: {args.sa}\n'
@@ -223,7 +249,7 @@ def main():
     db = None
     if not args.dry_run:
         db = init_firebase(args.sa)
-        init_cloudinary(args.cloud_name, args.api_key, args.api_secret)
+        init_cloudinary(cloud_name, api_key, api_secret)
     else:
         # Still need Firebase to fetch reference images
         if os.path.isfile(args.sa):
@@ -295,7 +321,7 @@ def main():
             print(f'  {key:6s}  {count:4d}  ({pct:4.1f}%)  {bar}')
 
     if not args.dry_run:
-        print(f'\nImages are live in the community carcasses pool on gradethismeat.xyz')
+        print(f'\nImages are live in ai_carcasses — available in the "Help Train the Grading Model" section on gradethismeat.xyz')
     print('=' * 52)
 
 

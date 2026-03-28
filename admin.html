@@ -63,6 +63,7 @@
       <button class="admin-tab" id="tab-btn-weekly" data-tab="weekly">Weekly Challenge</button>
       <button class="admin-tab" id="tab-btn-users" data-tab="users">Users</button>
       <button class="admin-tab" id="tab-btn-community" data-tab="community">Community</button>
+      <button class="admin-tab" id="tab-btn-grading-votes" data-tab="grading-votes">Grading Votes</button>
     </nav>
 
     <!-- Tab content -->
@@ -298,6 +299,43 @@
         <div class="admin-card">
           <h3 class="admin-card-label">All Community Carcasses</h3>
           <div id="community-list">
+            <div class="admin-empty">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================
+           GRADING VOTES TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-grading-votes">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Grading Votes</h2>
+          <div class="admin-toolbar-controls">
+            <button id="gv-refresh-btn" class="admin-btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="admin-stats-row">
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="gv-stat-images">—</div>
+            <div class="stat-label">Images Voted On</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="gv-stat-votes">—</div>
+            <div class="stat-label">Total Votes</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="gv-stat-promoted">—</div>
+            <div class="stat-label">Promoted</div>
+          </div>
+        </div>
+
+        <!-- Card grid -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Images by Vote Count</h3>
+          <p class="admin-card-sub">Sorted by total votes descending. Click "Push to References" to promote an image to <code>community_carcasses</code> using the consensus grade.</p>
+          <div id="gv-card-list" class="gv-card-list">
             <div class="admin-empty">Loading…</div>
           </div>
         </div>

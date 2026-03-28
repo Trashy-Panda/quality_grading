@@ -145,6 +145,24 @@
       <div class="home-sidebar">
         <div class="home-panel-header">Weekly Challenge</div>
 
+        <!-- Contribute Card -->
+        <div class="contribute-card" id="contribute-card">
+          <div class="contribute-card-header">
+            <span class="contribute-stamp">USDA Grading Research</span>
+          </div>
+          <div class="contribute-card-body">
+            <h2 class="contribute-title">Help Train the Grading Model</h2>
+            <p class="contribute-subtitle">Grade ribeye images to improve AI accuracy for beef science education</p>
+            <div class="contribute-counter" id="contribute-counter">
+              <span class="contribute-counter-num" id="contribute-counter-num">&hellip;</span>
+              <span class="contribute-counter-label">images graded by the community</span>
+            </div>
+            <button class="contribute-start-btn" id="contribute-start-btn" aria-label="Start grading ribeye images for research">
+              Start Grading &rarr;
+            </button>
+          </div>
+        </div>
+
         <!-- Weekly Challenge Card -->
         <div id="weekly-challenge-card" class="weekly-card">
           <div class="weekly-card-header">
@@ -498,6 +516,66 @@
         Continue with GitHub
       </button>
       <p class="auth-modal-disclaimer">No password needed. We only store your display name and score.</p>
+    </div>
+  </div>
+
+  <!-- ===================================================
+       CONTRIBUTE MODAL (Crowdsource Grading)
+       =================================================== -->
+  <div id="contribute-modal" class="contribute-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="contribute-modal-heading">
+    <div class="contribute-modal-inner">
+
+      <!-- Header bar -->
+      <div class="contribute-modal-header">
+        <div class="contribute-modal-stamp">USDA Grading Research</div>
+        <h2 id="contribute-modal-heading" class="contribute-modal-title">Help Train the Grading Model</h2>
+        <button class="contribute-modal-close" id="contribute-modal-close" aria-label="Close grading research panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Auth prompt (shown when signed out) -->
+      <div id="contribute-auth-prompt" class="contribute-auth-prompt hidden">
+        <p class="contribute-auth-msg">Sign in to contribute — your grades are credited to your profile</p>
+        <button class="contribute-signin-btn" id="contribute-signin-btn" aria-label="Sign in to contribute grades">
+          Sign In to Contribute
+        </button>
+      </div>
+
+      <!-- Grading area (shown when signed in + image loaded) -->
+      <div id="contribute-grading-area" class="contribute-grading-area hidden">
+
+        <!-- Progress line -->
+        <div class="contribute-progress-bar">
+          <span class="contribute-progress-text" id="contribute-progress-text">You&rsquo;ve graded 0 images</span>
+        </div>
+
+        <!-- Image panel -->
+        <div class="contribute-image-wrap" id="contribute-image-wrap">
+          <img id="contribute-img" src="" alt="Ribeye carcass for grading" class="contribute-img" />
+          <div class="contribute-img-loading" id="contribute-img-loading" aria-live="polite">Loading image&hellip;</div>
+        </div>
+
+        <!-- Grade buttons grid -->
+        <div class="contribute-grade-label">Select Quality Grade</div>
+        <div class="contribute-grade-grid" id="contribute-grade-grid" role="group" aria-label="Quality grade options">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Skip -->
+        <div class="contribute-skip-row">
+          <button class="contribute-skip-btn" id="contribute-skip-btn" aria-label="Skip this image">
+            Skip this image
+          </button>
+        </div>
+
+      </div>
+
+      <!-- No images state -->
+      <div id="contribute-empty" class="contribute-empty hidden">
+        <p>No ungraded images available right now. Check back soon!</p>
+      </div>
+
     </div>
   </div>
 
