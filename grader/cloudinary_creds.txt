@@ -1,5 +1,3 @@
-cloud_name=dhzgmfako
-api_key=763382349599767
-api_secret=gYY5zSm3mHYM_XP0I9iZ4lRTPPI
-
-
+cloud_name=YOUR_CLOUD_NAME
+api_key=YOUR_API_KEY
+api_secret=YOUR_API_SECRET

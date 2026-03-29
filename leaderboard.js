@@ -175,7 +175,7 @@ function renderLeaderboard(weekId, ruleSet) {
               <td colspan="5">
                 <div class="leaderboard-empty">
                   <strong>Could not load leaderboard</strong>
-                  ${err.message || 'An error occurred. Please try again.'}
+                  ${_escapeHtml(err.message || 'An error occurred. Please try again.')}
                 </div>
               </td>
             </tr>`;
@@ -320,7 +320,8 @@ function _escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function _escapeAttr(str) {
