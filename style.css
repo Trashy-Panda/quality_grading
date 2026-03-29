@@ -504,9 +504,9 @@ body {
     max-width: 260px;
   }
   /* Shift stack right to compensate for skewY visual offset */
-  .landing-bg-img .folder-card--back  { transform: skewY(-4deg) translateX(30px); }
-  .landing-bg-img .folder-card--mid   { transform: skewY(-4deg) translateX(42px); }
-  .landing-bg-img .folder-card--front { transform: skewY(-4deg) translateX(54px); }
+  .landing-bg-img .folder-card--back  { transform: skewY(-4deg) translateX(55px); }
+  .landing-bg-img .folder-card--mid   { transform: skewY(-4deg) translateX(67px); }
+  .landing-bg-img .folder-card--front { transform: skewY(-4deg) translateX(79px); }
 }
 
 /* ── Marquee Bar (home screen) — hidden in this design ──────── */
