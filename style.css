@@ -471,50 +471,42 @@ body {
     font-size: 8px;
   }
 
-  /* ── Show folder stack on mobile — below the landing text ── */
+  /* ── Show folder stack on mobile — centered below landing text ── */
   .landing-bg-img {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     border-right: none;
     border-top: 2px solid var(--rule-heavy);
     overflow: visible;
-    padding: 24px 16px 32px;
-    display: flex;
-    justify-content: center;
+    padding: 40px 16px 48px;
+    width: 100%;
   }
-  /* Hide the carcass image on mobile — folders only */
+  /* Hide decorative carcass photo — folders only on mobile */
   .landing-bg-img img {
     display: none;
   }
-  /* Flow the folder stack normally — no skew, no offsets, centered */
+  /* Center folder stack */
   .landing-bg-img .folder-stack-wrap {
     position: static;
     top: auto;
     left: auto;
     transform: none;
-    margin: 0;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 360px;
-    padding-bottom: 0;
   }
-  /* Remove skew and translateX on mobile — stack cleanly */
-  .landing-bg-img .folder-card--back,
-  .landing-bg-img .folder-card--mid,
-  .landing-bg-img .folder-card--front {
-    transform: none;
-    filter: none;
-    margin-top: 0;
-    margin-left: 0;
-    width: 100%;
-    max-width: 360px;
+  /* Scale folders to screen, keep skew + overlap intact */
+  .landing-bg-img .folder-card {
+    width: calc(100vw - 100px);
+    max-width: 260px;
   }
-  /* Re-add spacing between cards */
-  .landing-bg-img .folder-card--mid {
-    margin-top: 12px;
-  }
-  .landing-bg-img .folder-card--front {
-    margin-top: 12px;
-  }
+  /* Keep translateX offsets proportional — center the whole group */
+  .landing-bg-img .folder-card--back  { transform: skewY(-4deg) translateX(-12px); }
+  .landing-bg-img .folder-card--mid   { transform: skewY(-4deg) translateX(0px);   }
+  .landing-bg-img .folder-card--front { transform: skewY(-4deg) translateX(12px);  }
 }
 
 /* ── Marquee Bar (home screen) — hidden in this design ──────── */
