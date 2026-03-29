@@ -424,9 +424,10 @@ body {
   #landing-hero {
     height: auto;
     min-height: 100svh;
+    overflow: visible;
   }
   .landing-content {
-    padding: 36px 24px 40px;
+    padding: 36px 24px 24px;
   }
   .landing-stamp-bar {
     font-size: 8px;
@@ -468,6 +469,27 @@ body {
   .landing-proof {
     margin-top: 14px;
     font-size: 8px;
+  }
+
+  /* ── Show folder stack on mobile — below the landing text ── */
+  .landing-bg-img {
+    display: block;
+    border-right: none;
+    border-top: 2px solid var(--rule-heavy);
+    overflow: visible;
+    padding: 36px 24px 40px;
+  }
+  /* Hide the carcass image on mobile — folders only */
+  .landing-bg-img img {
+    display: none;
+  }
+  /* Flow the folder stack normally (not absolutely positioned) */
+  .landing-bg-img .folder-stack-wrap {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 0;
   }
 }
 
