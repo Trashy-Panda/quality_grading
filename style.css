@@ -477,19 +477,43 @@ body {
     border-right: none;
     border-top: 2px solid var(--rule-heavy);
     overflow: visible;
-    padding: 36px 24px 40px;
+    padding: 24px 16px 32px;
+    display: flex;
+    justify-content: center;
   }
   /* Hide the carcass image on mobile — folders only */
   .landing-bg-img img {
     display: none;
   }
-  /* Flow the folder stack normally (not absolutely positioned) */
+  /* Flow the folder stack normally — no skew, no offsets, centered */
   .landing-bg-img .folder-stack-wrap {
     position: static;
     top: auto;
     left: auto;
     transform: none;
     margin: 0;
+    align-items: center;
+    width: 100%;
+    max-width: 360px;
+    padding-bottom: 0;
+  }
+  /* Remove skew and translateX on mobile — stack cleanly */
+  .landing-bg-img .folder-card--back,
+  .landing-bg-img .folder-card--mid,
+  .landing-bg-img .folder-card--front {
+    transform: none;
+    filter: none;
+    margin-top: 0;
+    margin-left: 0;
+    width: 100%;
+    max-width: 360px;
+  }
+  /* Re-add spacing between cards */
+  .landing-bg-img .folder-card--mid {
+    margin-top: 12px;
+  }
+  .landing-bg-img .folder-card--front {
+    margin-top: 12px;
   }
 }
 
