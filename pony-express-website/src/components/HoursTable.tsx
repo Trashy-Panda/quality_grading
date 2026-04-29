@@ -13,7 +13,7 @@ export default function HoursTable() {
           </tr>
         </thead>
         <tbody>
-          {BUSINESS_INFO.hours.weekdays.map((row, i) => (
+          {BUSINESS_INFO.hours.weekdays.map((row) => (
             <tr
               key={row.day}
               className="border-t"
