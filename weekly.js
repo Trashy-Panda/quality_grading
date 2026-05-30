@@ -227,7 +227,7 @@ async function renderWeeklyCard() {
 
   const ruleSet = _weeklyRuleSet;
   const carcasses = await getWeeklyCarcasses(ruleSet);
-  const ruleLabel = ruleSet === 'ffa' ? 'FFA Rules' : 'Collegiate Rules';
+  const ruleLabel = ruleSet === 'ffa' ? 'High School' : 'College';
 
   const metaEl = document.getElementById('weekly-card-meta');
   if (metaEl) {
@@ -331,8 +331,8 @@ async function startWeeklyChallenge() {
     return;
   }
   window._isWeeklySession = true;
-  // Sync state.ruleSet to match the weekly challenge selection so grade buttons are correct
-  if (typeof state !== 'undefined') state.ruleSet = _weeklyRuleSet;
+  // Always use collegiate (full grades) for the drill — toggle only routes the leaderboard
+  if (typeof state !== 'undefined') state.ruleSet = 'collegiate';
   const deck = await getWeeklyCarcasses(_weeklyRuleSet);
   if (!deck || deck.length === 0) {
     alert('No carcasses available for this week\'s challenge.');

@@ -35,7 +35,7 @@ QUALITY_GRADES.forEach(g => { GRADE_POSITIONS[g.key] = g.position; });
 //  APPLICATION STATE
 // ------------------------------------------------------------------
 const state = {
-  ruleSet: 'ffa',         // 'ffa' | 'collegiate'
+  ruleSet: 'collegiate',
   currentIndex: 0,
   carcasses: [],
   answers: [],
@@ -52,11 +52,9 @@ const state = {
 
 function scoreQuality(userKey, correctKey) {
   if (userKey === correctKey) return 10;
-  // Count steps between the two grades using only grades active in the current rule set.
-  // This means FFA mode (no Average Select) correctly scores Low Choice ↔ Low Select as
-  // 2 steps (7 pts) instead of 3 steps (4 pts).
+  // Average Select (collegiateOnly) is excluded — Low Choice ↔ Low Select = 2 steps (7 pts).
   const activeGrades = QUALITY_GRADES
-    .filter(g => state.ruleSet === 'ffa' ? !g.collegiateOnly : true)
+    .filter(g => !g.collegiateOnly)
     .sort((a, b) => a.position - b.position);
   const userIdx    = activeGrades.findIndex(g => g.key === userKey);
   const correctIdx = activeGrades.findIndex(g => g.key === correctKey);
@@ -91,10 +89,7 @@ function savePrefs() {
 }
 
 function loadPrefs() {
-  try {
-    const p = JSON.parse(localStorage.getItem('bcd_preferences') || '{}');
-    if (p.ruleSet) state.ruleSet = p.ruleSet;
-  } catch (e) { /* ignore */ }
+  // ruleSet is always 'collegiate' — do not restore from prefs
 }
 
 function sessionTotal() {
@@ -110,8 +105,7 @@ function pct(earned, max) {
 // ------------------------------------------------------------------
 
 function getSubsForFamily(family) {
-  const grades = QUALITY_GRADES.filter(g => g.family === family);
-  return state.ruleSet === 'ffa' ? grades.filter(g => !g.collegiateOnly) : grades;
+  return QUALITY_GRADES.filter(g => g.family === family && !g.collegiateOnly);
 }
 
 function resolveKey(family) {
@@ -130,13 +124,10 @@ function cacheElements() {
   el.summaryScreen  = document.getElementById('summary-screen');
 
   // Home
-  el.ruleFFA        = document.getElementById('rule-ffa');
-  el.ruleCollegiate = document.getElementById('rule-collegiate');
   el.startBtn       = document.getElementById('start-btn');
   el.managePhotosBtn= document.getElementById('manage-photos-btn');
 
   // Drill
-  el.headerRuleLabel= document.getElementById('header-rule-label');
   el.headerScore    = document.getElementById('header-score');
   el.progressBar    = document.getElementById('progress-bar');
   el.progressText   = document.getElementById('progress-text');
@@ -206,8 +197,6 @@ function showScreen(name) {
 
 function renderHomeScreen() {
   showScreen('home');
-  el.ruleFFA.checked        = state.ruleSet === 'ffa';
-  el.ruleCollegiate.checked = state.ruleSet === 'collegiate';
 }
 
 // ------------------------------------------------------------------
@@ -301,7 +290,6 @@ function startSession(carcassSet) {
   state.sessionActive = true;
   savePrefs();
   showScreen('drill');
-  el.headerRuleLabel.textContent = state.ruleSet === 'ffa' ? 'FFA Rules' : 'Collegiate Rules';
   renderCarcass(0);
 }
 
@@ -1009,10 +997,6 @@ function init() {
     el.customPreview.src = url || '';
     el.customPreview.classList.toggle('hidden', !url);
   });
-
-  // Rule set
-  el.ruleFFA.addEventListener('change',        () => { state.ruleSet = 'ffa'; });
-  el.ruleCollegiate.addEventListener('change', () => { state.ruleSet = 'collegiate'; });
 
   // Start
   el.startBtn.addEventListener('click', () => {

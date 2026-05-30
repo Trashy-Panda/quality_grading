@@ -15,6 +15,8 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- ===================================================
        GLOBAL HEADER (visible on drill screen only)
        =================================================== -->
@@ -26,7 +28,6 @@
       </button>
     </div>
     <div class="header-right">
-<span id="header-rule-label" class="rule-chip">FFA Rules</span>
       <span id="header-score" class="score-display">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -47,65 +48,48 @@
   <section id="landing-hero" aria-label="Welcome">
     <span id="main-content" aria-hidden="true"></span>
 
-    <div class="landing-content">
-      <div class="landing-stamp-bar">
-        <span>U.S. Department of Agriculture · AMS</span>
-        <span>Form BGDRILL–2024</span>
-      </div>
+    <!-- Centered content area -->
+    <div class="landing-hero-inner">
+      <div class="landing-content">
+        <h1 class="landing-headline">Beef Carcass Quality Grading Drill</h1>
 
-      <div class="landing-eyebrow">Quality Grading Practice</div>
+        <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
 
-      <h1 class="landing-headline">Beef Carcass<br>Quality Grading</h1>
-
-      <div class="landing-field-block">
-        <div class="landing-field-row">
-          <span class="landing-field-label">Program</span>
-          <span class="landing-field-value">Competition-style quality grade practice</span>
-        </div>
-        <div class="landing-field-row">
-          <span class="landing-field-label">Authority</span>
-          <span class="landing-field-value">FFA · AMSA-IMS · Collegiate Meat Judging</span>
-        </div>
-        <div class="landing-field-row">
-          <span class="landing-field-label">Scoring</span>
-          <span class="landing-field-value">10 pts per carcass · Instant feedback</span>
+        <div class="landing-field-block">
+          <div class="landing-field-row">
+            <span class="landing-field-label">Program</span>
+            <span class="landing-field-value">Competition-style quality grade practice</span>
+          </div>
+          <div class="landing-field-row">
+            <span class="landing-field-label">Authority</span>
+            <span class="landing-field-value">FFA · AMSA-IMS · Collegiate Meat Judging</span>
+          </div>
+          <div class="landing-field-row">
+            <span class="landing-field-label">Scoring</span>
+            <span class="landing-field-value">10 pts per carcass · Instant feedback</span>
+          </div>
         </div>
       </div>
 
-    </div>
-
-    <!-- Right column: image + folder stack overlaid -->
-    <div class="landing-bg-img">
-      <img src="https://assets.farmjournal.com/dims4/default/92bf4df/2147483647/strip/true/crop/640x427+0+26/resize/800x534!/quality/90/?url=https%3A%2F%2Ffj-corp-pub.s3.us-east-2.amazonaws.com%2Fs3fs-public%2FBT_Beef_Carcass_Meat.jpg" alt="" aria-hidden="true" />
-
-      <!-- ── Manila Folder Stack ── -->
-      <div id="manila-folder-stack" class="folder-stack-wrap" role="group" aria-label="Navigation options">
-
-        <!-- Folder: SETUP (back, index 2) -->
-        <button class="folder-card folder-card--back" id="folder-drills"
-          tabindex="0" role="button" aria-label="Open Setup section">
-          <span class="folder-tab" aria-hidden="true">
-            <span class="folder-tab-label">Setup</span>
-          </span>
-        </button>
-
-        <!-- Folder: WEEKLY CHALLENGE (middle, index 1) -->
-        <button class="folder-card folder-card--mid" id="folder-weekly"
-          tabindex="0" role="button" aria-label="Open Weekly Challenge section">
-          <span class="folder-tab" aria-hidden="true">
-            <span class="folder-tab-label">Weekly</span>
-          </span>
-        </button>
-
-        <!-- Folder: SIGN ON (front, index 0) -->
-        <button class="folder-card folder-card--front" id="folder-signon"
-          tabindex="0" role="button" aria-label="Open Sign On section">
-          <span class="folder-tab" aria-hidden="true">
-            <span class="folder-tab-label">Sign On</span>
-          </span>
-        </button>
-
+      <!-- Action cards -->
+      <div class="landing-action-cards">
+        <div class="landing-action-card">
+          <h3>Practice Drill</h3>
+          <p>Grade at your own pace. No account needed.</p>
+          <button class="card-btn" id="landing-start-btn">Start Practice &rarr;</button>
+        </div>
+        <div class="landing-action-card">
+          <h3>Weekly Challenge</h3>
+          <p>Compete against other graders. Scores post to a public leaderboard.</p>
+          <button class="card-btn" id="landing-weekly-btn">Start Weekly &rarr;</button>
+        </div>
       </div>
+
+      <!-- Auth note -->
+      <p class="landing-auth-note">
+        Have a score to submit?
+        <button id="landing-signin-link">Sign In</button>
+      </p>
     </div>
   </section>
 
@@ -121,7 +105,7 @@
         <span class="page-nav-label">Session Setup</span>
       </button>
       <div class="page-nav-auth">
-        <button id="home-signin-btn" class="home-signin-btn hidden">Sign In</button>
+        <button id="home-signin-btn" class="home-signin-btn">Sign In</button>
         <div id="home-user-area" class="home-user-area hidden">
           <img id="home-avatar" class="auth-avatar" src="" alt="" />
           <span id="home-display-name" class="auth-display-name"></span>
@@ -169,10 +153,11 @@
           </div>
           <div class="weekly-card-body">
             <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
-            <!-- Rule set toggle — independent from free drill -->
+            <!-- Division toggle — routes leaderboard only, full grades always used -->
+            <div class="weekly-division-label">Select your division for rankings</div>
             <div class="weekly-ruleset-toggle">
-              <button id="weekly-rule-ffa" class="weekly-rule-btn active">FFA</button>
-              <button id="weekly-rule-collegiate" class="weekly-rule-btn">Collegiate</button>
+              <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School</button>
+              <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
             </div>
             <div class="weekly-card-meta" id="weekly-card-meta">
               <!-- Dynamically filled: carcass count, rule set -->
@@ -209,27 +194,6 @@
       <!-- RIGHT FORM AREA: Contest Rules + Image Set + Begin -->
       <div class="home-form-area">
         <div class="home-panel-header">Practice Drill Setup</div>
-
-        <!-- Contest Rules -->
-        <div class="home-card">
-          <h2 class="card-label">Contest Rules</h2>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="rule-set" id="rule-ffa" value="ffa" checked />
-              <span class="radio-content">
-                <span class="radio-label-main">FFA / National FFA Organization</span>
-                <span class="radio-label-sub">4 carcasses per class &middot; No Average Select subdivision</span>
-              </span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="rule-set" id="rule-collegiate" value="collegiate" />
-              <span class="radio-content">
-                <span class="radio-label-main">Collegiate / AMSA-IMS</span>
-                <span class="radio-label-sub">15 carcasses per class &middot; Full subdivisions including Average Select</span>
-              </span>
-            </label>
-          </div>
-        </div>
 
         <!-- Image Set -->
         <div class="home-card">
@@ -472,8 +436,8 @@
       <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
     </div>
     <div class="leaderboard-tabs">
-      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">FFA Rules</button>
-      <button id="leaderboard-tab-collegiate" class="leaderboard-tab">Collegiate</button>
+      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA)</button>
+      <button id="leaderboard-tab-collegiate" class="leaderboard-tab">College</button>
     </div>
     <div class="leaderboard-table-wrap">
       <table class="leaderboard-table">
@@ -594,7 +558,7 @@
       // app.js init() shows home-screen — re-hide it so landing shows first
       homeScreen.classList.add('hidden');
 
-      // ── Manila Folder Stack ─────────────────────────────────────
+      // ── Landing navigation helper ───────────────────────────────
       function folderNavigateTo(action) {
         landing.classList.add('landing-exit');
         setTimeout(() => {
@@ -604,61 +568,33 @@
         }, 260);
       }
 
-      // SIGN ON folder
-      const folderSignon = document.getElementById('folder-signon');
-      if (folderSignon) {
-        folderSignon.addEventListener('click', () => {
-          if (window._currentUser) {
-            // Already signed in — go to home screen
-            folderNavigateTo(() => {
-              homeScreen.classList.remove('hidden');
-            });
-          } else {
-            if (typeof openAuthModal === 'function') openAuthModal();
-          }
-        });
-        folderSignon.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderSignon.click(); }
-        });
-      }
-
-      // WEEKLY CHALLENGE folder
-      const folderWeekly = document.getElementById('folder-weekly');
-      if (folderWeekly) {
-        folderWeekly.addEventListener('click', () => {
+      // Practice Drill button
+      const landingStartBtn = document.getElementById('landing-start-btn');
+      if (landingStartBtn) {
+        landingStartBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
             if (typeof renderHomeScreen === 'function') renderHomeScreen();
           });
         });
-        folderWeekly.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderWeekly.click(); }
-        });
       }
 
-      // DRILLS folder
-      const folderDrills = document.getElementById('folder-drills');
-      if (folderDrills) {
-        folderDrills.addEventListener('click', () => {
+      // Weekly Challenge button
+      const landingWeeklyBtn = document.getElementById('landing-weekly-btn');
+      if (landingWeeklyBtn) {
+        landingWeeklyBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
             if (typeof renderHomeScreen === 'function') renderHomeScreen();
           });
         });
-        folderDrills.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); folderDrills.click(); }
-        });
       }
 
-      // Auth state → update SIGN ON folder sublabel
-      document.addEventListener('authStateChanged', () => {
-        const sublabel = document.getElementById('folder-signon-sublabel');
-        if (!sublabel) return;
-        if (window._currentUser) {
-          const name = escapeHtml(window._currentUser.displayName || window._currentUser.email || 'User');
-          sublabel.innerHTML = 'Signed in as <strong>' + name + '</strong>';
-        } else {
-          sublabel.textContent = 'Student identification & session entry';
-        }
-      });
+      // Sign In link below cards
+      const landingSigninLink = document.getElementById('landing-signin-link');
+      if (landingSigninLink) {
+        landingSigninLink.addEventListener('click', () => {
+          if (typeof openAuthModal === 'function') openAuthModal();
+        });
+      }
 
       // Setup page → back to landing
       document.getElementById('back-to-landing-btn').addEventListener('click', () => {
