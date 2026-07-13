@@ -59,26 +59,23 @@ html, body {
    ───────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
-  .landing-stamp-bar {
-    animation: p-slideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
-  }
-  .landing-eyebrow {
-    animation: p-slideLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
-  }
   .landing-headline {
-    animation: p-fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    animation: p-fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
   }
-  .landing-sub {
-    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.44s both;
+  .landing-subtext {
+    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
   }
-  .landing-cta-row {
-    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.56s both;
+  .landing-field-block {
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
   }
-  .landing-proof {
-    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  .landing-action-card:nth-of-type(1) {
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both;
   }
-  .landing-bg-img {
-    animation: p-fadeUp 1s ease 0.1s both;
+  .landing-action-card:nth-of-type(2) {
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.46s both;
+  }
+  .landing-auth-note {
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.54s both;
   }
 
   /* ── Home screen — cards enter when screen becomes visible ── */
@@ -93,9 +90,6 @@ html, body {
   }
   #home-screen:not(.hidden) .home-card:nth-of-type(2) {
     animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.19s both;
-  }
-  #home-screen:not(.hidden) .home-card:nth-of-type(3) {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
   }
   #home-screen:not(.hidden) #start-btn {
     animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
@@ -132,117 +126,6 @@ html, body {
   .grade-btn {
     transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
   }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   LANDING HERO
-   ───────────────────────────────────────────────────────────── */
-
-#landing-hero {
-  background-color: var(--paper-alt);
-  padding: 5rem 2rem 5rem clamp(2rem, 8vw, 7rem);
-}
-
-.landing-bg-img {
-  width: 54%;
-}
-
-.landing-bg-img img {
-  opacity: 0.18;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0,0,0,0.1) 20%,
-    rgba(0,0,0,0.65) 55%,
-    black 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0,0,0,0.1) 20%,
-    rgba(0,0,0,0.65) 55%,
-    black 100%
-  );
-}
-
-/* Stamp bar */
-.landing-stamp-bar {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  border: 1px solid var(--rule);
-  padding: 4px 14px;
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
-/* Eyebrow badge */
-.landing-eyebrow {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-secondary);
-  border: 1px solid var(--rule-heavy);
-  padding: 4px 12px;
-  margin-bottom: 1.75rem;
-  display: inline-block;
-}
-
-/* Headline */
-.landing-headline {
-  font-family: var(--font-ui);
-  font-size: clamp(3.2rem, 7vw, 5.5rem);
-  font-weight: bold;
-  letter-spacing: -0.025em;
-  line-height: 1.0;
-  margin-bottom: 1.6rem;
-  color: var(--ink);
-}
-
-/* Body copy */
-.landing-sub {
-  font-family: var(--font-ui);
-  font-size: 1.08rem;
-  font-weight: normal;
-  line-height: 1.78;
-  max-width: 440px;
-  color: var(--ink-secondary);
-  margin-bottom: 2.75rem;
-}
-
-/* CTA button */
-.landing-cta-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  padding: 12px 32px;
-  text-transform: uppercase;
-  background: var(--ink);
-  color: var(--paper);
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  cursor: pointer;
-  transition: opacity 0.1s;
-}
-
-.landing-cta-btn:hover {
-  opacity: 0.85;
-}
-
-/* Proof line */
-.landing-proof {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -953,8 +836,7 @@ html, body {
 
 .btn-primary:focus-visible,
 .btn-accent:focus-visible,
-.btn-secondary:focus-visible,
-.landing-cta-btn:focus-visible {
+.btn-secondary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }

@@ -3,28 +3,35 @@
    Federal Grade Record design system. Self-contained.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap');
 
 /* ============================================================
-   TOKENS
+   TOKENS — kept in sync with style.css
    ============================================================ */
 
 :root {
-  --paper:         #F5F4EE;
-  --paper-alt:     #EEECEA;
-  --ink:           #1A1A16;
-  --ink-secondary: #4A4A40;
-  --ink-tertiary:  #8A8A7A;
-  --rule:          #C8C5B8;
-  --rule-heavy:    #A09D90;
-  --accent:        #8C1A1A;
-  --accent-light:  #F5E8E6;
-  --alert:         #7A3020;
-  --alert-light:   #F2EAE6;
-  --pending:       #7A5C10;
-  --pending-light: #F5F0E0;
-  --font-ui:   'Helvetica Neue', 'Inter', Arial, sans-serif;
-  --font-data: 'Courier Prime', 'Courier New', Courier, monospace;
+  --paper:          #F7F3E9;
+  --paper-alt:      #EFE8D8;
+  --paper-deep:     #E8DFC9;
+  --ink:            #1F1B14;
+  --ink-secondary:  #55503F;
+  --ink-tertiary:   #8F8770;
+  --rule:           #D8D0B8;
+  --rule-heavy:     #AFA582;
+  --accent:         #8C1A1A;
+  --accent-light:   #F5E8E6;
+  --accent-deep:    #6A1010;
+  --accent-2:       #2B4A3A;
+  --accent-2-light: #E7EFE9;
+  --alert:          #7A3020;
+  --alert-light:    #F2EAE6;
+  --pending:        #7A5C10;
+  --pending-light:  #F5F0E0;
+  --font-ui:      'Helvetica Neue', 'Inter', Arial, sans-serif;
+  --font-display: 'Barlow Condensed', var(--font-ui);
+  --font-data:    'Courier Prime', 'Courier New', Courier, monospace;
+  --shadow-card:    4px 4px 0 var(--ink);
+  --shadow-card-sm: 2px 2px 0 var(--ink);
   --green:     #1A5C35;
   --green-lt:  #D8F0E4;
 }
@@ -87,10 +94,10 @@ a {
 }
 
 .admin-brand-text {
-  font-family: var(--font-ui);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
 }
@@ -206,10 +213,10 @@ a {
 
 .admin-tab {
   padding: 10px 20px;
-  font-family: var(--font-ui);
-  font-size: 9px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: none;
   border-bottom: 2px solid transparent;
@@ -260,10 +267,10 @@ a {
 }
 
 .admin-section-title {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-secondary);
 }
@@ -526,10 +533,10 @@ td.admin-empty {
 }
 
 .admin-card-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
   padding: 8px 16px;
