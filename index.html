@@ -6,7 +6,8 @@
   <title>Beef Carcass Grading Drill</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Yellowtail&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 96'%3E%3Cpath d='M50 4C34 12 18 14 7 9c7 19 4 37-4 51 17 16 37 22 47 34 10-12 30-18 47-34-8-14-11-32-4-51-11 5-27 3-43-5Z' fill='%23C8102E'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-family='Arial, sans-serif' font-weight='bold' font-size='46' fill='%23F5EFE2'%3EB%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
@@ -17,13 +18,25 @@
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
+  <!-- Shield logo definition (referenced via <use> throughout) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="gtm-shield">
+        <path d="M50 4 C 34 12, 18 14, 7 9 C 14 28, 11 46, 3 60 C 20 76, 40 82, 50 94 C 60 82, 80 76, 97 60 C 89 46, 86 28, 93 9 C 82 14, 66 12, 50 4 Z" fill="currentColor"/>
+        <text x="50" y="37" text-anchor="middle" font-family="'Jost','Futura PT','Century Gothic',sans-serif" font-weight="700" font-size="25" letter-spacing="2" fill="var(--shield-text, #F5EFE2)">BEEF</text>
+        <text x="50" y="61" text-anchor="middle" font-family="'Yellowtail',cursive" font-size="24" fill="var(--shield-text, #F5EFE2)" transform="rotate(-4 50 55)">Grading</text>
+        <text x="51" y="79" text-anchor="middle" font-family="'Jost','Futura PT','Century Gothic',sans-serif" font-weight="600" font-size="12" letter-spacing="3" fill="var(--shield-text, #F5EFE2)">.STUDY</text>
+      </g>
+    </defs>
+  </svg>
+
   <!-- ===================================================
        GLOBAL HEADER (visible on drill screen only)
        =================================================== -->
   <header id="app-header" class="hidden">
     <div class="brand">
       <button id="brand-home-btn" class="brand-home-btn" title="Home" aria-label="Go to home screen">
-        <span class="brand-badge">🥩</span>
+        <span class="brand-badge"><svg class="shield-mark" viewBox="0 0 100 96" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="brand-name">Beef Grading Drill</span>
       </button>
     </div>
@@ -51,6 +64,10 @@
     <!-- Centered content area -->
     <div class="landing-hero-inner">
       <div class="landing-content">
+        <div class="landing-shield">
+          <svg class="shield-mark shield-mark--cream" viewBox="0 0 100 96" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+        </div>
+        <p class="landing-script" aria-hidden="true">know your beef.</p>
         <h1 class="landing-headline">Beef Carcass Quality Grading Drill</h1>
 
         <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
@@ -101,7 +118,7 @@
     <!-- Settings page top nav -->
     <div class="page-nav">
       <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
-        <span class="page-nav-emoji">🥩</span>
+        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="0 0 100 96" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="page-nav-label">Session Setup</span>
       </button>
       <div class="page-nav-auth">
@@ -117,6 +134,7 @@
     <!-- PRACTICE PATH -->
     <div class="home-setup-single" id="practice-setup-view">
       <div class="setup-title-block">
+        <span class="setup-eyebrow" aria-hidden="true">practice makes prime</span>
         <h1 class="home-panel-header">Practice Drill</h1>
         <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
       </div>
@@ -125,6 +143,8 @@
         Begin Session
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
+
+      <div class="star-rule" aria-hidden="true">&#9733;</div>
 
       <!-- Practice Carcasses -->
       <div class="home-card" id="practice-carcasses-card">
@@ -150,6 +170,7 @@
     <!-- WEEKLY PATH -->
     <div class="home-setup-single hidden" id="weekly-setup-view">
       <div class="setup-title-block">
+        <span class="setup-eyebrow" aria-hidden="true">one shot, make it count</span>
         <h1 class="home-panel-header">Weekly Challenge</h1>
         <p class="setup-subtitle">One shot per week. Scores post to the public leaderboard.</p>
       </div>
@@ -258,6 +279,8 @@
   <main id="summary-screen" class="screen hidden">
 
     <div class="summary-hero">
+      <span class="summary-stamp" aria-hidden="true"><svg class="shield-mark" viewBox="0 0 100 96" focusable="false"><use href="#gtm-shield"/></svg></span>
+      <span class="summary-eyebrow" aria-hidden="true">how&#x2019;d you do?</span>
       <div class="summary-hero-label">Session Complete</div>
       <div id="summary-total" class="summary-score">0 / 0 pts</div>
       <span id="summary-pct" class="summary-pct pct-green">0%</span>
