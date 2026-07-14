@@ -177,7 +177,7 @@ body::before {
   width: clamp(230px, 26vw, 330px);
   height: auto;
   transform: rotate(-4deg);
-  filter: drop-shadow(0 10px 24px rgba(30, 27, 22, 0.28));
+  filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
 }
 
 /* ── Global Header (#app-header — shown during drill) ──────── */
