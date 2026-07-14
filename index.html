@@ -6,7 +6,7 @@
   <title>Beef Carcass Grading Drill</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
@@ -55,25 +55,25 @@
 
         <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
 
-        <div class="landing-field-block">
-          <div class="landing-field-row">
-            <span class="landing-field-label">Program</span>
-            <span class="landing-field-value">Competition-style quality grade practice</span>
+        <div class="landing-stats">
+          <div class="landing-stat">
+            <span class="landing-stat-value">10 pts</span>
+            <span class="landing-stat-label">per carcass, instant feedback</span>
           </div>
-          <div class="landing-field-row">
-            <span class="landing-field-label">Authority</span>
-            <span class="landing-field-value">FFA · AMSA-IMS · Collegiate Meat Judging</span>
+          <div class="landing-stat">
+            <span class="landing-stat-value">Weekly</span>
+            <span class="landing-stat-label">public leaderboard rankings</span>
           </div>
-          <div class="landing-field-row">
-            <span class="landing-field-label">Scoring</span>
-            <span class="landing-field-value">10 pts per carcass · Instant feedback</span>
+          <div class="landing-stat">
+            <span class="landing-stat-value">Free</span>
+            <span class="landing-stat-label">no account needed to practice</span>
           </div>
         </div>
       </div>
 
       <!-- Action cards -->
       <div class="landing-action-cards">
-        <div class="landing-action-card">
+        <div class="landing-action-card landing-action-card--primary">
           <h3>Practice Drill</h3>
           <p>Grade at your own pace. No account needed.</p>
           <button class="card-btn" id="landing-start-btn">Start Practice &rarr;</button>
@@ -114,16 +114,17 @@
       </div>
     </div>
 
-    <div class="hero">
-      <div>
-        <div class="hero-eyebrow">USDA Grading Practice</div>
-        <h1 class="hero-title">Beef Carcass Grading Drill</h1>
-      </div>
-    </div>
-
     <!-- PRACTICE PATH -->
     <div class="home-setup-single" id="practice-setup-view">
-      <div class="home-panel-header">Practice Drill Setup</div>
+      <div class="setup-title-block">
+        <h1 class="home-panel-header">Practice Drill</h1>
+        <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
+      </div>
+
+      <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
+        Begin Session
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
 
       <!-- Practice Carcasses -->
       <div class="home-card" id="practice-carcasses-card">
@@ -140,26 +141,6 @@
         </div>
       </div>
 
-      <!-- Scoring Reference -->
-      <div class="home-card">
-        <h2 class="card-label">Scoring — 10 pts per carcass</h2>
-        <div class="scoring-section">
-          <div class="scoring-row"><span>Exact match</span><span class="pts-badge pts-perfect">10</span></div>
-          <div class="scoring-row"><span>&#x2153; grade off (1 subdivision)</span><span class="pts-badge pts-good">9</span></div>
-          <div class="scoring-row"><span>&#x2154; grade off (2 subdivisions)</span><span class="pts-badge pts-good">7</span></div>
-          <div class="scoring-row"><span>1 full grade off (3 subdivisions)</span><span class="pts-badge pts-partial">4</span></div>
-          <div class="scoring-row"><span>More than 1 full grade off</span><span class="pts-badge pts-zero">0</span></div>
-        </div>
-        <p class="scoring-note">
-          One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).
-        </p>
-      </div>
-
-      <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
-        Begin Session
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-
       <div class="home-setup-footer-links">
         <button id="switch-to-weekly-link" class="setup-footer-link">Compete in this week&#x2019;s challenge instead &rarr;</button>
         <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
@@ -168,7 +149,10 @@
 
     <!-- WEEKLY PATH -->
     <div class="home-setup-single hidden" id="weekly-setup-view">
-      <div class="home-panel-header">Weekly Challenge</div>
+      <div class="setup-title-block">
+        <h1 class="home-panel-header">Weekly Challenge</h1>
+        <p class="setup-subtitle">One shot per week. Scores post to the public leaderboard.</p>
+      </div>
 
       <div id="weekly-challenge-card" class="weekly-card weekly-card-standalone">
         <div class="weekly-card-header">
@@ -295,6 +279,18 @@
 
     <div class="summary-table-wrap">
       <table id="summary-table"></table>
+    </div>
+
+    <div class="scoring-explainer">
+      <h3>How scoring works — 10 pts per carcass</h3>
+      <ul class="scoring-explainer-list">
+        <li><span class="pts-chip">10</span> Exact match</li>
+        <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
+        <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
+        <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
+        <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+      </ul>
+      <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).</p>
     </div>
 
   </main>

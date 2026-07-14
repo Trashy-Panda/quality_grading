@@ -1,17 +1,7 @@
-/* premium.css — Federal Grade Record design system
-   Premium/upgrade UI — federal record aesthetic
-   Loads after style.css — overrides visual properties only
-   Preserves all layout, functional classes, and JS hooks */
-
-/* ─────────────────────────────────────────────────────────────
-   FONT SYSTEM
-   ───────────────────────────────────────────────────────────── */
-
-html, body {
-  font-family: var(--font-ui);
-  font-weight: normal;
-  letter-spacing: 0.01em;
-}
+/* premium.css — Motion layer
+   Modern Mono+Scarlet design system.
+   Loads after all other stylesheets — animation/transition only.
+   No colors, no layout, no typography overrides. */
 
 /* ─────────────────────────────────────────────────────────────
    KEYFRAME ANIMATIONS
@@ -22,26 +12,15 @@ html, body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes p-slideLeft {
-  from { opacity: 0; transform: translateX(-28px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes p-stampDrop {
-  0%   { opacity: 0; transform: scale(1.04) translateY(-6px); }
-  55%  { transform: scale(0.98) translateY(1px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+@keyframes p-scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 @keyframes p-scorePop {
   0%   { opacity: 0; transform: scale(0.9); }
   65%  { transform: scale(1.03); }
   100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes p-progressPulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
 }
 
 @keyframes p-feedbackSlide {
@@ -55,792 +34,102 @@ html, body {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   MOTION — LANDING HERO (always runs on load)
+   ENTRANCE CHOREOGRAPHY (motion-safe only)
    ───────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: no-preference) {
+
+  /* ── Landing (dark hero) ── */
   .landing-headline {
-    animation: p-fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    animation: p-fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
   }
   .landing-subtext {
-    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
   }
-  .landing-field-block {
-    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  .landing-stats {
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
   }
   .landing-action-card:nth-of-type(1) {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both;
+    animation: p-cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
   }
   .landing-action-card:nth-of-type(2) {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.46s both;
+    animation: p-cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.44s both;
   }
   .landing-auth-note {
-    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.54s both;
+    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both;
   }
 
-  /* ── Home screen — cards enter when screen becomes visible ── */
-  #home-screen:not(.hidden) .hero {
+  /* ── Setup views — elements enter when screen becomes visible ── */
+  #home-screen:not(.hidden) .setup-title-block {
     animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
   }
-  #home-screen:not(.hidden) #weekly-challenge-card {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
-  }
-  #home-screen:not(.hidden) .home-card:nth-of-type(1) {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-  }
-  #home-screen:not(.hidden) .home-card:nth-of-type(2) {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.19s both;
-  }
   #home-screen:not(.hidden) #start-btn {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+  }
+  #home-screen:not(.hidden) .home-card {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+  }
+  #home-screen:not(.hidden) #weekly-challenge-card {
+    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+  }
+  #home-screen:not(.hidden) .home-setup-footer-links {
+    animation: p-fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
   }
 
-  /* ── Summary screen ───────────────────────────────────────── */
+  /* ── Summary screen ── */
   #summary-screen:not(.hidden) .summary-hero {
-    animation: p-stampDrop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+    animation: p-scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
   }
-  #summary-screen:not(.hidden) .summary-pct {
-    animation: p-scorePop 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  #summary-screen:not(.hidden) .summary-score {
+    animation: p-scorePop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
   }
   #summary-screen:not(.hidden) .summary-actions {
-    animation: p-fadeUp 0.4s ease 0.35s both;
+    animation: p-fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
   }
   #summary-screen:not(.hidden) .summary-table-wrap {
-    animation: p-fadeUp 0.4s ease 0.45s both;
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  }
+  #summary-screen:not(.hidden) .scoring-explainer {
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
   }
 
-  /* ── Leaderboard screen ───────────────────────────────────── */
+  /* ── Leaderboard screen ── */
   #leaderboard-screen:not(.hidden) .leaderboard-hero {
-    animation: p-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
   }
   #leaderboard-screen:not(.hidden) .leaderboard-table-wrap {
-    animation: p-fadeUp 0.4s ease 0.2s both;
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
   }
 
-  /* ── Feedback panel ───────────────────────────────────────── */
+  /* ── Drill feedback panel ── */
   .feedback-panel:not(.hidden) {
-    animation: p-feedbackSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    animation: p-feedbackSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* ── Grade btn press feel ─────────────────────────────────── */
-  .grade-btn {
-    transition: background 0.1s ease, color 0.1s ease, border-color 0.1s ease;
+  /* ── Modals ── */
+  .auth-modal-overlay:not(.hidden) .auth-modal-panel {
+    animation: p-scaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .settings-overlay:not(.hidden) .settings-box {
+    animation: p-scaleIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ── Grade button press feel ── */
+  .grade-btn:active,
+  .contribute-grade-btn:active {
+    transform: scale(0.97);
   }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   HOME SCREEN
+   REDUCED MOTION — kill everything decorative
    ───────────────────────────────────────────────────────────── */
 
-.hero {
-  position: relative;
-  padding: 2.75rem 2rem 2.5rem;
-  border: 1px solid var(--rule-heavy);
-  border-top: 3px solid var(--ink);
-  background: var(--paper);
-  margin-bottom: 1.5rem;
-  overflow: visible;
-  border-radius: 0;
-}
-
-.hero-eyebrow {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  margin-bottom: 1.25rem;
-}
-
-.hero-title {
-  font-family: var(--font-ui);
-  font-size: 1.9rem;
-  font-weight: bold;
-  letter-spacing: -0.03em;
-  line-height: 1.18;
-  white-space: nowrap;
-  margin-bottom: 0;
-  color: var(--ink);
-}
-
-.hero-subtitle {
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-  font-weight: normal;
-  line-height: 1.75;
-  color: var(--ink-secondary);
-  margin-top: 1.25rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--rule);
-}
-
-/* Card labels */
-.card-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-/* Radio options */
-.radio-label-main {
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
-  font-weight: normal;
-  line-height: 1.35;
-  color: var(--ink);
-}
-
-.radio-label-sub {
-  font-family: var(--font-ui);
-  font-size: 0.8rem;
-  font-weight: normal;
-  line-height: 1.5;
-  color: var(--ink-secondary);
-}
-
-/* Scoring */
-.pts-badge {
-  font-family: var(--font-data);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.04em;
-  padding: 2px 8px;
-  border: 1px solid var(--rule);
-  background: var(--paper-alt);
-  color: var(--ink);
-  border-radius: 0;
-}
-
-.scoring-row {
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
-  font-weight: normal;
-  color: var(--ink-secondary);
-}
-
-.scoring-note {
-  font-family: var(--font-ui);
-  font-size: 0.76rem;
-  font-weight: normal;
-  line-height: 1.6;
-  color: var(--ink-tertiary);
-}
-
-/* Begin session button */
-#start-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   DRILL SCREEN
-   ───────────────────────────────────────────────────────────── */
-
-.drill-left {
-  background-color: var(--ink);
-}
-
-.carcass-image-wrap {
-  background: var(--ink);
-}
-
-#carcass-image {
-  transition: opacity 0.2s ease;
-}
-
-.zoom-hint {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(245, 244, 238, 0.5);
-  background: rgba(26, 26, 22, 0.6);
-  padding: 3px 8px;
-  border-radius: 0;
-}
-
-.drill-right {
-  background-color: var(--paper);
-}
-
-.carcass-name {
-  font-family: var(--font-data);
-  font-size: 1.05rem;
-  font-weight: normal;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-/* Progress bar */
-.progress-wrap {
-  height: 5px;
-  border: 1px solid var(--rule-heavy);
-  background: var(--paper-alt);
-  border-radius: 0;
-}
-
-#progress-bar {
-  background: var(--accent);
-  border-radius: 0;
-}
-
-.progress-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-/* Grade panel */
-.panel-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.panel-label-sub {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-/* Grade buttons */
-.grade-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  padding: 9px 16px;
-  min-height: 44px;
-  text-transform: uppercase;
-  border-radius: 0;
-}
-
-/* Grade display */
-.grade-display {
-  font-family: var(--font-data);
-  font-size: 1.02rem;
-  font-weight: normal;
-  letter-spacing: 0.06em;
-  min-height: 2.6rem;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-.grade-display.unset {
-  font-family: var(--font-ui);
-  font-style: italic;
-  font-size: 0.84rem;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink-tertiary);
-}
-
-/* Action buttons */
-.btn-primary {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border-radius: 0;
-}
-
-.btn-primary.btn-lg {
-  font-size: 13px;
-  letter-spacing: 0.14em;
-}
-
-.btn-primary.btn-submit {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-}
-
-.btn-secondary {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 0;
-}
-
-.btn-accent {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 0;
-}
-
-/* Feedback panel */
-.feedback-panel {
-  border-left-width: 3px;
-  border-left-color: var(--accent);
-  background: var(--accent-light);
-  border-radius: 0;
-}
-
-.feedback-panel.feedback-incorrect {
-  border-left-color: var(--alert);
-  background: var(--alert-light);
-}
-
-.feedback-panel p {
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
-  font-weight: normal;
-  line-height: 1.62;
-  color: var(--ink);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   SUMMARY SCREEN
-   ───────────────────────────────────────────────────────────── */
-
-.summary-hero-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.summary-score {
-  font-family: var(--font-data);
-  font-size: 2rem;
-  font-weight: normal;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
-.summary-pct {
-  font-family: var(--font-data);
-  font-size: 5.5rem;
-  font-weight: normal;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--ink);
-}
-
-#summary-table th {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--paper);
-  background: var(--accent);
-}
-
-#summary-table td {
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
-  color: var(--ink-secondary);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   HEADER
-   ───────────────────────────────────────────────────────────── */
-
-.brand-name {
-  font-family: var(--font-ui);
-  font-size: 0.88rem;
-  font-weight: bold;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-}
-
-.rule-chip {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  border: 1px solid var(--rule);
-  padding: 2px 6px;
-  background: var(--paper-alt);
-}
-
-.score-display {
-  font-family: var(--font-data);
-  font-size: 0.9rem;
-  font-weight: normal;
-  letter-spacing: 0.04em;
-  color: var(--ink);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   LEADERBOARD
-   ───────────────────────────────────────────────────────────── */
-
-.leaderboard-hero-stamp {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.leaderboard-title {
-  font-family: var(--font-ui);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: bold;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--ink);
-}
-
-.leaderboard-week-label {
-  font-family: var(--font-data);
-  font-size: 11px;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-}
-
-.leaderboard-tab {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.leaderboard-table th {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.leaderboard-table td {
-  font-family: var(--font-ui);
-  font-size: 0.88rem;
-  color: var(--ink-secondary);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   WEEKLY CHALLENGE CARD
-   ───────────────────────────────────────────────────────────── */
-
-.weekly-stamp {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.weekly-countdown {
-  font-family: var(--font-data);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.04em;
-  color: var(--ink-secondary);
-}
-
-.weekly-week-label {
-  font-family: var(--font-data);
-  font-size: 13px;
-  font-weight: normal;
-  color: var(--ink);
-}
-
-.weekly-rule-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   MODALS
-   ───────────────────────────────────────────────────────────── */
-
-.settings-title {
-  font-family: var(--font-ui);
-  font-size: 1.15rem;
-  font-weight: bold;
-  letter-spacing: 0.01em;
-  color: var(--ink);
-}
-
-.settings-section-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.settings-description {
-  font-family: var(--font-ui);
-  font-size: 0.86rem;
-  font-weight: normal;
-  line-height: 1.65;
-  color: var(--ink-secondary);
-}
-
-.form-row label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-secondary);
-}
-
-.form-row input[type="text"],
-.form-row input[type="url"],
-.form-row select,
-.form-row textarea {
-  font-family: var(--font-data);
-  font-size: 0.9rem;
-  background: var(--paper);
-  border: 1px solid var(--rule-heavy);
-  color: var(--ink);
-  border-radius: 0;
-}
-
-/* Auth modal */
-.auth-modal-title {
-  font-family: var(--font-ui);
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.auth-modal-sub {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: normal;
-  line-height: 1.6;
-  color: var(--ink-secondary);
-}
-
-.auth-provider-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   PAGE NAV
-   ───────────────────────────────────────────────────────────── */
-
-.page-nav-back {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-secondary);
-}
-
-.page-nav-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   PREMIUM BADGE / STATUS STAMPS
-   ───────────────────────────────────────────────────────────── */
-
-.premium-badge {
-  display: inline-block;
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  background: var(--accent-light);
-  border-radius: 0;
-}
-
-.premium-stamp {
-  display: inline-block;
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border: 1px solid var(--pending);
-  color: var(--pending);
-  background: var(--pending-light);
-  border-radius: 0;
-}
-
-/* Premium panel — form block layout */
-.premium-panel {
-  background: var(--paper);
-  border: 1px solid var(--rule-heavy);
-  border-top: 3px solid var(--accent);
-  padding: 24px;
-  margin-bottom: 1rem;
-  border-radius: 0;
-}
-
-.premium-panel-header {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 16px;
-}
-
-.premium-panel-title {
-  font-family: var(--font-ui);
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--ink);
-  margin-top: 4px;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   UTILITY / MISC
-   ───────────────────────────────────────────────────────────── */
-
-.delete-btn {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.empty-msg {
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-}
-
-.community-status-msg {
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
-  color: var(--ink-secondary);
-}
-
-.auth-display-name {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.02em;
-  color: var(--ink-secondary);
-}
-
-.auth-signout-btn {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.json-textarea {
-  font-family: var(--font-data);
-  font-size: 0.8rem;
-  background: var(--paper-alt);
-  border: 1px solid var(--rule-heavy);
-  color: var(--ink);
-  border-radius: 0;
-}
-
-.image-source {
-  font-family: var(--font-data);
-  font-size: 0.72rem;
-  color: var(--ink-tertiary);
-}
-
-.bmaturity-badge {
-  font-family: var(--font-data);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  border: 1px solid var(--rule);
-  padding: 1px 5px;
-  background: var(--paper-alt);
-  border-radius: 0;
-}
-
-.card-label-action {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-}
-
-.submit-error {
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: normal;
-  color: var(--alert);
-  background: var(--alert-light);
-  border: 1px solid var(--alert);
-  padding: 6px 10px;
-  border-radius: 0;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   FOCUS STATES — accent red
-   ───────────────────────────────────────────────────────────── */
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.btn-primary:focus-visible,
-.btn-accent:focus-visible,
-.btn-secondary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
-@media (max-width: 600px) {
-  .hero-title { white-space: normal; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

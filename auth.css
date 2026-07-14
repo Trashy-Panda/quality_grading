@@ -1,13 +1,13 @@
-/* auth.css — Federal Grade Record design system
-   Identity Verification form aesthetic — light mode only */
+/* auth.css — Modern Mono+Scarlet design system
+   Sign-in modal + header/nav auth chips */
 
-/* ── Utility ─────────────────────────────────────────────────────────────── */
+/* ── Utility ────────────────────────────────────────────────── */
 
 .hidden {
   display: none !important;
 }
 
-/* ── Home screen nav auth area ───────────────────────────────────────────── */
+/* ── Home screen nav auth area ──────────────────────────────── */
 
 .page-nav-auth {
   margin-left: auto;
@@ -17,101 +17,98 @@
 
 .home-signin-btn {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
   border: none;
-  background: transparent;
-  color: var(--ink-tertiary);
+  background: var(--red);
+  color: var(--white);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
+  border-radius: var(--radius-pill);
+  transition: background 140ms ease;
 }
 
 .home-signin-btn:hover {
-  color: var(--ink);
+  background: var(--red-deep);
 }
 
 .home-signin-btn:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
 .home-user-area {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
-/* Home nav auth — override to match page-nav context */
 .home-user-area .auth-display-name {
-  color: var(--ink-secondary);
+  color: var(--gray-700);
 }
 
 .home-user-area .auth-signout-btn {
-  color: var(--ink-tertiary);
+  color: var(--gray-500);
   border: none;
   background: transparent;
 }
 
 .home-user-area .auth-signout-btn:hover {
-  color: var(--ink);
+  color: var(--black);
 }
 
-/* ── Header: Sign-In Button ─────────────────────────────────────────────── */
+/* ── Header: Sign-In Button ─────────────────────────────────── */
 
 #auth-signin-btn {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
   border: none;
-  background: transparent;
-  color: var(--ink-tertiary);
+  background: var(--red);
+  color: var(--white);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
+  transition: background 140ms ease;
 }
 
 #auth-signin-btn:hover {
-  color: var(--ink);
+  background: var(--red-deep);
 }
 
 #auth-signin-btn:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* ── Header: User Area ───────────────────────────────────────────────────── */
+/* ── Header: User Area ──────────────────────────────────────── */
 
 .auth-user-area {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .auth-avatar {
-  width: 20px;
-  height: 20px;
-  border-radius: 0;
-  border: 1px solid var(--rule);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
   display: block;
 }
 
 .auth-display-name {
-  color: var(--ink-secondary);
+  color: var(--gray-700);
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  max-width: 110px;
+  font-size: 13px;
+  font-weight: 500;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -120,35 +117,35 @@
 
 .auth-signout-btn {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
   border: none;
   background: transparent;
-  color: var(--ink-tertiary);
+  color: var(--gray-500);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
+  transition: background 120ms ease, color 120ms ease;
 }
 
 .auth-signout-btn:hover {
-  color: var(--ink);
+  background: var(--gray-100);
+  color: var(--black);
 }
 
 .auth-signout-btn:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* ── Modal: Overlay ──────────────────────────────────────────────────────── */
+/* ── Modal: Overlay ─────────────────────────────────────────── */
 
 .auth-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 22, 0.7);
+  background: rgba(11, 11, 12, 0.6);
   z-index: 500;
   display: flex;
   align-items: center;
@@ -156,203 +153,201 @@
   padding: 16px;
 }
 
-/* ── Modal: Panel ────────────────────────────────────────────────────────── */
+/* ── Modal: Panel ───────────────────────────────────────────── */
 
 .auth-modal-panel {
   position: relative;
-  background: var(--paper);
-  border: 1px solid var(--rule-heavy);
-  border-top: 3px solid var(--ink);
-  padding: 32px;
-  max-width: 400px;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 32px 32px;
+  max-width: 420px;
   width: calc(100% - 2rem);
   box-sizing: border-box;
-  border-radius: 0;
 }
 
-/* ── Modal: Close Button ─────────────────────────────────────────────────── */
+/* ── Modal: Close Button ────────────────────────────────────── */
 
 .auth-modal-close {
   position: absolute;
-  top: 10px;
+  top: 14px;
   right: 14px;
-  background: transparent;
+  background: var(--gray-100);
   border: none;
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 13px;
   line-height: 1;
   cursor: pointer;
-  color: var(--ink-tertiary);
-  padding: 0;
+  color: var(--gray-700);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
   z-index: 1;
-  border-radius: 0;
+  transition: background 140ms ease, color 140ms ease;
 }
 
 .auth-modal-close:hover {
-  color: var(--ink);
-  text-decoration: underline;
+  background: var(--gray-200);
+  color: var(--black);
 }
 
 .auth-modal-close:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* ── Modal: Stamp / Section Header ──────────────────────────────────────── */
+/* ── Modal: Badge ───────────────────────────────────────────── */
 
 .auth-modal-stamp {
   display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-  padding: 0;
-  margin: 0 0 10px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-wash);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  margin: 0 0 14px 0;
   line-height: 1.4;
-  border: none;
-  background: transparent;
 }
 
-/* ── Modal: Typography ───────────────────────────────────────────────────── */
+/* ── Modal: Typography ──────────────────────────────────────── */
 
 .auth-modal-title {
-  font-family: var(--font-ui);
-  font-size: 22px;
-  font-weight: bold;
-  line-height: 1.1;
-  margin: 0 0 6px 0;
-  color: var(--ink);
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 8px 0;
+  color: var(--black);
   letter-spacing: -0.01em;
 }
 
 .auth-modal-sub {
   font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: normal;
-  color: var(--ink-secondary);
-  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: var(--gray-700);
+  margin: 0 0 22px 0;
   line-height: 1.55;
 }
 
 /* Divider rule */
 .auth-modal-divider {
   border: none;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--gray-200);
   margin: 16px 0;
 }
 
 /* Section label above provider buttons */
 .auth-modal-method-label {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
   margin: 0 0 8px 0;
 }
 
-/* ── Modal: Provider Buttons ─────────────────────────────────────────────── */
+/* ── Modal: Provider Buttons ────────────────────────────────── */
 
 .auth-provider-btn {
   width: 100%;
-  padding: 10px 18px;
+  padding: 13px 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  letter-spacing: 0.08em;
-  border: 1px solid var(--rule-heavy);
-  border-radius: 0;
-  background: var(--paper-alt);
-  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  margin-bottom: 6px;
-  text-align: left;
+  margin-bottom: 10px;
   box-sizing: border-box;
-  text-transform: uppercase;
-  transition: background 0.1s, color 0.1s;
+  transition: background 140ms ease, border-color 140ms ease, opacity 140ms ease;
 }
 
 .auth-provider-btn:last-of-type {
   margin-bottom: 0;
 }
 
-.auth-provider-btn:hover {
-  background: var(--ink);
-  color: var(--paper);
+/* Google — white pill with gray border */
+.auth-google-btn {
+  background: var(--white);
+  color: var(--black);
+  border: 1.5px solid var(--gray-300);
+}
+.auth-google-btn:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-500);
 }
 
-.auth-provider-btn:hover svg path,
-.auth-provider-btn:hover svg rect,
-.auth-provider-btn:hover svg circle {
-  fill: var(--paper);
+/* GitHub — black pill */
+.auth-github-btn {
+  background: var(--black);
+  color: var(--white);
+  border: 1.5px solid var(--black);
+}
+.auth-github-btn:hover {
+  background: #232327;
+  border-color: #232327;
 }
 
 .auth-provider-btn:active {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .auth-provider-btn:focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
 .auth-provider-btn svg {
   flex-shrink: 0;
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
 }
 
-/* ── Modal: Disclaimer ───────────────────────────────────────────────────── */
+/* ── Modal: Disclaimer ──────────────────────────────────────── */
 
 .auth-modal-disclaimer {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  margin: 16px 0 0 0;
+  font-size: 12px;
+  color: var(--gray-500);
+  margin: 18px 0 0 0;
   text-align: center;
   line-height: 1.6;
 }
 
-/* ── Modal: Inline Error ─────────────────────────────────────────────────── */
+/* ── Modal: Inline Error ────────────────────────────────────── */
 
 .auth-modal-error {
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  color: var(--alert);
-  background: var(--alert-light);
-  border: 1px solid var(--alert);
-  padding: 6px 10px;
-  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--red);
+  background: var(--red-wash);
+  border: 1px solid var(--red-wash-border);
+  padding: 10px 14px;
+  margin-bottom: 12px;
   text-align: left;
-  border-radius: 0;
+  border-radius: var(--radius-md);
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* ── Responsive ─────────────────────────────────────────────── */
 
 @media (max-width: 480px) {
   .auth-modal-panel {
     max-width: 100%;
     width: calc(100% - 16px);
-    padding: 24px 20px;
+    padding: 28px 22px 24px;
   }
 
   .auth-modal-title {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .auth-display-name {

@@ -1,298 +1,274 @@
-/* leaderboard.css — Federal Grade Record design system
-   Weekly Grading Rankings — federal record table pattern */
+/* leaderboard.css — Modern Mono+Scarlet design system
+   Weekly Grading Rankings */
 
-/* ── Leaderboard Screen ──────────────────────────────────────────────────── */
+/* ── Leaderboard Screen ─────────────────────────────────────── */
 
 #leaderboard-screen {
-  background: var(--paper);
+  background: var(--gray-50);
   min-height: 100vh;
-  color: var(--ink);
+  color: var(--black);
 }
 
 /* Page nav inherits from global .page-nav styles in style.css */
-#leaderboard-screen .page-nav {
-  background: var(--paper-alt);
-  border-bottom: 1px solid var(--rule);
-  padding: 6px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-/* ── Leaderboard Hero Header ─────────────────────────────────────────────── */
+/* ── Leaderboard Hero Header ────────────────────────────────── */
 
 .leaderboard-hero {
-  background: var(--paper-alt);
-  border-bottom: 1px solid var(--rule);
-  padding: 20px 16px 14px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 8px;
+  text-align: center;
 }
 
 .leaderboard-hero-stamp {
+  display: inline-block;
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-wash);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 12px;
 }
 
 .leaderboard-title {
-  font-family: var(--font-ui);
-  font-size: 28px;
-  font-weight: bold;
-  color: var(--ink);
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--black);
   letter-spacing: -0.01em;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   line-height: 1.1;
 }
 
 .leaderboard-week-label {
-  font-family: var(--font-data);
-  font-size: 11px;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-  letter-spacing: 0.04em;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--gray-500);
 }
 
-/* ── Tabs ────────────────────────────────────────────────────────────────── */
+/* ── Tabs — segmented pill control ──────────────────────────── */
 
 .leaderboard-tabs {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--gray-100);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  margin: 20px auto 0;
+}
+
+/* center the inline-flex tabs */
+#leaderboard-screen .leaderboard-tabs {
   display: flex;
-  background: var(--paper-alt);
-  border-bottom: 1px solid var(--rule);
-  gap: 0;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .leaderboard-tab {
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-tertiary);
-  background: var(--paper-alt);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-500);
+  background: transparent;
   border: none;
-  border-right: 1px solid var(--rule);
-  padding: 9px 20px;
+  padding: 8px 22px;
   cursor: pointer;
-  border-radius: 0;
-  border-bottom: 2px solid transparent;
-  transition: color 0.1s, background 0.1s;
-}
-
-.leaderboard-tab:last-child {
-  border-right: none;
+  border-radius: var(--radius-pill);
+  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
 }
 
 .leaderboard-tab:hover {
-  color: var(--ink);
-  background: var(--paper);
+  color: var(--black);
 }
 
 .leaderboard-tab.active {
-  color: var(--accent);
-  background: var(--paper);
-  border-bottom: 2px solid var(--accent);
+  color: var(--black);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
 }
 
 .leaderboard-tab:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
-/* ── Table Wrapper ───────────────────────────────────────────────────────── */
+/* ── Table Wrapper ──────────────────────────────────────────── */
 
 .leaderboard-table-wrap {
-  padding: 16px;
+  max-width: 860px;
+  margin: 20px auto 0;
+  padding: 0 20px 56px;
   overflow-x: auto;
 }
 
-/* ── Data Table ──────────────────────────────────────────────────────────── */
+/* ── Data Table ─────────────────────────────────────────────── */
 
 .leaderboard-table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  border: 1px solid var(--rule);
-  border-radius: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .leaderboard-table th {
-  background: var(--accent);
-  color: var(--paper);
+  background: var(--gray-50);
+  color: var(--gray-700);
   font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 12px 16px;
   text-align: left;
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--gray-200);
   white-space: nowrap;
 }
 
-.leaderboard-table th:last-child {
-  border-right: none;
-}
-
 .leaderboard-table td {
-  padding: 7px 12px;
-  border-right: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink-secondary);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--gray-700);
   vertical-align: middle;
   font-family: var(--font-ui);
-  font-size: 12px;
-}
-
-.leaderboard-table td:last-child {
-  border-right: none;
-}
-
-.leaderboard-table tr:nth-child(odd) td {
-  background: var(--paper);
-}
-
-.leaderboard-table tr:nth-child(even) td {
-  background: var(--paper-alt);
+  font-size: 13.5px;
 }
 
 .leaderboard-table tr:last-child td {
   border-bottom: none;
 }
 
-/* ── Rank Column ─────────────────────────────────────────────────────────── */
+/* ── Rank Column ────────────────────────────────────────────── */
 
 .col-rank {
-  width: 48px;
+  width: 64px;
   text-align: center;
 }
 
 .leaderboard-table td.col-rank {
-  font-family: var(--font-data);
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
   text-align: center;
 }
 
-/* ── Name Column ─────────────────────────────────────────────────────────── */
+/* ── Name Column ────────────────────────────────────────────── */
 
 .leaderboard-name-cell {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .leaderboard-table td.col-name {
-  font-family: var(--font-ui);
-  font-size: 12px;
-  color: var(--ink);
+  font-weight: 600;
+  color: var(--black);
 }
 
-/* ── Score Column ────────────────────────────────────────────────────────── */
+/* ── Score Column ───────────────────────────────────────────── */
 
 .col-score {
   text-align: right;
 }
 
 .leaderboard-table td.col-score {
-  font-family: var(--font-data);
-  font-size: 13px;
-  font-weight: normal;
-  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--black);
   text-align: right;
+  white-space: nowrap;
 }
 
-/* ── Pct Column ──────────────────────────────────────────────────────────── */
+/* ── Pct Column ─────────────────────────────────────────────── */
 
 .col-pct {
   text-align: right;
 }
 
 .leaderboard-table td.col-pct {
-  font-family: var(--font-data);
-  font-size: 13px;
-  font-weight: normal;
-  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--gray-700);
   text-align: right;
 }
 
 .leaderboard-table td.col-pct.high-score {
-  color: var(--accent);
+  color: var(--red);
 }
 
-/* ── Date Column ─────────────────────────────────────────────────────────── */
+/* ── Date Column ────────────────────────────────────────────── */
 
 .col-date {
   white-space: nowrap;
 }
 
 .leaderboard-table td.col-date {
-  font-family: var(--font-data);
-  font-size: 10px;
-  color: var(--ink-tertiary);
+  font-size: 12px;
+  color: var(--gray-500);
 }
 
-/* ── My Row Highlight ────────────────────────────────────────────────────── */
+/* ── My Row Highlight ───────────────────────────────────────── */
 
 .leaderboard-row-me td {
-  background: var(--accent-light) !important;
+  background: var(--red-wash) !important;
 }
 
 .leaderboard-row-me td.col-rank,
 .leaderboard-row-me td.col-score,
 .leaderboard-row-me td.col-pct {
-  color: var(--accent);
+  color: var(--red);
 }
 
-/* ── Avatar ──────────────────────────────────────────────────────────────── */
+/* ── Avatar ─────────────────────────────────────────────────── */
 
 .leaderboard-avatar {
-  width: 22px;
-  height: 22px;
-  border: 1px solid var(--rule);
-  border-radius: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   object-fit: cover;
   vertical-align: middle;
   flex-shrink: 0;
 }
 
-/* ── Rank Badges ─────────────────────────────────────────────────────────── */
+/* ── Rank Badges — filled circles ───────────────────────────── */
 
 .rank-badge {
-  display: inline-block;
-  font-family: var(--font-data);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
   font-size: 10px;
-  font-weight: normal;
-  letter-spacing: 0.06em;
-  padding: 1px 5px;
-  text-transform: uppercase;
-  border: 1px solid currentColor;
-  border-radius: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  border: none;
 }
 
 .rank-1st {
-  color: var(--pending);
-  border-color: var(--pending);
-  background: var(--pending-light);
+  color: var(--white);
+  background: var(--red);
 }
 
 .rank-2nd {
-  color: var(--ink-secondary);
-  border-color: var(--rule-heavy);
-  background: var(--paper-alt);
+  color: var(--white);
+  background: var(--black);
 }
 
 .rank-3rd {
-  color: var(--ink-tertiary);
-  border-color: var(--rule);
-  background: var(--paper-alt);
+  color: var(--black);
+  background: var(--gray-300);
 }
 
-/* ── Skeleton Loading Rows ───────────────────────────────────────────────── */
+/* ── Skeleton Loading Rows ──────────────────────────────────── */
 
 @keyframes leaderboard-shimmer {
   0%   { opacity: 0.4; }
@@ -301,56 +277,52 @@
 }
 
 .leaderboard-skeleton td {
-  padding: 7px 12px;
-  border-bottom: 1px solid var(--rule);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-100);
 }
 
 .leaderboard-skeleton td > span {
   display: block;
-  height: 0.85rem;
-  background: var(--rule);
+  height: 0.9rem;
+  background: var(--gray-200);
   animation: leaderboard-shimmer 1.6s ease-in-out infinite;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
 }
 
-/* ── Loading / Empty States ──────────────────────────────────────────────── */
+/* ── Loading / Empty States ─────────────────────────────────── */
 
 .leaderboard-empty {
   text-align: center;
-  padding: 32px 16px;
+  padding: 44px 16px;
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-  background: var(--paper);
+  font-size: 13px;
+  color: var(--gray-500);
 }
 
 .leaderboard-empty strong {
   display: block;
-  font-family: var(--font-data);
-  font-size: 12px;
-  font-weight: normal;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
   margin-bottom: 6px;
-  color: var(--ink-secondary);
+  color: var(--black);
 }
 
-/* ── Sign-in Prompt ──────────────────────────────────────────────────────── */
+/* ── Sign-in Prompt ─────────────────────────────────────────── */
 
 .leaderboard-signin {
   text-align: center;
-  padding: 32px 16px;
+  padding: 44px 16px;
   font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: normal;
-  color: var(--ink-tertiary);
-  background: var(--paper);
+  font-size: 13px;
+  color: var(--gray-500);
 }
 
 .leaderboard-signin strong {
   display: block;
-  font-family: var(--font-data);
-  font-size: 12px;
-  font-weight: normal;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
   margin-bottom: 6px;
-  color: var(--ink-secondary);
+  color: var(--black);
 }
