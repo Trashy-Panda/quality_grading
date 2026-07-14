@@ -215,9 +215,7 @@ function renderHomeScreen(mode) {
 
 function renderFamilyButtons() {
   el.familyBtns.innerHTML = '';
-  const families = state.ruleSet === 'ffa'
-    ? ['Prime', 'Choice', 'Select', 'Standard']
-    : GRADE_FAMILIES;
+  const families = GRADE_FAMILIES;
 
   families.forEach(fam => {
     const btn = document.createElement('button');
@@ -430,6 +428,10 @@ function renderSummary() {
   el.summaryTotal.textContent = `${earned} / ${max} pts`;
   el.summaryPct.textContent = `${p}%`;
   el.summaryPct.className = 'summary-pct ' + (p >= 80 ? 'pct-green' : p >= 60 ? 'pct-yellow' : 'pct-red');
+
+  // Perfect session → Certified Prime stamp
+  const certStamp = document.getElementById('summary-cert-stamp');
+  if (certStamp) certStamp.classList.toggle('hidden', !(max > 0 && earned === max));
 
   let html = `
     <thead><tr>
@@ -654,7 +656,10 @@ async function loadCommunitySet() {
       .get();
     state.communitySet = snap.docs
       .map(d => Object.assign({ id: d.id }, d.data()))
-      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
+      // Legacy docs may carry grades no longer offered in the drill
+      // (Commercial, Average Select) — those can't be answered, skip them.
+      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade &&
+        GRADE_MAP[r.correct.qualityGrade] && !GRADE_MAP[r.correct.qualityGrade].collegiateOnly);
   } catch (e) {
     state.communitySet = [];
     if (el.communityStatus) el.communityStatus.textContent = 'Could not load community set: ' + e.message;

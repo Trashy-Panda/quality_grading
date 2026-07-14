@@ -48,8 +48,9 @@
 @media (prefers-reduced-motion: no-preference) {
 
   /* ── Landing (scarlet poster) ── */
-  .landing-shield {
-    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
+  .landing-shield svg {
+    --stamp-rot: -4deg;
+    animation: p-stampIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
   }
   .landing-script {
     animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
@@ -97,6 +98,11 @@
   #summary-screen:not(.hidden) .summary-stamp {
     --stamp-rot: -5deg;
     animation: p-stampIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  }
+  /* Certified Prime — slams in late, harder overshoot */
+  #summary-screen:not(.hidden) .summary-cert-stamp:not(.hidden) {
+    --stamp-rot: 8deg;
+    animation: p-stampIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
   }
   #summary-screen:not(.hidden) .summary-score {
     animation: p-scorePop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
