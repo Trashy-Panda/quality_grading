@@ -10,7 +10,7 @@
 //  - https://firebase.google.com/docs/firestore/security/insecure-rules
 //
 //  Admin UID: KLoBqbA2P9UkQ83urzmgpxT4Oit1
-//  Last updated: 2026-03-28
+//  Last updated: 2026-05-30
 // ============================================================
 
 rules_version = '2';
@@ -82,8 +82,11 @@ service cloud.firestore {
     // ----------------------------------------------------------
     //  community_carcasses/{docId}
     //  read:   public
-    //  create: any authenticated user, imageUrl must be HTTPS
-    //  update: never
+    //  create: any authenticated user, imageUrl must be HTTPS,
+    //          correct.qualityGrade must be a non-empty string
+    //          (matches the actual write shape used by app.js and
+    //          admin.js — NOT a top-level `grade` field)
+    //  update: admin only (used by the Manage Community edit UI)
     //  delete: admin only
     // ----------------------------------------------------------
     match /community_carcasses/{docId} {
@@ -91,9 +94,15 @@ service cloud.firestore {
       allow create: if request.auth != null
         && request.resource.data.imageUrl is string
         && request.resource.data.imageUrl.matches('https://.*')
-        && request.resource.data.grade is string
-        && request.resource.data.grade.size() > 0;
-      allow update: if false;
+        && request.resource.data.correct is map
+        && request.resource.data.correct.qualityGrade is string
+        && request.resource.data.correct.qualityGrade.size() > 0;
+      allow update: if isAdmin()
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.matches('https://.*')
+        && request.resource.data.correct is map
+        && request.resource.data.correct.qualityGrade is string
+        && request.resource.data.correct.qualityGrade.size() > 0;
       allow delete: if isAdmin();
     }
 

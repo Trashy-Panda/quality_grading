@@ -36,6 +36,7 @@ QUALITY_GRADES.forEach(g => { GRADE_POSITIONS[g.key] = g.position; });
 // ------------------------------------------------------------------
 const state = {
   ruleSet: 'collegiate',
+  setupMode: 'practice',
   currentIndex: 0,
   carcasses: [],
   answers: [],
@@ -77,11 +78,6 @@ function shuffle(arr) {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
-}
-
-function loadAllCarcasses() {
-  const custom = JSON.parse(localStorage.getItem('bcd_customCarcasses') || '[]');
-  return [...DEFAULT_CARCASSES, ...custom];
 }
 
 function savePrefs() {
@@ -126,6 +122,12 @@ function cacheElements() {
   // Home
   el.startBtn       = document.getElementById('start-btn');
   el.managePhotosBtn= document.getElementById('manage-photos-btn');
+  el.practiceView   = document.getElementById('practice-setup-view');
+  el.weeklyView     = document.getElementById('weekly-setup-view');
+  el.useCustomSetToggle = document.getElementById('use-custom-set-toggle');
+  el.switchToWeeklyLink  = document.getElementById('switch-to-weekly-link');
+  el.switchToPracticeLink= document.getElementById('switch-to-practice-link');
+  el.openContributeLink  = document.getElementById('open-contribute-link');
 
   // Drill
   el.headerScore    = document.getElementById('header-score');
@@ -195,8 +197,16 @@ function showScreen(name) {
 //  HOME SCREEN
 // ------------------------------------------------------------------
 
-function renderHomeScreen() {
+function renderHomeScreen(mode) {
+  if (mode) state.setupMode = mode;
+  const activeMode = state.setupMode || 'practice';
   showScreen('home');
+  el.practiceView.classList.toggle('hidden', activeMode !== 'practice');
+  el.weeklyView.classList.toggle('hidden', activeMode !== 'weekly');
+  window._isWeeklySession = activeMode === 'weekly';
+  if (activeMode === 'weekly' && typeof renderWeeklyCard === 'function') {
+    renderWeeklyCard();
+  }
 }
 
 // ------------------------------------------------------------------
@@ -205,9 +215,7 @@ function renderHomeScreen() {
 
 function renderFamilyButtons() {
   el.familyBtns.innerHTML = '';
-  const families = state.ruleSet === 'ffa'
-    ? ['Prime', 'Choice', 'Select', 'Standard']
-    : GRADE_FAMILIES;
+  const families = GRADE_FAMILIES;
 
   families.forEach(fam => {
     const btn = document.createElement('button');
@@ -421,6 +429,10 @@ function renderSummary() {
   el.summaryPct.textContent = `${p}%`;
   el.summaryPct.className = 'summary-pct ' + (p >= 80 ? 'pct-green' : p >= 60 ? 'pct-yellow' : 'pct-red');
 
+  // Perfect session → Certified Prime stamp
+  const certStamp = document.getElementById('summary-cert-stamp');
+  if (certStamp) certStamp.classList.toggle('hidden', !(max > 0 && earned === max));
+
   let html = `
     <thead><tr>
       <th>#</th><th>Carcass</th><th>Your Grade</th><th>Correct Grade</th><th>Points</th>
@@ -623,9 +635,9 @@ function attachUrlDotChecks(container) {
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'No carcasses yet — be the first to submit!';
+    el.communitySetSub.textContent = 'Showing sample carcasses — be the first to add real ones via Manage Photos';
   } else {
-    el.communitySetSub.textContent = state.communitySet.length + ' carcasses from the team';
+    el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
   }
 }
 
@@ -644,7 +656,10 @@ async function loadCommunitySet() {
       .get();
     state.communitySet = snap.docs
       .map(d => Object.assign({ id: d.id }, d.data()))
-      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade);
+      // Legacy docs may carry grades no longer offered in the drill
+      // (Commercial, Average Select) — those can't be answered, skip them.
+      .filter(r => r.imageUrl && r.correct && r.correct.qualityGrade &&
+        GRADE_MAP[r.correct.qualityGrade] && !GRADE_MAP[r.correct.qualityGrade].collegiateOnly);
   } catch (e) {
     state.communitySet = [];
     if (el.communityStatus) el.communityStatus.textContent = 'Could not load community set: ' + e.message;
@@ -758,7 +773,7 @@ function renderCommunityList() {
 
 function buildCustomQualitySelector() {
   el.customQuality.innerHTML = '';
-  QUALITY_GRADES.forEach(g => {
+  QUALITY_GRADES.filter(g => !g.collegiateOnly).forEach(g => {
     const opt = document.createElement('option');
     opt.value = g.key;
     opt.textContent = g.label;
@@ -989,7 +1004,6 @@ function init() {
   initImageModal();
   buildCustomQualitySelector();
   loadCommunitySet();
-  loadAiSet();
 
   // Image URL preview
   el.customUrl.addEventListener('input', () => {
@@ -1000,32 +1014,13 @@ function init() {
 
   // Start
   el.startBtn.addEventListener('click', () => {
-    const setVal = document.querySelector('input[name="image-set"]:checked').value;
-    const custom = getCustomList();
     let deck;
-    if (setVal === 'custom')          deck = custom.length ? custom : DEFAULT_CARCASSES;
-    else if (setVal === 'community') {
-      if (!state.communitySet.length) {
-        if (window._db) {
-          alert('Community set is still loading. Please wait a moment and try again.');
-        } else {
-          alert('Community set is empty — falling back to default carcasses.');
-          deck = DEFAULT_CARCASSES;
-        }
-        if (!deck) return;
-      } else {
-        deck = state.communitySet;
-      }
+    if (el.useCustomSetToggle.checked) {
+      const custom = getCustomList();
+      deck = custom.length ? custom : DEFAULT_CARCASSES;
+    } else {
+      deck = state.communitySet.length ? state.communitySet : DEFAULT_CARCASSES;
     }
-    else if (setVal === 'ai') {
-      if (!state.aiSet.length) {
-        alert('AI set is still loading — please wait a moment and try again.');
-        return;
-      }
-      deck = state.aiSet;
-    }
-    else                              deck = loadAllCarcasses();
-
     if (!deck.length) { alert('No carcasses available. Please add images in Manage Photos.'); return; }
     startSession(deck);
   });

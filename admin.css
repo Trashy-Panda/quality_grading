@@ -1,32 +1,41 @@
 /* ============================================================
    ADMIN PANEL — admin.css
-   Federal Grade Record design system. Self-contained.
+   ROLLMARK design system. Self-contained.
+   Kraft-cream paper · warm ink · brand scarlet · tracked caps
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 /* ============================================================
-   TOKENS
+   TOKENS — remapped to Rollmark (style.css); legacy names kept
+   so the rest of this file works unchanged
    ============================================================ */
 
 :root {
-  --paper:         #F5F4EE;
-  --paper-alt:     #EEECEA;
-  --ink:           #1A1A16;
-  --ink-secondary: #4A4A40;
-  --ink-tertiary:  #8A8A7A;
-  --rule:          #C8C5B8;
-  --rule-heavy:    #A09D90;
-  --accent:        #8C1A1A;
-  --accent-light:  #F5E8E6;
-  --alert:         #7A3020;
-  --alert-light:   #F2EAE6;
-  --pending:       #7A5C10;
-  --pending-light: #F5F0E0;
-  --font-ui:   'Helvetica Neue', 'Inter', Arial, sans-serif;
-  --font-data: 'Courier Prime', 'Courier New', Courier, monospace;
-  --green:     #1A5C35;
-  --green-lt:  #D8F0E4;
+  --paper:          #F5EFE2;
+  --paper-alt:      #ECE4D2;
+  --paper-deep:     #E4DAC4;
+  --ink:            #1E1B16;
+  --ink-secondary:  #57503F;
+  --ink-tertiary:   #6E675A;
+  --rule:           #DCD2BC;
+  --rule-heavy:     #C9BEA6;
+  --accent:         #C8102E;
+  --accent-light:   #F6E3DC;
+  --accent-deep:    #A00D25;
+  --accent-2:       #201D18;
+  --accent-2-light: #ECE4D2;
+  --alert:          #C8102E;
+  --alert-light:    #F6E3DC;
+  --pending:        #57503F;
+  --pending-light:  #ECE4D2;
+  --font-ui:      'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Jost', 'Futura PT', 'Century Gothic', var(--font-ui);
+  --font-data:    ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --shadow-card:    0 2px 0 rgba(30, 27, 22, 0.14);
+  --shadow-card-sm: 0 1px 2px rgba(30, 27, 22, 0.07);
+  --green:     #2F5D3A;
+  --green-lt:  #DEEBD9;
 }
 
 /* ============================================================
@@ -87,10 +96,10 @@ a {
 }
 
 .admin-brand-text {
-  font-family: var(--font-ui);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
 }
@@ -206,10 +215,10 @@ a {
 
 .admin-tab {
   padding: 10px 20px;
-  font-family: var(--font-ui);
-  font-size: 9px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: none;
   border-bottom: 2px solid transparent;
@@ -260,10 +269,10 @@ a {
 }
 
 .admin-section-title {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-secondary);
 }
@@ -526,10 +535,10 @@ td.admin-empty {
 }
 
 .admin-card-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-tertiary);
   padding: 8px 16px;
@@ -1169,4 +1178,58 @@ td.admin-empty {
   font-size: .8em;
   font-weight: bold;
   font-family: 'Courier New', monospace;
+}
+
+/* ============================================================
+   ROLLMARK REFINEMENTS — appended layer
+   Softens the old square/offset-shadow DNA to match style.css
+   ============================================================ */
+
+.admin-btn-primary,
+.admin-btn-secondary,
+.admin-btn-danger,
+.admin-btn-sm,
+.admin-header-btn {
+  border-radius: 6px;
+  letter-spacing: 0.09em;
+}
+
+.admin-btn-primary:active,
+.admin-btn-secondary:active,
+.admin-btn-danger:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.admin-tab {
+  border-bottom-width: 3px;
+}
+
+.admin-access-denied {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+
+.admin-brand-text {
+  color: var(--accent);
+}
+
+select,
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+textarea {
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.admin-brand-shield {
+  height: 24px;
+  width: auto;
+  display: block;
 }

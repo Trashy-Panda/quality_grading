@@ -708,10 +708,6 @@ function _renderCommunityForAdmin(set) {
 //  Community Tab
 // ============================================================
 
-// NOTE: The edit feature below requires updating the Firestore security rule for
-// community_carcasses from `allow update: if false` to `allow update: if isAdmin()`.
-// Without this rule change, save operations will be rejected by Firestore.
-
 function loadCommunityTab() {
   var listEl    = document.getElementById('community-list');
   var countEl   = document.getElementById('community-stat-count');
@@ -812,9 +808,10 @@ function _showCommunityEditForm(row, c) {
   var form = document.createElement('div');
   form.className = 'community-edit-form';
 
-  // Build grade options HTML
+  // Build grade options HTML — restricted to scorable grades since
+  // community_carcasses is the primary practice pool
   var gradeOptions = '<option value="">— Grade —</option>';
-  QUALITY_GRADES.forEach(function(g) {
+  QUALITY_GRADES.filter(function(g) { return !g.collegiateOnly; }).forEach(function(g) {
     var sel = (c.correct && c.correct.qualityGrade === g.key) ? ' selected' : '';
     gradeOptions += '<option value="' + escapeHtml(g.key) + '"' + sel + '>' + escapeHtml(g.label) + '</option>';
   });
@@ -864,8 +861,6 @@ function _showCommunityEditForm(row, c) {
     saveBtn.disabled = true;
     statusSpan.textContent = 'Saving\u2026';
 
-    // NOTE: This update requires the Firestore rule to allow updates by admin.
-    // Change `allow update: if false` to `allow update: if isAdmin()` in your rules.
     _db.collection(DB_COLLECTIONS.community_carcasses).doc(docId).update({
       imageName: newName,
       imageUrl:  newUrl,
@@ -973,8 +968,8 @@ function importCommunityJson() {
   var VALID_GRADES = {
     PR_HI: true, PR_AVG: true, PR_LO: true,
     CH_HI: true, CH_AVG: true, CH_LO: true,
-    SE_HI: true, SE_AVG: true, SE_LO: true,
-    STD: true, COM: true
+    SE_HI: true, SE_LO: true,
+    STD: true
   };
 
   var statusEl = document.getElementById('community-import-status');

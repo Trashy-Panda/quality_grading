@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "GradeThisMeat",
+      "path": "."
+    },
+    {
+      "name": "Pony Express Burritos",
+      "path": "./pony-express-website"
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": true
+    }
+  }
+}

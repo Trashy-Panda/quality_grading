@@ -66,8 +66,10 @@ const QUALITY_GRADES = [
 const GRADE_MAP = {};
 QUALITY_GRADES.forEach(g => { GRADE_MAP[g.key] = g; });
 
-// Grade families for the button matrix Row 1
-const GRADE_FAMILIES = ['Prime', 'Choice', 'Select', 'Standard', 'Commercial'];
+// Grade families for the button matrix Row 1.
+// Commercial is intentionally excluded — the drill only covers
+// A-maturity carcasses, so mature grades are never asked for.
+const GRADE_FAMILIES = ['Prime', 'Choice', 'Select', 'Standard'];
 
 // ------------------------------------------------------------------
 //  DEFAULT CARCASS IMAGE SET
@@ -150,10 +152,10 @@ const DEFAULT_CARCASSES = [
   {
     id: 'sample-07',
     imageName: 'Carcass 7',
-    imageUrl: _ph('Replace with real image\n\nCommercial', '5a2d00', 'ffffff'),
+    imageUrl: _ph('Replace with real image\n\nHigh Prime', '6b4700', 'ffffff'),
     source: 'Placeholder — add real image via ⚙ Settings',
-    correct: { qualityGrade: 'COM' },
-    notes: 'Older animal — ossification and lean color indicate Commercial grade.',
+    correct: { qualityGrade: 'PR_HI' },
+    notes: 'Very abundant marbling — the top of the Prime range.',
   },
   {
     id: 'sample-08',

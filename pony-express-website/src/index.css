@@ -1,0 +1,159 @@
+/*
+ * PONY EXPRESS BURRITOS — Dark Luxury Western Theme
+ * Design: Deep charcoal background, warm cream foreground, deep red accents
+ * Typography: Playfair Display (display), Inter (body), Caveat (accent)
+ * Aesthetic: Glassmorphism with Western heritage elements
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-accent: "Caveat", cursive;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 1rem;
+  --background: oklch(0.08 0.01 30);
+  --foreground: oklch(0.92 0.05 80);
+  --card: oklch(0.1 0.01 30 / 50%);
+  --card-foreground: oklch(0.92 0.05 80);
+  --primary: oklch(0.45 0.15 25);
+  --primary-foreground: oklch(0.92 0.05 80);
+  --secondary: oklch(0.68 0.08 60);
+  --secondary-foreground: oklch(0.08 0.01 30);
+  --muted: oklch(1 0 0 / 5%);
+  --muted-foreground: oklch(1 0 0 / 50%);
+  --accent: oklch(0.68 0.08 60);
+  --accent-foreground: oklch(0.08 0.01 30);
+  --border: oklch(1 0 0 / 15%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.45 0.15 25 / 30%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href] {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 4rem;
+      padding-right: 4rem;
+      max-width: 1400px;
+    }
+  }
+
+  /* Glassmorphism card — signature Pony Express surface */
+  .glass-card {
+    background: oklch(1 0 0 / 5%);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid oklch(1 0 0 / 15%);
+    border-radius: 1.25rem;
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    background: oklch(1 0 0 / 8%);
+    border-color: oklch(1 0 0 / 25%);
+    box-shadow: 0 20px 40px oklch(0 0 0 / 40%);
+  }
+
+  /* Section label style */
+  .section-label {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: oklch(1 0 0 / 50%);
+  }
+
+  /* Tagline/accent text */
+  .tagline {
+    font-family: var(--font-accent);
+    font-size: 1.75rem;
+    color: oklch(0.68 0.08 60);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 15%);
+    border-radius: 2px;
+  }
+}

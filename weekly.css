@@ -1,300 +1,332 @@
-/* weekly.css — Federal Grade Record design system
-   Weekly Challenge Card — USDA field report sub-form layout */
+/* weekly.css — Rollmark design system
+   Weekly Challenge card + injected weekly.js UI */
 
-/* ── Weekly Challenge Card ───────────────────────────────────────────────── */
+/* ── Weekly Challenge Card ──────────────────────────────────── */
 
 .weekly-card {
-  background: var(--paper);
-  border: 1px solid var(--rule-heavy);
-  border-top: 3px solid var(--accent);  /* strong accent top rule = important document */
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Header strip — always visible, shows program identity */
+/* Standalone treatment when the card is the whole screen */
+.weekly-card-standalone {
+  box-shadow: var(--shadow-md);
+}
+
+/* Header strip */
 .weekly-card-header {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  padding: 8px 16px;
-  background: var(--paper-alt);
-  border-bottom: 1px solid var(--rule-heavy);
+  padding: 18px 24px 0;
   gap: 12px;
 }
 
-/* "WEEKLY CHALLENGE" stamp — bordered label, not bare text */
+/* "WEEKLY CHALLENGE" badge — rotated scarlet stamp */
 .weekly-stamp {
-  font-family: var(--font-ui);
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  background: var(--accent-light);
-  display: inline-block;
-  line-height: 1.5;
-  border-radius: 0;
-  white-space: nowrap;
-}
-
-/* Countdown — right side, monospace, tabular */
-.weekly-countdown {
-  font-family: var(--font-data);
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 10px;
   font-weight: 700;
-  color: var(--ink);
-  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--red);
+  background: transparent;
+  border: 1.5px solid var(--red);
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  justify-self: start;
+  line-height: 1.5;
+  white-space: nowrap;
+  transform: rotate(-1.5deg);
+}
+
+/* Countdown — ink chip, tabular numerals */
+.weekly-countdown {
+  font-family: var(--font-ui);
   font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper-deep);
+  border: 1.5px solid var(--ink);
+  padding: 4px 14px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
 }
 
-/* ── Card Body: Form Block Layout ────────────────────────────────────────── */
+/* ── Card Body ──────────────────────────────────────────────── */
 
 .weekly-card-body {
-  padding: 0;
+  padding: 0 24px 22px;
 }
 
-/* Week label — key record value, treated as a typed field */
 .weekly-week-label {
-  font-family: var(--font-data);
-  font-size: 15px;
+  font-family: var(--font-display);
+  font-size: 17px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   color: var(--ink);
-  padding: 12px 16px 8px;
-  border-bottom: 1px solid var(--rule);
+  padding: 14px 0 4px;
   display: block;
 }
 
-/* Rule set toggle — field row format */
+.weekly-division-label {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin: 8px 0 8px;
+}
+
+/* Division toggle — segmented ink-bordered control */
 .weekly-ruleset-toggle {
-  display: flex;
+  display: inline-flex;
   gap: 0;
-  border-bottom: 1px solid var(--rule);
-  padding: 8px 16px;
-  align-items: center;
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  margin-bottom: 14px;
+  overflow: hidden;
 }
 
 .weekly-rule-btn {
-  padding: 5px 16px;
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  padding: 9px 20px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  border: 1px solid var(--rule-heavy);
-  background: var(--paper-alt);
-  color: var(--ink-tertiary);
+  letter-spacing: var(--track-stamp);
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
   cursor: pointer;
-  transition: background 80ms ease, color 80ms ease;
   border-radius: 0;
-  margin-right: -1px;  /* overlap borders */
+  transition: background 140ms ease, color 140ms ease;
 }
 
 .weekly-rule-btn.active {
-  background: var(--accent);
-  color: var(--paper);
-  border-color: var(--accent);
-  position: relative;
-  z-index: 1;
+  background: var(--ink);
+  color: var(--board-text);
 }
 
 .weekly-rule-btn:hover:not(.active) {
-  background: var(--paper);
+  background: var(--paper-deep);
   color: var(--ink);
 }
 
 .weekly-rule-btn:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2px solid var(--red);
+  outline-offset: -2px;
 }
 
-/* ── Card Meta ───────────────────────────────────────────────────────────── */
+/* ── Card Meta ──────────────────────────────────────────────── */
 
 .weekly-card-meta {
   font-family: var(--font-ui);
-  font-size: 10px;
-  color: var(--ink-tertiary);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 6px 16px;
-  border-bottom: 1px solid var(--rule);
-  background: var(--paper-alt);
+  font-size: 13px;
+  color: var(--ink-faint);
+  padding: 0 0 12px;
 }
 
-/* ── User Status Area ────────────────────────────────────────────────────── */
+/* ── User Status Area ───────────────────────────────────────── */
 
 .weekly-user-status {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--rule);
+  padding: 4px 0 12px;
 }
 
 /* Score display when user has submitted */
 .weekly-score-display {
-  font-family: var(--font-data);
-  font-size: 24px;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 40px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--ink);
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .weekly-score-label {
-  font-family: var(--font-ui);
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  color: var(--ink-tertiary);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-faint);
   text-transform: uppercase;
+  letter-spacing: var(--track-wide);
 }
 
 .weekly-rank {
   font-family: var(--font-ui);
-  font-size: 12px;
-  color: var(--ink-secondary);
-  margin-top: 3px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin-top: 5px;
 }
 
 .weekly-rank strong {
-  font-family: var(--font-data);
   color: var(--ink);
   font-weight: 700;
 }
 
 /* Status stamp variants */
 .weekly-status-confirmed {
-  font-family: var(--font-ui);
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 3px 10px;
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  background: var(--accent-light);
+  letter-spacing: var(--track-wide);
+  color: var(--poster-cream);
+  background: var(--red);
+  border: 1.5px solid var(--ink);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
   display: inline-block;
-  border-radius: 0;
 }
 
 .weekly-status-pending {
-  font-family: var(--font-ui);
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 3px 10px;
-  border: 1.5px solid var(--pending);
-  color: var(--pending);
-  background: var(--pending-light);
+  letter-spacing: var(--track-wide);
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
   display: inline-block;
-  border-radius: 0;
 }
 
-/* ── Card Actions ────────────────────────────────────────────────────────── */
+/* ── Card Actions ───────────────────────────────────────────── */
 
 .weekly-card-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 4px 0 6px;
 }
 
-.weekly-card-actions .btn-weekly-primary,
-.weekly-card-actions .btn-weekly-secondary {
-  margin-right: 8px;
-  margin-bottom: 4px;
-}
-
-/* ── Action Buttons inside Weekly Card ──────────────────────────────────── */
+/* ── Action Buttons inside Weekly Card ──────────────────────── */
 
 .btn-weekly-primary {
-  background: var(--accent);
-  color: var(--paper);
-  border: 1px solid var(--accent);
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  background: var(--red);
+  color: var(--poster-cream);
+  border: var(--border-ink);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
-  padding: 8px 18px;
+  letter-spacing: var(--track-stamp);
+  padding: 13px 26px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border-radius: 0;
-  transition: background 80ms ease;
-  min-height: 36px;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  transition: background 140ms ease, transform 140ms ease;
+  min-height: 44px;
 }
 
-.btn-weekly-primary:hover,
+.btn-weekly-primary:hover {
+  background: var(--red-deep);
+}
+
 .btn-weekly-primary:focus-visible {
-  background: #6a1010;
-  border-color: #6a1010;
-  outline: none;
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
 .btn-weekly-primary:active {
-  opacity: 0.9;
+  transform: translateY(1px);
 }
 
 .btn-weekly-secondary {
-  background: var(--paper-alt);
+  background: var(--paper-card);
   color: var(--ink);
-  border: 1px solid var(--rule-heavy);
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  border: var(--border-ink);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
-  padding: 8px 18px;
+  letter-spacing: var(--track-stamp);
+  padding: 12px 24px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border-radius: 0;
-  transition: background 80ms ease, color 80ms ease;
-  min-height: 36px;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  transition: background 140ms ease, color 140ms ease;
+  min-height: 44px;
 }
 
-.btn-weekly-secondary:hover,
-.btn-weekly-secondary:focus-visible {
+.btn-weekly-secondary:hover {
   background: var(--ink);
-  color: var(--paper);
-  outline: none;
+  color: var(--board-text);
+}
+
+.btn-weekly-secondary:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
 .btn-weekly-secondary:active {
   opacity: 0.9;
 }
 
-/* ── Weekly Submit Button (on summary screen) ────────────────────────────── */
+/* Leaderboard link row at the bottom of the card */
+.weekly-leaderboard-link {
+  padding: 10px 0 0;
+  border-top: 1px dashed var(--line);
+  margin-top: 6px;
+}
+
+.weekly-lb-link-btn {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 120ms ease;
+}
+.weekly-lb-link-btn:hover { color: var(--red); }
+
+/* ── Weekly Submit Button (on summary screen) ───────────────── */
 
 .weekly-submit-btn {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
-  padding: 10px 24px;
-  background: var(--accent);
-  color: var(--paper);
-  border: 1px solid var(--accent);
+  letter-spacing: var(--track-stamp);
+  padding: 13px 26px;
+  background: var(--board-bg);
+  color: var(--board-text);
+  border: var(--border-ink);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   line-height: 1.2;
-  border-radius: 0;
-  transition: background 80ms ease;
+  border-radius: var(--radius-sm);
+  transition: background 140ms ease;
 }
 
-.weekly-submit-btn:hover,
+.weekly-submit-btn:hover {
+  background: #3A342A;
+}
+
 .weekly-submit-btn:focus-visible {
-  background: #6a1010;
-  border-color: #6a1010;
-  outline: none;
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
 .weekly-submit-btn:active {
@@ -307,8 +339,8 @@
 }
 
 .weekly-submit-btn.weekly-submit-success {
-  opacity: 0.7;
-  cursor: default;
+  background: var(--red);
+  color: var(--poster-cream);
 }
 
 .weekly-submit-btn.hidden {

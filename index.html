@@ -6,7 +6,8 @@
   <title>Beef Carcass Grading Drill</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Yellowtail&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="beefgrade.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
@@ -17,13 +18,27 @@
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
+  <!-- Shield logo definition (referenced via <use> throughout) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="gtm-shield" fill="currentColor">
+        <path d="M440.96,623.44c-8.72,9.11-13.09,17.07-13.09,24,0,2.52.43,4.46,1.3,5.82.87,1.36,2.05,1.83,3.55,1.4.87-.25,2.41-1.25,4.62-3,8.29-7.3,15.87-15.94,22.74-25.88,6.87-9.93,15.12-23.14,24.75-39.67-20.53,15.87-35.15,28.22-43.87,37.33Z"/>
+        <path d="M315.4,371.87c2.4-2.7,4.2-7.19,4.2-12.89,0-6.29-2.1-11.39-5.09-14.39-6.29-6.29-19.18-6.59-32.07-6.59h-10.79v41.96h11.69c14.39,0,26.38-1.5,32.07-8.09Z"/>
+        <path d="M533.62,598.29c-1.67,2.13-3.28,5.6-4.62,10.37-1.34,4.78-2.01,8.27-2.01,10.48,0,1.34.39,2.32,1.18,2.93.79.62,1.78.73,2.96.35,1.1-.35,2.37-1.23,3.79-2.64,1.42-1.41,3.69-3.99,6.81-7.76,3.12-3.77,5.15-6.2,6.1-7.29,1.34-1.62,4.32-5.12,8.94-10.51,4.62-5.39,7.99-9.53,10.12-12.42,2.13-2.89,3.95-5.94,5.45-9.14,1.5-3.2,2.57-6.57,3.2-10.09-7.03,4.6-15.28,11.05-24.75,19.35-9.47,8.3-15.19,13.84-17.17,16.37Z"/>
+        <path d="M301.02,293.05c3.3-3.3,4.8-8.69,4.8-13.19,0-5.1-1.8-10.19-4.8-13.49-3.3-3.3-9.59-5.99-19.78-5.99h-9.59v38.96h9.59c5.4,0,14.39-.6,19.78-6.29Z"/>
+        <path d="M729.1,743.29h-4.8v42.66h4c4.8,0,11.55-.46,16.7-5.49,2.52-2.4,5.83-7.21,5.83-15.67,0-7.09-2.17-13.15-5.95-16.7-4.69-4.35-10.87-4.8-15.78-4.8Z"/>
+        <path d="M1065.4,751.78c-3.71-38.42-16.35-74.43-23.95-109.96l-13.98-65.43-4.41-39.65-4.09-58.51-2.06-86.19,3.22-35.79,1.41-7.77h0c11.29-62.88,24.31-122.81,39.92-186.02-16.1-21.95-31.96-46.76-50.16-65.63l-71.58-74.19c-36.06,23.45-75.93,38.05-118.62,44.27-27.52-1.01-55.45.8-81.88-1.99-65.37-6.9-133.3-34.06-190.02-64.91-101.7,50.42-199.83,86.87-314.51,72.22-42.66-8.47-85.16-24.44-124.1-49.56l-57.76,64.05-42.65,52.53c-13.31,13.62-11.35,30.43-6.52,47.59,15.3,54.34,27.63,106.49,37.55,163.13,3.73,21.32,4.02,51.64,3.43,74.95l-1.62,63.51c-.73,28.68.83,56.86-4.5,84.55l-11.92,61.89c-9.19,47.68-27.27,94.78-24.89,143.3,3.46,70.31,44.53,147.35,106.42,175.79,38.03,17.47,78.74,23.5,120.47,27.15l63.86,5.58c86.98,7.6,182.79,32.54,256.75,82.27,74.41-51.48,159.43-78.36,250.26-88.52l23.88-2.67,27.23-3.21c28.77-3.4,56.9-7.2,84.37-15.09,86.1-24.73,139-119.31,130.46-207.65ZM581.55,220.52h113.59v44.06h-61.74v33.27h58.44v44.06h-58.44v34.47h61.74v44.06h-113.59v-199.91ZM677.62,490.83c0,3.41-1.62,7.59-4.86,12.56-3.24,4.97-6.71,7.96-10.42,8.96-1.97.53-3.85.3-5.63-.72-1.78-1.02-2.66-2.67-2.66-4.97,0-3.49,1.66-7.83,4.97-13.02,3.32-5.19,6.75-8.26,10.3-9.2,2.37-.63,4.34-.41,5.92.64,1.58,1.06,2.37,2.98,2.37,5.75ZM420.01,220.52h113.59v44.06h-61.74v33.27h58.44v44.06h-58.44v34.47h61.74v44.06h-113.59v-199.91ZM219.8,220.52h77.33c14.39,0,31.47,2.1,43.76,15.58,6.89,7.49,12.29,19.78,12.29,37.46,0,8.69-1.5,16.18-5.69,24.58-4.2,7.79-8.69,12.29-16.18,15.59,10.49,1.2,20.98,5.99,27.27,11.99,8.09,7.79,13.49,20.68,13.49,36.56,0,18.88-7.19,31.77-14.69,39.26-10.79,11.09-29.67,18.88-54.25,18.88h-83.32v-199.91ZM463.06,801.4c-2.4,2.4-5.38,3.55-8.35,3.55-2.52,0-5.6-.8-8.35-3.55-1.49-1.49-3.55-4.23-3.55-8.35s2.06-6.86,3.55-8.35c2.75-2.75,5.83-3.55,8.35-3.55,2.86,0,5.95,1.14,8.46,3.66,1.95,1.94,3.32,4.46,3.32,8.24s-1.37,6.29-3.43,8.35ZM531.34,796.71c-6.52,6.52-14.41,7.78-22.53,7.78-4.8,0-9.38-.46-14.98-2.52-1.26-.46-6.06-2.29-11.55-6.06l8.46-16.01c4.23,4,10.64,7.78,17.5,7.78,4,0,6.41-1.26,7.66-2.63,1.14-1.14,1.94-2.86,1.94-4.8,0-1.49-.57-3.2-2.17-4.58-1.94-1.72-4.92-2.52-9.84-4l-5.15-1.6c-3.2-1.03-7.89-2.75-10.98-6.18-3.89-4.23-4.35-9.61-4.35-13.5,0-9.38,3.66-15.1,6.98-18.42,3.89-3.89,10.29-7.21,19.56-7.21,7.55,0,16.36,2.4,23.56,6.18l-7.89,15.44c-5.95-4.69-10.41-5.15-13.04-5.15-1.94,0-4.58.46-6.52,2.29-1.14,1.14-1.94,2.4-1.94,4.12,0,1.37.23,2.4,1.03,3.43.57.69,1.94,2.06,6.63,3.43l6.06,1.83c4.8,1.49,9.84,3.2,13.84,7.55,3.89,4.12,4.92,8.35,4.92,13.61,0,6.98-1.72,13.73-7.21,19.22ZM601.8,743.29h-16.24v59.48h-19.79v-59.48h-16.24v-16.81h52.27v16.81ZM682.78,770.28c0,8.01-.34,16.36-8.58,24.71-6.41,6.52-14.41,9.49-25.16,9.49-12.01,0-20.59-4.12-25.28-9.15-6.63-7.21-7.44-16.93-7.44-25.05v-43.81h19.79v45.18c0,3.2.11,8.12,3.89,11.78,2.29,2.17,5.95,3.66,9.38,3.66s6.98-1.37,9.15-3.32c4.58-4,4.46-9.61,4.46-13.84v-43.46h19.79v43.81ZM761.46,791.22c-6.06,6.06-16.24,11.55-29.28,11.55h-27.68v-76.29h25.96c7.66,0,20.47,1.03,30.31,10.52,8.92,8.58,10.64,19.56,10.64,27.79,0,10.07-2.52,18.99-9.95,26.42ZM762.29,641.66c-2.37.36-3.55-.92-3.55-3.86,0-5.72,2.88-13.51,8.64-23.26,2.29-3.83,4.92-7.62,7.87-11.36,2.96-3.74,5.76-6.98,8.41-9.73,2.64-2.75,6.14-6.18,10.48-10.26,4.34-4.08,7.3-6.83,8.88-8.33,7.9-16.95,13.58-29.75,17.05-38.56-7.42,8.42-13.9,15.49-19.42,21.1-5.53,5.62-10.6,10.09-15.22,13.39-4.62,3.3-8.78,5.22-12.49,5.73-4.02.56-7.74-2.13-11.13-8.08-2.61-4.58-4.21-9.41-4.81-14.51-10.42,12-18.49,21.02-24.2,26.82-6,6.09-10.89,9.57-14.68,10.38-6.48,1.38-9.71-2.17-9.71-10.74,0-2.54.39-5.13,1.18-7.77.79-2.63,1.87-5.44,3.26-8.4,1.38-2.96,3.49-7.23,6.34-12.8,2.84-5.57,6.12-11.87,9.83-18.89-4.5,3.21-10.14,8.95-16.93,17.27-4.42,5.26-8.17,10.19-11.25,14.75-3.08,4.57-6.38,9.63-9.89,15.21-3.51,5.57-6.08,9.38-7.7,11.41s-3.26,3.25-4.91,3.68c-2.53.64-4.86-1.41-6.99-6.17-1.68-3.76-2.69-8.24-3.05-13.43-6.87,10.41-13.31,18.75-19.34,25-6.63,6.88-12.28,11.01-16.93,12.36-6.47,1.88-11.29-.09-14.45-5.96-2.67-4.96-4.2-10.72-4.61-17.27-16.65,26.39-29.52,41.12-38.61,43.99-3.71,1.17-6.37.59-7.99-1.74-1.62-2.33-2.43-6.3-2.43-11.91,0-7.59.95-16.07,2.84-25.44-6.95,10.12-13.16,18.82-18.65,26.11-5.49,7.29-9.95,12.85-13.38,16.67-3.43,3.82-5.78,5.94-7.05,6.35-2.05.66-4.36-.26-6.93-2.75-2.57-2.49-4.76-6.01-6.57-10.56-1.13-2.83-1.91-5.8-2.34-8.92-19,26.89-32.67,41.55-41.01,44.12-3.08.95-5.27.62-6.57-.99-1.3-1.61-1.95-4.39-1.95-8.32,0-6.22,2.25-15.93,6.75-29.13-11.53,16.32-20.09,27.96-25.7,35.01-5.61,7.05-10.22,11.08-13.85,12.12-1.74.5-3.91-.37-6.51-2.63-2.61-2.25-4.92-5.48-6.93-9.68-1.59-3.31-2.54-6.91-2.88-10.79-5.87,7.72-10.78,13.91-14.71,18.56-4.26,5.06-8.21,9.2-11.84,12.44-3.63,3.24-6.87,5.2-9.71,5.89-3.32.81-6.08-.05-8.29-2.55-2.21-2.5-3.32-6.63-3.32-12.36,0-3.37.87-7.42,2.61-12.15,1.74-4.73,4.28-10.02,7.64-15.91,3.36-5.88,7.12-11.87,11.31-17.96-2.21,1.03-4.7,2.15-7.46,3.35-2.76,1.2-5.68,2.44-8.76,3.72-3.08,1.29-5.45,2.27-7.11,2.97-4.89,10.87-12,21.32-21.31,31.17v-1.83c-8.4,8.73-16.73,17.04-24.99,24.88-8.84,8.4-22.92,17.77-32.21,27.81-6.66,7.2-12.04,17.36-16.7,23.42-4.66,6.05-8.69,11.03-12.08,14.96-3.4,3.94-5.13,5.92-5.21,6.01-1.11,1.4-2.96,2.86-5.57,4.34-2.61,1.48-4.78,2.25-6.51,2.32-2.45.11-4.48-.7-6.1-2.4-1.62-1.71-2.43-3.78-2.43-6.2,0-6.26,3.31-12.99,9.95-20.39,6.63-7.4,20.41-15.07,29.13-23.95,6.5-6.62,12.35-19.41,18.12-29.29,5.76-9.88,10.79-18.94,15.1-27.13,4.3-8.19,8.27-16.25,11.9-24.16-5.68,5.68-11.33,11.11-16.93,16.28-5.61,5.17-11.09,10.06-16.46,14.66-5.37,4.61-8.68,7.39-9.95,8.46-1.26,1.07-2.37,2-3.32,2.8-13.74,13.26-24,19.76-30.79,20.05-6.47.28-11.92-2.65-16.34-8.69-4.42-6.04-6.63-13.75-6.63-23.06,0-5.86.95-11.97,2.84-18.36,1.89-6.38,4.8-12.95,8.7-19.77,3.91-6.82,8.58-13.46,14.03-20,5.45-6.54,11.44-12.68,18-18.48,10.11-8.83,21.43-17.21,33.99-25.28,12.55-8.07,24.24-14.9,35.05-20.3,10.81-5.4,18.79-8.8,23.92-9.93,3-.66,5.39-.48,7.16.57,1.78,1.05,3.04,2.72,3.79,5.02.75,2.3,1.13,4.82,1.13,7.57,0,2.51-.77,5.28-2.37,8.09-2.2,3.88-6.32,8.39-12.08,13.36-5.76,4.98-11.57,9.47-17.41,13.48-5.84,4-9.2,6.03-10.07,6.19-.47.09-.71-.03-.71-.34,0-.71.91-2,2.72-3.91,1.81-1.9,3.83-3.89,6.04-5.96,4.89-4.63,7.78-9.14,8.65-13.48-7.66,3.68-15.28,7.91-22.86,12.67-7.58,4.77-15.08,10.06-22.5,15.88-7.42,5.82-14.88,12.18-22.26,19.06-8.37,7.8-15.49,15.67-21.38,23.61-5.88,7.95-10.34,15.13-13.38,21.67-3.04,6.54-4.56,11.51-4.56,14.95,0,2.58.83,4.8,2.49,6.66,1.66,1.86,3.91,2.72,6.75,2.58,3.31-.16,7.42-1.84,12.31-5.09,5.29-3.51,11.11-8.01,17.47-13.56,6.35-5.54,12.22-10.88,17.58-15.98,5.37-5.09,11.17-10.78,17.41-16.97,5.73-5.69,10.24-10.33,13.44-13.83,3.2-3.51,5.58-6.52,7.16-9.01,3.32-5.17,6.61-8.44,9.89-9.8,3.28-1.36,6.08-1.29,8.41.22,2.33,1.51,3.49,3.71,3.49,6.62,0,.94-1.72,4.98-5.15,12.09-3.43,7.11-8.68,17.44-15.75,30.88s-15.77,29.26-26.11,47.26c9.08-6.17,23.56-18.12,43.43-36.73,3.63-5.12,6.45-9.51,8.43-13.11-2.53-.31-4.36-.98-5.5-1.99-1.15-1.01-1.72-2.77-1.72-5.29,0-2.82,1.18-6.64,3.55-11.47,2.37-4.82,5.29-9.51,8.76-14.06,3.47-4.55,6.63-7.72,9.47-9.49,1.11-.81,2.17-1.34,3.2-1.58,1.58-.38,2.37.18,2.37,1.67,0,1.34-1.23,4.35-3.67,9.01,16.26-6.37,26.53-10.41,30.79-11.55,1.66-.44,2.8-.59,3.43-.45,1.34.34,2.45,1.7,3.32,4.06.87,2.36,1.3,4.83,1.3,7.43,0,1.65-.73,3.64-2.19,5.96-1.46,2.32-4.01,5.82-7.52,10.45-4.19,5.53-7.7,11.37-10.54,17.35-2.84,5.99-4.26,10.31-4.26,12.98,0,3.69,2.29,4.97,6.87,3.8,4.62-1.19,12.54-7.74,23.72-19.83.18-1.57.44-3.02.79-4.35.71-2.67,2.09-5.6,4.15-8.77,2.05-3.17,5.33-7.52,9.83-13.06,12-14.31,23.64-25.88,34.93-34.64,11.29-8.75,20.01-14.16,26.17-16.12,1.66-.53,3.2-.33,4.62.6,1.42.93,2.54,2.16,3.37,3.71.83,1.55,1.24,2.76,1.24,3.63,0,1.42-.55,2.64-1.66,3.66-1.11,1.02-3.04,2.45-5.8,4.27.55,1.09,1.26,2.48,2.13,4.17.87,1.7,1.54,3.08,2.01,4.15.47,1.07.71,2.08.71,3.03,0,1.89-1.91,6.03-5.74,12.41s-6.51,11.02-8.05,13.95c-1.54,2.93-2.31,6.16-2.31,9.71,0,5.83,2.68,7.91,8.05,6.22,5.17-1.63,13.08-8.66,23.73-21.14.43-7.33,4.12-15.76,11.09-25.3,7.42-10.17,15.87-19.35,25.34-27.55,9.47-8.19,16.58-13.04,21.31-14.55,3.87-1.24,7.66.01,11.37,3.74,6.08-14.65,11.86-27.78,17.35-39.37,5.49-11.59,10.08-20.37,13.8-26.33,3.71-5.96,6.35-9.17,7.93-9.65,1.74-.52,3.33-.15,4.8,1.11,1.46,1.27,2.19,2.97,2.19,5.11,0,4.12-3,12.07-9,23.89-6,11.83-11.92,23.39-17.76,34.69-5.84,11.3-10.86,22.22-15.04,32.75-4.18,10.53-6.28,19.71-6.28,27.53,0,7.11,2.29,9.95,6.87,8.52,2.76-.86,6.24-3.51,10.42-7.93,4.08-4.31,9.85-11.15,17.3-20.47.15-1.18.33-2.35.58-3.51.63-3,1.38-5.54,2.25-7.62.87-2.08,2.49-5.42,4.86-10,11.21-20.84,21.47-32.56,30.79-35.16,4.81-1.34,7.22-.13,7.22,3.59,0,2.54-1.56,6.92-4.68,13.17-3.12,6.25-5.9,10.87-8.35,13.86-6.87,8.59-11.35,14.53-13.44,17.75-2.09,3.22-3.14,6.5-3.14,9.82,0,2.85,1.07,4.91,3.2,6.19,2.13,1.28,4.89,1.43,8.29.47,3.71-1.06,7.8-3.57,12.26-7.54,4.05-3.6,9.19-8.85,15.42-15.68.24-1.95.63-3.67,1.16-5.14.99-2.72,2.94-6.72,5.86-11.99,5.45-9.81,10.14-17.16,14.09-22.05,3.95-4.89,7.74-7.77,11.37-8.62,2.52-.59,4.56-.62,6.1-.1,1.54.52,2.31,1.7,2.31,3.53,0,.79-.24,1.68-.71,2.66-.48.98-1.01,1.89-1.6,2.74-.59.85-1.84,2.52-3.73,5.02-12.47,16.77-18.71,27.39-18.71,31.51,0,2.3.75,3.26,2.25,2.89.95-.23,2.78-2.21,5.51-5.93,2.72-3.71,6.24-8.56,10.54-14.51,4.3-5.95,9.4-12.28,15.28-18.94,5.88-6.66,12.57-13.24,20.07-19.67,4.18-3.73,7.66-5.83,10.42-6.32,1.26-.22,2.51,1.31,3.73,4.6,1.22,3.29,1.83,6.72,1.83,10.3,0,1.75-1.7,4.69-5.09,8.86-13.9,18.01-20.84,30.34-20.84,36.46,0,3.42,1.38,4.84,4.15,4.3,2.29-.45,5.27-2.23,8.94-5.33,3.42-2.89,8.67-7.76,15.69-14.45.35-2.03.96-4.17,1.83-6.4,1.46-3.73,3.75-7.83,6.87-12.28,3.12-4.45,7.09-9.1,11.9-13.92,4.81-4.82,10.46-9.6,16.93-14.27,12.24-9.02,21.75-13.55,28.54-13.93,5.05-.29,7.58,1.49,7.58,5.24,0,5.18-5.49,10.4-16.46,16.13-6.71,3.43-13.36,7.94-19.95,13.49-6.59,5.56-11.92,11.38-15.99,17.36-4.07,5.99-6.1,11.19-6.1,15.57,0,2.15.51,3.79,1.54,4.92,1.02,1.13,2.37,1.58,4.02,1.37,2.76-.36,5.92-2.03,9.47-5,3.55-2.96,8.8-8.05,15.75-15.13,3.16-3.23,7.36-8.35,12.61-15.29,5.25-6.93,9.59-12.18,13.03-15.81,3.44-3.62,6.53-5.47,9.3-5.55,1.58-.05,2.86.42,3.85,1.4.99.98,1.48,2.42,1.48,4.34,0,3.67-1.44,9.01-4.32,16.06-2.88,7.05-8.07,18.61-15.57,34.87,11.46-9.04,17.2-13.41,28.66-21.83v7.77c-15.73,13.05-23.59,19.89-39.32,34.08-11.05,20.08-21.12,35.51-30.2,46.13-9.08,10.62-15.83,16.37-20.25,17.04ZM823.57,766.17v36.6h-19.9v-36.6l-27.57-39.69h23.68l14.41,20.82,13.84-20.82h24.02l-28.48,39.69ZM857.59,264.58h-62.64v33.27h56.95v44.06h-56.95v78.52h-51.85v-199.91h114.49v44.06Z"/>
+      </g>
+    </defs>
+  </svg>
+
   <!-- ===================================================
        GLOBAL HEADER (visible on drill screen only)
        =================================================== -->
   <header id="app-header" class="hidden">
     <div class="brand">
       <button id="brand-home-btn" class="brand-home-btn" title="Home" aria-label="Go to home screen">
-        <span class="brand-badge">🥩</span>
+        <span class="brand-badge"><svg class="shield-mark" viewBox="0 0 1066.3 1068.92" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="brand-name">Beef Grading Drill</span>
       </button>
     </div>
@@ -50,30 +65,35 @@
 
     <!-- Centered content area -->
     <div class="landing-hero-inner">
+      <div class="landing-shield">
+        <svg class="shield-mark shield-mark--cream" viewBox="0 0 1066.3 1068.92" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+      </div>
+
       <div class="landing-content">
+        <p class="landing-script" aria-hidden="true">welcome to the rail.</p>
         <h1 class="landing-headline">Beef Carcass Quality Grading Drill</h1>
 
         <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
 
-        <div class="landing-field-block">
-          <div class="landing-field-row">
-            <span class="landing-field-label">Program</span>
-            <span class="landing-field-value">Competition-style quality grade practice</span>
+        <div class="landing-stats">
+          <div class="landing-stat">
+            <span class="landing-stat-value">10 pts</span>
+            <span class="landing-stat-label">per carcass, instant feedback</span>
           </div>
-          <div class="landing-field-row">
-            <span class="landing-field-label">Authority</span>
-            <span class="landing-field-value">FFA · AMSA-IMS · Collegiate Meat Judging</span>
+          <div class="landing-stat">
+            <span class="landing-stat-value">Weekly</span>
+            <span class="landing-stat-label">public leaderboard rankings</span>
           </div>
-          <div class="landing-field-row">
-            <span class="landing-field-label">Scoring</span>
-            <span class="landing-field-value">10 pts per carcass · Instant feedback</span>
+          <div class="landing-stat">
+            <span class="landing-stat-value">Free</span>
+            <span class="landing-stat-label">no account needed to practice</span>
           </div>
         </div>
       </div>
 
       <!-- Action cards -->
       <div class="landing-action-cards">
-        <div class="landing-action-card">
+        <div class="landing-action-card landing-action-card--primary">
           <h3>Practice Drill</h3>
           <p>Grade at your own pace. No account needed.</p>
           <button class="card-btn" id="landing-start-btn">Start Practice &rarr;</button>
@@ -91,6 +111,11 @@
         <button id="landing-signin-link">Sign In</button>
       </p>
     </div>
+
+    <!-- Poster border ticker -->
+    <div class="landing-ticker" aria-hidden="true">
+      <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
+    </div>
   </section>
 
   <!-- ===================================================
@@ -101,7 +126,7 @@
     <!-- Settings page top nav -->
     <div class="page-nav">
       <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
-        <span class="page-nav-emoji">🥩</span>
+        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="0 0 1066.3 1068.92" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="page-nav-label">Session Setup</span>
       </button>
       <div class="page-nav-auth">
@@ -114,133 +139,82 @@
       </div>
     </div>
 
-    <div class="hero">
-      <div>
-        <div class="hero-eyebrow">USDA Grading Practice</div>
-        <h1 class="hero-title">Beef Carcass Grading Drill</h1>
+    <!-- PRACTICE PATH -->
+    <div class="home-setup-single" id="practice-setup-view">
+      <div class="setup-title-block">
+        <span class="setup-eyebrow" aria-hidden="true">practice makes prime</span>
+        <h1 class="home-panel-header">Practice Drill</h1>
+        <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
       </div>
-    </div>
 
-    <div class="home-form-grid">
+      <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
+        Begin Session
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
 
-      <!-- LEFT SIDEBAR: Weekly card + Scoring -->
-      <div class="home-sidebar">
-        <div class="home-panel-header">Weekly Challenge</div>
+      <div class="star-rule" aria-hidden="true">&#9733;</div>
 
-        <!-- Contribute Card -->
-        <div class="contribute-card" id="contribute-card">
-          <div class="contribute-card-header">
-            <span class="contribute-stamp">USDA Grading Research</span>
+      <!-- Practice Carcasses -->
+      <div class="home-card" id="practice-carcasses-card">
+        <h2 class="card-label">
+          Practice Carcasses
+          <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
+        </h2>
+        <div class="practice-carcasses-body">
+          <p id="community-set-sub" class="practice-carcasses-status">Loading&hellip;</p>
+          <label class="custom-set-toggle">
+            <input type="checkbox" id="use-custom-set-toggle" />
+            <span>Practice with my personal images instead</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="home-setup-footer-links">
+        <button id="switch-to-weekly-link" class="setup-footer-link">Compete in this week&#x2019;s challenge instead &rarr;</button>
+        <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
+      </div>
+    </div><!-- /#practice-setup-view -->
+
+    <!-- WEEKLY PATH -->
+    <div class="home-setup-single hidden" id="weekly-setup-view">
+      <div class="setup-title-block">
+        <span class="setup-eyebrow" aria-hidden="true">earn your seat at the table</span>
+        <h1 class="home-panel-header">Weekly Challenge</h1>
+        <p class="setup-subtitle">One shot per week. Scores post to the public leaderboard.</p>
+      </div>
+
+      <div id="weekly-challenge-card" class="weekly-card weekly-card-standalone">
+        <div class="weekly-card-header">
+          <span class="weekly-stamp">Weekly Challenge</span>
+          <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
+        </div>
+        <div class="weekly-card-body">
+          <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
+          <!-- Division toggle — routes leaderboard only, full grades always used -->
+          <div class="weekly-division-label">Select your division for rankings</div>
+          <div class="weekly-ruleset-toggle">
+            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School</button>
+            <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
           </div>
-          <div class="contribute-card-body">
-            <h2 class="contribute-title">Help Train the Grading Model</h2>
-            <p class="contribute-subtitle">Grade ribeye images to improve AI accuracy for beef science education</p>
-            <div class="contribute-counter" id="contribute-counter">
-              <span class="contribute-counter-num" id="contribute-counter-num">&hellip;</span>
-              <span class="contribute-counter-label">images graded by the community</span>
-            </div>
-            <button class="contribute-start-btn" id="contribute-start-btn" aria-label="Start grading ribeye images for research">
-              Start Grading &rarr;
-            </button>
+          <div class="weekly-card-meta" id="weekly-card-meta">
+            <!-- Dynamically filled: carcass count, rule set -->
+          </div>
+          <div id="weekly-user-status" class="weekly-user-status">
+            <!-- Dynamically filled based on auth state -->
+          </div>
+          <div class="weekly-card-actions" id="weekly-card-actions">
+            <!-- Buttons injected dynamically by weekly.js -->
+          </div>
+          <div class="weekly-leaderboard-link">
+            <button id="weekly-view-leaderboard-btn" class="weekly-lb-link-btn">View Rankings &rarr;</button>
           </div>
         </div>
+      </div>
 
-        <!-- Weekly Challenge Card -->
-        <div id="weekly-challenge-card" class="weekly-card">
-          <div class="weekly-card-header">
-            <span class="weekly-stamp">Weekly Challenge</span>
-            <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
-          </div>
-          <div class="weekly-card-body">
-            <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
-            <!-- Division toggle — routes leaderboard only, full grades always used -->
-            <div class="weekly-division-label">Select your division for rankings</div>
-            <div class="weekly-ruleset-toggle">
-              <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School</button>
-              <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
-            </div>
-            <div class="weekly-card-meta" id="weekly-card-meta">
-              <!-- Dynamically filled: carcass count, rule set -->
-            </div>
-            <div id="weekly-user-status" class="weekly-user-status">
-              <!-- Dynamically filled based on auth state -->
-            </div>
-            <div class="weekly-card-actions" id="weekly-card-actions">
-              <!-- Buttons injected dynamically by weekly.js -->
-            </div>
-            <div class="weekly-leaderboard-link">
-              <button id="weekly-view-leaderboard-btn" class="weekly-lb-link-btn">View Rankings &rarr;</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scoring Reference -->
-        <div class="home-card">
-          <h2 class="card-label">Scoring — 10 pts per carcass</h2>
-          <div class="scoring-section">
-            <div class="scoring-row"><span>Exact match</span><span class="pts-badge pts-perfect">10</span></div>
-            <div class="scoring-row"><span>&#x2153; grade off (1 subdivision)</span><span class="pts-badge pts-good">9</span></div>
-            <div class="scoring-row"><span>&#x2154; grade off (2 subdivisions)</span><span class="pts-badge pts-good">7</span></div>
-            <div class="scoring-row"><span>1 full grade off (3 subdivisions)</span><span class="pts-badge pts-partial">4</span></div>
-            <div class="scoring-row"><span>More than 1 full grade off</span><span class="pts-badge pts-zero">0</span></div>
-          </div>
-          <p class="scoring-note">
-            One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).
-          </p>
-        </div>
-
-      </div><!-- /.home-sidebar -->
-
-      <!-- RIGHT FORM AREA: Contest Rules + Image Set + Begin -->
-      <div class="home-form-area">
-        <div class="home-panel-header">Practice Drill Setup</div>
-
-        <!-- Image Set -->
-        <div class="home-card">
-          <h2 class="card-label">
-            Image Set
-            <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
-          </h2>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="image-set" value="custom" />
-              <span class="radio-content">
-                <span class="radio-label-main">Custom Set Only</span>
-                <span class="radio-label-sub">Images you&#x2019;ve added via Manage Photos</span>
-              </span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="image-set" value="all" />
-              <span class="radio-content">
-                <span class="radio-label-main">All Images</span>
-                <span class="radio-label-sub">Default + custom combined</span>
-              </span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="image-set" value="community" checked />
-              <span class="radio-content">
-                <span class="radio-label-main">Community Set</span>
-                <span id="community-set-sub" class="radio-label-sub">Loading&hellip;</span>
-              </span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="image-set" value="ai" />
-              <span class="radio-content">
-                <span class="radio-label-main">AI Set</span>
-                <span id="ai-set-sub" class="radio-label-sub">Loading&hellip;</span>
-              </span>
-            </label>
-          </div>
-        </div>
-
-        <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
-          Begin Session
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-        </button>
-
-      </div><!-- /.home-form-area -->
-
-    </div><!-- /.home-form-grid -->
+      <div class="home-setup-footer-links">
+        <button id="switch-to-practice-link" class="setup-footer-link">Just want to practice, no leaderboard? &rarr;</button>
+      </div>
+    </div><!-- /#weekly-setup-view -->
 
   </main>
 
@@ -313,6 +287,9 @@
   <main id="summary-screen" class="screen hidden">
 
     <div class="summary-hero">
+      <span class="summary-stamp" aria-hidden="true"><svg class="shield-mark" viewBox="0 0 1066.3 1068.92" focusable="false"><use href="#gtm-shield"/></svg></span>
+      <span class="summary-eyebrow" aria-hidden="true">and the scantron says&#x2026;</span>
+      <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true">Certified<br />Prime</span>
       <div class="summary-hero-label">Session Complete</div>
       <div id="summary-total" class="summary-score">0 / 0 pts</div>
       <span id="summary-pct" class="summary-pct pct-green">0%</span>
@@ -334,6 +311,18 @@
 
     <div class="summary-table-wrap">
       <table id="summary-table"></table>
+    </div>
+
+    <div class="scoring-explainer">
+      <h3>How scoring works — 10 pts per carcass</h3>
+      <ul class="scoring-explainer-list">
+        <li><span class="pts-chip">10</span> Exact match</li>
+        <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
+        <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
+        <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
+        <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+      </ul>
+      <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).</p>
     </div>
 
   </main>
@@ -390,13 +379,14 @@
       </div>
 
       <div class="form-btn-row">
-        <button id="add-custom-btn" class="btn-primary btn-add">Add to My Set</button>
-        <button id="submit-community-btn" class="btn-secondary">Submit to Community</button>
+        <button id="submit-community-btn" class="btn-primary btn-add">Submit to Community</button>
+        <button id="add-custom-btn" class="btn-secondary">Add to My Set</button>
         <button id="cancel-edit-btn" class="btn-secondary hidden">Cancel Edit</button>
       </div>
 
       <!-- Custom list -->
       <h3 class="settings-section-label">My Custom Carcasses</h3>
+      <p class="settings-section-caption">Only used if you enable &#x201c;Practice with my personal images instead&#x201d; on the setup screen.</p>
       <div id="custom-list"></div>
 
       <!-- Import / Export -->
@@ -489,8 +479,15 @@
 
       <!-- Header bar -->
       <div class="contribute-modal-header">
-        <div class="contribute-modal-stamp">USDA Grading Research</div>
-        <h2 id="contribute-modal-heading" class="contribute-modal-title">Help Train the Grading Model</h2>
+        <div class="contribute-modal-header-text">
+          <div class="contribute-modal-stamp">USDA Grading Research</div>
+          <h2 id="contribute-modal-heading" class="contribute-modal-title">Help Train the Grading Model</h2>
+          <p class="contribute-modal-subtitle">Grade ribeye images to improve AI accuracy for beef science education</p>
+          <div class="contribute-counter" id="contribute-counter">
+            <span class="contribute-counter-num" id="contribute-counter-num">&hellip;</span>
+            <span class="contribute-counter-label">images graded by the community</span>
+          </div>
+        </div>
         <button class="contribute-modal-close" id="contribute-modal-close" aria-label="Close grading research panel">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
@@ -573,7 +570,7 @@
       if (landingStartBtn) {
         landingStartBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen();
+            if (typeof renderHomeScreen === 'function') renderHomeScreen('practice');
           });
         });
       }
@@ -583,7 +580,7 @@
       if (landingWeeklyBtn) {
         landingWeeklyBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen();
+            if (typeof renderHomeScreen === 'function') renderHomeScreen('weekly');
           });
         });
       }
@@ -603,11 +600,28 @@
         landing.style.opacity = '';
       });
 
-      // Brand emoji → home screen
+      // Brand emoji → home screen, returns to whichever mode was last active
       document.getElementById('brand-home-btn').addEventListener('click', () => {
-        window._isWeeklySession = false;
         renderHomeScreen();
       });
+
+      // Setup screen cross-links between Practice and Weekly views
+      const switchToWeeklyLink = document.getElementById('switch-to-weekly-link');
+      if (switchToWeeklyLink) {
+        switchToWeeklyLink.addEventListener('click', () => renderHomeScreen('weekly'));
+      }
+      const switchToPracticeLink = document.getElementById('switch-to-practice-link');
+      if (switchToPracticeLink) {
+        switchToPracticeLink.addEventListener('click', () => renderHomeScreen('practice'));
+      }
+
+      // Contribute link on Practice setup opens the crowdsource-grading modal directly
+      const openContributeLink = document.getElementById('open-contribute-link');
+      if (openContributeLink) {
+        openContributeLink.addEventListener('click', () => {
+          if (typeof openContributeModal === 'function') openContributeModal();
+        });
+      }
 
       // Weekly challenge → View Rankings button (always visible)
       const weeklyLbBtn = document.getElementById('weekly-view-leaderboard-btn');
