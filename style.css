@@ -152,15 +152,15 @@ body::before {
   border-top-color: var(--poster-line);
 }
 
-/* ── Shield logo (SVG <use> instances of #gtm-shield) ───────── */
+/* ── Shield logo (SVG <use> instances of #gtm-shield) ─────────
+   Official artwork: single-color paths, lettering knocked out —
+   recolor with `color` alone. */
 .shield-mark {
   display: block;
-  color: var(--red);               /* shield fill */
-  --shield-text: var(--poster-cream);  /* lettering */
+  color: var(--red);
 }
 .shield-mark--cream {
   color: var(--poster-cream);
-  --shield-text: var(--red);
 }
 
 .landing-shield {
@@ -350,11 +350,11 @@ body::before {
   max-width: 52ch;
 }
 
-/* Stat callouts — poster rule-separated */
+/* Stat callouts — pure gap layout (wrap-safe) */
 .landing-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
+  gap: 20px 44px;
   margin-top: 44px;
 }
 
@@ -362,11 +362,6 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 0 36px;
-}
-.landing-stat:first-child { padding-left: 0; }
-.landing-stat:not(:first-child) {
-  border-left: 1px solid var(--poster-line);
 }
 
 .landing-stat-value {
@@ -1014,15 +1009,16 @@ body::before {
 /* Grade buttons — JS-built .grade-btn.family-btn / .grade-btn.sub-btn */
 .grade-btn {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 11px 14px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  padding: 11px 12px;
   border: 1.5px solid var(--ink);
   cursor: pointer;
-  flex: 1;
-  min-width: 72px;
+  flex: 1 1 auto;   /* basis = label width — never narrower than the text */
+  min-width: 0;
   background: var(--paper-card);
   color: var(--ink);
   border-radius: var(--radius-sm);
@@ -1951,11 +1947,9 @@ body::before {
     font-size: 15px;
   }
   .landing-stats {
-    gap: 0;
+    gap: 16px 28px;
     margin-top: 32px;
   }
-  .landing-stat { padding: 0 20px; }
-  .landing-stat:first-child { padding-left: 0; }
   .landing-stat-value { font-size: 19px; }
   .landing-auth-note {
     grid-column: 1;
