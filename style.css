@@ -57,16 +57,6 @@
   --font-data:    var(--font-ui);
   --track-stamp:  0.09em;   /* USDA-stamp tracking — headlines, buttons, labels */
   --track-wide:   0.16em;   /* eyebrows, stamps, letterboard headers */
-
-  /* LEGACY ALIASES — satellite CSS transition only; deleted in final step */
-  --black:    var(--ink);
-  --white:    var(--paper-card);
-  --gray-50:  var(--paper);
-  --gray-100: var(--paper-deep);
-  --gray-200: var(--line);
-  --gray-300: #C9BEA6;
-  --gray-500: var(--ink-faint);
-  --gray-700: var(--ink-soft);
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */

@@ -1,4 +1,4 @@
-/* auth.css — Modern Mono+Scarlet design system
+/* auth.css — Rollmark design system
    Sign-in modal + header/nav auth chips */
 
 /* ── Utility ────────────────────────────────────────────────── */
@@ -16,17 +16,19 @@
 }
 
 .home-signin-btn {
-  font-family: var(--font-ui);
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 12px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   padding: 8px 18px;
-  border: none;
+  border: 1.5px solid var(--ink);
   background: var(--red);
-  color: var(--white);
+  color: var(--poster-cream);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   transition: background 140ms ease;
 }
 
@@ -46,33 +48,35 @@
 }
 
 .home-user-area .auth-display-name {
-  color: var(--gray-700);
+  color: var(--ink-soft);
 }
 
 .home-user-area .auth-signout-btn {
-  color: var(--gray-500);
+  color: var(--ink-faint);
   border: none;
   background: transparent;
 }
 
 .home-user-area .auth-signout-btn:hover {
-  color: var(--black);
+  color: var(--ink);
 }
 
 /* ── Header: Sign-In Button ─────────────────────────────────── */
 
 #auth-signin-btn {
-  font-family: var(--font-ui);
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 12px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   padding: 8px 18px;
-  border: none;
+  border: 1.5px solid var(--ink);
   background: var(--red);
-  color: var(--white);
+  color: var(--poster-cream);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   transition: background 140ms ease;
 }
 
@@ -98,13 +102,14 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  border: 1.5px solid var(--ink);
   object-fit: cover;
   flex-shrink: 0;
   display: block;
 }
 
 .auth-display-name {
-  color: var(--gray-700);
+  color: var(--ink-soft);
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 500;
@@ -116,23 +121,25 @@
 }
 
 .auth-signout-btn {
-  font-family: var(--font-ui);
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   padding: 7px 14px;
   border: none;
   background: transparent;
-  color: var(--gray-500);
+  color: var(--ink-faint);
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   transition: background 120ms ease, color 120ms ease;
 }
 
 .auth-signout-btn:hover {
-  background: var(--gray-100);
-  color: var(--black);
+  background: var(--paper-deep);
+  color: var(--ink);
 }
 
 .auth-signout-btn:focus-visible {
@@ -145,7 +152,7 @@
 .auth-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(11, 11, 12, 0.6);
+  background: rgba(30, 27, 22, 0.6);
   z-index: 500;
   display: flex;
   align-items: center;
@@ -157,8 +164,9 @@
 
 .auth-modal-panel {
   position: relative;
-  background: var(--white);
-  border-radius: var(--radius-lg);
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   padding: 36px 32px 32px;
   max-width: 420px;
@@ -172,13 +180,13 @@
   position: absolute;
   top: 14px;
   right: 14px;
-  background: var(--gray-100);
+  background: var(--paper-deep);
   border: none;
   font-family: var(--font-ui);
   font-size: 13px;
   line-height: 1;
   cursor: pointer;
-  color: var(--gray-700);
+  color: var(--ink-soft);
   width: 34px;
   height: 34px;
   display: flex;
@@ -190,8 +198,8 @@
 }
 
 .auth-modal-close:hover {
-  background: var(--gray-200);
-  color: var(--black);
+  background: var(--line);
+  color: var(--ink);
 }
 
 .auth-modal-close:focus-visible {
@@ -203,33 +211,38 @@
 
 .auth-modal-stamp {
   display: inline-block;
-  font-family: var(--font-ui);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 10px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
   color: var(--red);
-  background: var(--red-wash);
+  background: transparent;
+  border: 1.5px solid var(--red);
   padding: 4px 12px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   margin: 0 0 14px 0;
   line-height: 1.4;
+  transform: rotate(-1.5deg);
 }
 
 /* ── Modal: Typography ──────────────────────────────────────── */
 
 .auth-modal-title {
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   line-height: 1.15;
   margin: 0 0 8px 0;
-  color: var(--black);
-  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .auth-modal-sub {
   font-family: var(--font-ui);
   font-size: 14px;
-  color: var(--gray-700);
+  color: var(--ink-soft);
   margin: 0 0 22px 0;
   line-height: 1.55;
 }
@@ -237,16 +250,18 @@
 /* Divider rule */
 .auth-modal-divider {
   border: none;
-  border-top: 1px solid var(--gray-200);
+  border-top: 1px dashed var(--line);
   margin: 16px 0;
 }
 
 /* Section label above provider buttons */
 .auth-modal-method-label {
-  font-family: var(--font-ui);
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink-faint);
   margin: 0 0 8px 0;
 }
 
@@ -259,40 +274,40 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-family: var(--font-ui);
-  font-size: 14px;
+  font-family: var(--font-display);
+  font-size: 13px;
   font-weight: 600;
-  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   margin-bottom: 10px;
   box-sizing: border-box;
-  transition: background 140ms ease, border-color 140ms ease, opacity 140ms ease;
+  transition: background 140ms ease, color 140ms ease, opacity 140ms ease;
 }
 
 .auth-provider-btn:last-of-type {
   margin-bottom: 0;
 }
 
-/* Google — white pill with gray border */
+/* Google — outlined ink block */
 .auth-google-btn {
-  background: var(--white);
-  color: var(--black);
-  border: 1.5px solid var(--gray-300);
+  background: var(--paper-card);
+  color: var(--ink);
+  border: var(--border-ink);
 }
 .auth-google-btn:hover {
-  background: var(--gray-100);
-  border-color: var(--gray-500);
+  background: var(--paper-deep);
 }
 
-/* GitHub — black pill */
+/* GitHub — ink letterboard block */
 .auth-github-btn {
-  background: var(--black);
-  color: var(--white);
-  border: 1.5px solid var(--black);
+  background: var(--board-bg);
+  color: var(--board-text);
+  border: var(--border-ink);
 }
 .auth-github-btn:hover {
-  background: #232327;
-  border-color: #232327;
+  background: #3A342A;
 }
 
 .auth-provider-btn:active {
@@ -316,7 +331,7 @@
 .auth-modal-disclaimer {
   font-family: var(--font-ui);
   font-size: 12px;
-  color: var(--gray-500);
+  color: var(--ink-faint);
   margin: 18px 0 0 0;
   text-align: center;
   line-height: 1.6;
@@ -330,11 +345,11 @@
   font-weight: 500;
   color: var(--red);
   background: var(--red-wash);
-  border: 1px solid var(--red-wash-border);
+  border: 1.5px solid var(--red-wash-border);
   padding: 10px 14px;
   margin-bottom: 12px;
   text-align: left;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */
@@ -347,7 +362,7 @@
   }
 
   .auth-modal-title {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .auth-display-name {

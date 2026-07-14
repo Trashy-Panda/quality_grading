@@ -1,12 +1,12 @@
-/* leaderboard.css — Modern Mono+Scarlet design system
-   Weekly Grading Rankings */
+/* leaderboard.css — Rollmark design system
+   Weekly Grading Rankings — the letterboard menu */
 
 /* ── Leaderboard Screen ─────────────────────────────────────── */
 
 #leaderboard-screen {
-  background: var(--gray-50);
+  background: var(--paper);
   min-height: 100vh;
-  color: var(--black);
+  color: var(--ink);
 }
 
 /* Page nav inherits from global .page-nav styles in style.css */
@@ -22,41 +22,48 @@
 
 .leaderboard-hero-stamp {
   display: inline-block;
-  font-family: var(--font-ui);
-  font-size: 11px;
+  font-family: var(--font-display);
+  font-size: 10px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
   color: var(--red);
-  background: var(--red-wash);
+  background: transparent;
+  border: 1.5px solid var(--red);
   padding: 5px 14px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   margin-bottom: 12px;
+  transform: rotate(-1.5deg);
 }
 
 .leaderboard-title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
   font-weight: 700;
-  color: var(--black);
-  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
   margin-bottom: 6px;
-  line-height: 1.1;
+  line-height: 1.12;
 }
 
 .leaderboard-week-label {
-  font-family: var(--font-ui);
-  font-size: 14px;
-  color: var(--gray-500);
+  font-family: var(--font-script);
+  font-size: 20px;
+  color: var(--ink-soft);
 }
 
-/* ── Tabs — segmented pill control ──────────────────────────── */
+/* ── Tabs — segmented ink-bordered control ──────────────────── */
 
 .leaderboard-tabs {
   display: inline-flex;
-  gap: 4px;
-  background: var(--gray-100);
-  border-radius: var(--radius-pill);
-  padding: 4px;
+  gap: 0;
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  padding: 0;
   margin: 20px auto 0;
+  overflow: hidden;
 }
 
 /* center the inline-flex tabs */
@@ -68,31 +75,33 @@
 }
 
 .leaderboard-tab {
-  font-family: var(--font-ui);
-  font-size: 13px;
+  font-family: var(--font-display);
+  font-size: 12px;
   font-weight: 600;
-  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink-soft);
   background: transparent;
   border: none;
-  padding: 8px 22px;
+  padding: 9px 22px;
   cursor: pointer;
-  border-radius: var(--radius-pill);
-  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+  border-radius: 0;
+  transition: background 140ms ease, color 140ms ease;
 }
 
 .leaderboard-tab:hover {
-  color: var(--black);
+  background: var(--paper-deep);
+  color: var(--ink);
 }
 
 .leaderboard-tab.active {
-  color: var(--black);
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
+  color: var(--board-text);
+  background: var(--ink);
 }
 
 .leaderboard-tab:focus-visible {
   outline: 2px solid var(--red);
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
 
 /* ── Table Wrapper ──────────────────────────────────────────── */
@@ -104,36 +113,37 @@
   overflow-x: auto;
 }
 
-/* ── Data Table ─────────────────────────────────────────────── */
+/* ── Data Table — letterboard header, paper rows ────────────── */
 
 .leaderboard-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 13.5px;
-  background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
 
 .leaderboard-table th {
-  background: var(--gray-50);
-  color: var(--gray-700);
-  font-family: var(--font-ui);
-  font-size: 12px;
+  background: var(--board-bg);
+  color: var(--board-text);
+  font-family: var(--font-display);
+  font-size: 11px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
   padding: 12px 16px;
   text-align: left;
-  border-bottom: 1px solid var(--gray-200);
   white-space: nowrap;
 }
 
 .leaderboard-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-100);
-  color: var(--gray-700);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
   vertical-align: middle;
   font-family: var(--font-ui);
   font-size: 13.5px;
@@ -154,7 +164,7 @@
   font-variant-numeric: tabular-nums;
   font-size: 14px;
   font-weight: 700;
-  color: var(--black);
+  color: var(--ink);
   text-align: center;
 }
 
@@ -168,7 +178,7 @@
 
 .leaderboard-table td.col-name {
   font-weight: 600;
-  color: var(--black);
+  color: var(--ink);
 }
 
 /* ── Score Column ───────────────────────────────────────────── */
@@ -180,7 +190,7 @@
 .leaderboard-table td.col-score {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  color: var(--black);
+  color: var(--ink);
   text-align: right;
   white-space: nowrap;
 }
@@ -194,7 +204,7 @@
 .leaderboard-table td.col-pct {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--ink-soft);
   text-align: right;
 }
 
@@ -210,7 +220,7 @@
 
 .leaderboard-table td.col-date {
   font-size: 12px;
-  color: var(--gray-500);
+  color: var(--ink-faint);
 }
 
 /* ── My Row Highlight ───────────────────────────────────────── */
@@ -236,36 +246,37 @@
   flex-shrink: 0;
 }
 
-/* ── Rank Badges — filled circles ───────────────────────────── */
+/* ── Rank Badges — stamped plates ───────────────────────────── */
 
 .rank-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-ui);
+  font-family: var(--font-display);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  min-width: 34px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  min-width: 36px;
   height: 24px;
   padding: 0 8px;
-  border-radius: var(--radius-pill);
-  border: none;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--ink);
 }
 
 .rank-1st {
-  color: var(--white);
+  color: var(--poster-cream);
   background: var(--red);
 }
 
 .rank-2nd {
-  color: var(--white);
-  background: var(--black);
+  color: var(--board-text);
+  background: var(--board-bg);
 }
 
 .rank-3rd {
-  color: var(--black);
-  background: var(--gray-300);
+  color: var(--ink);
+  background: transparent;
 }
 
 /* ── Skeleton Loading Rows ──────────────────────────────────── */
@@ -278,15 +289,15 @@
 
 .leaderboard-skeleton td {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var(--line);
 }
 
 .leaderboard-skeleton td > span {
   display: block;
   height: 0.9rem;
-  background: var(--gray-200);
+  background: var(--paper-deep);
   animation: leaderboard-shimmer 1.6s ease-in-out infinite;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
 }
 
 /* ── Loading / Empty States ─────────────────────────────────── */
@@ -296,16 +307,18 @@
   padding: 44px 16px;
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--gray-500);
+  color: var(--ink-faint);
 }
 
 .leaderboard-empty strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   margin-bottom: 6px;
-  color: var(--black);
+  color: var(--ink);
 }
 
 /* ── Sign-in Prompt ─────────────────────────────────────────── */
@@ -315,14 +328,16 @@
   padding: 44px 16px;
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--gray-500);
+  color: var(--ink-faint);
 }
 
 .leaderboard-signin strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
   margin-bottom: 6px;
-  color: var(--black);
+  color: var(--ink);
 }
