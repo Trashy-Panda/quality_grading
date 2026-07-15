@@ -2,7 +2,7 @@
 
 ## Project Context
 
-Static GitHub Pages site at **gradethismeat.xyz**. Stack: vanilla HTML/CSS/JS (no build
+Static GitHub Pages site at **beefgrading.study**. Stack: vanilla HTML/CSS/JS (no build
 system, no npm, no server), Firebase Firestore + Auth as the sole backend.
 
 - Branch `dev` → work here. Branch `master` → production (auto-deploys via GitHub Pages).
@@ -254,7 +254,7 @@ Step 3 → WebSearch: "github pages content security policy headers 2025"
 - [ ] `grep -n "onerror=\|onclick=" *.html *.js` → no inline HTML attribute handlers
 
 **Auth:**
-- [ ] Firebase Console: Auth authorized domains = only `gradethismeat.xyz` + `localhost`
+- [ ] Firebase Console: Auth authorized domains = only `beefgrading.study` + `localhost`
 - [ ] Admin UID check in BOTH `admin.js` AND Firestore rules
 
 **Rate limiting:**

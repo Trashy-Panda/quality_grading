@@ -39,7 +39,7 @@ service cloud.firestore {
 3. Click **Google** → toggle Enable → add your email as support email → **Save**
 4. Click **GitHub** → toggle Enable
    - You'll need a GitHub OAuth app: go to github.com → Settings → Developer settings → OAuth Apps → New OAuth App
-   - Homepage URL: `https://gradethismeat.xyz`
+   - Homepage URL: `https://beefgrading.study`
    - Callback URL: copy the one shown in Firebase (looks like `https://your-project.firebaseapp.com/__/auth/handler`)
    - Click Register, then copy the Client ID and Client Secret back into Firebase → **Save**
 
@@ -127,7 +127,7 @@ one-vote-per-image-per-user is needed, use docId pattern `{uid}_{imageId}` in th
 # Dev Workflow Cheat Sheet
 
 ## The Two Branches
-- **master** — your live site at gradethismeat.xyz. Never experiment here.
+- **master** — your live site at beefgrading.study. Never experiment here.
 - **dev** — your sandbox. Break things, try ideas, no consequences.
 
 ---
@@ -140,7 +140,7 @@ one-vote-per-image-per-user is needed, use docId pattern `{uid}_{imageId}` in th
 That's it. Your files will update instantly to reflect whichever branch you're on.
 
 > Tip: Keep a browser tab open to your local `index.html` for dev preview,
-> and another tab open to `gradethismeat.xyz` for the live site.
+> and another tab open to `beefgrading.study` for the live site.
 
 ---
 
@@ -200,5 +200,5 @@ This wipes all uncommitted dev changes and puts dev back in sync with master.
                                           ↓
                                    merge into master
                                           ↓
-                              gradethismeat.xyz updates
+                              beefgrading.study updates
 ```
