@@ -55,6 +55,9 @@
   .landing-script {
     animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
   }
+  .landing-rail-art {
+    animation: p-fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+  }
   .landing-headline {
     animation: p-fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
   }

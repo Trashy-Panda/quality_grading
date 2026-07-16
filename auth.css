@@ -164,6 +164,7 @@
 
 .auth-modal-panel {
   position: relative;
+  overflow: hidden;
   background: var(--paper-card);
   border: var(--border-ink);
   border-radius: var(--radius-md);
@@ -172,6 +173,22 @@
   max-width: 420px;
   width: calc(100% - 2rem);
   box-sizing: border-box;
+}
+
+/* Cap overprint watermark in the panel corner */
+.auth-modal-panel::after {
+  content: '';
+  position: absolute;
+  right: -28px;
+  bottom: -22px;
+  width: 170px;
+  aspect-ratio: 1109 / 789;
+  background: var(--ink);
+  -webkit-mask: url(assets/art-cap.png) center / contain no-repeat;
+  mask: url(assets/art-cap.png) center / contain no-repeat;
+  opacity: 0.1;
+  transform: rotate(-10deg);
+  pointer-events: none;
 }
 
 /* ── Modal: Close Button ────────────────────────────────────── */

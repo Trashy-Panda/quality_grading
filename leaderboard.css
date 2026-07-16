@@ -20,6 +20,19 @@
   text-align: center;
 }
 
+/* Rosette overprint art above the stamp badge */
+.leaderboard-hero::before {
+  content: '';
+  display: block;
+  width: 52px;
+  aspect-ratio: 565 / 939;
+  margin: 0 auto 10px;
+  background: var(--red);
+  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
+  mask: url(assets/art-rosette.png) center / contain no-repeat;
+  transform: rotate(-5deg);
+}
+
 .leaderboard-hero-stamp {
   display: inline-block;
   font-family: var(--font-display);
