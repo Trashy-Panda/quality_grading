@@ -20,14 +20,14 @@
   text-align: center;
 }
 
-/* Rosette overprint art above the stamp badge */
+/* Blue-ribbon rosette above the stamp badge (award context) */
 .leaderboard-hero::before {
   content: '';
   display: block;
   width: 52px;
   aspect-ratio: 565 / 939;
   margin: 0 auto 10px;
-  background: var(--red);
+  background: var(--ribbon);
   -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
   mask: url(assets/art-rosette.png) center / contain no-repeat;
   transform: rotate(-5deg);

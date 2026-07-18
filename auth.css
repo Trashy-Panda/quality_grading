@@ -175,19 +175,19 @@
   box-sizing: border-box;
 }
 
-/* Cap overprint watermark in the panel corner */
+/* Meat-judging hard hat watermark in the panel corner */
 .auth-modal-panel::after {
   content: '';
   position: absolute;
-  right: -28px;
-  bottom: -22px;
-  width: 170px;
+  right: -14px;
+  bottom: -10px;
+  width: 160px;
   aspect-ratio: 1109 / 789;
   background: var(--ink);
-  -webkit-mask: url(assets/art-cap.png) center / contain no-repeat;
-  mask: url(assets/art-cap.png) center / contain no-repeat;
-  opacity: 0.1;
-  transform: rotate(-10deg);
+  -webkit-mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  opacity: 0.16;
+  transform: rotate(-8deg);
   pointer-events: none;
 }
 

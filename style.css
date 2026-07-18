@@ -27,6 +27,9 @@
   --red-wash:        #F6E3DC;
   --red-wash-border: #E5B8AC;
 
+  /* stock-show blue — AWARD moments only (blue ribbon = 1st place) */
+  --ribbon: #3B67C4;
+
   /* poster locals — the scarlet landing field */
   --poster-bg:    #C8102E;
   --poster-cream: #F5EFE2;
@@ -180,16 +183,6 @@ body::before {
   user-select: none;
 }
 
-/* Hanging beef side — literalizes "welcome to the rail." */
-.landing-rail-art {
-  --art: url(assets/art-carcass.png);
-  width: clamp(120px, 13vw, 190px);
-  height: min(58vh, 540px);
-  align-self: center;
-  color: var(--poster-cream);
-  opacity: 0.92;
-}
-
 .landing-shield {
   line-height: 0;
   justify-self: center;
@@ -304,6 +297,7 @@ body::before {
 #landing-hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--poster-bg);
   color: var(--poster-cream);
   display: flex;
@@ -334,13 +328,9 @@ body::before {
   margin: 0 auto;
   padding: 56px 32px 88px;
   display: grid;
-  grid-template-columns: minmax(230px, 320px) 1fr auto;
+  grid-template-columns: minmax(230px, 320px) 1fr;
   column-gap: 56px;
   align-items: center;
-}
-
-@media (max-width: 1100px) {
-  .landing-rail-art { display: none; }
 }
 
 .landing-content {
@@ -372,6 +362,7 @@ body::before {
   line-height: 1.1;
   margin: 0;
   max-width: 20ch;
+  text-wrap: balance;
 }
 
 .landing-subtext {
@@ -665,6 +656,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   line-height: 1.12;
+  text-wrap: balance;
 }
 
 .setup-subtitle {
@@ -1241,26 +1233,34 @@ body::before {
   transform: rotate(-2deg);
 }
 
-/* "CERTIFIED PRIME" — perfect-session stamp (toggled by app.js at 100%) */
+/* "CERTIFIED PRIME" — perfect-session blue ribbon (toggled by app.js at 100%)
+   Blue ribbon = first place at stock shows and meat judging contests. */
 .summary-cert-stamp {
   position: absolute;
-  top: 20px;
-  right: 24px;
+  top: 16px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
   line-height: 1.4;
   text-align: center;
-  color: var(--red);
-  border: 2px solid var(--red);
-  box-shadow: 0 0 0 3px var(--paper-card), 0 0 0 4.5px var(--red);
-  border-radius: 4px;
-  padding: 9px 13px;
+  color: var(--ribbon);
   transform: rotate(8deg);
   pointer-events: none;
   user-select: none;
+}
+
+.cert-rosette {
+  --art: url(assets/art-rosette.png);
+  width: 58px;
+  aspect-ratio: 565 / 939;
+  color: var(--ribbon);
 }
 
 .summary-hero-label {
@@ -1484,6 +1484,7 @@ body::before {
 
 .settings-box {
   position: relative;
+  overflow: hidden;
   background: var(--paper-card);
   border: var(--border-ink);
   border-radius: var(--radius-md);
@@ -1491,6 +1492,22 @@ body::before {
   max-width: 640px;
   width: 100%;
   padding-bottom: 28px;
+}
+
+/* Meat-judging hard hat watermark, bottom corner */
+.settings-box::after {
+  content: '';
+  position: absolute;
+  right: -26px;
+  bottom: -18px;
+  width: 190px;
+  aspect-ratio: 1109 / 789;
+  background: var(--ink);
+  -webkit-mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  opacity: 0.07;
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
 .settings-close {
@@ -2074,11 +2091,11 @@ body::before {
     padding: 9px 0;
   }
   .summary-cert-stamp {
-    top: 12px;
-    right: 12px;
-    font-size: 11px;
-    padding: 7px 10px;
+    top: 10px;
+    right: 10px;
+    font-size: 9px;
   }
+  .cert-rosette { width: 44px; }
   .landing-subtext {
     font-size: 15px;
   }
