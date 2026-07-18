@@ -164,6 +164,7 @@
 
 .auth-modal-panel {
   position: relative;
+  overflow: hidden;
   background: var(--paper-card);
   border: var(--border-ink);
   border-radius: var(--radius-md);
@@ -172,6 +173,22 @@
   max-width: 420px;
   width: calc(100% - 2rem);
   box-sizing: border-box;
+}
+
+/* Meat-judging hard hat watermark in the panel corner */
+.auth-modal-panel::after {
+  content: '';
+  position: absolute;
+  right: -14px;
+  bottom: -10px;
+  width: 160px;
+  aspect-ratio: 1109 / 789;
+  background: var(--ink);
+  -webkit-mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  opacity: 0.16;
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
 /* ── Modal: Close Button ────────────────────────────────────── */

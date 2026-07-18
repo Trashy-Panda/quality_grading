@@ -27,6 +27,9 @@
   --red-wash:        #F6E3DC;
   --red-wash-border: #E5B8AC;
 
+  /* stock-show blue — AWARD moments only (blue ribbon = 1st place) */
+  --ribbon: #3B67C4;
+
   /* poster locals — the scarlet landing field */
   --poster-bg:    #C8102E;
   --poster-cream: #F5EFE2;
@@ -169,6 +172,17 @@ body::before {
   color: var(--poster-cream);
 }
 
+/* ── Overprint art (user-made threshold PNGs, recolored via mask) ──
+   Single-color art with real alpha: pour any brand color through it. */
+.art-mask {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask: var(--art) center / contain no-repeat;
+  mask: var(--art) center / contain no-repeat;
+  pointer-events: none;
+  user-select: none;
+}
+
 .landing-shield {
   line-height: 0;
   justify-self: center;
@@ -283,6 +297,7 @@ body::before {
 #landing-hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--poster-bg);
   color: var(--poster-cream);
   display: flex;
@@ -347,6 +362,7 @@ body::before {
   line-height: 1.1;
   margin: 0;
   max-width: 20ch;
+  text-wrap: balance;
 }
 
 .landing-subtext {
@@ -640,6 +656,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   line-height: 1.12;
+  text-wrap: balance;
 }
 
 .setup-subtitle {
@@ -1216,26 +1233,34 @@ body::before {
   transform: rotate(-2deg);
 }
 
-/* "CERTIFIED PRIME" — perfect-session stamp (toggled by app.js at 100%) */
+/* "CERTIFIED PRIME" — perfect-session blue ribbon (toggled by app.js at 100%)
+   Blue ribbon = first place at stock shows and meat judging contests. */
 .summary-cert-stamp {
   position: absolute;
-  top: 20px;
-  right: 24px;
+  top: 16px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
   line-height: 1.4;
   text-align: center;
-  color: var(--red);
-  border: 2px solid var(--red);
-  box-shadow: 0 0 0 3px var(--paper-card), 0 0 0 4.5px var(--red);
-  border-radius: 4px;
-  padding: 9px 13px;
+  color: var(--ribbon);
   transform: rotate(8deg);
   pointer-events: none;
   user-select: none;
+}
+
+.cert-rosette {
+  --art: url(assets/art-rosette.png);
+  width: 58px;
+  aspect-ratio: 565 / 939;
+  color: var(--ribbon);
 }
 
 .summary-hero-label {
@@ -1331,10 +1356,25 @@ body::before {
 
 /* Scoring explainer — ticket stub after the table */
 .scoring-explainer {
+  position: relative;
+  overflow: hidden;
   background: var(--paper-card);
   border: 2px dashed var(--ink);
   border-radius: var(--radius-sm);
   padding: 22px 24px;
+}
+
+/* Ribeye watermark in the ticket corner */
+.explainer-art {
+  --art: url(assets/art-ribeye.png);
+  position: absolute;
+  right: -34px;
+  bottom: -30px;
+  width: 240px;
+  aspect-ratio: 899 / 685;
+  color: var(--ink);
+  opacity: 0.07;
+  transform: rotate(-8deg);
 }
 
 .scoring-explainer h3 {
@@ -1444,6 +1484,7 @@ body::before {
 
 .settings-box {
   position: relative;
+  overflow: hidden;
   background: var(--paper-card);
   border: var(--border-ink);
   border-radius: var(--radius-md);
@@ -1451,6 +1492,22 @@ body::before {
   max-width: 640px;
   width: 100%;
   padding-bottom: 28px;
+}
+
+/* Meat-judging hard hat watermark, bottom corner */
+.settings-box::after {
+  content: '';
+  position: absolute;
+  right: -26px;
+  bottom: -18px;
+  width: 190px;
+  aspect-ratio: 1109 / 789;
+  background: var(--ink);
+  -webkit-mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  mask: url(assets/art-hardhat.png) center / contain no-repeat;
+  opacity: 0.07;
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
 .settings-close {
@@ -1984,6 +2041,17 @@ body::before {
   font-size: 14px;
   color: var(--ink-faint);
 }
+.contribute-empty::before {
+  content: '';
+  display: block;
+  width: 150px;
+  aspect-ratio: 899 / 685;
+  margin: 0 auto 14px;
+  background: var(--ink);
+  -webkit-mask: url(assets/art-ribeye.png) center / contain no-repeat;
+  mask: url(assets/art-ribeye.png) center / contain no-repeat;
+  opacity: 0.22;
+}
 
 /* ── Responsive: tablets and below ──────────────────────────── */
 @media (max-width: 900px) {
@@ -2023,11 +2091,11 @@ body::before {
     padding: 9px 0;
   }
   .summary-cert-stamp {
-    top: 12px;
-    right: 12px;
-    font-size: 11px;
-    padding: 7px 10px;
+    top: 10px;
+    right: 10px;
+    font-size: 9px;
   }
+  .cert-rosette { width: 44px; }
   .landing-subtext {
     font-size: 15px;
   }
