@@ -1009,6 +1009,46 @@ async function loadContributeStats() {
 }
 
 // ------------------------------------------------------------------
+//  FIELD GUIDE SCREEN
+// ------------------------------------------------------------------
+
+let _fieldGuideReturn = 'landing'; // 'landing' or 'home'
+
+// fromLanding: pass true when invoked from the landing nav (the landing
+// exit animation hides the hero before this runs, so it can't be detected).
+function showFieldGuideScreen(fromLanding) {
+  const landing = document.getElementById('landing-hero');
+  _fieldGuideReturn = (fromLanding === true ||
+    (landing && !landing.classList.contains('hidden'))) ? 'landing' : 'home';
+
+  document.querySelectorAll('main.screen').forEach(s => s.classList.add('hidden'));
+  const drill = document.getElementById('drill-screen');
+  if (drill) drill.classList.add('hidden');
+  const header = document.getElementById('app-header');
+  if (header) header.classList.add('hidden');
+  if (landing) landing.classList.add('hidden');
+
+  const fg = document.getElementById('fieldguide-screen');
+  if (fg) fg.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function hideFieldGuideScreen() {
+  const fg = document.getElementById('fieldguide-screen');
+  if (fg) fg.classList.add('hidden');
+  if (_fieldGuideReturn === 'landing') {
+    const landing = document.getElementById('landing-hero');
+    if (landing) {
+      landing.classList.remove('hidden', 'landing-exit');
+      landing.style.opacity = '';
+    }
+  } else {
+    const home = document.getElementById('home-screen');
+    if (home) home.classList.remove('hidden');
+  }
+}
+
+// ------------------------------------------------------------------
 //  INITIALIZATION
 // ------------------------------------------------------------------
 
@@ -1052,6 +1092,17 @@ function init() {
   el.useCustomSetToggle.addEventListener('change', () => {
     if (el.startError) el.startError.classList.add('hidden');
   });
+
+  // Field guide back / practice buttons
+  const fgBackBtn = document.getElementById('fieldguide-back-btn');
+  if (fgBackBtn) fgBackBtn.addEventListener('click', hideFieldGuideScreen);
+  const fgDrillBtn = document.getElementById('fieldguide-drill-btn');
+  if (fgDrillBtn) {
+    fgDrillBtn.addEventListener('click', () => {
+      document.getElementById('fieldguide-screen').classList.add('hidden');
+      renderHomeScreen('practice');
+    });
+  }
 
   // Drill actions
   el.submitBtn.addEventListener('click', onSubmit);

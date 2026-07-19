@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
   <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="stylesheet" href="fieldguide.css" />
   <link rel="stylesheet" href="premium.css" />
 </head>
 <body>
@@ -487,6 +488,132 @@
     </div>
   </main>
 
+  <!-- ===================================================
+       GRADE FIELD GUIDE
+       =================================================== -->
+  <main id="fieldguide-screen" class="screen hidden">
+
+    <nav class="page-nav" aria-label="Field guide">
+      <button class="page-nav-brand page-nav-brand-btn" id="fieldguide-back-btn" title="Back" aria-label="Back">
+        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
+        <span class="page-nav-label">&larr; Back</span>
+      </button>
+    </nav>
+
+    <div class="fg-inner">
+
+      <header class="fg-hero">
+        <span class="fg-postmark postmark" aria-hidden="true">Reference<br />&#9733; official &#9733;<br />BG.Study</span>
+        <span class="fg-eyebrow" aria-hidden="true">know your beef</span>
+        <h1 class="fg-title">Grade Field Guide</h1>
+        <p class="fg-sub">The USDA quality-grade ladder, the marbling behind it, and how the drill scores you — all on one card.</p>
+        <hr class="zigzag-rule zigzag-rule--red zigzag-rule--wide" aria-hidden="true" />
+      </header>
+
+      <!-- 1. The grade ladder -->
+      <section class="fg-section" aria-labelledby="fg-ladder-heading">
+        <h2 id="fg-ladder-heading" class="fg-board-header">Quality Grade Ladder &mdash; A Maturity</h2>
+        <div class="fg-card fg-ladder-card">
+          <ol class="fg-ladder" reversed>
+            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">High Prime</span><span class="fg-rung-family">Prime</span></li>
+            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Average Prime</span><span class="fg-rung-family">Prime</span></li>
+            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Low Prime</span><span class="fg-rung-family">Prime</span></li>
+            <li class="fg-rung fg-rung--choice fg-rung--boundary"><span class="fg-rung-grade">High Choice</span><span class="fg-rung-family">Choice</span></li>
+            <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Average Choice</span><span class="fg-rung-family">Choice</span></li>
+            <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Low Choice</span><span class="fg-rung-family">Choice</span></li>
+            <li class="fg-rung fg-rung--select fg-rung--boundary"><span class="fg-rung-grade">High Select</span><span class="fg-rung-family">Select</span></li>
+            <li class="fg-rung fg-rung--select"><span class="fg-rung-grade">Low Select</span><span class="fg-rung-family">Select</span></li>
+            <li class="fg-rung fg-rung--standard fg-rung--boundary"><span class="fg-rung-grade">Standard</span><span class="fg-rung-family">Standard</span></li>
+          </ol>
+          <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong> &mdash; the Choice&#8202;/&#8202;Select line especially is where contests are won and lost. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
+        </div>
+      </section>
+
+      <!-- 2. Marbling degrees -->
+      <section class="fg-section" aria-labelledby="fg-marbling-heading">
+        <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
+        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Learn these pairings cold:</p>
+        <div class="fg-marbling-grid">
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Abundant</span>
+            <span class="fg-marbling-grade">High Prime</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Moderately Abundant</span>
+            <span class="fg-marbling-grade">Average Prime</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Slightly Abundant</span>
+            <span class="fg-marbling-grade">Low Prime</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Moderate</span>
+            <span class="fg-marbling-grade">High Choice</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Modest</span>
+            <span class="fg-marbling-grade">Average Choice</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Small</span>
+            <span class="fg-marbling-grade">Low Choice</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Slight&sup1;</span>
+            <span class="fg-marbling-grade">Select</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Traces</span>
+            <span class="fg-marbling-grade">Standard</span>
+          </div>
+          <div class="fg-marbling-tile">
+            <span class="fg-marbling-art" aria-hidden="true"></span>
+            <span class="fg-marbling-degree">Practically Devoid</span>
+            <span class="fg-marbling-grade">Standard</span>
+          </div>
+        </div>
+        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight&#8202;50&ndash;100 grades High Select, Slight&#8202;0&ndash;50 grades Low Select.</p>
+      </section>
+
+      <!-- 3. Maturity -->
+      <section class="fg-section" aria-labelledby="fg-maturity-heading">
+        <h2 id="fg-maturity-heading" class="fg-board-header">A Word on Maturity</h2>
+        <div class="fg-card">
+          <p class="fg-body">Quality grade is marbling <em>plus</em> maturity. This drill assumes <strong>A maturity</strong> (roughly 9&ndash;30 months &mdash; nearly all fed cattle) so every carcass grades straight off its marbling. As skeletal and lean maturity advance past A, the same marbling earns a lower grade, and the oldest carcasses fall to the mature grades (Commercial, Utility) that this drill leaves out.</p>
+        </div>
+      </section>
+
+      <!-- 4. How scoring works -->
+      <section class="fg-section" aria-labelledby="fg-scoring-heading">
+        <h2 id="fg-scoring-heading" class="fg-board-header">How the Drill Scores</h2>
+        <div class="fg-card fg-scoring-card">
+          <ul class="scoring-explainer-list">
+            <li><span class="pts-chip">10</span> Exact match</li>
+            <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
+            <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
+            <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
+            <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+          </ul>
+          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts) &mdash; the scale cares about distance, not family lines.</p>
+        </div>
+      </section>
+
+      <div class="fg-footer">
+        <hr class="zigzag-rule" aria-hidden="true" />
+        <button id="fieldguide-drill-btn" class="btn-primary">Put It to Practice &rarr;</button>
+      </div>
+
+    </div>
+  </main>
+
   <!-- AUTH MODAL -->
   <div id="auth-modal" class="auth-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-heading">
     <div id="auth-modal-panel" class="auth-modal-panel">
@@ -664,7 +791,8 @@
       if (navFieldguide) {
         navFieldguide.addEventListener('click', () => {
           folderNavigateTo(() => {
-            if (typeof showFieldGuideScreen === 'function') showFieldGuideScreen();
+            // true = came from landing (already hidden by the exit animation)
+            if (typeof showFieldGuideScreen === 'function') showFieldGuideScreen(true);
           });
         });
       }

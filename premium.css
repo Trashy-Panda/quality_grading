@@ -146,6 +146,17 @@
     animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
   }
 
+  /* ── Field guide screen ── */
+  #fieldguide-screen:not(.hidden) .fg-hero {
+    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
+  }
+  #fieldguide-screen:not(.hidden) .fg-section {
+    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(2) { animation-delay: 0.18s; }
+  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(3) { animation-delay: 0.26s; }
+  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(4) { animation-delay: 0.34s; }
+
   /* ── Drill feedback panel ── */
   .feedback-panel:not(.hidden) {
     animation: p-feedbackSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
