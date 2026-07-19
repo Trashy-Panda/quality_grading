@@ -5,11 +5,19 @@
 Static GitHub Pages site at **beefgrading.study**. Stack: vanilla HTML/CSS/JS (no build
 system, no npm, no server), Firebase Firestore + Auth as the sole backend.
 
-- Branch `dev` → work here. Branch `master` → production (auto-deploys via GitHub Pages).
-- Deploy via `deploy.bat` (merges dev → master → push).
-- Files: `index.html`, `style.css`, `app.js`, `auth.js`, `data.js`, `weekly.js`,
-  `leaderboard.js`, `admin.html`, `admin.js`, `admin.css`, `auth.html`, `auth.css`,
-  `weekly.html`, `weekly.css`, `leaderboard.html`, `leaderboard.css`
+- Branch `dev` → work here. Branch `master` → production (auto-deploys via GitHub Pages,
+  serving `master`'s repo root literally — no build step). **Live site files
+  (`index.html`, `admin.html`, and every CSS/JS/SVG they reference) must stay at repo
+  root** — this was already learned the hard way once (see commit `adaa82e`): moving
+  them into a subfolder breaks production the next time `deploy.bat` merges `dev` into
+  `master`, since Pages has no way to serve from anywhere but root.
+- Deploy via `deployment/deploy.bat` (merges dev → master → push).
+- Live site files (repo root): `index.html`, `style.css`, `app.js`, `auth.js`, `data.js`,
+  `weekly.js`, `leaderboard.js`, `admin.html`, `admin.js`, `admin.css`, `auth.css`,
+  `weekly.css`, `leaderboard.css`, `beefgrade.svg`, `CNAME`, `firestore.rules`.
+  `auth.html`/`weekly.html`/`leaderboard.html` are **not** live pages — they're dev
+  reference docs (their markup is already merged into `index.html`) and live in `docs/`.
+- See root `README.md` for the full repo layout (grader/, deployment/, docs/, etc.).
 
 ---
 
@@ -47,14 +55,18 @@ If uncertain which agent → spawn SECURITY AGENT to assess, then route.
 ```
 Step 1 → mcp__magic__21st_magic_component_inspiration
          Browse real components matching the UI need BEFORE writing any code.
-         Search terms: component type + "brutalist" or "high contrast"
+         Search terms: component type + "vintage americana" or "print poster" or
+         "letterboard menu" or "stamped badge"
          Goal: find the closest existing component to adapt — not invent from scratch.
 
 Step 2 → mcp__magic__21st_magic_component_builder
          Build the component using Step 1 findings as context.
          Always include in the prompt:
            - "vanilla JS, no React, no npm, no build tools"
-           - "neo-brutalist: 2-3px black borders, offset box-shadow, monospace accents"
+           - "Rollmark: kraft-cream paper + warm ink, flat print-plate elevation
+             (no offset hard shadows outside modals), 6-14px radii, scarlet
+             #C8102E accent, tracked uppercase Jost headings, Yellowtail script
+             accents, Inter body"
 
 Step 3 → mcp__magic__21st_magic_component_refiner  (if iteration needed)
          Pass the current output + the specific delta needed.
@@ -75,7 +87,7 @@ Run before any significant UI build (skip for trivial one-line fixes):
 ```bash
 # Generate design system
 python3 skills/ui-ux-pro-max/scripts/search.py \
-  "beef grading agriculture brutalist educational drill" \
+  "beef grading agriculture vintage americana print poster educational drill" \
   --design-system -p "GradeThisMeat" -f markdown
 
 # Get UX rules for the specific concern
@@ -125,18 +137,44 @@ apply spring presets, stagger patterns, and accessibility guidance directly.
 **CSS transitions for simple states** (hover, button feedback): `transition: transform 150ms ease, opacity 150ms ease`
 **Only animate** `transform` and `opacity` — never `width`/`height` (layout thrash).
 
-### Neo-Brutalist Design System Tokens
+### Rollmark Design System Tokens
+
+Source of truth is `style.css`'s `:root` block — re-check it before use, since
+it evolves. Current values:
 
 ```css
---border: 2px solid #000;          /* standard border */
---border-thick: 3px solid #000;    /* headers, cards */
---shadow-sm: 3px 3px 0 #000;
---shadow-md: 4px 4px 0 #000;
---shadow-lg: 6px 6px 0 #000;
---radius: 0;                        /* no border radius */
---font-mono: 'Space Mono', monospace;
---font-body: 'Inter', sans-serif;
---color-brand: #cc0000;            /* red accent */
+/* paper */
+--paper:      #F5EFE2;   /* page bg — warm kraft cream */
+--paper-deep: #ECE4D2;   /* fills, hover, zero-feedback */
+--paper-card: #FBF7EE;   /* card surface */
+--line:       #DCD2BC;   /* hairline rules */
+/* ink */
+--ink:        #1E1B16;
+--ink-soft:   #57503F;   /* secondary text */
+--ink-faint:  #6E675A;   /* tertiary text */
+/* scarlet — primary brand accent */
+--red:             #C8102E;
+--red-deep:        #A00D25;
+--red-wash:        #F6E3DC;
+--red-wash-border: #E5B8AC;
+/* ribbon — award-only accent (blue ribbon / stock-show first place), never used elsewhere */
+--ribbon: #3B67C4;
+/* shape — print plates, not pills; no zero-radius brutalism */
+--radius-sm:   6px;
+--radius-md:   10px;
+--radius-lg:   14px;
+--radius-pill: 999px;
+--border-ink:  2px solid var(--ink);
+/* elevation — flat print look; borders carry structure, no offset hard shadows outside modals */
+--shadow-sm: 0 1px 2px rgba(30, 27, 22, 0.07);
+--shadow-md: 0 2px 0 rgba(30, 27, 22, 0.14);
+--shadow-lg: 0 14px 40px rgba(30, 27, 22, 0.16);  /* modals only */
+/* type */
+--font-display: 'Jost', 'Futura PT', 'Century Gothic', system-ui, sans-serif;
+--font-script:  'Yellowtail', cursive;
+--font-ui:      'Inter', system-ui, sans-serif;
+--track-stamp:  0.09em;   /* USDA-stamp tracking — headlines, buttons, labels */
+--track-wide:   0.16em;   /* eyebrows, stamps, letterboard headers */
 ```
 
 ### Hard Rules
@@ -151,7 +189,7 @@ apply spring presets, stagger patterns, and accessibility guidance directly.
 ### Spawn Count
 
 - **1 agent**: single component or single page section
-- **2 agents in parallel**: two independent pages (e.g., leaderboard.html + admin.html)
+- **2 agents in parallel**: two independent pages/sections (e.g., leaderboard section in index.html + admin.html)
 - **3 agents in parallel**: full site reskin (main app + admin + leaderboard simultaneously)
 
 ---
@@ -200,7 +238,7 @@ Step 4 → WebFetch: https://firebase.google.com/docs/firestore/security/insecur
 
 1. Publish in Firebase Console → Firestore → Rules
 2. Test each permission scenario in the Firebase Rules Playground
-3. Document schema changes in `NOTES.md`
+3. Document schema changes in `docs/NOTES.md`
 
 ### Firebase Web Config Note
 
