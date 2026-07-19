@@ -121,6 +121,7 @@ function cacheElements() {
 
   // Home
   el.startBtn       = document.getElementById('start-btn');
+  el.startError     = document.getElementById('start-error');
   el.managePhotosBtn= document.getElementById('manage-photos-btn');
   el.practiceView   = document.getElementById('practice-setup-view');
   el.weeklyView     = document.getElementById('weekly-setup-view');
@@ -635,7 +636,7 @@ function attachUrlDotChecks(container) {
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'Showing sample carcasses — be the first to add real ones via Manage Photos';
+    el.communitySetSub.textContent = 'No community carcasses yet — add real ones via Manage Photos';
   } else {
     el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
   }
@@ -954,6 +955,17 @@ async function submitContributeGrade(imageId, imageUrl, gradeKey) {
       submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
 
+    // Bump voteCount so this image rotates out of the low-vote pool.
+    // The vote above is already recorded and is the source of truth, so a
+    // failure here should never block the user's grade from having counted.
+    try {
+      await window._db.collection(DB_COLLECTIONS.ai_carcasses).doc(imageId).update({
+        voteCount: firebase.firestore.FieldValue.increment(1)
+      });
+    } catch (voteCountErr) {
+      // Non-fatal: image ordering is a display aid, not the source of truth.
+    }
+
     _contributeState.sessionCount++;
     const progressEl = document.getElementById('contribute-progress-text');
     if (progressEl) {
@@ -1014,15 +1026,29 @@ function init() {
 
   // Start
   el.startBtn.addEventListener('click', () => {
-    let deck;
+    // No silent fallback to DEFAULT_CARCASSES — placeholders never enter a deck.
+    let deck, emptyMsg;
     if (el.useCustomSetToggle.checked) {
-      const custom = getCustomList();
-      deck = custom.length ? custom : DEFAULT_CARCASSES;
+      deck = getCustomList();
+      emptyMsg = 'Your personal set is empty. Add images in Manage Photos, or uncheck the toggle to use community carcasses.';
     } else {
-      deck = state.communitySet.length ? state.communitySet : DEFAULT_CARCASSES;
+      deck = state.communitySet;
+      emptyMsg = 'No practice carcasses are available right now. Try Refresh in Manage Photos, or check back soon.';
     }
-    if (!deck.length) { alert('No carcasses available. Please add images in Manage Photos.'); return; }
+    if (!deck.length) {
+      if (el.startError) {
+        el.startError.textContent = emptyMsg;
+        el.startError.classList.remove('hidden');
+      }
+      return;
+    }
+    if (el.startError) el.startError.classList.add('hidden');
     startSession(deck);
+  });
+
+  // Clear the start error when the deck source changes
+  el.useCustomSetToggle.addEventListener('change', () => {
+    if (el.startError) el.startError.classList.add('hidden');
   });
 
   // Drill actions

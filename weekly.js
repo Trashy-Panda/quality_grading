@@ -34,20 +34,6 @@ function getWeekBounds() {
   return { start: monday, end: sunday };
 }
 
-function seededShuffle(array, seed) {
-  const arr = [...array];
-  let s = seed;
-  function rand() {
-    s = (s * 1664525 + 1013904223) & 0xffffffff;
-    return (s >>> 0) / 0xffffffff;
-  }
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
 // ------------------------------------------------------------------
 //  WEEKLY CARCASS DECK
 // ------------------------------------------------------------------
@@ -109,14 +95,11 @@ async function getWeeklyCarcasses(ruleSet) {
     }
   }
 
-  // Seeded fallback — DEFAULT_CARCASSES only (no community set).
-  // Community set loads async so its size varies across calls; excluding it
-  // keeps the fallback count consistent. Not cached so the next call still
-  // retries Firestore in case the override was just saved by the admin.
-  const seed = parseInt(weekId.replace(/\D/g, ''), 10);
-  const deck = seededShuffle([...DEFAULT_CARCASSES], seed);
-  window._weeklyCarcasses = deck;
-  return deck;
+  // No admin-configured week — the challenge is unavailable. Placeholder
+  // carcasses (DEFAULT_CARCASSES) are never served as a deck. Not cached so
+  // the next call still retries Firestore in case the override was just saved.
+  window._weeklyCarcasses = [];
+  return [];
 }
 
 // ------------------------------------------------------------------
@@ -231,7 +214,9 @@ async function renderWeeklyCard() {
 
   const metaEl = document.getElementById('weekly-card-meta');
   if (metaEl) {
-    metaEl.textContent = carcasses.length + ' carcasses \u00b7 ' + ruleLabel;
+    metaEl.textContent = carcasses.length
+      ? carcasses.length + ' carcasses \u00b7 ' + ruleLabel
+      : 'This week\u2019s challenge isn\u2019t set up yet';
   }
 
   const statusEl  = document.getElementById('weekly-user-status');
@@ -293,6 +278,13 @@ async function renderWeeklyCard() {
     statusEl.innerHTML = `
       <div class="weekly-rank">Signed in as <strong>${_escapeHtml(displayName)}</strong> &mdash; score not yet submitted</div>`;
 
+    if (carcasses.length === 0) {
+      // No admin-configured deck — nothing to start
+      actionsEl.innerHTML = `
+        <div class="weekly-rank">Check back soon &mdash; a new challenge posts when the week&rsquo;s carcasses are selected.</div>`;
+      return;
+    }
+
     actionsEl.innerHTML = `
       <button id="weekly-start-btn" class="btn-weekly-primary">
         Start Weekly Challenge &rarr;
@@ -335,7 +327,7 @@ async function startWeeklyChallenge() {
   if (typeof state !== 'undefined') state.ruleSet = 'collegiate';
   const deck = await getWeeklyCarcasses(_weeklyRuleSet);
   if (!deck || deck.length === 0) {
-    alert('No carcasses available for this week\'s challenge.');
+    alert('This week\'s challenge isn\'t set up yet. Check back soon.');
     window._isWeeklySession = false;
     return;
   }
