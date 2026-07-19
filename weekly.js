@@ -145,6 +145,17 @@ async function submitWeeklyScore(scoreData) {
   const existing = await checkUserSubmission(uid, ruleSet);
   if (existing) return false; // already submitted
 
+  // Compact per-carcass answer log — feeds admin analytics (most-missed carcasses).
+  // Grade keys (PR_HI etc.) kept small; capped at 60 entries to bound doc size.
+  const answers = Array.isArray(scoreData.answers)
+    ? scoreData.answers.slice(0, 60).map(a => ({
+        carcassId: String(a.carcassId || ''),
+        guess: String(a.userKey || ''),
+        correct: String(a.correctKey || ''),
+        pts: typeof a.score === 'number' ? a.score : 0,
+      }))
+    : [];
+
   try {
     await window._db.collection(DB_COLLECTIONS.submissions).doc(docId).set({
       userId: uid,
@@ -155,6 +166,7 @@ async function submitWeeklyScore(scoreData) {
       earned: scoreData.earned,
       max: scoreData.max,
       pct: scoreData.pct,
+      answers: answers,
       submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
     return true;

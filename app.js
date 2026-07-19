@@ -365,6 +365,8 @@ function onSubmit() {
   state.answers.push({
     carcassId: c.id,
     carcassName: c.imageName,
+    userKey: state.selectedKey,
+    correctKey: c.correct.qualityGrade,
     userQualityLabel: userLabel,
     correctQualityLabel: correctLabel,
     score,

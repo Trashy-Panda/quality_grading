@@ -10,7 +10,7 @@
 //  - https://firebase.google.com/docs/firestore/security/insecure-rules
 //
 //  Admin UID: KLoBqbA2P9UkQ83urzmgpxT4Oit1
-//  Last updated: 2026-05-30
+//  Last updated: 2026-07-19 (optional `answers` list on submissions)
 // ============================================================
 
 rules_version = '2';
@@ -23,6 +23,25 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null
           && request.auth.uid == 'KLoBqbA2P9UkQ83urzmgpxT4Oit1';
+    }
+
+    // ----------------------------------------------------------
+    //  Helper: sum of a grading_votes tally map (used to gate
+    //  community_carcasses promotion writes — see below).
+    //  Enumerates the 9 fixed grade keys rather than iterating,
+    //  since Firestore rules have no loop/reduce construct over
+    //  arbitrary maps.
+    // ----------------------------------------------------------
+    function voteTallyTotal(m) {
+      return (('PR_HI'  in m) ? m.PR_HI  : 0)
+           + (('PR_AVG' in m) ? m.PR_AVG : 0)
+           + (('PR_LO'  in m) ? m.PR_LO  : 0)
+           + (('CH_HI'  in m) ? m.CH_HI  : 0)
+           + (('CH_AVG' in m) ? m.CH_AVG : 0)
+           + (('CH_LO'  in m) ? m.CH_LO  : 0)
+           + (('SE_HI'  in m) ? m.SE_HI  : 0)
+           + (('SE_LO'  in m) ? m.SE_LO  : 0)
+           + (('STD'    in m) ? m.STD    : 0);
     }
 
     // ----------------------------------------------------------
@@ -46,6 +65,15 @@ service cloud.firestore {
     //  create: owner only, all fields validated
     //  update: never
     //  delete: owner OR admin
+    //
+    //  OPTIONAL `answers` FIELD: a compact per-carcass answer log
+    //  ([{carcassId, guess, correct, pts}]) written by weekly.js
+    //  submitWeeklyScore() to feed admin analytics (most-missed
+    //  carcasses). Optional so legacy clients/docs stay valid.
+    //  Rules can't iterate list elements, so validation is bounded
+    //  to type + size (<= 60, matching the client-side cap); the
+    //  field is analytics-only and never feeds scoring, so element
+    //  contents being client-trusted is acceptable.
     // ----------------------------------------------------------
     match /submissions/{docId} {
       allow read: if true;
@@ -61,7 +89,10 @@ service cloud.firestore {
         && math.abs(
              request.resource.data.pct
              - (request.resource.data.earned / request.resource.data.max * 100)
-           ) < 0.5;
+           ) < 0.5
+        && (!('answers' in request.resource.data)
+            || (request.resource.data.answers is list
+                && request.resource.data.answers.size() <= 60));
       allow update: if false;
       allow delete: if request.auth != null
         && (resource.data.userId == request.auth.uid || isAdmin());
@@ -85,7 +116,43 @@ service cloud.firestore {
     //  create: any authenticated user, imageUrl must be HTTPS,
     //          correct.qualityGrade must be a non-empty string
     //          (matches the actual write shape used by app.js and
-    //          admin.js — NOT a top-level `grade` field)
+    //          admin.js — NOT a top-level `grade` field).
+    //
+    //          NOTE ON `create` NOT BEING isAdmin-GATED (by design,
+    //          not an oversight): there are three legitimate call
+    //          sites for this create rule today —
+    //            1. app.js `onSubmitToCommunity()` — any signed-in
+    //               user submitting their own carcass photo.
+    //            2. admin.js manual "Add to Community" form.
+    //            3. admin.js `pushToReferences()` — admin promotes
+    //               a crowdsourced grading_votes consensus, and
+    //               additionally stamps a `voteBreakdown` tally
+    //               map onto the doc (see below).
+    //          Restricting create to isAdmin() would break path 1,
+    //          a real user-facing feature, so it stays open to any
+    //          authenticated user, same as before.
+    //
+    //          MINIMUM-VOTE GATE — added defense-in-depth, NOT a
+    //          real security boundary: when the incoming doc
+    //          carries a `voteBreakdown` field (i.e. it's coming
+    //          through the promotion path), require the tally to
+    //          sum to >= 5 votes. This guards against a regression
+    //          in the client-side "min 5 votes before Promote is
+    //          clickable" gate (added in the paired JS change)
+    //          accidentally shipping a single-digit-vote image.
+    //          IMPORTANT CAVEAT: this is NOT a real security
+    //          control. `voteBreakdown` is a client-supplied map —
+    //          rules cannot cross-check it against the actual
+    //          `grading_votes` documents (that would need a Cloud
+    //          Function or per-vote `get()` reads, not a per-write
+    //          rule), so any authenticated caller can trivially
+    //          fabricate `{STD: 5}` and satisfy this check with
+    //          zero real votes. The deeper trust boundary here is
+    //          "any authenticated user can create community_carcasses
+    //          docs at all" (see above) — that has been true since
+    //          this rule was written and is unchanged by this fix.
+    //          Flag for a future SECURITY AGENT pass if tighter
+    //          control over data authenticity is ever required.
     //  update: admin only (used by the Manage Community edit UI)
     //  delete: admin only
     // ----------------------------------------------------------
@@ -96,7 +163,10 @@ service cloud.firestore {
         && request.resource.data.imageUrl.matches('https://.*')
         && request.resource.data.correct is map
         && request.resource.data.correct.qualityGrade is string
-        && request.resource.data.correct.qualityGrade.size() > 0;
+        && request.resource.data.correct.qualityGrade.size() > 0
+        && (!('voteBreakdown' in request.resource.data)
+            || (request.resource.data.voteBreakdown is map
+                && voteTallyTotal(request.resource.data.voteBreakdown) >= 5));
       allow update: if isAdmin()
         && request.resource.data.imageUrl is string
         && request.resource.data.imageUrl.matches('https://.*')
@@ -109,11 +179,44 @@ service cloud.firestore {
     // ----------------------------------------------------------
     //  ai_carcasses/{docId}
     //  read:   public (used by grading drill + crowdsource voting)
-    //  write:  admin only (populated by grader pipeline)
+    //  create: admin only (populated by grader pipeline)
+    //  update: admin — full rights, any field.
+    //          non-admin authenticated user — ONLY allowed to
+    //          atomically bump `voteCount` by exactly +1 (the
+    //          "Contribute" voting flow calls
+    //          `.update({ voteCount: increment(1) })` on this doc
+    //          right after a successful `grading_votes` write, so
+    //          under-voted images stop being served forever — see
+    //          NOTES.md / the paired JS fix for the full bug).
+    //          No other field may change in that path, voteCount
+    //          may only move by exactly +1 per write (never set to
+    //          an arbitrary value, never decremented), enforced via
+    //          diff().affectedKeys().hasOnly([...]) — see
+    //          https://firebase.google.com/docs/firestore/security/rules-data-validation
+    //  delete: admin only
+    //
+    //  PIPELINE-ONLY PROVENANCE FIELDS (documentation only — no
+    //  rule needed): the Python grading pipeline (grader/base/
+    //  grade_ribeyes.py et al.) writes `aiModel`, `promptVersion`,
+    //  `k` (self-consistency sample count, int), `medianScore`
+    //  (number), `scoreSpread` (number), and `calibrationOffset`
+    //  (number) onto these docs using the firebase-admin SDK with
+    //  service-account credentials. Service-account/Admin SDK
+    //  writes bypass Firestore Security Rules entirely, so these
+    //  fields are never validated here — noted for future
+    //  maintainers so nobody "fixes" a missing rule for them.
     // ----------------------------------------------------------
     match /ai_carcasses/{docId} {
       allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (
+          request.auth != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['voteCount'])
+          && request.resource.data.voteCount is int
+          && resource.data.voteCount is int
+          && request.resource.data.voteCount == resource.data.voteCount + 1
+        );
     }
 
     // ----------------------------------------------------------

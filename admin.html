@@ -66,6 +66,7 @@
       <button class="admin-tab" id="tab-btn-users" data-tab="users">Users</button>
       <button class="admin-tab" id="tab-btn-community" data-tab="community">Community</button>
       <button class="admin-tab" id="tab-btn-grading-votes" data-tab="grading-votes">Grading Votes</button>
+      <button class="admin-tab" id="tab-btn-analytics" data-tab="analytics">Analytics</button>
     </nav>
 
     <!-- Tab content -->
@@ -335,6 +336,106 @@
           <p class="admin-card-sub">Sorted by total votes descending. Click "Push to References" to promote an image to <code>community_carcasses</code> using the consensus grade.</p>
           <div id="gv-card-list" class="gv-card-list">
             <div class="admin-empty">Loading…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================
+           ANALYTICS TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-analytics">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Analytics</h2>
+          <div class="admin-toolbar-controls">
+            <button id="an-refresh-btn" class="admin-btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <div class="admin-stats-row">
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="an-stat-users">—</div>
+            <div class="stat-label">Users</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="an-stat-subs">—</div>
+            <div class="stat-label">Total Submissions</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="an-stat-week">—</div>
+            <div class="stat-label">This Week</div>
+          </div>
+          <div class="admin-stat-chip">
+            <div class="stat-value" id="an-stat-community">—</div>
+            <div class="stat-label">Community Carcasses</div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3 class="admin-card-label">Weekly Participation</h3>
+          <p class="admin-card-sub">Recent weeks with at least one submission. Averages are across both divisions.</p>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="an-weeks-table">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>Submissions</th>
+                  <th>HS / College</th>
+                  <th>Avg %</th>
+                  <th>Top %</th>
+                </tr>
+              </thead>
+              <tbody id="an-weeks-tbody">
+                <tr><td colspan="5" class="admin-empty">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3 class="admin-card-label">Score Distribution — This Week</h3>
+          <div id="an-dist" class="an-dist">
+            <div class="admin-empty">Loading…</div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3 class="admin-card-label">Most-Missed Carcasses</h3>
+          <p class="admin-card-sub">From per-answer logs on weekly submissions (min 3 attempts). Older submissions predate answer logging and are excluded.</p>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="an-missed-table">
+              <thead>
+                <tr>
+                  <th>Carcass</th>
+                  <th>Correct Grade</th>
+                  <th>Attempts</th>
+                  <th>Miss Rate</th>
+                  <th>Avg Pts</th>
+                </tr>
+              </thead>
+              <tbody id="an-missed-tbody">
+                <tr><td colspan="5" class="admin-empty">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3 class="admin-card-label">Most Contested Images</h3>
+          <p class="admin-card-sub">Crowdsource votes with the least consensus (min 3 votes) — the images students disagree on most.</p>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="an-contested-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Votes</th>
+                  <th>Leading Grade</th>
+                  <th>Consensus</th>
+                </tr>
+              </thead>
+              <tbody id="an-contested-tbody">
+                <tr><td colspan="4" class="admin-empty">Loading…</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

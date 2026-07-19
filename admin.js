@@ -83,6 +83,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabCommunity) tabCommunity.addEventListener('click', function () { switchTab('community'); });
   const tabGradingVotes = document.getElementById('tab-btn-grading-votes');
   if (tabGradingVotes) tabGradingVotes.addEventListener('click', function () { switchTab('grading-votes'); });
+  const tabAnalytics = document.getElementById('tab-btn-analytics');
+  if (tabAnalytics) tabAnalytics.addEventListener('click', function () { switchTab('analytics'); });
+  const anRefreshBtn = document.getElementById('an-refresh-btn');
+  if (anRefreshBtn) anRefreshBtn.addEventListener('click', function () { loadAnalyticsTab(); });
 
   // 6. Sign-in / sign-out
   const signinBtn = document.getElementById('admin-signin-btn');
@@ -237,7 +241,7 @@ function switchTab(name) {
   _currentTab = name;
 
   // Update tab button active states
-  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes'].forEach(function (t) {
+  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes', 'analytics'].forEach(function (t) {
     const btn = document.getElementById('tab-btn-' + t);
     const section = document.getElementById('tab-' + t);
     if (btn) {
@@ -267,6 +271,8 @@ function switchTab(name) {
     loadCommunityTab();
   } else if (name === 'grading-votes') {
     loadGradingVotesTab();
+  } else if (name === 'analytics') {
+    loadAnalyticsTab();
   }
 }
 
@@ -1227,6 +1233,57 @@ const GRADE_LABELS_GV = {
   SE_HI:'High Select', SE_LO:'Low Select', STD:'Standard',
 };
 
+// Promotion gate — a consensus is only trustworthy enough to push into
+// community_carcasses (used elsewhere as few-shot calibration input) once
+// it clears a minimum sample size, a clear majority, and isn't split across
+// grades that are far apart on the ladder.
+var GV_MIN_VOTES         = 5;
+var GV_MIN_SHARE         = 0.6;
+var GV_MAX_RUNG_DISTANCE = 1;
+
+// Rung distance uses QUALITY_GRADES' authoritative `position` field
+// (data.js) rather than a second hardcoded copy of the ladder.
+function gvRungDistance(gradeA, gradeB) {
+  var a = (typeof GRADE_MAP !== 'undefined') && GRADE_MAP[gradeA];
+  var b = (typeof GRADE_MAP !== 'undefined') && GRADE_MAP[gradeB];
+  if (!a || !b) return 0;
+  return Math.abs(a.position - b.position);
+}
+
+// Returns { passed: bool, reasons: [String] } describing why a consensus
+// is or isn't eligible to be pushed to references.
+function gvEvaluatePromotionGate(tally, sortedGrades, totalVotes) {
+  var consensusGrade = sortedGrades[0];
+  var runnerUpGrade  = sortedGrades[1];
+  var topShare       = tally[consensusGrade] / totalVotes;
+  var reasons = [];
+
+  if (totalVotes < GV_MIN_VOTES) {
+    reasons.push('Needs ' + GV_MIN_VOTES + '+ votes (has ' + totalVotes + ')');
+  }
+
+  if (topShare < GV_MIN_SHARE) {
+    var topPct = Math.round(topShare * 100);
+    if (runnerUpGrade) {
+      var runnerPct = Math.round((tally[runnerUpGrade] / totalVotes) * 100);
+      reasons.push('Contentious — ' + consensusGrade + ' ' + topPct + '% vs ' +
+        runnerUpGrade + ' ' + runnerPct + '%, needs 60%+ share');
+    } else {
+      reasons.push('Needs 60%+ share (has ' + topPct + '%)');
+    }
+  }
+
+  if (runnerUpGrade) {
+    var rungDistance = gvRungDistance(consensusGrade, runnerUpGrade);
+    if (rungDistance > GV_MAX_RUNG_DISTANCE) {
+      reasons.push(consensusGrade + ' vs ' + runnerUpGrade + ' are ' + rungDistance +
+        ' rungs apart (max ' + GV_MAX_RUNG_DISTANCE + ')');
+    }
+  }
+
+  return { passed: reasons.length === 0, reasons: reasons };
+}
+
 async function loadGradingVotesTab() {
   var listEl   = document.getElementById('gv-card-list');
   var statImgs = document.getElementById('gv-stat-images');
@@ -1289,8 +1346,10 @@ async function loadGradingVotesTab() {
       // Tally votes per grade
       var tally = {};
       votes.forEach(function(v) { tally[v.grade] = (tally[v.grade] || 0) + 1; });
-      var consensusGrade = Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; })[0];
-      var totalVotes = votes.length;
+      var sortedGrades   = Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; });
+      var consensusGrade = sortedGrades[0];
+      var totalVotes     = votes.length;
+      var gateResult     = gvEvaluatePromotionGate(tally, sortedGrades, totalVotes);
 
       // Build card
       var card = document.createElement('div');
@@ -1329,15 +1388,22 @@ async function loadGradingVotesTab() {
 
       body.innerHTML = metaHtml + gradesHtml;
 
-      // Push button
+      // Push button — gated behind minimum votes / share / rung-distance
       if (!isPromoted) {
-        var pushBtn = document.createElement('button');
-        pushBtn.className = 'admin-btn-primary gv-push-btn';
-        pushBtn.textContent = 'Push to References as ' + escapeHtml(consensusGrade);
-        pushBtn.addEventListener('click', function() {
-          pushToReferences(imageId, imageUrl, consensusGrade, tally, totalVotes, card, pushBtn);
-        });
-        body.appendChild(pushBtn);
+        if (gateResult.passed) {
+          var pushBtn = document.createElement('button');
+          pushBtn.className = 'admin-btn-primary gv-push-btn';
+          pushBtn.textContent = 'Push to References as ' + escapeHtml(consensusGrade);
+          pushBtn.addEventListener('click', function() {
+            pushToReferences(imageId, imageUrl, consensusGrade, tally, totalVotes, card, pushBtn);
+          });
+          body.appendChild(pushBtn);
+        } else {
+          var gateNote = document.createElement('div');
+          gateNote.className = 'gv-gate-note';
+          gateNote.textContent = gateResult.reasons.join(' — ');
+          body.appendChild(gateNote);
+        }
       } else {
         var badge = document.createElement('div');
         badge.className = 'gv-promoted-badge';
@@ -1388,6 +1454,185 @@ async function pushToReferences(imageId, imageUrl, consensusGrade, tally, totalV
     btnEl.disabled = false;
     btnEl.textContent = 'Push to References as ' + escapeHtml(consensusGrade);
     alert('Push failed: ' + e.message);
+  }
+}
+
+// ============================================================
+//  Analytics Tab
+// ============================================================
+
+async function loadAnalyticsTab() {
+  var statUsers     = document.getElementById('an-stat-users');
+  var statSubs      = document.getElementById('an-stat-subs');
+  var statWeek      = document.getElementById('an-stat-week');
+  var statCommunity = document.getElementById('an-stat-community');
+  var weeksTbody    = document.getElementById('an-weeks-tbody');
+  var distEl        = document.getElementById('an-dist');
+  var missedTbody   = document.getElementById('an-missed-tbody');
+  var contestedTbody = document.getElementById('an-contested-tbody');
+  if (!weeksTbody || !window._db) return;
+
+  weeksTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">Loading…</td></tr>';
+  missedTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">Loading…</td></tr>';
+  contestedTbody.innerHTML = '<tr><td colspan="4" class="admin-empty">Loading…</td></tr>';
+  distEl.innerHTML = '<div class="admin-empty">Loading…</div>';
+
+  try {
+    // All fetches in parallel; every aggregation is client-side so no
+    // composite indexes are ever required (same convention as leaderboard).
+    var results = await Promise.all([
+      _db.collection('users').get(),
+      _db.collection('submissions').get(),
+      _db.collection(DB_COLLECTIONS.community_carcasses).get(),
+      _db.collection('grading_votes').get(),
+    ]);
+    var usersSnap = results[0], subsSnap = results[1],
+        commSnap  = results[2], votesSnap = results[3];
+
+    var subs = subsSnap.docs.map(function (d) { return d.data(); });
+    var currentWeek = getWeekId();
+
+    // ---- Stat chips ----
+    if (statUsers)     statUsers.textContent     = String(usersSnap.size);
+    if (statSubs)      statSubs.textContent      = String(subsSnap.size);
+    if (statCommunity) statCommunity.textContent = String(commSnap.size);
+    var thisWeekSubs = subs.filter(function (s) { return s.weekId === currentWeek; });
+    if (statWeek) statWeek.textContent = String(thisWeekSubs.length);
+
+    // ---- Weekly participation table ----
+    var byWeek = {};
+    subs.forEach(function (s) {
+      if (!s.weekId) return;
+      if (!byWeek[s.weekId]) byWeek[s.weekId] = [];
+      byWeek[s.weekId].push(s);
+    });
+    var weekIds = Object.keys(byWeek).sort().reverse().slice(0, 8);
+    if (!weekIds.length) {
+      weeksTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">No submissions yet.</td></tr>';
+    } else {
+      weeksTbody.innerHTML = weekIds.map(function (w) {
+        var rows = byWeek[w];
+        var ffa  = rows.filter(function (s) { return s.ruleSet === 'ffa'; }).length;
+        var col  = rows.length - ffa;
+        var pcts = rows.map(function (s) { return typeof s.pct === 'number' ? s.pct : 0; });
+        var avg  = Math.round(pcts.reduce(function (a, b) { return a + b; }, 0) / rows.length);
+        var top  = Math.max.apply(null, pcts);
+        return '<tr>'
+          + '<td>' + escapeHtml(formatWeekLabel(w)) + (w === currentWeek ? ' <span class="an-now">now</span>' : '') + '</td>'
+          + '<td>' + rows.length + '</td>'
+          + '<td>' + ffa + ' / ' + col + '</td>'
+          + '<td>' + avg + '%</td>'
+          + '<td>' + top + '%</td>'
+          + '</tr>';
+      }).join('');
+    }
+
+    // ---- Score distribution (this week) ----
+    var buckets = [
+      { label: '90–100%', min: 90,  max: 101 },
+      { label: '80–89%',  min: 80,  max: 90 },
+      { label: '70–79%',  min: 70,  max: 80 },
+      { label: '50–69%',  min: 50,  max: 70 },
+      { label: '0–49%',   min: 0,   max: 50 },
+    ];
+    if (!thisWeekSubs.length) {
+      distEl.innerHTML = '<div class="admin-empty">No submissions this week yet.</div>';
+    } else {
+      distEl.innerHTML = buckets.map(function (b) {
+        var count = thisWeekSubs.filter(function (s) { return s.pct >= b.min && s.pct < b.max; }).length;
+        var pct = Math.round(count / thisWeekSubs.length * 100);
+        return '<div class="an-dist-row">'
+          + '<span class="an-dist-label">' + b.label + '</span>'
+          + '<span class="an-dist-track"><span class="an-dist-bar" style="width:' + pct + '%"></span></span>'
+          + '<span class="an-dist-count">' + count + '</span>'
+          + '</div>';
+      }).join('');
+    }
+
+    // ---- Most-missed carcasses (from per-answer logs) ----
+    var nameById = {};
+    commSnap.docs.forEach(function (d) {
+      var data = d.data();
+      nameById[d.id] = data.imageName || d.id;
+    });
+    var perCarcass = {};
+    subs.forEach(function (s) {
+      if (!Array.isArray(s.answers)) return;
+      s.answers.forEach(function (a) {
+        if (!a || !a.carcassId) return;
+        if (!perCarcass[a.carcassId]) {
+          perCarcass[a.carcassId] = { attempts: 0, misses: 0, ptsSum: 0, correct: a.correct || '' };
+        }
+        var rec = perCarcass[a.carcassId];
+        rec.attempts++;
+        rec.ptsSum += (typeof a.pts === 'number' ? a.pts : 0);
+        if (a.pts !== 10) rec.misses++;
+      });
+    });
+    var missedIds = Object.keys(perCarcass).filter(function (id) {
+      return perCarcass[id].attempts >= 3;
+    }).sort(function (a, b) {
+      return (perCarcass[b].misses / perCarcass[b].attempts)
+           - (perCarcass[a].misses / perCarcass[a].attempts);
+    }).slice(0, 10);
+    if (!missedIds.length) {
+      missedTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">Collecting data — appears as new weekly submissions come in.</td></tr>';
+    } else {
+      missedTbody.innerHTML = missedIds.map(function (id) {
+        var rec = perCarcass[id];
+        var gradeLabel = (typeof GRADE_MAP !== 'undefined' && GRADE_MAP[rec.correct])
+          ? GRADE_MAP[rec.correct].label : rec.correct;
+        return '<tr>'
+          + '<td>' + escapeHtml(nameById[id] || id) + '</td>'
+          + '<td>' + escapeHtml(gradeLabel) + '</td>'
+          + '<td>' + rec.attempts + '</td>'
+          + '<td>' + Math.round(rec.misses / rec.attempts * 100) + '%</td>'
+          + '<td>' + (rec.ptsSum / rec.attempts).toFixed(1) + '</td>'
+          + '</tr>';
+      }).join('');
+    }
+
+    // ---- Most contested crowdsource images ----
+    var votesByImage = {};
+    votesSnap.docs.forEach(function (d) {
+      var v = d.data();
+      if (!v.imageId) return;
+      if (!votesByImage[v.imageId]) votesByImage[v.imageId] = [];
+      votesByImage[v.imageId].push(v);
+    });
+    var contested = Object.keys(votesByImage).map(function (id) {
+      var votes = votesByImage[id];
+      var tally = {};
+      votes.forEach(function (v) { tally[v.grade] = (tally[v.grade] || 0) + 1; });
+      var top = Object.keys(tally).sort(function (a, b) { return tally[b] - tally[a]; })[0];
+      return {
+        id: id,
+        total: votes.length,
+        leader: top,
+        consensus: Math.round(tally[top] / votes.length * 100),
+      };
+    }).filter(function (r) { return r.total >= 3; })
+      .sort(function (a, b) { return a.consensus - b.consensus; })
+      .slice(0, 10);
+    if (!contested.length) {
+      contestedTbody.innerHTML = '<tr><td colspan="4" class="admin-empty">Not enough votes yet (min 3 per image).</td></tr>';
+    } else {
+      contestedTbody.innerHTML = contested.map(function (r) {
+        var gradeLabel = (typeof GRADE_MAP !== 'undefined' && GRADE_MAP[r.leader])
+          ? GRADE_MAP[r.leader].label : r.leader;
+        return '<tr>'
+          + '<td>' + escapeHtml(r.id) + '</td>'
+          + '<td>' + r.total + '</td>'
+          + '<td>' + escapeHtml(gradeLabel) + '</td>'
+          + '<td>' + r.consensus + '%</td>'
+          + '</tr>';
+      }).join('');
+    }
+  } catch (e) {
+    weeksTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">Failed to load analytics: ' + escapeHtml(e.message) + '</td></tr>';
+    distEl.innerHTML = '';
+    missedTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">—</td></tr>';
+    contestedTbody.innerHTML = '<tr><td colspan="4" class="admin-empty">—</td></tr>';
   }
 }
 
