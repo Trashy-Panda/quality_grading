@@ -407,14 +407,26 @@ function onNext() {
 //  IMAGE MODAL
 // ------------------------------------------------------------------
 
+let _imageModalReturnFocus = null;
+
+function closeImageModal() {
+  el.imageModal.classList.add('hidden');
+  if (_imageModalReturnFocus && typeof _imageModalReturnFocus.focus === 'function') {
+    _imageModalReturnFocus.focus();
+  }
+  _imageModalReturnFocus = null;
+}
+
 function initImageModal() {
   el.carcassImage.addEventListener('click', () => {
+    _imageModalReturnFocus = document.activeElement;
     el.imageModalImg.src = el.carcassImage.src;
     el.imageModal.classList.remove('hidden');
+    el.imageModalClose.focus();
   });
-  el.imageModalClose.addEventListener('click', () => el.imageModal.classList.add('hidden'));
+  el.imageModalClose.addEventListener('click', closeImageModal);
   el.imageModal.addEventListener('click', e => {
-    if (e.target === el.imageModal) el.imageModal.classList.add('hidden');
+    if (e.target === el.imageModal) closeImageModal();
   });
 }
 
@@ -784,11 +796,23 @@ function buildCustomQualitySelector() {
   });
 }
 
+let _settingsReturnFocus = null;
+
 function openSettings() {
   cancelEdit();
   renderCustomList();
   renderCommunityList();
+  _settingsReturnFocus = document.activeElement;
   el.settingsModal.classList.remove('hidden');
+  el.settingsClose.focus();
+}
+
+function closeSettings() {
+  el.settingsModal.classList.add('hidden');
+  if (_settingsReturnFocus && typeof _settingsReturnFocus.focus === 'function') {
+    _settingsReturnFocus.focus();
+  }
+  _settingsReturnFocus = null;
 }
 
 // ------------------------------------------------------------------
@@ -1116,9 +1140,16 @@ function init() {
   el.settingsBtn.addEventListener('click', openSettings);
   el.managePhotosBtn.addEventListener('click', openSettings);
 
-  el.settingsClose.addEventListener('click', () => el.settingsModal.classList.add('hidden'));
+  el.settingsClose.addEventListener('click', closeSettings);
   el.settingsModal.addEventListener('click', e => {
-    if (e.target === el.settingsModal) el.settingsModal.classList.add('hidden');
+    if (e.target === el.settingsModal) closeSettings();
+  });
+
+  // Escape closes whichever modal is open (topmost first)
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!el.imageModal.classList.contains('hidden')) { closeImageModal(); return; }
+    if (!el.settingsModal.classList.contains('hidden')) closeSettings();
   });
 
   el.addCustomBtn.addEventListener('click', onSaveCustom);

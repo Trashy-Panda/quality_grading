@@ -507,12 +507,10 @@ body::before {
   fill: var(--red);
 }
 
-/* Skip-link anchor span — out of layout flow */
-#landing-hero > span#main-content {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
+/* Skip-link target — the hero content itself; no focus ring on
+   programmatic focus (tabindex="-1") */
+#main-content:focus {
+  outline: none;
 }
 
 /* Landing exit transition (inline script adds .landing-exit) */

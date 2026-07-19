@@ -57,7 +57,7 @@
       </button>
     </div>
     <div class="header-right">
-      <span id="header-score" class="score-display">0 / 0 pts</span>
+      <span id="header-score" class="score-display" aria-live="polite">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
@@ -75,7 +75,6 @@
        LANDING HERO
        =================================================== -->
   <section id="landing-hero" aria-label="Welcome">
-    <span id="main-content" aria-hidden="true"></span>
 
     <!-- Top menu bar — print-shop letterhead -->
     <nav class="landing-nav" aria-label="Main">
@@ -102,8 +101,8 @@
       <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
     </svg>
 
-    <!-- Centered content area -->
-    <div class="landing-hero-inner">
+    <!-- Centered content area (skip-link target) -->
+    <div class="landing-hero-inner" id="main-content" tabindex="-1">
       <div class="landing-shield">
         <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
       </div>
@@ -164,7 +163,7 @@
   <main id="home-screen" class="screen hidden">
 
     <!-- Settings page top nav -->
-    <div class="page-nav">
+    <nav class="page-nav" aria-label="Session setup">
       <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
         <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="page-nav-label">Session Setup</span>
@@ -177,7 +176,7 @@
           <button id="home-signout-btn" class="auth-signout-btn">Sign Out</button>
         </div>
       </div>
-    </div>
+    </nav>
 
     <!-- PRACTICE PATH -->
     <div class="home-setup-single" id="practice-setup-view">
@@ -313,7 +312,7 @@
         <div id="submit-error" class="submit-error hidden"></div>
 
         <!-- Feedback Panel -->
-        <div id="feedback-panel" class="feedback-panel hidden">
+        <div id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
           <p id="feedback-quality"></p>
           <p id="feedback-notes" class="hidden"></p>
         </div>
@@ -453,16 +452,16 @@
 
   <!-- LEADERBOARD SCREEN -->
   <main id="leaderboard-screen" class="screen hidden">
-    <div class="page-nav">
+    <nav class="page-nav" aria-label="Leaderboard">
       <button class="page-nav-back" id="leaderboard-back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         Home
       </button>
       <span class="page-nav-brand">
-        <span class="page-nav-emoji">🏆</span>
+        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
         <span class="page-nav-label">Weekly Leaderboard</span>
       </span>
-    </div>
+    </nav>
     <div class="leaderboard-hero">
       <div class="leaderboard-hero-stamp">WEEK RANKINGS</div>
       <h1 class="leaderboard-title">Leaderboard</h1>
