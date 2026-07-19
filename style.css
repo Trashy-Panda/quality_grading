@@ -161,6 +161,62 @@ body::before {
   border-top-color: var(--poster-line);
 }
 
+/* Zigzag print rule — El Felix / vintage price-card divider */
+.zigzag-rule {
+  height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%231E1B16' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center / 16px 8px;
+  border: none;
+  margin: 18px auto;
+  max-width: 180px;
+}
+.zigzag-rule--red {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%23C8102E' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+.zigzag-rule--wide { max-width: 320px; }
+
+/* Postmark stamp — circular dashed-ring mark (Brick Creative ref) */
+.postmark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 92px;
+  border: 1.5px dashed var(--red);
+  border-radius: 50%;
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-align: center;
+  line-height: 1.5;
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Duotone print treatment — single-ink photo on cream (Jack's ref).
+   DECORATIVE USE ONLY — never on drill grading images, where
+   marbling color fidelity is the whole point. */
+.duotone-red {
+  position: relative;
+  background: var(--red);
+  overflow: hidden;
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+}
+.duotone-red > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.15) brightness(1.05);
+  mix-blend-mode: screen;
+}
+
 /* ── Shield logo (SVG <use> instances of #gtm-shield) ─────────
    Official artwork: single-color paths, lettering knocked out —
    recolor with `color` alone. */
@@ -293,17 +349,162 @@ body::before {
   color: var(--ink);
 }
 
-/* ── Landing Hero (#landing-hero) — THE scarlet poster ──────── */
+/* ── Landing Hero (#landing-hero) — cream letterpress poster ──
+   One warm red ink on kraft cream (Jack's-postcard model); the
+   OG-card lockup (shield + script over tracked caps) morphed to
+   a viewport, with a giant overprint word behind the content. */
 #landing-hero {
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--poster-bg);
-  color: var(--poster-cream);
+  background: var(--paper);
+  color: var(--ink);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
+}
+
+/* Top menu bar — print-shop letterhead */
+.landing-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 28px;
+  border-bottom: var(--border-ink);
+  background: var(--paper);
+  z-index: 3;
+}
+
+.landing-nav-brand {
+  font-family: var(--font-script);
+  font-size: 22px;
+  color: var(--red);
+  line-height: 1;
+  transform: rotate(-2deg);
+  white-space: nowrap;
+}
+
+.landing-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.landing-nav-links::-webkit-scrollbar { display: none; }
+
+.landing-nav-link {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink);
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: color 140ms ease, background 140ms ease;
+}
+.landing-nav-link:hover {
+  color: var(--red);
+  background: var(--paper-deep);
+}
+.landing-nav-link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.landing-nav-signin {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  padding: 8px 18px;
+  border: 1.5px solid var(--ink);
+  background: var(--red);
+  color: var(--poster-cream);
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  transition: background 140ms ease;
+}
+.landing-nav-signin:hover { background: var(--red-deep); }
+.landing-nav-signin:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* Giant overprint letterform — bleeds past both edges behind content */
+.landing-giant {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -54%);
+  font-family: var(--font-display);
+  font-size: clamp(11rem, 30vw, 26rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--red);
+  opacity: 0.07;
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* Corner grain art — OG-card motif recurring at low weight */
+.landing-corner-art {
+  position: absolute;
+  z-index: 0;
+  opacity: 0.1;
+}
+.landing-corner-art--ribeye {
+  --art: url(assets/art-ribeye.png);
+  color: var(--red);
+  top: 76px;
+  right: -40px;
+  width: 230px;
+  aspect-ratio: 899 / 685;
+  transform: rotate(12deg);
+}
+.landing-corner-art--hardhat {
+  --art: url(assets/art-hardhat.png);
+  color: var(--ink);
+  bottom: 52px;
+  left: -30px;
+  width: 210px;
+  aspect-ratio: 1109 / 789;
+  transform: rotate(-9deg);
+}
+
+/* Arched print flourish — bottom corner */
+.landing-arch {
+  position: absolute;
+  right: 26px;
+  bottom: 54px;
+  width: 190px;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+}
+.landing-arch-text {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  fill: var(--red);
 }
 
 /* Skip-link anchor span — out of layout flow */
@@ -323,10 +524,12 @@ body::before {
 
 /* Poster grid: giant shield left, content right, cards across the bottom */
 .landing-hero-inner {
+  position: relative;
+  z-index: 1;
   max-width: 1080px;
   width: 100%;
   margin: 0 auto;
-  padding: 56px 32px 88px;
+  padding: 110px 32px 88px;
   display: grid;
   grid-template-columns: minmax(230px, 320px) 1fr;
   column-gap: 56px;
@@ -339,27 +542,29 @@ body::before {
   flex-direction: column;
 }
 
-/* Brush-script lead-in above the headline */
+/* Brush-script lead-in — the OG-card lockup's script line */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-size: clamp(2.1rem, 3.6vw, 3rem);
   font-weight: 400;
-  color: var(--poster-cream);
-  line-height: 1.2;
-  margin: 0 0 10px;
+  color: var(--red);
+  line-height: 1.15;
+  margin: 0 0 4px;
   transform: rotate(-2deg);
   transform-origin: left bottom;
 }
 
-/* Main headline — vintage MEAT-ad caps (the shield carries the brand) */
+/* Main headline — tracked caps under the script (OG lockup),
+   two-layer letterpress: ink face + tight scarlet press shadow */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
   font-weight: 700;
-  color: var(--poster-cream);
+  color: var(--ink);
+  text-shadow: 0.05em 0.05em 0 var(--red-wash-border);
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.1;
+  letter-spacing: var(--track-wide);
+  line-height: 1.14;
   margin: 0;
   max-width: 20ch;
   text-wrap: balance;
@@ -368,40 +573,46 @@ body::before {
 .landing-subtext {
   font-family: var(--font-ui);
   font-size: 17px;
-  color: var(--poster-dim);
+  color: var(--ink-soft);
   line-height: 1.65;
   margin-top: 20px;
   max-width: 52ch;
 }
 
-/* Stat callouts — pure gap layout (wrap-safe) */
+/* Stat callouts — vintage price-card tiles */
 .landing-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px 44px;
-  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 36px;
 }
 
 .landing-stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+  background: var(--paper-card);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-md);
 }
 
 .landing-stat-value {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--poster-cream);
+  color: var(--red);
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .landing-stat-label {
   font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--poster-dim);
+  font-size: 12.5px;
+  color: var(--ink-soft);
 }
 
 /* Action cards — full-width bottom row, paper tickets on the poster */
@@ -420,12 +631,12 @@ body::before {
   padding: 26px;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 4px 0 rgba(30, 27, 22, 0.35);
+  box-shadow: var(--shadow-md);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .landing-action-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(30, 27, 22, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 rgba(30, 27, 22, 0.14);
 }
 
 .landing-action-card h3 {
@@ -489,18 +700,29 @@ body::before {
   grid-column: 1 / -1;
   font-family: var(--font-ui);
   font-size: 13px;
-  color: var(--poster-dim);
+  color: var(--ink-faint);
   margin-top: 28px;
   text-align: center;
 }
 
-/* Poster border ticker — pinned to the hero's bottom edge */
+/* Kept slogan — small script aside in the note line */
+.landing-note-script {
+  font-family: var(--font-script);
+  font-size: 17px;
+  color: var(--red);
+  margin-right: 10px;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+
+/* Letterboard border ticker — ink band pinned to the hero's bottom edge */
 .landing-ticker {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  border-top: 1px solid var(--poster-line);
+  background: var(--board-bg);
+  border-top: var(--border-ink);
   padding: 11px 0;
   overflow: hidden;
   white-space: nowrap;
@@ -510,15 +732,16 @@ body::before {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
-  color: var(--poster-dim);
+  color: var(--board-dim);
   user-select: none;
   pointer-events: none;
+  z-index: 2;
 }
 
 .landing-auth-note button {
   background: none;
   border: none;
-  color: var(--poster-cream);
+  color: var(--red);
   cursor: pointer;
   font-family: var(--font-ui);
   font-size: 13px;
@@ -528,9 +751,9 @@ body::before {
   padding: 2px 4px;
   border-radius: var(--radius-sm);
 }
-.landing-auth-note button:hover { color: #FFFFFF; }
+.landing-auth-note button:hover { color: var(--red-deep); }
 .landing-auth-note button:focus-visible {
-  outline: 2px solid var(--poster-cream);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
@@ -760,36 +983,41 @@ body::before {
   border-top: 1px dashed var(--line);
 }
 
+/* Stamped-plate checkbox — replaces the iOS-style slider (de-tech).
+   Checked state stamps a cream star on a scarlet plate. */
 .custom-set-toggle input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 42px;
+  width: 24px;
   height: 24px;
-  border-radius: var(--radius-pill);
-  background: var(--paper-deep);
+  border-radius: 4px;
+  background: var(--paper-card);
   border: 1.5px solid var(--ink);
   flex-shrink: 0;
   cursor: pointer;
   position: relative;
-  transition: background 160ms ease;
+  transition: background 140ms ease;
 }
 .custom-set-toggle input[type="checkbox"]::after {
-  content: '';
+  content: '\2605';
   position: absolute;
-  top: 2.5px;
-  left: 2.5px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--ink);
-  transition: transform 160ms ease, background 160ms ease;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--poster-cream);
+  opacity: 0;
+  transform: scale(1.5);
+  transition: opacity 140ms ease, transform 140ms ease;
 }
 .custom-set-toggle input[type="checkbox"]:checked {
   background: var(--red);
 }
 .custom-set-toggle input[type="checkbox"]:checked::after {
-  transform: translateX(17px);
-  background: var(--poster-cream);
+  opacity: 1;
+  transform: scale(1);
 }
 .custom-set-toggle input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--red);
@@ -1261,6 +1489,14 @@ body::before {
   width: 58px;
   aspect-ratio: 565 / 939;
   color: var(--ribbon);
+}
+
+/* Postmark in the ticket's corner — official mark of the session */
+.summary-postmark {
+  position: absolute;
+  left: 26px;
+  bottom: 20px;
+  opacity: 0.55;
 }
 
 .summary-hero-label {
@@ -2066,9 +2302,27 @@ body::before {
   #landing-hero {
     min-height: 100svh;
   }
+  .landing-nav {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .landing-nav-brand { font-size: 18px; }
+  .landing-nav-link {
+    font-size: 11px;
+    padding: 7px 9px;
+    letter-spacing: 0.1em;
+  }
+  .landing-nav-signin {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+  .landing-corner-art,
+  .landing-arch {
+    display: none;
+  }
   .landing-hero-inner {
     grid-template-columns: 1fr;
-    padding: 40px 20px 72px;
+    padding: 92px 20px 72px;
     row-gap: 28px;
   }
   .landing-shield svg {
@@ -2078,8 +2332,11 @@ body::before {
     text-align: center;
     align-items: center;
   }
+  .landing-script {
+    transform-origin: center bottom;
+  }
   .landing-headline {
-    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+    font-size: clamp(1.5rem, 6.6vw, 2rem);
     max-width: none;
   }
   .landing-action-cards {
@@ -2096,13 +2353,15 @@ body::before {
     font-size: 9px;
   }
   .cert-rosette { width: 44px; }
+  .summary-postmark { display: none; }
   .landing-subtext {
     font-size: 15px;
   }
   .landing-stats {
-    gap: 16px 28px;
+    grid-template-columns: 1fr;
+    gap: 10px;
     margin-top: 24px;
-    justify-content: center;
+    text-align: left;
   }
   .landing-stat-value { font-size: 19px; }
   .landing-auth-note {

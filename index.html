@@ -76,15 +76,40 @@
   <section id="landing-hero" aria-label="Welcome">
     <span id="main-content" aria-hidden="true"></span>
 
+    <!-- Top menu bar — print-shop letterhead -->
+    <nav class="landing-nav" aria-label="Main">
+      <span class="landing-nav-brand" aria-hidden="true">Beef Grading</span>
+      <div class="landing-nav-links">
+        <button class="landing-nav-link" id="nav-practice-btn">Practice</button>
+        <button class="landing-nav-link" id="nav-weekly-btn">Weekly</button>
+        <button class="landing-nav-link" id="nav-leaderboard-btn">Leaderboard</button>
+        <button class="landing-nav-link" id="nav-fieldguide-btn">Field Guide</button>
+      </div>
+      <button class="landing-nav-signin" id="nav-signin-btn">Sign In</button>
+    </nav>
+
+    <!-- Giant overprint letterform behind the composition -->
+    <div class="landing-giant" aria-hidden="true">PRIME</div>
+
+    <!-- Corner grain art (OG-card motif) -->
+    <span class="landing-corner-art landing-corner-art--ribeye art-mask" aria-hidden="true"></span>
+    <span class="landing-corner-art landing-corner-art--hardhat art-mask" aria-hidden="true"></span>
+
+    <!-- Arched print flourish -->
+    <svg class="landing-arch" viewBox="0 0 220 56" aria-hidden="true" focusable="false">
+      <path id="landing-arch-path" d="M12,48 Q110,8 208,48" fill="none"/>
+      <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
+    </svg>
+
     <!-- Centered content area -->
     <div class="landing-hero-inner">
       <div class="landing-shield">
-        <svg class="shield-mark shield-mark--cream" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+        <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
       </div>
 
       <div class="landing-content">
-        <p class="landing-script" aria-hidden="true">welcome to the rail.</p>
-        <h1 class="landing-headline">Beef Carcass Quality Grading Drill</h1>
+        <p class="landing-script" aria-hidden="true">Meat Judging</p>
+        <h1 class="landing-headline">Quality Grading Drills</h1>
 
         <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
 
@@ -120,6 +145,7 @@
 
       <!-- Auth note -->
       <p class="landing-auth-note">
+        <span class="landing-note-script" aria-hidden="true">welcome to the rail.</span>
         Have a score to submit?
         <button id="landing-signin-link">Sign In</button>
       </p>
@@ -302,6 +328,7 @@
 
     <div class="summary-hero">
       <span class="summary-stamp" aria-hidden="true"><svg class="shield-mark" viewBox="427 427 1094 1085" focusable="false"><use href="#gtm-shield"/></svg></span>
+      <span class="summary-postmark postmark" aria-hidden="true">Graded<br />&#9733; official &#9733;<br />BG.Study</span>
       <span class="summary-eyebrow" aria-hidden="true">and the scantron says&#x2026;</span>
       <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true"><span class="cert-rosette art-mask"></span>Certified<br />Prime</span>
       <div class="summary-hero-label">Session Complete</div>
@@ -604,6 +631,46 @@
       const landingSigninLink = document.getElementById('landing-signin-link');
       if (landingSigninLink) {
         landingSigninLink.addEventListener('click', () => {
+          if (typeof openAuthModal === 'function') openAuthModal();
+        });
+      }
+
+      // ── Top menu bar links ─────────────────────────────────────
+      const navPractice = document.getElementById('nav-practice-btn');
+      if (navPractice) {
+        navPractice.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof renderHomeScreen === 'function') renderHomeScreen('practice');
+          });
+        });
+      }
+      const navWeekly = document.getElementById('nav-weekly-btn');
+      if (navWeekly) {
+        navWeekly.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof renderHomeScreen === 'function') renderHomeScreen('weekly');
+          });
+        });
+      }
+      const navLeaderboard = document.getElementById('nav-leaderboard-btn');
+      if (navLeaderboard) {
+        navLeaderboard.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
+          });
+        });
+      }
+      const navFieldguide = document.getElementById('nav-fieldguide-btn');
+      if (navFieldguide) {
+        navFieldguide.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof showFieldGuideScreen === 'function') showFieldGuideScreen();
+          });
+        });
+      }
+      const navSignin = document.getElementById('nav-signin-btn');
+      if (navSignin) {
+        navSignin.addEventListener('click', () => {
           if (typeof openAuthModal === 'function') openAuthModal();
         });
       }
