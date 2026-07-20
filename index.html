@@ -76,26 +76,24 @@
        =================================================== -->
   <section id="landing-hero" aria-label="Welcome">
 
-    <!-- 1. Masthead — letterhead, not a nav -->
-    <header class="landing-masthead">
-      <span class="masthead-script" aria-hidden="true">Beef Grading</span>
-      <span class="masthead-line">USDA Standards &middot; FFA &amp; Collegiate Meat Judging</span>
-    </header>
-
-    <!-- 2. Brand block (skip-link target) -->
+    <!-- 1. Brand block — the OG-card composition at viewport scale
+         (skip-link target). Overprints ride the TOP layer. -->
     <div class="landing-brand" id="main-content" tabindex="-1">
-      <span class="landing-brand-art art-mask" aria-hidden="true"></span>
-      <div class="landing-shield">
-        <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
-      </div>
-      <div class="landing-content">
-        <p class="landing-script" aria-hidden="true">Meat Judging</p>
-        <h1 class="landing-headline">Quality Grading Drills</h1>
-        <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+      <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
+      <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
+      <div class="landing-brand-inner">
+        <div class="landing-shield">
+          <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+        </div>
+        <div class="landing-content">
+          <p class="landing-script" aria-hidden="true">Meat Judging</p>
+          <h1 class="landing-headline">Quality Grading Drills</h1>
+          <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+        </div>
       </div>
     </div>
 
-    <!-- 3. The drills — two receipt tickets -->
+    <!-- 2. The drills — two receipt tickets -->
     <div class="landing-drills">
       <div class="ticket ticket--tilt-l">
         <h2 class="ticket-head">Practice Drill</h2>
@@ -175,8 +173,7 @@
     <!-- Settings page top nav -->
     <nav class="page-nav" aria-label="Session setup">
       <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
-        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
-        <span class="page-nav-label">Session Setup</span>
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </button>
       <div class="page-nav-auth">
         <button id="home-signin-btn" class="home-signin-btn">Sign In</button>

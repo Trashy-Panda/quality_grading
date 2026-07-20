@@ -64,7 +64,8 @@
   margin-top: 40px;
 }
 
-/* Letterboard band section header (ref: black menu boards) */
+/* Letterboard band section header — torn strip (sawtooth edges,
+   same mask technique as the .ticket receipt system) */
 .fg-board-header {
   font-family: var(--font-display);
   font-size: 13px;
@@ -73,11 +74,17 @@
   letter-spacing: var(--track-wide);
   color: var(--board-text);
   background: var(--board-bg);
-  border: var(--border-ink);
-  border-radius: var(--radius-sm);
-  padding: 10px 18px;
-  margin: 0 0 16px;
+  padding: 16px 18px 13px;
+  margin: 0 0 18px;
   text-align: center;
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
+    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
+    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'%3E%3C/path%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
 }
 
 .fg-lead {

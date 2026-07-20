@@ -369,58 +369,57 @@ body::before {
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
-/* ── 1. Masthead — letterhead ───────────────────────────────── */
-.landing-masthead {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 26px 20px 18px;
-  border-bottom: 1px solid var(--line);
-}
-
-.masthead-script {
-  font-family: var(--font-script);
-  font-size: 30px;
-  color: var(--red);
-  line-height: 1.1;
-  transform: rotate(-2deg);
-}
-
-.masthead-line {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--ink-faint);
-}
-
-/* ── 2. Brand block ─────────────────────────────────────────── */
+/* ── 1. Brand block — the OG card at viewport scale ─────────── */
 .landing-brand {
   position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+}
+.landing-brand:focus { outline: none; }
+
+.landing-brand-inner {
+  position: relative;
+  z-index: 1;
   max-width: 980px;
-  margin: 0 auto;
-  padding: 72px 32px 84px;
+  width: 100%;
   display: grid;
   grid-template-columns: minmax(220px, 300px) 1fr;
   column-gap: 60px;
   align-items: center;
 }
-.landing-brand:focus { outline: none; }
 
-/* Rib overprint from the OG card — ink, faint, bleeding right */
-.landing-brand-art {
-  --art: url(assets/art-rib.png);
+/* Overprint art — TOP layer, ink poured over the composition.
+   The rib's straight edges sit flush with the page's top + right
+   (OG-card placement); the hard hat anchors bottom-left. */
+.landing-overprint {
   position: absolute;
-  right: -120px;
-  top: 46%;
-  transform: translateY(-50%) rotate(-4deg);
-  width: min(560px, 52vw);
-  aspect-ratio: 1400 / 1053;
   color: var(--ink);
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+
+.landing-overprint--rib {
+  --art: url(assets/art-rib.png);
+  top: 0;
+  right: 0;
+  width: min(520px, 46vw);
+  aspect-ratio: 1400 / 1053;
+  opacity: 0.09;
+}
+
+.landing-overprint--hardhat {
+  --art: url(assets/art-hardhat.png);
+  bottom: -16px;
+  left: -26px;
+  width: min(300px, 34vw);
+  aspect-ratio: 1109 / 789;
   opacity: 0.08;
-  z-index: 0;
+  transform: rotate(-7deg);
 }
 
 .landing-shield {
@@ -455,14 +454,14 @@ body::before {
   transform-origin: left bottom;
 }
 
+/* Flat scarlet caps under the script — the OG-card lockup, one ink */
 .landing-headline {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.2vw, 2.7rem);
   font-weight: 700;
-  color: var(--ink);
-  text-shadow: 0.05em 0.05em 0 var(--red-wash-border);
+  color: var(--red);
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
+  letter-spacing: var(--track-stamp);
   line-height: 1.14;
   margin: 0;
   max-width: 20ch;
@@ -887,6 +886,17 @@ body::before {
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
   color: var(--ink);
+}
+
+/* Script wordmark brand — replaces the shield where it's too small to read */
+.page-nav-script {
+  font-family: var(--font-script);
+  font-size: 21px;
+  color: var(--red);
+  line-height: 1.1;
+  display: inline-block;
+  transform: rotate(-2deg);
+  padding: 2px 0;
 }
 
 .page-nav-back {
@@ -2404,14 +2414,22 @@ body::before {
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
   .landing-brand {
+    min-height: 100svh;
+    padding: 44px 20px;
+  }
+  .landing-brand-inner {
     grid-template-columns: 1fr;
-    padding: 44px 20px 56px;
     row-gap: 26px;
   }
-  .landing-brand-art {
-    right: -160px;
-    width: 340px;
+  .landing-overprint--rib {
+    width: 62vw;
+    opacity: 0.07;
+    --rest-opacity: 0.07;  /* keeps the entrance animation's fill in sync */
+  }
+  .landing-overprint--hardhat {
+    width: 40vw;
     opacity: 0.06;
+    --rest-opacity: 0.06;
   }
   .landing-shield svg {
     width: 156px;
