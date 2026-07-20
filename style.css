@@ -407,19 +407,19 @@ body::before {
   --art: url(assets/art-rib.png);
   top: 0;
   right: 0;
-  width: min(520px, 46vw);
+  width: min(420px, 38vw);
   aspect-ratio: 1400 / 1053;
-  opacity: 0.09;
+  opacity: 0.08;
 }
 
-.landing-overprint--hardhat {
-  --art: url(assets/art-hardhat.png);
-  bottom: -16px;
-  left: -26px;
-  width: min(300px, 34vw);
-  aspect-ratio: 1109 / 789;
-  opacity: 0.08;
-  transform: rotate(-7deg);
+.landing-overprint--ribeye {
+  --art: url(assets/art-ribeye.png);
+  bottom: -30px;
+  left: -34px;
+  width: min(300px, 32vw);
+  aspect-ratio: 899 / 685;
+  opacity: 0.07;
+  transform: rotate(10deg);
 }
 
 .landing-shield {
@@ -429,7 +429,7 @@ body::before {
   justify-self: center;
 }
 .landing-shield svg {
-  width: clamp(210px, 24vw, 300px);
+  width: clamp(250px, 29vw, 380px);
   height: auto;
   transform: rotate(-4deg);
   filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
@@ -445,7 +445,7 @@ body::before {
 /* Script lead-in over tracked caps — the OG-card lockup */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(2.1rem, 3.6vw, 3rem);
+  font-size: clamp(2.6rem, 4.6vw, 3.9rem);
   font-weight: 400;
   color: var(--red);
   line-height: 1.15;
@@ -457,45 +457,56 @@ body::before {
 /* Flat scarlet caps under the script — the OG-card lockup, one ink */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
   font-weight: 700;
   color: var(--red);
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  line-height: 1.14;
+  line-height: 1.12;
   margin: 0;
   max-width: 20ch;
   text-wrap: balance;
 }
 
+/* One short line — the lockup and CTA do the talking */
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: 16.5px;
-  color: var(--ink-soft);
-  line-height: 1.65;
-  margin-top: 18px;
+  font-size: 15.5px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  margin-top: 14px;
   max-width: 46ch;
 }
 
-/* ── 3. The drills — receipt tickets on a deep-cream band ───── */
-.landing-drills {
-  background: var(--paper-deep);
-  border-top: 1px solid var(--line);
-  padding: 64px 32px 72px;
-  display: grid;
-  grid-template-columns: minmax(0, 340px) minmax(0, 340px);
-  gap: 34px;
-  justify-content: center;
+/* The landing's single job: send people to the setup page */
+.landing-cta {
+  align-self: flex-start;
+  margin-top: 26px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  padding: 16px 36px;
+  background: var(--red);
+  color: var(--poster-cream);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+.landing-cta:hover { background: var(--red-deep); }
+.landing-cta:active { transform: translate(1px, 1px); }
+.landing-cta:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
-.ticket--tilt-l { transform: rotate(-0.6deg); }
-.ticket--tilt-r { transform: rotate(0.5deg); }
-
-/* ── 4. Study the standard — field guide feeder ─────────────── */
+/* ── 2. Study the standard — deep-cream band, field guide feeder ── */
 .landing-study {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 76px 32px;
+  background: var(--paper-deep);
+  border-top: 1px solid var(--line);
+  padding: 76px max(32px, calc((100vw - 980px) / 2));
   display: grid;
   grid-template-columns: minmax(260px, 1fr) auto;
   gap: 48px;
@@ -1031,6 +1042,13 @@ body::before {
 
 .setup-ticket #start-error {
   margin-top: 12px;
+}
+
+.setup-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
 }
 
 .setup-footer-link {
@@ -2422,12 +2440,12 @@ body::before {
     row-gap: 26px;
   }
   .landing-overprint--rib {
-    width: 62vw;
+    width: 52vw;
     opacity: 0.07;
     --rest-opacity: 0.07;  /* keeps the entrance animation's fill in sync */
   }
-  .landing-overprint--hardhat {
-    width: 40vw;
+  .landing-overprint--ribeye {
+    width: 38vw;
     opacity: 0.06;
     --rest-opacity: 0.06;
   }
@@ -2448,13 +2466,9 @@ body::before {
   .landing-subtext {
     font-size: 15px;
   }
-  .landing-drills {
-    grid-template-columns: minmax(0, 400px);
-    padding: 44px 20px 52px;
-    gap: 26px;
+  .landing-cta {
+    align-self: center;
   }
-  .ticket--tilt-l,
-  .ticket--tilt-r { transform: none; }
   .landing-study {
     grid-template-columns: 1fr;
     padding: 52px 20px;

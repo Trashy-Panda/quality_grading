@@ -80,7 +80,7 @@
          (skip-link target). Overprints ride the TOP layer. -->
     <div class="landing-brand" id="main-content" tabindex="-1">
       <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
-      <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
+      <span class="landing-overprint landing-overprint--ribeye art-mask" aria-hidden="true"></span>
       <div class="landing-brand-inner">
         <div class="landing-shield">
           <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
@@ -88,36 +88,13 @@
         <div class="landing-content">
           <p class="landing-script" aria-hidden="true">Meat Judging</p>
           <h1 class="landing-headline">Quality Grading Drills</h1>
-          <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+          <p class="landing-subtext">Real ribeyes, USDA standards, instant feedback.</p>
+          <button class="landing-cta" id="landing-setup-btn">Start Grading &rarr;</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. The drills — two receipt tickets -->
-    <div class="landing-drills">
-      <div class="ticket ticket--tilt-l">
-        <h2 class="ticket-head">Practice Drill</h2>
-        <div class="ticket-body">
-          <div class="ticket-row"><span>Per carcass</span><span class="ticket-leader"></span><span class="ticket-val">10 pts</span></div>
-          <div class="ticket-row"><span>Feedback</span><span class="ticket-leader"></span><span class="ticket-val">Instant</span></div>
-          <div class="ticket-row"><span>Account</span><span class="ticket-leader"></span><span class="ticket-val">None needed</span></div>
-          <hr class="ticket-rule" aria-hidden="true" />
-          <button class="ticket-btn ticket-btn--primary" id="landing-start-btn">Start Practice &rarr;</button>
-        </div>
-      </div>
-      <div class="ticket ticket--tilt-r">
-        <h2 class="ticket-head">Weekly Challenge</h2>
-        <div class="ticket-body">
-          <div class="ticket-row"><span>Attempts</span><span class="ticket-leader"></span><span class="ticket-val">One per week</span></div>
-          <div class="ticket-row"><span>Scores post to</span><span class="ticket-leader"></span><span class="ticket-val">Public board</span></div>
-          <div class="ticket-row"><span>Divisions</span><span class="ticket-leader"></span><span class="ticket-val">HS &amp; College</span></div>
-          <hr class="ticket-rule" aria-hidden="true" />
-          <button class="ticket-btn" id="landing-weekly-btn">Start Weekly &rarr;</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Study the standard — field guide feeder -->
+    <!-- 2. Study the standard — field guide feeder -->
     <div class="landing-study">
       <div class="landing-study-text">
         <p class="landing-study-script" aria-hidden="true">know your beef</p>
@@ -141,14 +118,14 @@
       </div>
     </div>
 
-    <!-- 5. This week's board — letterboard band -->
+    <!-- 3. This week's board — letterboard band -->
     <div class="landing-board">
       <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
       <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
       <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
     </div>
 
-    <!-- 6. Footer -->
+    <!-- 4. Footer -->
     <div class="landing-ticker" aria-hidden="true">
       <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
     </div>
@@ -212,7 +189,10 @@
           <p id="start-error" class="submit-error hidden" role="alert"></p>
         </div>
       </div>
-      <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
+      <div class="setup-links-row">
+        <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
+        <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
+      </div>
     </div><!-- /#practice-setup-view -->
 
     <!-- WEEKLY PATH — challenge ticket -->
@@ -246,6 +226,7 @@
           </div>
         </div>
       </div>
+      <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
     </div><!-- /#weekly-setup-view -->
 
   </main>
@@ -450,8 +431,7 @@
         Home
       </button>
       <span class="page-nav-brand">
-        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
-        <span class="page-nav-label">Weekly Leaderboard</span>
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </span>
     </nav>
     <div class="leaderboard-hero">
@@ -485,10 +465,13 @@
   <main id="fieldguide-screen" class="screen hidden">
 
     <nav class="page-nav" aria-label="Field guide">
-      <button class="page-nav-brand page-nav-brand-btn" id="fieldguide-back-btn" title="Back" aria-label="Back">
-        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
-        <span class="page-nav-label">&larr; Back</span>
+      <button class="page-nav-back" id="fieldguide-back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back
       </button>
+      <span class="page-nav-brand">
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
+      </span>
     </nav>
 
     <div class="fg-inner">
@@ -733,22 +716,12 @@
         }, 260);
       }
 
-      // Practice Drill button
-      const landingStartBtn = document.getElementById('landing-start-btn');
-      if (landingStartBtn) {
-        landingStartBtn.addEventListener('click', () => {
+      // Start Grading — the landing's single job: get people to the setup page
+      const landingSetupBtn = document.getElementById('landing-setup-btn');
+      if (landingSetupBtn) {
+        landingSetupBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('practice');
-          });
-        });
-      }
-
-      // Weekly Challenge button
-      const landingWeeklyBtn = document.getElementById('landing-weekly-btn');
-      if (landingWeeklyBtn) {
-        landingWeeklyBtn.addEventListener('click', () => {
-          folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('weekly');
+            if (typeof renderHomeScreen === 'function') renderHomeScreen();
           });
         });
       }

@@ -1134,6 +1134,10 @@ function init() {
   // Field guide back / practice buttons
   const fgBackBtn = document.getElementById('fieldguide-back-btn');
   if (fgBackBtn) fgBackBtn.addEventListener('click', hideFieldGuideScreen);
+  // "Review the Field Guide" links on the setup views
+  document.querySelectorAll('.setup-fieldguide-link').forEach(btn => {
+    btn.addEventListener('click', () => showFieldGuideScreen());
+  });
   const fgDrillBtn = document.getElementById('fieldguide-drill-btn');
   if (fgDrillBtn) {
     fgDrillBtn.addEventListener('click', () => {
