@@ -656,11 +656,10 @@ function attachUrlDotChecks(container) {
 
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
-  // Rendered as a short receipt-row value on the setup ticket
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'None yet';
+    el.communitySetSub.textContent = 'No community carcasses yet - add real ones via Manage Photos';
   } else {
-    el.communitySetSub.textContent = state.communitySet.length + ' community';
+    el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
   }
 }
 

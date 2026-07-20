@@ -384,12 +384,26 @@ body::before {
 .landing-brand-inner {
   position: relative;
   z-index: 1;
-  max-width: 980px;
+  max-width: 1040px;
   width: 100%;
   display: grid;
   grid-template-columns: minmax(220px, 300px) 1fr;
-  column-gap: 60px;
+  column-gap: 92px;
   align-items: center;
+}
+
+/* Torn seam into the next (deep-cream) band — the zigzag motif as
+   a scroll transition rather than a flat border. */
+.landing-brand::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  z-index: 1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 10 L10 0 L20 10 Z' fill='%23ECE4D2'/%3E%3C/svg%3E") repeat-x bottom / 20px 10px;
+  pointer-events: none;
 }
 
 /* Overprint art — TOP layer, ink poured over the composition.
@@ -412,14 +426,15 @@ body::before {
   opacity: 0.08;
 }
 
-.landing-overprint--ribeye {
-  --art: url(assets/art-ribeye.png);
-  bottom: -30px;
-  left: -34px;
-  width: min(300px, 32vw);
-  aspect-ratio: 899 / 685;
-  opacity: 0.07;
-  transform: rotate(10deg);
+/* Flipped so the brim faces into the composition, not off the edge */
+.landing-overprint--hardhat {
+  --art: url(assets/art-hardhat.png);
+  bottom: -16px;
+  left: -26px;
+  width: min(300px, 34vw);
+  aspect-ratio: 1109 / 789;
+  opacity: 0.08;
+  transform: scaleX(-1) rotate(-7deg);
 }
 
 .landing-shield {
@@ -463,25 +478,25 @@ body::before {
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   line-height: 1.12;
-  margin: 0;
+  margin: 10px 0 0;
   max-width: 20ch;
   text-wrap: balance;
 }
 
-/* One short line — the lockup and CTA do the talking */
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: 15.5px;
-  color: var(--ink-faint);
-  line-height: 1.6;
-  margin-top: 14px;
+  font-size: 16.5px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin-top: 22px;
   max-width: 46ch;
 }
 
-/* The landing's single job: send people to the setup page */
+/* The landing's single job: send people to the setup page.
+   Flat scarlet, no border — cohesive with the shield, not a shout. */
 .landing-cta {
   align-self: flex-start;
-  margin-top: 26px;
+  margin-top: 36px;
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
@@ -490,13 +505,13 @@ body::before {
   padding: 16px 36px;
   background: var(--red);
   color: var(--poster-cream);
-  border: var(--border-ink);
+  border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 140ms ease;
 }
 .landing-cta:hover { background: var(--red-deep); }
-.landing-cta:active { transform: translate(1px, 1px); }
+.landing-cta:active { transform: translateY(1px); }
 .landing-cta:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
@@ -505,7 +520,6 @@ body::before {
 /* ── 2. Study the standard — deep-cream band, field guide feeder ── */
 .landing-study {
   background: var(--paper-deep);
-  border-top: 1px solid var(--line);
   padding: 76px max(32px, calc((100vw - 980px) / 2));
   display: grid;
   grid-template-columns: minmax(260px, 1fr) auto;
@@ -736,107 +750,12 @@ body::before {
   fill: var(--red);
 }
 
-/* ── Ticket / receipt system (reusable) ─────────────────────── */
-/* Sawtooth edges via layered masks: zigzag strips top + bottom,
-   solid body between. Shadow must be filter: drop-shadow so it
-   follows the torn edge. */
-.ticket {
-  position: relative;
-  background: var(--paper-card);
-  border-left: 1.5px solid var(--ink);
-  border-right: 1.5px solid var(--ink);
-  padding: 0 0 6px;
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
-    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 18px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 0 L8 9 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 9px;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
-    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 18px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 0 L8 9 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 9px;
-}
-
-/* Letterboard band across the ticket head */
-.ticket-head {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--board-text);
-  background: var(--board-bg);
-  text-align: center;
-  padding: 13px 18px 10px;
-  margin: 0;
-}
-
-.ticket-body {
-  padding: 20px 24px 22px;
-}
-
-.ticket-row {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  font-family: var(--font-ui);
-  font-size: 13.5px;
-  color: var(--ink-soft);
-  padding: 5px 0;
-}
-
+/* Dotted leader — used by the scoring-menu price lines
+   (summary explainer + field guide). */
 .ticket-leader {
   flex: 1;
   border-bottom: 2px dotted var(--line);
   transform: translateY(-3px);
-}
-
-.ticket-val {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.ticket-rule {
-  border: none;
-  border-top: 1px dashed var(--line);
-  margin: 14px 0 16px;
-}
-
-.ticket-btn {
-  width: 100%;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  padding: 13px 20px;
-  background: transparent;
-  color: var(--ink);
-  border: var(--border-ink);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 140ms ease, color 140ms ease;
-}
-.ticket-btn:hover {
-  background: var(--ink);
-  color: var(--board-text);
-}
-.ticket-btn--primary {
-  background: var(--red);
-  color: var(--poster-cream);
-}
-.ticket-btn--primary:hover {
-  background: var(--red-deep);
-  color: var(--poster-cream);
-}
-.ticket-btn:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
 }
 
 /* ── Screen Layout ──────────────────────────────────────────── */
@@ -945,8 +864,29 @@ body::before {
   padding: 32px 20px 64px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
+}
+
+/* Brush-script eyebrow above setup titles */
+.setup-eyebrow {
+  font-family: var(--font-script);
+  font-size: 26px;
+  color: var(--red);
+  line-height: 1.2;
+  margin: 0 0 4px;
+  display: block;
+  transform: rotate(-2deg);
+}
+
+.home-panel-header {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 700;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  line-height: 1.12;
+  text-wrap: balance;
 }
 
 /* Mode switcher — segmented Practice / Weekly control */
@@ -992,63 +932,25 @@ body::before {
   outline-offset: -2px;
 }
 
-/* Order-ticket variant of the receipt system */
-.setup-ticket {
-  width: 100%;
-  max-width: 440px;
-  margin: 0 auto;
+.setup-title-block {
+  text-align: center;
+  margin-bottom: 8px;
 }
 
-.setup-ticket-script {
-  font-family: var(--font-script);
-  font-size: 24px;
-  color: var(--red);
-  line-height: 1.2;
-  margin: 0 0 2px;
-  transform: rotate(-2deg);
-  transform-origin: left bottom;
-}
-
-.setup-ticket-sub {
+.setup-subtitle {
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--ink-soft);
-  line-height: 1.6;
-  margin: 0;
+  margin-top: 8px;
 }
 
-/* Red text-link action inside a receipt row */
-.ticket-row-action {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--red);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-}
-.ticket-row-action:hover { color: var(--red-deep); }
-.ticket-row-action:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-.setup-ticket #start-error {
-  margin-top: 12px;
-}
-
-.setup-links-row {
+.home-setup-footer-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: 4px 18px;
+  margin-top: 4px;
 }
 
 .setup-footer-link {
@@ -1068,6 +970,15 @@ body::before {
 .setup-footer-link:hover { color: var(--red); }
 
 /* ── Cards ──────────────────────────────────────────────────── */
+.home-card {
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  width: 100%;
+}
+
 .card-label {
   color: var(--ink);
   font-family: var(--font-display);
@@ -1102,6 +1013,20 @@ body::before {
   color: var(--board-text);
 }
 
+/* Practice Carcasses card body */
+.practice-carcasses-body {
+  padding: 12px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.practice-carcasses-status {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
 .custom-set-toggle {
   display: flex;
   align-items: center;
@@ -1110,8 +1035,7 @@ body::before {
   font-size: 13.5px;
   color: var(--ink-soft);
   cursor: pointer;
-  padding: 12px 0 4px;
-  margin-top: 6px;
+  padding-top: 14px;
   border-top: 1px dashed var(--line);
 }
 
@@ -2444,10 +2368,10 @@ body::before {
     opacity: 0.07;
     --rest-opacity: 0.07;  /* keeps the entrance animation's fill in sync */
   }
-  .landing-overprint--ribeye {
-    width: 38vw;
-    opacity: 0.06;
-    --rest-opacity: 0.06;
+  .landing-overprint--hardhat {
+    width: 40vw;
+    opacity: 0.07;
+    --rest-opacity: 0.07;
   }
   .landing-shield svg {
     width: 156px;

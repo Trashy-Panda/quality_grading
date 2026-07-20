@@ -1,41 +1,71 @@
 /* weekly.css — Rollmark design system
    Weekly Challenge card + injected weekly.js UI */
 
-/* ── Weekly Challenge Ticket ────────────────────────────────── */
-/* The card wrapper is a .ticket (sawtooth receipt, style.css);
-   these rules cover the weekly-specific head band and body rows. */
+/* ── Weekly Challenge Card ──────────────────────────────────── */
 
-/* Head band: title left, countdown right (inside .ticket-head) */
-.weekly-ticket-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  text-align: left;
-}
-
-.weekly-ticket-title {
-  font: inherit;
-  letter-spacing: inherit;
+.weekly-card {
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  width: 100%;
   margin: 0;
+  padding: 0;
 }
 
-/* Countdown — cream-outline chip on the ink band */
+/* Standalone treatment when the card is the whole screen */
+.weekly-card-standalone {
+  box-shadow: var(--shadow-md);
+}
+
+/* Header strip */
+.weekly-card-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 18px 24px 0;
+  gap: 12px;
+}
+
+/* "WEEKLY CHALLENGE" badge — rotated scarlet stamp */
+.weekly-stamp {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--red);
+  background: transparent;
+  border: 1.5px solid var(--red);
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  justify-self: start;
+  line-height: 1.5;
+  white-space: nowrap;
+  transform: rotate(-1.5deg);
+}
+
+/* Countdown — ink chip, tabular numerals */
 .weekly-countdown {
   font-family: var(--font-ui);
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--board-text);
-  background: transparent;
-  border: 1.5px solid var(--board-dim);
-  padding: 3px 12px;
+  color: var(--ink);
+  background: var(--paper-deep);
+  border: 1.5px solid var(--ink);
+  padding: 4px 14px;
   border-radius: var(--radius-sm);
   white-space: nowrap;
-  letter-spacing: 0.02em;
 }
 
-/* ── Ticket Body ────────────────────────────────────────────── */
+/* ── Card Body ──────────────────────────────────────────────── */
+
+.weekly-card-body {
+  padding: 0 24px 22px;
+}
 
 .weekly-week-label {
   font-family: var(--font-display);
@@ -44,7 +74,7 @@
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   color: var(--ink);
-  padding: 6px 0 4px;
+  padding: 14px 0 4px;
   display: block;
 }
 
