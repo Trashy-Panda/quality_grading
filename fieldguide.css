@@ -89,12 +89,18 @@
   text-align: center;
 }
 
-.fg-card {
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: 22px 24px;
+/* Prose sections — no box, just measured text between ornaments */
+.fg-section--prose {
+  text-align: center;
+}
+
+.fg-prose-heading {
+  font-family: var(--font-script);
+  font-size: 27px;
+  font-weight: 400;
+  color: var(--red);
+  margin: 4px 0 10px;
+  transform: rotate(-1.5deg);
 }
 
 .fg-body {
@@ -102,7 +108,9 @@
   font-size: 14.5px;
   color: var(--ink-soft);
   line-height: 1.7;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 58ch;
+  text-align: left;
 }
 
 .fg-note {
@@ -181,44 +189,53 @@
   border-color: var(--ink-faint);
 }
 
-/* ── Marbling tiles — vintage price cards ───────────────────── */
+/* ── Marbling specimens — butcher-chart rows w/ USDA photos ── */
 
-.fg-marbling-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+.fg-specimen-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.fg-marbling-tile {
+.fg-specimen-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 22px;
+  padding: 14px 4px;
+  border-bottom: 1px dashed var(--line);
+}
+.fg-specimen-row:last-child {
+  border-bottom: none;
+}
+
+.fg-specimen-img {
+  display: block;
+  width: 92px;
+  height: 116px;
+  object-fit: cover;
+  flex-shrink: 0;
   background: var(--paper-card);
   border: 1.5px solid var(--ink);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-  padding: 14px 10px 12px;
-  text-align: center;
+  border-radius: 3px;
+  padding: 4px;
+}
+/* alternate rows lean the specimen slightly — pinned prints, not a grid */
+.fg-specimen-row:nth-child(odd) .fg-specimen-img { transform: rotate(-1.6deg); }
+.fg-specimen-row:nth-child(even) .fg-specimen-img { transform: rotate(1.3deg); }
+
+.fg-specimen-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* Art slot — placeholder frame until marbling spot illustrations exist.
-   Drop future art in as a background-image or child img. */
-.fg-marbling-art {
-  width: 54px;
-  height: 54px;
-  border: 1.5px dashed var(--line);
-  border-radius: var(--radius-sm);
-  background:
-    radial-gradient(circle at 30% 35%, var(--paper-deep) 2px, transparent 2.5px),
-    radial-gradient(circle at 65% 60%, var(--paper-deep) 2.5px, transparent 3px),
-    radial-gradient(circle at 45% 75%, var(--paper-deep) 1.5px, transparent 2px),
-    var(--paper);
+.fg-specimen-row--nophoto {
+  padding-left: 118px;
 }
 
 .fg-marbling-degree {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -228,15 +245,23 @@
 
 .fg-marbling-grade {
   font-family: var(--font-script);
-  font-size: 16px;
+  font-size: 19px;
   color: var(--red);
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
-/* ── Scoring card ───────────────────────────────────────────── */
+/* ── Scoring menu — dotted-leader price list, no box ────────── */
 
-.fg-scoring-card .scoring-explainer-list {
+.fg-scoring-menu {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.fg-scoring-menu .scoring-explainer-list {
   margin: 0;
+  padding: 0;
+  gap: 10px;
+  font-size: 14px;
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
@@ -253,12 +278,19 @@
 /* ── Responsive ─────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
-  .fg-marbling-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .fg-postmark { display: none; }
   .fg-rung {
     padding: 9px 12px;
   }
   .fg-rung-grade { font-size: 12px; }
+  .fg-specimen-row {
+    gap: 14px;
+  }
+  .fg-specimen-img {
+    width: 76px;
+    height: 98px;
+  }
+  .fg-specimen-row--nophoto {
+    padding-left: 94px;
+  }
 }

@@ -14,6 +14,7 @@
   --paper-deep: #ECE4D2;   /* fills, hover, zero-feedback */
   --paper-card: #FBF7EE;   /* card surface */
   --line:       #DCD2BC;   /* hairline rules */
+  --line-heavy: #C9BEA6;   /* resting borders on interactive tiles */
 
   /* ink */
   --ink:        #1E1B16;
@@ -1405,17 +1406,18 @@ body::before {
   letter-spacing: 0.05em;
   white-space: nowrap;
   padding: 11px 12px;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--line-heavy);
   cursor: pointer;
   flex: 1 1 auto;   /* basis = label width — never narrower than the text */
   min-width: 0;
   background: var(--paper-card);
   color: var(--ink);
   border-radius: var(--radius-sm);
-  transition: background 120ms ease, color 120ms ease;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 .grade-btn:hover {
   background: var(--paper-deep);
+  border-color: var(--ink);
 }
 .grade-btn.active {
   background: var(--red);
@@ -1486,11 +1488,18 @@ body::before {
 
 /* Feedback Panel */
 .feedback-panel {
-  border-radius: var(--radius-md);
-  padding: 18px 22px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 22px 22px 18px;
   font-family: var(--font-ui);
   font-size: 14.5px;
   line-height: 1.6;
+  /* Torn receipt-stub top edge */
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 9px) no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 9px) no-repeat;
 }
 .feedback-panel.feedback-perfect {
   background: var(--board-bg);
@@ -1736,31 +1745,23 @@ body::before {
   color: var(--ink-soft);
 }
 
+/* Dotted-leader menu lines: "Exact match ......... 10" */
 .scoring-explainer-list li {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .pts-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 34px;
-  height: 26px;
-  padding: 0 8px;
-  background: var(--ink);
-  color: var(--paper-card);
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  border-radius: var(--radius-sm);
+  color: var(--ink);
   flex-shrink: 0;
 }
 .pts-chip-zero {
-  background: var(--red);
-  color: var(--poster-cream);
+  color: var(--red);
 }
 
 .scoring-explainer-note {

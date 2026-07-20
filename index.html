@@ -351,13 +351,13 @@
 
     <div class="scoring-explainer">
       <span class="explainer-art art-mask" aria-hidden="true"></span>
-      <h3>How scoring works — 10 pts per carcass</h3>
+      <h3>How scoring works: 10 pts per carcass</h3>
       <ul class="scoring-explainer-list">
-        <li><span class="pts-chip">10</span> Exact match</li>
-        <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
-        <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
-        <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
-        <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+        <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
+        <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
+        <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
+        <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
+        <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
       </ul>
       <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).</p>
     </div>
@@ -500,103 +500,111 @@
         <span class="fg-postmark postmark" aria-hidden="true">Reference<br />&#9733; official &#9733;<br />BG.Study</span>
         <span class="fg-eyebrow" aria-hidden="true">know your beef</span>
         <h1 class="fg-title">Grade Field Guide</h1>
-        <p class="fg-sub">The USDA quality-grade ladder, the marbling behind it, and how the drill scores you — all on one card.</p>
+        <p class="fg-sub">The USDA quality-grade ladder, the marbling behind it, and how the drill scores you. All on one card.</p>
         <hr class="zigzag-rule zigzag-rule--red zigzag-rule--wide" aria-hidden="true" />
       </header>
 
       <!-- 1. The grade ladder -->
       <section class="fg-section" aria-labelledby="fg-ladder-heading">
-        <h2 id="fg-ladder-heading" class="fg-board-header">Quality Grade Ladder &mdash; A Maturity</h2>
-        <div class="fg-card fg-ladder-card">
-          <ol class="fg-ladder" reversed>
-            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">High Prime</span><span class="fg-rung-family">Prime</span></li>
-            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Average Prime</span><span class="fg-rung-family">Prime</span></li>
-            <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Low Prime</span><span class="fg-rung-family">Prime</span></li>
-            <li class="fg-rung fg-rung--choice fg-rung--boundary"><span class="fg-rung-grade">High Choice</span><span class="fg-rung-family">Choice</span></li>
-            <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Average Choice</span><span class="fg-rung-family">Choice</span></li>
-            <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Low Choice</span><span class="fg-rung-family">Choice</span></li>
-            <li class="fg-rung fg-rung--select fg-rung--boundary"><span class="fg-rung-grade">High Select</span><span class="fg-rung-family">Select</span></li>
-            <li class="fg-rung fg-rung--select"><span class="fg-rung-grade">Low Select</span><span class="fg-rung-family">Select</span></li>
-            <li class="fg-rung fg-rung--standard fg-rung--boundary"><span class="fg-rung-grade">Standard</span><span class="fg-rung-family">Standard</span></li>
-          </ol>
-          <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong> &mdash; the Choice&#8202;/&#8202;Select line especially is where contests are won and lost. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
-        </div>
+        <h2 id="fg-ladder-heading" class="fg-board-header">Quality Grade Ladder (A Maturity)</h2>
+        <ol class="fg-ladder" reversed>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">High Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Average Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Low Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--choice fg-rung--boundary"><span class="fg-rung-grade">High Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Average Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Low Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--select fg-rung--boundary"><span class="fg-rung-grade">High Select</span><span class="fg-rung-family">Select</span></li>
+          <li class="fg-rung fg-rung--select"><span class="fg-rung-grade">Low Select</span><span class="fg-rung-family">Select</span></li>
+          <li class="fg-rung fg-rung--standard fg-rung--boundary"><span class="fg-rung-grade">Standard</span><span class="fg-rung-family">Standard</span></li>
+        </ol>
+        <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong>; the Choice&#8202;/&#8202;Select line especially is where contests are won and lost. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
       </section>
 
-      <!-- 2. Marbling degrees -->
+      <!-- 2. Marbling degrees — specimen chart with USDA anchor photos -->
       <section class="fg-section" aria-labelledby="fg-marbling-heading">
         <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
-        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Learn these pairings cold:</p>
-        <div class="fg-marbling-grid">
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Abundant</span>
-            <span class="fg-marbling-grade">High Prime</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Moderately Abundant</span>
-            <span class="fg-marbling-grade">Average Prime</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Slightly Abundant</span>
-            <span class="fg-marbling-grade">Low Prime</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Moderate</span>
-            <span class="fg-marbling-grade">High Choice</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Modest</span>
-            <span class="fg-marbling-grade">Average Choice</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Small</span>
-            <span class="fg-marbling-grade">Low Choice</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Slight&sup1;</span>
-            <span class="fg-marbling-grade">Select</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Traces</span>
-            <span class="fg-marbling-grade">Standard</span>
-          </div>
-          <div class="fg-marbling-tile">
-            <span class="fg-marbling-art" aria-hidden="true"></span>
-            <span class="fg-marbling-degree">Practically Devoid</span>
-            <span class="fg-marbling-grade">Standard</span>
-          </div>
-        </div>
-        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight&#8202;50&ndash;100 grades High Select, Slight&#8202;0&ndash;50 grades Low Select.</p>
+        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree.</p>
+        <ol class="fg-specimen-list">
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Abundant</span>
+              <span class="fg-marbling-grade">High Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Moderately Abundant</span>
+              <span class="fg-marbling-grade">Average Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Slightly Abundant</span>
+              <span class="fg-marbling-grade">Low Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Moderate</span>
+              <span class="fg-marbling-grade">High Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Modest</span>
+              <span class="fg-marbling-grade">Average Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Small</span>
+              <span class="fg-marbling-grade">Low Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <img class="fg-specimen-img" src="assets/anchors/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Slight&sup1;</span>
+              <span class="fg-marbling-grade">Select</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row fg-specimen-row--nophoto">
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Traces &amp; Practically Devoid&sup2;</span>
+              <span class="fg-marbling-grade">Standard</span>
+            </div>
+          </li>
+        </ol>
+        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight 50&ndash;100 grades High Select, Slight 0&ndash;50 grades Low Select.<br />&sup2; USDA publishes no reference photo below Slight; genuinely negligible marbling is rare in fed cattle.<br />Photographs: official USDA marbling references (public domain).</p>
       </section>
 
-      <!-- 3. Maturity -->
-      <section class="fg-section" aria-labelledby="fg-maturity-heading">
-        <h2 id="fg-maturity-heading" class="fg-board-header">A Word on Maturity</h2>
-        <div class="fg-card">
-          <p class="fg-body">Quality grade is marbling <em>plus</em> maturity. This drill assumes <strong>A maturity</strong> (roughly 9&ndash;30 months &mdash; nearly all fed cattle) so every carcass grades straight off its marbling. As skeletal and lean maturity advance past A, the same marbling earns a lower grade, and the oldest carcasses fall to the mature grades (Commercial, Utility) that this drill leaves out.</p>
-        </div>
+      <!-- 3. Maturity — plain prose, no box -->
+      <section class="fg-section fg-section--prose" aria-labelledby="fg-maturity-heading">
+        <hr class="zigzag-rule" aria-hidden="true" />
+        <h2 id="fg-maturity-heading" class="fg-prose-heading">A word on maturity</h2>
+        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity. This drill assumes <strong>A maturity</strong> (roughly 9&ndash;30 months, nearly all fed cattle) so every carcass grades straight off its marbling. As skeletal and lean maturity advance past A, the same marbling earns a lower grade, and the oldest carcasses fall to the mature grades (Commercial, Utility) that this drill leaves out.</p>
+        <hr class="zigzag-rule" aria-hidden="true" />
       </section>
 
       <!-- 4. How scoring works -->
       <section class="fg-section" aria-labelledby="fg-scoring-heading">
         <h2 id="fg-scoring-heading" class="fg-board-header">How the Drill Scores</h2>
-        <div class="fg-card fg-scoring-card">
+        <div class="fg-scoring-menu">
           <ul class="scoring-explainer-list">
-            <li><span class="pts-chip">10</span> Exact match</li>
-            <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
-            <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
-            <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
-            <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+            <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
+            <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
+            <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
+            <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
+            <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
           </ul>
-          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts) &mdash; the scale cares about distance, not family lines.</p>
+          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts). The scale cares about distance, not family lines.</p>
         </div>
       </section>
 
