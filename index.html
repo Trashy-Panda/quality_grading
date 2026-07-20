@@ -72,89 +72,99 @@
   </header>
 
   <!-- ===================================================
-       LANDING HERO
+       LANDING PAGE — scrolling broadsheet
        =================================================== -->
   <section id="landing-hero" aria-label="Welcome">
 
-    <!-- Top menu bar — print-shop letterhead -->
-    <nav class="landing-nav" aria-label="Main">
-      <span class="landing-nav-brand" aria-hidden="true">Beef Grading</span>
-      <div class="landing-nav-links">
-        <button class="landing-nav-link" id="nav-practice-btn">Practice</button>
-        <button class="landing-nav-link" id="nav-weekly-btn">Weekly</button>
-        <button class="landing-nav-link" id="nav-leaderboard-btn">Leaderboard</button>
-        <button class="landing-nav-link" id="nav-fieldguide-btn">Field Guide</button>
-      </div>
-      <button class="landing-nav-signin" id="nav-signin-btn">Sign In</button>
-    </nav>
+    <!-- 1. Masthead — letterhead, not a nav -->
+    <header class="landing-masthead">
+      <span class="masthead-script" aria-hidden="true">Beef Grading</span>
+      <span class="masthead-line">USDA Standards &middot; FFA &amp; Collegiate Meat Judging</span>
+    </header>
 
-    <!-- Giant overprint letterform behind the composition -->
-    <div class="landing-giant" aria-hidden="true">PRIME</div>
-
-    <!-- Corner grain art (OG-card motif) -->
-    <span class="landing-corner-art landing-corner-art--ribeye art-mask" aria-hidden="true"></span>
-    <span class="landing-corner-art landing-corner-art--hardhat art-mask" aria-hidden="true"></span>
-
-    <!-- Arched print flourish -->
-    <svg class="landing-arch" viewBox="0 0 220 56" aria-hidden="true" focusable="false">
-      <path id="landing-arch-path" d="M12,48 Q110,8 208,48" fill="none"/>
-      <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
-    </svg>
-
-    <!-- Centered content area (skip-link target) -->
-    <div class="landing-hero-inner" id="main-content" tabindex="-1">
+    <!-- 2. Brand block (skip-link target) -->
+    <div class="landing-brand" id="main-content" tabindex="-1">
+      <span class="landing-brand-art art-mask" aria-hidden="true"></span>
       <div class="landing-shield">
         <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
       </div>
-
       <div class="landing-content">
         <p class="landing-script" aria-hidden="true">Meat Judging</p>
         <h1 class="landing-headline">Quality Grading Drills</h1>
+        <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+      </div>
+    </div>
 
-        <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
-
-        <div class="landing-stats">
-          <div class="landing-stat">
-            <span class="landing-stat-value">10 pts</span>
-            <span class="landing-stat-label">per carcass, instant feedback</span>
-          </div>
-          <div class="landing-stat">
-            <span class="landing-stat-value">Weekly</span>
-            <span class="landing-stat-label">public leaderboard rankings</span>
-          </div>
-          <div class="landing-stat">
-            <span class="landing-stat-value">Free</span>
-            <span class="landing-stat-label">no account needed to practice</span>
-          </div>
+    <!-- 3. The drills — two receipt tickets -->
+    <div class="landing-drills">
+      <div class="ticket ticket--tilt-l">
+        <h2 class="ticket-head">Practice Drill</h2>
+        <div class="ticket-body">
+          <div class="ticket-row"><span>Per carcass</span><span class="ticket-leader"></span><span class="ticket-val">10 pts</span></div>
+          <div class="ticket-row"><span>Feedback</span><span class="ticket-leader"></span><span class="ticket-val">Instant</span></div>
+          <div class="ticket-row"><span>Account</span><span class="ticket-leader"></span><span class="ticket-val">None needed</span></div>
+          <hr class="ticket-rule" aria-hidden="true" />
+          <button class="ticket-btn ticket-btn--primary" id="landing-start-btn">Start Practice &rarr;</button>
         </div>
       </div>
-
-      <!-- Action cards -->
-      <div class="landing-action-cards">
-        <div class="landing-action-card landing-action-card--primary">
-          <h3>Practice Drill</h3>
-          <p>Grade at your own pace. No account needed.</p>
-          <button class="card-btn" id="landing-start-btn">Start Practice &rarr;</button>
-        </div>
-        <div class="landing-action-card">
-          <h3>Weekly Challenge</h3>
-          <p>Compete against other graders. Scores post to a public leaderboard.</p>
-          <button class="card-btn" id="landing-weekly-btn">Start Weekly &rarr;</button>
+      <div class="ticket ticket--tilt-r">
+        <h2 class="ticket-head">Weekly Challenge</h2>
+        <div class="ticket-body">
+          <div class="ticket-row"><span>Attempts</span><span class="ticket-leader"></span><span class="ticket-val">One per week</span></div>
+          <div class="ticket-row"><span>Scores post to</span><span class="ticket-leader"></span><span class="ticket-val">Public board</span></div>
+          <div class="ticket-row"><span>Divisions</span><span class="ticket-leader"></span><span class="ticket-val">HS &amp; College</span></div>
+          <hr class="ticket-rule" aria-hidden="true" />
+          <button class="ticket-btn" id="landing-weekly-btn">Start Weekly &rarr;</button>
         </div>
       </div>
+    </div>
 
-      <!-- Auth note -->
+    <!-- 4. Study the standard — field guide feeder -->
+    <div class="landing-study">
+      <div class="landing-study-text">
+        <p class="landing-study-script" aria-hidden="true">know your beef</p>
+        <h2 class="landing-study-title">Study the Standard</h2>
+        <p class="landing-study-body">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
+        <button class="landing-study-link" id="landing-fieldguide-btn">Open the Field Guide &rarr;</button>
+      </div>
+      <div class="landing-study-specimens" aria-hidden="true">
+        <figure class="landing-specimen">
+          <img src="assets/anchors/01_slight.jpg" alt="" loading="lazy" />
+          <figcaption>Slight</figcaption>
+        </figure>
+        <figure class="landing-specimen">
+          <img src="assets/anchors/03_modest.jpg" alt="" loading="lazy" />
+          <figcaption>Modest</figcaption>
+        </figure>
+        <figure class="landing-specimen">
+          <img src="assets/anchors/07_abundant.jpg" alt="" loading="lazy" />
+          <figcaption>Abundant</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- 5. This week's board — letterboard band -->
+    <div class="landing-board">
+      <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
+      <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
+      <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
+    </div>
+
+    <!-- 6. Footer -->
+    <div class="landing-ticker" aria-hidden="true">
+      <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
+    </div>
+    <footer class="landing-footer">
       <p class="landing-auth-note">
         <span class="landing-note-script" aria-hidden="true">welcome to the rail.</span>
         Have a score to submit?
         <button id="landing-signin-link">Sign In</button>
       </p>
-    </div>
-
-    <!-- Poster border ticker -->
-    <div class="landing-ticker" aria-hidden="true">
-      <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
-    </div>
+      <svg class="landing-arch" viewBox="0 0 220 56" aria-hidden="true" focusable="false">
+        <path id="landing-arch-path" d="M12,48 Q110,8 208,48" fill="none"/>
+        <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
+      </svg>
+    </footer>
   </section>
 
   <!-- ===================================================
@@ -761,44 +771,22 @@
         });
       }
 
-      // ── Top menu bar links ─────────────────────────────────────
-      const navPractice = document.getElementById('nav-practice-btn');
-      if (navPractice) {
-        navPractice.addEventListener('click', () => {
-          folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('practice');
-          });
-        });
-      }
-      const navWeekly = document.getElementById('nav-weekly-btn');
-      if (navWeekly) {
-        navWeekly.addEventListener('click', () => {
-          folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('weekly');
-          });
-        });
-      }
-      const navLeaderboard = document.getElementById('nav-leaderboard-btn');
-      if (navLeaderboard) {
-        navLeaderboard.addEventListener('click', () => {
-          folderNavigateTo(() => {
-            if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
-          });
-        });
-      }
-      const navFieldguide = document.getElementById('nav-fieldguide-btn');
-      if (navFieldguide) {
-        navFieldguide.addEventListener('click', () => {
+      // ── Landing section links ──────────────────────────────────
+      const landingFieldguideBtn = document.getElementById('landing-fieldguide-btn');
+      if (landingFieldguideBtn) {
+        landingFieldguideBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
             // true = came from landing (already hidden by the exit animation)
             if (typeof showFieldGuideScreen === 'function') showFieldGuideScreen(true);
           });
         });
       }
-      const navSignin = document.getElementById('nav-signin-btn');
-      if (navSignin) {
-        navSignin.addEventListener('click', () => {
-          if (typeof openAuthModal === 'function') openAuthModal();
+      const landingLeaderboardBtn = document.getElementById('landing-leaderboard-btn');
+      if (landingLeaderboardBtn) {
+        landingLeaderboardBtn.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
+          });
         });
       }
 

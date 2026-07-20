@@ -349,168 +349,16 @@ body::before {
   color: var(--ink);
 }
 
-/* ── Landing Hero (#landing-hero) — cream letterpress poster ──
-   One warm red ink on kraft cream (Jack's-postcard model); the
-   OG-card lockup (shield + script over tracked caps) morphed to
-   a viewport, with a giant overprint word behind the content. */
+/* ── Landing Page (#landing-hero) — scrolling broadsheet ──────
+   Printed-menu rhythm: cream masthead + brand block, deep-cream
+   drills band with receipt tickets, cream study section, ink
+   letterboard band, ticker + small-print footer. One warm red
+   ink; overprint art is always INK at low opacity. */
 #landing-hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
   background: var(--paper);
   color: var(--ink);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   overflow: hidden;
-}
-
-/* Top menu bar — print-shop letterhead */
-.landing-nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 14px 28px;
-  border-bottom: var(--border-ink);
-  background: var(--paper);
-  z-index: 3;
-}
-
-.landing-nav-brand {
-  font-family: var(--font-script);
-  font-size: 22px;
-  color: var(--red);
-  line-height: 1;
-  transform: rotate(-2deg);
-  white-space: nowrap;
-}
-
-.landing-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 0 auto;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.landing-nav-links::-webkit-scrollbar { display: none; }
-
-.landing-nav-link {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--ink);
-  background: none;
-  border: none;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-  transition: color 140ms ease, background 140ms ease;
-}
-.landing-nav-link:hover {
-  color: var(--red);
-  background: var(--paper-deep);
-}
-.landing-nav-link:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-.landing-nav-signin {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  padding: 8px 18px;
-  border: 1.5px solid var(--ink);
-  background: var(--red);
-  color: var(--poster-cream);
-  cursor: pointer;
-  line-height: 1;
-  white-space: nowrap;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease;
-}
-.landing-nav-signin:hover { background: var(--red-deep); }
-.landing-nav-signin:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-/* Giant overprint letterform — bleeds past both edges behind content */
-.landing-giant {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -54%);
-  font-family: var(--font-display);
-  font-size: clamp(11rem, 30vw, 26rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--red);
-  opacity: 0.07;
-  white-space: nowrap;
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-/* Corner grain art — OG-card motif recurring at low weight */
-.landing-corner-art {
-  position: absolute;
-  z-index: 0;
-  opacity: 0.1;
-}
-.landing-corner-art--ribeye {
-  --art: url(assets/art-ribeye.png);
-  color: var(--red);
-  top: 76px;
-  right: -40px;
-  width: 230px;
-  aspect-ratio: 899 / 685;
-  transform: rotate(12deg);
-}
-.landing-corner-art--hardhat {
-  --art: url(assets/art-hardhat.png);
-  color: var(--ink);
-  bottom: 52px;
-  left: -30px;
-  width: 210px;
-  aspect-ratio: 1109 / 789;
-  transform: rotate(-9deg);
-}
-
-/* Arched print flourish — bottom corner */
-.landing-arch {
-  position: absolute;
-  right: 26px;
-  bottom: 54px;
-  width: 190px;
-  height: auto;
-  z-index: 1;
-  pointer-events: none;
-}
-.landing-arch-text {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  fill: var(--red);
-}
-
-/* Skip-link target — the hero content itself; no focus ring on
-   programmatic focus (tabindex="-1") */
-#main-content:focus {
-  outline: none;
 }
 
 /* Landing exit transition (inline script adds .landing-exit) */
@@ -520,27 +368,81 @@ body::before {
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
-/* Poster grid: giant shield left, content right, cards across the bottom */
-.landing-hero-inner {
+/* ── 1. Masthead — letterhead ───────────────────────────────── */
+.landing-masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 26px 20px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead-script {
+  font-family: var(--font-script);
+  font-size: 30px;
+  color: var(--red);
+  line-height: 1.1;
+  transform: rotate(-2deg);
+}
+
+.masthead-line {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-faint);
+}
+
+/* ── 2. Brand block ─────────────────────────────────────────── */
+.landing-brand {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 72px 32px 84px;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  column-gap: 60px;
+  align-items: center;
+}
+.landing-brand:focus { outline: none; }
+
+/* Rib overprint from the OG card — ink, faint, bleeding right */
+.landing-brand-art {
+  --art: url(assets/art-rib.png);
+  position: absolute;
+  right: -120px;
+  top: 46%;
+  transform: translateY(-50%) rotate(-4deg);
+  width: min(560px, 52vw);
+  aspect-ratio: 1400 / 1053;
+  color: var(--ink);
+  opacity: 0.08;
+  z-index: 0;
+}
+
+.landing-shield {
   position: relative;
   z-index: 1;
-  max-width: 1080px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 110px 32px 88px;
-  display: grid;
-  grid-template-columns: minmax(230px, 320px) 1fr;
-  column-gap: 56px;
-  align-items: center;
+  line-height: 0;
+  justify-self: center;
+}
+.landing-shield svg {
+  width: clamp(210px, 24vw, 300px);
+  height: auto;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
 }
 
 .landing-content {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Brush-script lead-in — the OG-card lockup's script line */
+/* Script lead-in over tracked caps — the OG-card lockup */
 .landing-script {
   font-family: var(--font-script);
   font-size: clamp(2.1rem, 3.6vw, 3rem);
@@ -552,8 +454,6 @@ body::before {
   transform-origin: left bottom;
 }
 
-/* Main headline — tracked caps under the script (OG lockup),
-   two-layer letterpress: ink face + tight scarlet press shadow */
 .landing-headline {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.2vw, 2.7rem);
@@ -570,157 +470,190 @@ body::before {
 
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: 17px;
+  font-size: 16.5px;
   color: var(--ink-soft);
   line-height: 1.65;
-  margin-top: 20px;
-  max-width: 52ch;
+  margin-top: 18px;
+  max-width: 46ch;
 }
 
-/* Stat callouts — vintage price-card tiles */
-.landing-stats {
+/* ── 3. The drills — receipt tickets on a deep-cream band ───── */
+.landing-drills {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--line);
+  padding: 64px 32px 72px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 36px;
+  grid-template-columns: minmax(0, 340px) minmax(0, 340px);
+  gap: 34px;
+  justify-content: center;
 }
 
-.landing-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  background: var(--paper-card);
-  border: 1.5px solid var(--ink);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-md);
+.ticket--tilt-l { transform: rotate(-0.6deg); }
+.ticket--tilt-r { transform: rotate(0.5deg); }
+
+/* ── 4. Study the standard — field guide feeder ─────────────── */
+.landing-study {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 76px 32px;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 48px;
+  align-items: center;
 }
 
-.landing-stat-value {
-  font-family: var(--font-display);
+.landing-study-script {
+  font-family: var(--font-script);
   font-size: 24px;
-  font-weight: 700;
   color: var(--red);
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+  margin: 0 0 2px;
 }
 
-.landing-stat-label {
-  font-family: var(--font-ui);
-  font-size: 12.5px;
-  color: var(--ink-soft);
-}
-
-/* Action cards — full-width bottom row, paper tickets on the poster */
-.landing-action-cards {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 44px;
-}
-
-.landing-action-card {
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  padding: 26px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-md);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-.landing-action-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 0 rgba(30, 27, 22, 0.14);
-}
-
-.landing-action-card h3 {
+.landing-study-title {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
   font-weight: 700;
-  color: var(--ink);
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
+  margin: 0 0 10px;
 }
 
-.landing-action-card p {
+.landing-study-body {
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--ink-soft);
-  flex-grow: 1;
-  margin-bottom: 20px;
-  line-height: 1.55;
+  line-height: 1.65;
+  max-width: 44ch;
+  margin: 0 0 20px;
 }
 
-/* Card CTAs — outlined ink block by default */
-.landing-action-card .card-btn {
-  width: 100%;
-  background: transparent;
-  color: var(--ink);
-  border: var(--border-ink);
-  padding: 13px 20px;
+.landing-study-link {
+  align-self: flex-start;
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  cursor: pointer;
+  color: var(--ink);
+  background: transparent;
+  border: var(--border-ink);
   border-radius: var(--radius-sm);
+  padding: 12px 22px;
+  cursor: pointer;
   transition: background 140ms ease, color 140ms ease;
 }
-.landing-action-card .card-btn:hover {
+.landing-study-link:hover {
   background: var(--ink);
   color: var(--board-text);
 }
-
-/* Primary card CTA — the ink letterboard block */
-.landing-action-card--primary .card-btn {
-  background: var(--board-bg);
-  border-color: var(--ink);
-  color: var(--board-text);
-}
-.landing-action-card--primary .card-btn:hover {
-  background: var(--red);
-  color: var(--poster-cream);
-}
-
-.landing-action-card .card-btn:focus-visible {
+.landing-study-link:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* Auth note — spans below both columns */
-.landing-auth-note {
-  grid-column: 1 / -1;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
-  margin-top: 28px;
+/* Anchor specimens — small framed photos, fanned like prints */
+.landing-study-specimens {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.landing-specimen {
+  margin: 0;
+  background: var(--paper-card);
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  padding: 7px 7px 5px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.landing-specimen:nth-child(1) { transform: rotate(-3deg); }
+.landing-specimen:nth-child(2) { transform: rotate(1.5deg) translateY(-10px); }
+.landing-specimen:nth-child(3) { transform: rotate(3.5deg); }
+
+.landing-specimen img {
+  display: block;
+  width: 88px;
+  height: 118px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.landing-specimen figcaption {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  padding-top: 5px;
+}
+
+/* ── 5. This week's board — letterboard band ────────────────── */
+.landing-board {
+  background: var(--board-bg);
+  border-top: var(--border-ink);
+  padding: 44px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  flex-wrap: wrap;
   text-align: center;
 }
 
-/* Kept slogan — small script aside in the note line */
-.landing-note-script {
-  font-family: var(--font-script);
-  font-size: 17px;
-  color: var(--red);
-  margin-right: 10px;
-  display: inline-block;
-  transform: rotate(-2deg);
+.landing-board-rosette {
+  --art: url(assets/art-rosette.png);
+  width: 40px;
+  aspect-ratio: 565 / 939;
+  color: var(--ribbon);
+  transform: rotate(-5deg);
+  flex-shrink: 0;
 }
 
-/* Letterboard border ticker — ink band pinned to the hero's bottom edge */
+.landing-board-line {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--board-text);
+  line-height: 1.6;
+  max-width: 40ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.landing-board-link {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--board-text);
+  background: transparent;
+  border: 1.5px solid var(--board-dim);
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.landing-board-link:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+.landing-board-link:focus-visible {
+  outline: 2px solid var(--board-text);
+  outline-offset: 2px;
+}
+
+/* ── 6. Footer — ticker + small print ───────────────────────── */
 .landing-ticker {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: var(--board-bg);
-  border-top: var(--border-ink);
+  border-top: 1px solid rgba(245, 239, 226, 0.18);
   padding: 11px 0;
   overflow: hidden;
   white-space: nowrap;
@@ -733,7 +666,31 @@ body::before {
   color: var(--board-dim);
   user-select: none;
   pointer-events: none;
-  z-index: 2;
+}
+
+.landing-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 34px 20px 40px;
+}
+
+.landing-auth-note {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin: 0;
+  text-align: center;
+}
+
+.landing-note-script {
+  font-family: var(--font-script);
+  font-size: 17px;
+  color: var(--red);
+  margin-right: 10px;
+  display: inline-block;
+  transform: rotate(-2deg);
 }
 
 .landing-auth-note button {
@@ -751,6 +708,122 @@ body::before {
 }
 .landing-auth-note button:hover { color: var(--red-deep); }
 .landing-auth-note button:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.landing-arch {
+  width: 170px;
+  height: auto;
+  pointer-events: none;
+}
+.landing-arch-text {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  fill: var(--red);
+}
+
+/* ── Ticket / receipt system (reusable) ─────────────────────── */
+/* Sawtooth edges via layered masks: zigzag strips top + bottom,
+   solid body between. Shadow must be filter: drop-shadow so it
+   follows the torn edge. */
+.ticket {
+  position: relative;
+  background: var(--paper-card);
+  border-left: 1.5px solid var(--ink);
+  border-right: 1.5px solid var(--ink);
+  padding: 0 0 6px;
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 18px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 0 L8 9 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 9px;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 18px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 0 L8 9 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 9px;
+}
+
+/* Letterboard band across the ticket head */
+.ticket-head {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--board-text);
+  background: var(--board-bg);
+  text-align: center;
+  padding: 13px 18px 10px;
+  margin: 0;
+}
+
+.ticket-body {
+  padding: 20px 24px 22px;
+}
+
+.ticket-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  padding: 5px 0;
+}
+
+.ticket-leader {
+  flex: 1;
+  border-bottom: 2px dotted var(--line);
+  transform: translateY(-3px);
+}
+
+.ticket-val {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ticket-rule {
+  border: none;
+  border-top: 1px dashed var(--line);
+  margin: 14px 0 16px;
+}
+
+.ticket-btn {
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  padding: 13px 20px;
+  background: transparent;
+  color: var(--ink);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.ticket-btn:hover {
+  background: var(--ink);
+  color: var(--board-text);
+}
+.ticket-btn--primary {
+  background: var(--red);
+  color: var(--poster-cream);
+}
+.ticket-btn--primary:hover {
+  background: var(--red-deep);
+  color: var(--poster-cream);
+}
+.ticket-btn:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
@@ -2297,34 +2370,18 @@ body::before {
 
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
-  #landing-hero {
-    min-height: 100svh;
-  }
-  .landing-nav {
-    padding: 10px 14px;
-    gap: 12px;
-  }
-  .landing-nav-brand { font-size: 18px; }
-  .landing-nav-link {
-    font-size: 11px;
-    padding: 7px 9px;
-    letter-spacing: 0.1em;
-  }
-  .landing-nav-signin {
-    font-size: 11px;
-    padding: 7px 12px;
-  }
-  .landing-corner-art,
-  .landing-arch {
-    display: none;
-  }
-  .landing-hero-inner {
+  .landing-brand {
     grid-template-columns: 1fr;
-    padding: 92px 20px 72px;
-    row-gap: 28px;
+    padding: 44px 20px 56px;
+    row-gap: 26px;
+  }
+  .landing-brand-art {
+    right: -160px;
+    width: 340px;
+    opacity: 0.06;
   }
   .landing-shield svg {
-    width: 160px;
+    width: 156px;
   }
   .landing-content {
     text-align: center;
@@ -2337,9 +2394,32 @@ body::before {
     font-size: clamp(1.5rem, 6.6vw, 2rem);
     max-width: none;
   }
-  .landing-action-cards {
+  .landing-subtext {
+    font-size: 15px;
+  }
+  .landing-drills {
+    grid-template-columns: minmax(0, 400px);
+    padding: 44px 20px 52px;
+    gap: 26px;
+  }
+  .ticket--tilt-l,
+  .ticket--tilt-r { transform: none; }
+  .landing-study {
     grid-template-columns: 1fr;
-    margin-top: 8px;
+    padding: 52px 20px;
+    gap: 34px;
+    text-align: center;
+  }
+  .landing-study-script { transform-origin: center bottom; }
+  .landing-study-link { align-self: center; }
+  .landing-study-specimens { justify-content: center; }
+  .landing-specimen img {
+    width: 76px;
+    height: 102px;
+  }
+  .landing-board {
+    padding: 36px 20px;
+    gap: 18px;
   }
   .landing-ticker {
     font-size: 9px;
@@ -2352,20 +2432,6 @@ body::before {
   }
   .cert-rosette { width: 44px; }
   .summary-postmark { display: none; }
-  .landing-subtext {
-    font-size: 15px;
-  }
-  .landing-stats {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 24px;
-    text-align: left;
-  }
-  .landing-stat-value { font-size: 19px; }
-  .landing-auth-note {
-    grid-column: 1;
-    margin-top: 8px;
-  }
 
   .home-setup-single {
     padding: 32px 16px 48px;
