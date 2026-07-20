@@ -1040,6 +1040,28 @@ async function loadContributeStats() {
 }
 
 // ------------------------------------------------------------------
+//  SLASH NAV — shared page-nav links (every screen but the landing)
+// ------------------------------------------------------------------
+
+function pageNavGo(target) {
+  const lbScreen = document.getElementById('leaderboard-screen');
+  const fgScreen = document.getElementById('fieldguide-screen');
+  if (lbScreen && !lbScreen.classList.contains('hidden') && typeof hideLeaderboardScreen === 'function') {
+    hideLeaderboardScreen();
+  }
+  if (fgScreen && !fgScreen.classList.contains('hidden')) {
+    hideFieldGuideScreen();
+  }
+  if (target === 'practice' || target === 'weekly') {
+    renderHomeScreen(target);
+  } else if (target === 'leaderboard' && typeof showLeaderboardScreen === 'function') {
+    showLeaderboardScreen();
+  } else if (target === 'fieldguide') {
+    showFieldGuideScreen();
+  }
+}
+
+// ------------------------------------------------------------------
 //  FIELD GUIDE SCREEN
 // ------------------------------------------------------------------
 
@@ -1136,6 +1158,11 @@ function init() {
   // "Review the Field Guide" links on the setup views
   document.querySelectorAll('.setup-fieldguide-link').forEach(btn => {
     btn.addEventListener('click', () => showFieldGuideScreen());
+  });
+
+  // Slash nav — same links row on setup, leaderboard, and field guide
+  document.querySelectorAll('.pnav-link').forEach(btn => {
+    btn.addEventListener('click', () => pageNavGo(btn.dataset.nav));
   });
   const fgDrillBtn = document.getElementById('fieldguide-drill-btn');
   if (fgDrillBtn) {

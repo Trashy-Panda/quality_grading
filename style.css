@@ -857,6 +857,40 @@ body::before {
   gap: 10px;
 }
 
+/* Slash-separated caps nav — every screen except the landing */
+.page-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.pnav-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  padding: 4px 2px;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+.pnav-link:hover { color: var(--red); }
+.pnav-link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pnav-sep {
+  color: var(--line-heavy);
+  font-size: 12px;
+  user-select: none;
+}
+
 /* ── Session setup: single-column entry-point views ─────────── */
 .home-setup-single {
   max-width: 620px;
@@ -1553,14 +1587,6 @@ body::before {
   width: 58px;
   aspect-ratio: 565 / 939;
   color: var(--ribbon);
-}
-
-/* Postmark in the ticket's corner — official mark of the session */
-.summary-postmark {
-  position: absolute;
-  left: 26px;
-  bottom: 20px;
-  opacity: 0.55;
 }
 
 .summary-hero-label {
@@ -2353,6 +2379,14 @@ body::before {
   .carcass-image-wrap { min-height: 220px; }
 }
 
+/* Slash nav collapses at narrow widths — brand/back + auth keep the bar
+   usable; all destinations stay reachable through in-page content links. */
+@media (max-width: 700px) {
+  .page-nav-links {
+    display: none;
+  }
+}
+
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
   .landing-brand {
@@ -2420,7 +2454,6 @@ body::before {
     font-size: 9px;
   }
   .cert-rosette { width: 44px; }
-  .summary-postmark { display: none; }
 
   .home-setup-single {
     padding: 32px 16px 48px;
