@@ -188,58 +188,47 @@
       </div>
     </nav>
 
-    <!-- PRACTICE PATH -->
-    <div class="home-setup-single" id="practice-setup-view">
-      <div class="setup-title-block">
-        <span class="setup-eyebrow" aria-hidden="true">practice makes prime</span>
-        <h1 class="home-panel-header">Practice Drill</h1>
-        <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
+    <!-- Mode switcher — Practice vs Weekly -->
+    <div class="setup-switcher-wrap">
+      <div class="setup-switcher" role="tablist" aria-label="Session mode">
+        <button id="setup-tab-practice" class="setup-tab active" role="tab" aria-selected="true">Practice</button>
+        <button id="setup-tab-weekly" class="setup-tab" role="tab" aria-selected="false">Weekly Challenge</button>
       </div>
+    </div>
 
-      <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
-        Begin Session
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-      <p id="start-error" class="submit-error hidden" role="alert"></p>
-
-      <div class="star-rule" aria-hidden="true">&#9733;</div>
-
-      <!-- Practice Carcasses -->
-      <div class="home-card" id="practice-carcasses-card">
-        <h2 class="card-label">
-          Practice Carcasses
-          <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
-        </h2>
-        <div class="practice-carcasses-body">
-          <p id="community-set-sub" class="practice-carcasses-status">Loading&hellip;</p>
+    <!-- PRACTICE PATH — order ticket -->
+    <div class="home-setup-single" id="practice-setup-view">
+      <div class="ticket setup-ticket">
+        <h1 class="ticket-head">Practice Drill</h1>
+        <div class="ticket-body">
+          <p class="setup-ticket-script" aria-hidden="true">practice makes prime</p>
+          <p class="setup-ticket-sub">Grade real carcass images and get instant feedback.</p>
+          <hr class="ticket-rule" aria-hidden="true" />
+          <div class="ticket-row"><span>Carcass pool</span><span class="ticket-leader"></span><span class="ticket-val" id="community-set-sub">Loading&hellip;</span></div>
+          <div class="ticket-row"><span>Photo sets</span><span class="ticket-leader"></span><button id="manage-photos-btn" class="ticket-row-action">Manage &rarr;</button></div>
           <label class="custom-set-toggle">
             <input type="checkbox" id="use-custom-set-toggle" />
             <span>Practice with my personal images instead</span>
           </label>
+          <hr class="ticket-rule" aria-hidden="true" />
+          <button id="start-btn" class="ticket-btn ticket-btn--primary">Begin Session &rarr;</button>
+          <p id="start-error" class="submit-error hidden" role="alert"></p>
         </div>
       </div>
-
-      <div class="home-setup-footer-links">
-        <button id="switch-to-weekly-link" class="setup-footer-link">Compete in this week&#x2019;s challenge instead &rarr;</button>
-        <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
-      </div>
+      <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
     </div><!-- /#practice-setup-view -->
 
-    <!-- WEEKLY PATH -->
+    <!-- WEEKLY PATH — challenge ticket -->
     <div class="home-setup-single hidden" id="weekly-setup-view">
-      <div class="setup-title-block">
-        <span class="setup-eyebrow" aria-hidden="true">earn your seat at the table</span>
-        <h1 class="home-panel-header">Weekly Challenge</h1>
-        <p class="setup-subtitle">One shot per week. Scores post to the public leaderboard.</p>
-      </div>
-
-      <div id="weekly-challenge-card" class="weekly-card weekly-card-standalone">
-        <div class="weekly-card-header">
-          <span class="weekly-stamp">Weekly Challenge</span>
+      <div id="weekly-challenge-card" class="ticket setup-ticket weekly-card-standalone">
+        <div class="ticket-head weekly-ticket-head">
+          <h1 class="weekly-ticket-title">Weekly Challenge</h1>
           <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
         </div>
-        <div class="weekly-card-body">
+        <div class="ticket-body weekly-card-body">
+          <p class="setup-ticket-script" aria-hidden="true">earn your seat at the table</p>
           <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
+          <hr class="ticket-rule" aria-hidden="true" />
           <!-- Division toggle — routes leaderboard only, full grades always used -->
           <div class="weekly-division-label">Select your division for rankings</div>
           <div class="weekly-ruleset-toggle">
@@ -259,10 +248,6 @@
             <button id="weekly-view-leaderboard-btn" class="weekly-lb-link-btn">View Rankings &rarr;</button>
           </div>
         </div>
-      </div>
-
-      <div class="home-setup-footer-links">
-        <button id="switch-to-practice-link" class="setup-footer-link">Just want to practice, no leaderboard? &rarr;</button>
       </div>
     </div><!-- /#weekly-setup-view -->
 
@@ -801,16 +786,6 @@
       document.getElementById('brand-home-btn').addEventListener('click', () => {
         renderHomeScreen();
       });
-
-      // Setup screen cross-links between Practice and Weekly views
-      const switchToWeeklyLink = document.getElementById('switch-to-weekly-link');
-      if (switchToWeeklyLink) {
-        switchToWeeklyLink.addEventListener('click', () => renderHomeScreen('weekly'));
-      }
-      const switchToPracticeLink = document.getElementById('switch-to-practice-link');
-      if (switchToPracticeLink) {
-        switchToPracticeLink.addEventListener('click', () => renderHomeScreen('practice'));
-      }
 
       // Contribute link on Practice setup opens the crowdsource-grading modal directly
       const openContributeLink = document.getElementById('open-contribute-link');

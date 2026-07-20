@@ -90,19 +90,13 @@
   }
 
   /* ── Setup views — elements enter when screen becomes visible ── */
-  #home-screen:not(.hidden) .setup-title-block {
+  #home-screen:not(.hidden) .setup-switcher-wrap {
     animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
   }
-  #home-screen:not(.hidden) #start-btn {
+  #home-screen:not(.hidden) .setup-ticket {
     animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
   }
-  #home-screen:not(.hidden) .home-card {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
-  }
-  #home-screen:not(.hidden) #weekly-challenge-card {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
-  }
-  #home-screen:not(.hidden) .home-setup-footer-links {
+  #home-screen:not(.hidden) .setup-footer-link {
     animation: p-fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.22s both;
   }
 

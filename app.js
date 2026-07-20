@@ -126,8 +126,6 @@ function cacheElements() {
   el.practiceView   = document.getElementById('practice-setup-view');
   el.weeklyView     = document.getElementById('weekly-setup-view');
   el.useCustomSetToggle = document.getElementById('use-custom-set-toggle');
-  el.switchToWeeklyLink  = document.getElementById('switch-to-weekly-link');
-  el.switchToPracticeLink= document.getElementById('switch-to-practice-link');
   el.openContributeLink  = document.getElementById('open-contribute-link');
 
   // Drill
@@ -204,6 +202,15 @@ function renderHomeScreen(mode) {
   showScreen('home');
   el.practiceView.classList.toggle('hidden', activeMode !== 'practice');
   el.weeklyView.classList.toggle('hidden', activeMode !== 'weekly');
+  // Mode switcher tabs mirror the active view
+  const tabPractice = document.getElementById('setup-tab-practice');
+  const tabWeekly = document.getElementById('setup-tab-weekly');
+  if (tabPractice && tabWeekly) {
+    tabPractice.classList.toggle('active', activeMode === 'practice');
+    tabPractice.setAttribute('aria-selected', String(activeMode === 'practice'));
+    tabWeekly.classList.toggle('active', activeMode === 'weekly');
+    tabWeekly.setAttribute('aria-selected', String(activeMode === 'weekly'));
+  }
   window._isWeeklySession = activeMode === 'weekly';
   if (activeMode === 'weekly' && typeof renderWeeklyCard === 'function') {
     renderWeeklyCard();
@@ -649,10 +656,11 @@ function attachUrlDotChecks(container) {
 
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
+  // Rendered as a short receipt-row value on the setup ticket
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'No community carcasses yet — add real ones via Manage Photos';
+    el.communitySetSub.textContent = 'None yet';
   } else {
-    el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
+    el.communitySetSub.textContent = state.communitySet.length + ' community';
   }
 }
 
@@ -1116,6 +1124,12 @@ function init() {
   el.useCustomSetToggle.addEventListener('change', () => {
     if (el.startError) el.startError.classList.add('hidden');
   });
+
+  // Setup mode switcher tabs
+  const setupTabPractice = document.getElementById('setup-tab-practice');
+  if (setupTabPractice) setupTabPractice.addEventListener('click', () => renderHomeScreen('practice'));
+  const setupTabWeekly = document.getElementById('setup-tab-weekly');
+  if (setupTabWeekly) setupTabWeekly.addEventListener('click', () => renderHomeScreen('weekly'));
 
   // Field guide back / practice buttons
   const fgBackBtn = document.getElementById('fieldguide-back-btn');

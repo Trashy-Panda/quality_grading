@@ -920,51 +920,105 @@ body::before {
 .home-setup-single {
   max-width: 620px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.setup-title-block {
-  text-align: center;
-  margin-bottom: 8px;
-}
-
-/* Brush-script eyebrow above setup titles */
-.setup-eyebrow {
-  font-family: var(--font-script);
-  font-size: 26px;
-  color: var(--red);
-  line-height: 1.2;
-  margin: 0 0 4px;
-  display: block;
-  transform: rotate(-2deg);
-}
-
-.home-panel-header {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
-  font-weight: 700;
-  color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.12;
-  text-wrap: balance;
-}
-
-.setup-subtitle {
-  font-family: var(--font-ui);
-  font-size: 15px;
-  color: var(--ink-soft);
-  margin-top: 8px;
-}
-
-.home-setup-footer-links {
+  padding: 32px 20px 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 20px;
+}
+
+/* Mode switcher — segmented Practice / Weekly control */
+.setup-switcher-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 34px 20px 0;
+}
+
+.setup-switcher {
+  display: flex;
+  width: fit-content;
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.setup-tab {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  padding: 10px 24px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 140ms ease, color 140ms ease;
+}
+.setup-tab:hover:not(.active) {
+  background: var(--paper-deep);
+  color: var(--ink);
+}
+.setup-tab.active {
+  background: var(--ink);
+  color: var(--board-text);
+}
+.setup-tab:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: -2px;
+}
+
+/* Order-ticket variant of the receipt system */
+.setup-ticket {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.setup-ticket-script {
+  font-family: var(--font-script);
+  font-size: 24px;
+  color: var(--red);
+  line-height: 1.2;
+  margin: 0 0 2px;
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+}
+
+.setup-ticket-sub {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Red text-link action inside a receipt row */
+.ticket-row-action {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--red);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.ticket-row-action:hover { color: var(--red-deep); }
+.ticket-row-action:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.setup-ticket #start-error {
   margin-top: 12px;
 }
 
@@ -985,15 +1039,6 @@ body::before {
 .setup-footer-link:hover { color: var(--red); }
 
 /* ── Cards ──────────────────────────────────────────────────── */
-.home-card {
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-  width: 100%;
-}
-
 .card-label {
   color: var(--ink);
   font-family: var(--font-display);
@@ -1028,20 +1073,6 @@ body::before {
   color: var(--board-text);
 }
 
-/* Practice Carcasses card body */
-.practice-carcasses-body {
-  padding: 12px 24px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.practice-carcasses-status {
-  font-family: var(--font-ui);
-  font-size: 14px;
-  color: var(--ink-soft);
-}
-
 .custom-set-toggle {
   display: flex;
   align-items: center;
@@ -1050,7 +1081,8 @@ body::before {
   font-size: 13.5px;
   color: var(--ink-soft);
   cursor: pointer;
-  padding-top: 14px;
+  padding: 12px 0 4px;
+  margin-top: 6px;
   border-top: 1px dashed var(--line);
 }
 
