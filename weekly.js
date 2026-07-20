@@ -222,7 +222,7 @@ async function renderWeeklyCard() {
 
   const ruleSet = _weeklyRuleSet;
   const carcasses = await getWeeklyCarcasses(ruleSet);
-  const ruleLabel = ruleSet === 'ffa' ? 'High School' : 'College';
+  const ruleLabel = ruleSet === 'ffa' ? 'High School (FFA/4-H)' : 'College';
 
   const metaEl = document.getElementById('weekly-card-meta');
   if (metaEl) {

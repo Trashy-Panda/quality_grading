@@ -387,8 +387,8 @@ body::before {
   max-width: 1040px;
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(220px, 300px) 1fr;
-  column-gap: 92px;
+  grid-template-columns: minmax(210px, 300px) 1fr;
+  column-gap: 116px;
   align-items: center;
 }
 
@@ -423,7 +423,7 @@ body::before {
   right: 0;
   width: min(420px, 38vw);
   aspect-ratio: 1400 / 1053;
-  opacity: 0.08;
+  opacity: 0.12;
 }
 
 /* Flipped so the brim faces into the composition, not off the edge */
@@ -433,7 +433,7 @@ body::before {
   left: -26px;
   width: min(300px, 34vw);
   aspect-ratio: 1109 / 789;
-  opacity: 0.08;
+  opacity: 0.11;
   transform: scaleX(-1) rotate(-7deg);
 }
 
@@ -444,7 +444,7 @@ body::before {
   justify-self: center;
 }
 .landing-shield svg {
-  width: clamp(250px, 29vw, 380px);
+  width: clamp(210px, 24vw, 300px);
   height: auto;
   transform: rotate(-4deg);
   filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
@@ -460,7 +460,7 @@ body::before {
 /* Script lead-in over tracked caps — the OG-card lockup */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(2.6rem, 4.6vw, 3.9rem);
+  font-size: clamp(2.1rem, 3.6vw, 3rem);
   font-weight: 400;
   color: var(--red);
   line-height: 1.15;
@@ -472,13 +472,13 @@ body::before {
 /* Flat scarlet caps under the script — the OG-card lockup, one ink */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
   font-weight: 700;
   color: var(--red);
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  line-height: 1.12;
-  margin: 10px 0 0;
+  line-height: 1.14;
+  margin: 8px 0 0;
   max-width: 20ch;
   text-wrap: balance;
 }
@@ -488,27 +488,34 @@ body::before {
   font-size: 16.5px;
   color: var(--ink-soft);
   line-height: 1.65;
-  margin-top: 22px;
-  max-width: 46ch;
+  margin-top: 18px;
+  max-width: 50ch;
 }
 
 /* The landing's single job: send people to the setup page.
-   Flat scarlet, no border — cohesive with the shield, not a shout. */
+   Flat scarlet, no border — cohesive with the shield, not a shout.
+   Same directional chevron as every other primary CTA on the site. */
 .landing-cta {
   align-self: flex-start;
-  margin-top: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 28px;
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  padding: 16px 36px;
+  padding: 15px 30px;
   background: var(--red);
   color: var(--poster-cream);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 140ms ease;
+}
+.landing-cta svg {
+  flex-shrink: 0;
 }
 .landing-cta:hover { background: var(--red-deep); }
 .landing-cta:active { transform: translateY(1px); }
@@ -763,6 +770,31 @@ body::before {
   width: 100%;
   padding: 0;
   margin: 0;
+}
+
+#home-screen {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Faint corner overprint — same ink-over-content technique as the
+   landing hero, dialed way down so it reads as texture, not noise.
+   Negative z-index (contained by #home-screen's own stacking context)
+   keeps it strictly behind every normal-flow child. */
+.setup-overprint {
+  --art: url(assets/art-ribeye.png);
+  position: absolute;
+  top: 90px;
+  right: -60px;
+  width: 300px;
+  aspect-ratio: 899 / 685;
+  color: var(--ink);
+  opacity: 0.05;
+  transform: rotate(9deg);
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ── Page nav (setup / leaderboard top bar) ─────────────────── */
@@ -2389,6 +2421,9 @@ body::before {
 
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
+  .setup-overprint {
+    display: none;
+  }
   .landing-brand {
     min-height: 100svh;
     padding: 44px 20px;
@@ -2399,13 +2434,13 @@ body::before {
   }
   .landing-overprint--rib {
     width: 52vw;
-    opacity: 0.07;
-    --rest-opacity: 0.07;  /* keeps the entrance animation's fill in sync */
+    opacity: 0.1;
+    --rest-opacity: 0.1;  /* keeps the entrance animation's fill in sync */
   }
   .landing-overprint--hardhat {
     width: 40vw;
-    opacity: 0.07;
-    --rest-opacity: 0.07;
+    opacity: 0.1;
+    --rest-opacity: 0.1;
   }
   .landing-shield svg {
     width: 156px;

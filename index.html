@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beef Carcass Grading Drill</title>
-  <meta name="description" content="Competition-style beef carcass quality grading practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards, get instant feedback, and compete on the weekly leaderboard." />
+  <meta name="description" content="Competition-style beef carcass quality grading practice for FFA, 4-H, and collegiate meat judging. Grade real ribeye images against USDA standards, get instant feedback, and compete on the weekly leaderboard." />
   <meta name="theme-color" content="#C8102E" />
   <meta property="og:title" content="Beef Carcass Grading Drill" />
   <meta property="og:description" content="Grade real carcasses against USDA standards. Instant feedback, weekly leaderboard, free to practice." />
@@ -88,8 +88,11 @@
         <div class="landing-content">
           <p class="landing-script" aria-hidden="true">Meat Judging</p>
           <h1 class="landing-headline">Quality Grading Drills</h1>
-          <p class="landing-subtext">Real ribeyes, USDA standards, instant feedback.</p>
-          <button class="landing-cta" id="landing-setup-btn">Start Grading &rarr;</button>
+          <p class="landing-subtext">Competition-style practice for FFA, 4-H, and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+          <button class="landing-cta" id="landing-setup-btn">
+            Start Grading
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -146,6 +149,7 @@
        HOME SCREEN
        =================================================== -->
   <main id="home-screen" class="screen hidden">
+    <span class="setup-overprint art-mask" aria-hidden="true"></span>
 
     <!-- Settings page top nav -->
     <nav class="page-nav" aria-label="Session setup">
@@ -187,7 +191,7 @@
       </button>
       <p id="start-error" class="submit-error hidden" role="alert"></p>
 
-      <div class="star-rule" aria-hidden="true">&#9733;</div>
+      <hr class="zigzag-rule zigzag-rule--red" aria-hidden="true" />
 
       <!-- Practice Carcasses -->
       <div class="home-card" id="practice-carcasses-card">
@@ -228,7 +232,7 @@
           <!-- Division toggle — routes leaderboard only, full grades always used -->
           <div class="weekly-division-label">Select your division for rankings</div>
           <div class="weekly-ruleset-toggle">
-            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School</button>
+            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School (FFA/4-H)</button>
             <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
           </div>
           <div class="weekly-card-meta" id="weekly-card-meta">
@@ -464,7 +468,7 @@
       <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
     </div>
     <div class="leaderboard-tabs">
-      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA)</button>
+      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA/4-H)</button>
       <button id="leaderboard-tab-collegiate" class="leaderboard-tab">College</button>
     </div>
     <div class="leaderboard-table-wrap">
@@ -487,6 +491,7 @@
        GRADE FIELD GUIDE
        =================================================== -->
   <main id="fieldguide-screen" class="screen hidden">
+    <span class="fg-overprint art-mask" aria-hidden="true"></span>
 
     <nav class="page-nav" aria-label="Field guide">
       <button class="page-nav-back" id="fieldguide-back-btn">
@@ -531,52 +536,66 @@
       <!-- 2. Marbling degrees — specimen chart with USDA anchor photos -->
       <section class="fg-section" aria-labelledby="fg-marbling-heading">
         <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
-        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree.</p>
+        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree. Tap any photo to view it full screen.</p>
         <ol class="fg-specimen-list">
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/07_abundant.jpg" data-full-alt="USDA reference photo: Abundant marbling, minimum of the degree" aria-label="View full screen: Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Abundant</span>
               <span class="fg-marbling-grade">High Prime</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/06_moderately_abundant.jpg" data-full-alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" aria-label="View full screen: Moderately Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Moderately Abundant</span>
               <span class="fg-marbling-grade">Average Prime</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/05_slightly_abundant.jpg" data-full-alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" aria-label="View full screen: Slightly Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Slightly Abundant</span>
               <span class="fg-marbling-grade">Low Prime</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/04_moderate.jpg" data-full-alt="USDA reference photo: Moderate marbling, minimum of the degree" aria-label="View full screen: Moderate marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Moderate</span>
               <span class="fg-marbling-grade">High Choice</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/03_modest.jpg" data-full-alt="USDA reference photo: Modest marbling, minimum of the degree" aria-label="View full screen: Modest marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Modest</span>
               <span class="fg-marbling-grade">Average Choice</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/02_small.jpg" data-full-alt="USDA reference photo: Small marbling, minimum of the degree" aria-label="View full screen: Small marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Small</span>
               <span class="fg-marbling-grade">Low Choice</span>
             </div>
           </li>
           <li class="fg-specimen-row">
-            <img class="fg-specimen-img" src="assets/anchors/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors/01_slight.jpg" data-full-alt="USDA reference photo: Slight marbling, minimum of the degree" aria-label="View full screen: Slight marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
+            </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Slight&sup1;</span>
               <span class="fg-marbling-grade">Select</span>
@@ -596,7 +615,7 @@
       <section class="fg-section fg-section--prose" aria-labelledby="fg-maturity-heading">
         <hr class="zigzag-rule" aria-hidden="true" />
         <h2 id="fg-maturity-heading" class="fg-prose-heading">A word on maturity</h2>
-        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity. This drill assumes <strong>A maturity</strong> (roughly 9&ndash;30 months, nearly all fed cattle) so every carcass grades straight off its marbling. As skeletal and lean maturity advance past A, the same marbling earns a lower grade, and the oldest carcasses fall to the mature grades (Commercial, Utility) that this drill leaves out.</p>
+        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity, so this drill assumes every carcass is <strong>A maturity</strong> (roughly 9&ndash;30 months, nearly all fed cattle) and grades it straight off the marbling. In the ring, maturity is read from the actual bones and lean, detail a photo can't show, similar to how certain yield-grade traits can knock a carcass out of eligibility for a quality grade its marbling alone would earn. This drill isolates the marbling half of that call; a maturity study tool may be a future addition.</p>
         <hr class="zigzag-rule" aria-hidden="true" />
       </section>
 
@@ -611,7 +630,7 @@
             <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
             <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
           </ul>
-          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts). The scale cares about distance, not family lines.</p>
+          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts).</p>
         </div>
       </section>
 

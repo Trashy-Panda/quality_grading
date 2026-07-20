@@ -416,6 +416,16 @@ function onNext() {
 
 let _imageModalReturnFocus = null;
 
+// Shared full-screen image viewer — used by the drill's carcass image and
+// by any clickable reference photo (e.g. field guide marbling specimens).
+function openImageModal(src, alt) {
+  _imageModalReturnFocus = document.activeElement;
+  el.imageModalImg.src = src;
+  el.imageModalImg.alt = alt || '';
+  el.imageModal.classList.remove('hidden');
+  el.imageModalClose.focus();
+}
+
 function closeImageModal() {
   el.imageModal.classList.add('hidden');
   if (_imageModalReturnFocus && typeof _imageModalReturnFocus.focus === 'function') {
@@ -426,14 +436,17 @@ function closeImageModal() {
 
 function initImageModal() {
   el.carcassImage.addEventListener('click', () => {
-    _imageModalReturnFocus = document.activeElement;
-    el.imageModalImg.src = el.carcassImage.src;
-    el.imageModal.classList.remove('hidden');
-    el.imageModalClose.focus();
+    openImageModal(el.carcassImage.src, el.carcassImage.alt);
   });
   el.imageModalClose.addEventListener('click', closeImageModal);
   el.imageModal.addEventListener('click', e => {
     if (e.target === el.imageModal) closeImageModal();
+  });
+  // Field guide specimen photos
+  document.querySelectorAll('.fg-specimen-view').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openImageModal(btn.dataset.fullSrc, btn.dataset.fullAlt);
+    });
   });
 }
 
