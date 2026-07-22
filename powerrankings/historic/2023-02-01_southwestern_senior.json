@@ -1,0 +1,55 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2023-02-01",
+ "season": 2023,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Angelo State",
+   "place": 6
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 7
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 8
+  },
+  {
+   "school": "Iowa State University",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 11
+  }
+ ]
+}

@@ -68,6 +68,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   _db = firebase.firestore();
   _auth = firebase.auth();
+  // powerrank.js (documented dependency: auth.js's window._db) expects a
+  // global — admin.html doesn't load auth.js, so expose the same instance
+  // under that name here instead of duplicating Firebase init.
+  window._db = _db;
 
   // 4. Auth state listener
   _auth.onAuthStateChanged(onAuthStateChanged);
@@ -85,6 +89,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabGradingVotes) tabGradingVotes.addEventListener('click', function () { switchTab('grading-votes'); });
   const tabAnalytics = document.getElementById('tab-btn-analytics');
   if (tabAnalytics) tabAnalytics.addEventListener('click', function () { switchTab('analytics'); });
+  const tabPowerrank = document.getElementById('tab-btn-powerrank');
+  if (tabPowerrank) tabPowerrank.addEventListener('click', function () { switchTab('powerrank'); });
+  const tabPowerrankPreview = document.getElementById('tab-btn-powerrank-preview');
+  if (tabPowerrankPreview) tabPowerrankPreview.addEventListener('click', function () { switchTab('powerrank-preview'); });
   const anRefreshBtn = document.getElementById('an-refresh-btn');
   if (anRefreshBtn) anRefreshBtn.addEventListener('click', function () { loadAnalyticsTab(); });
 
@@ -185,6 +193,53 @@ document.addEventListener('DOMContentLoaded', function () {
     var st = document.getElementById('community-import-status');
     if (st) st.textContent = '';
   });
+
+  // 23. Power Rankings tab
+  var prRefreshBtn = document.getElementById('pr-refresh-btn');
+  if (prRefreshBtn) prRefreshBtn.addEventListener('click', loadPowerrankTab);
+
+  var prImportPreviewBtn = document.getElementById('pr-import-preview-btn');
+  if (prImportPreviewBtn) prImportPreviewBtn.addEventListener('click', prPreviewImport);
+
+  var prImportClearBtn = document.getElementById('pr-import-clear-btn');
+  if (prImportClearBtn) prImportClearBtn.addEventListener('click', prClearImport);
+
+  var prAddRowBtn = document.getElementById('pr-add-row-btn');
+  if (prAddRowBtn) prAddRowBtn.addEventListener('click', function () {
+    var rows = document.getElementById('pr-team-rows');
+    if (rows) rows.appendChild(prBuildTeamRow(null));
+  });
+
+  var prSaveBtn = document.getElementById('pr-form-save-btn');
+  if (prSaveBtn) prSaveBtn.addEventListener('click', prSaveManual);
+
+  var prCancelEditBtn = document.getElementById('pr-edit-cancel-btn');
+  if (prCancelEditBtn) prCancelEditBtn.addEventListener('click', function () {
+    if (!confirm('Discard the contest currently loaded in the form?')) return;
+    prResetForm();
+  });
+
+  var prDateInput = document.getElementById('pr-form-date');
+  if (prDateInput) prDateInput.addEventListener('change', function () {
+    var seasonInput = document.getElementById('pr-form-season');
+    if (!seasonInput) return;
+    var year = (this.value || '').slice(0, 4);
+    if (/^\d{4}$/.test(year) && (!seasonInput.value || seasonInput.value === seasonInput.dataset.auto)) {
+      seasonInput.value = year;
+      seasonInput.dataset.auto = year;
+    }
+    prUpdateSlugPreview();
+  });
+
+  ['pr-form-shortname', 'pr-form-division'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', prUpdateSlugPreview);
+    if (el) el.addEventListener('change', prUpdateSlugPreview);
+  });
+
+  // Start the manual form with one empty team row
+  var prRows = document.getElementById('pr-team-rows');
+  if (prRows) prRows.appendChild(prBuildTeamRow(null));
 });
 
 // ============================================================
@@ -241,7 +296,7 @@ function switchTab(name) {
   _currentTab = name;
 
   // Update tab button active states
-  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes', 'analytics'].forEach(function (t) {
+  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes', 'analytics', 'powerrank', 'powerrank-preview'].forEach(function (t) {
     const btn = document.getElementById('tab-btn-' + t);
     const section = document.getElementById('tab-' + t);
     if (btn) {
@@ -273,6 +328,10 @@ function switchTab(name) {
     loadGradingVotesTab();
   } else if (name === 'analytics') {
     loadAnalyticsTab();
+  } else if (name === 'powerrank') {
+    loadPowerrankTab();
+  } else if (name === 'powerrank-preview') {
+    if (typeof showPowerRankScreen === 'function') showPowerRankScreen();
   }
 }
 
@@ -1615,6 +1674,1077 @@ async function loadAnalyticsTab() {
     missedTbody.innerHTML = '<tr><td colspan="5" class="admin-empty">—</td></tr>';
     contestedTbody.innerHTML = '<tr><td colspan="4" class="admin-empty">—</td></tr>';
   }
+}
+
+// ============================================================
+//  Power Rankings Tab — meat_contests
+// ============================================================
+
+var PR_COLLECTION = 'meat_contests';
+
+var PR_CATEGORIES = [
+  { key: 'beefGrading',    label: 'Beef Grading' },
+  { key: 'beefJudging',    label: 'Beef Judging' },
+  { key: 'lambJudging',    label: 'Lamb Judging' },
+  { key: 'porkJudging',    label: 'Pork Judging' },
+  { key: 'specifications', label: 'Specifications' },
+  { key: 'overallBeef',    label: 'Overall Beef' },
+  { key: 'totalPlacings',  label: 'Total Placings' },
+  { key: 'reasons',        label: 'Reasons' }
+];
+
+var _prContests = [];        // cache: [{ slug, data }] of existing meat_contests docs
+var _prParsedImport = null;  // { doc, slug } awaiting import confirmation
+var _prEditingSlug = null;   // original docId when a contest is loaded into the form
+var _prRowSeq = 0;           // unique ids for category panels (aria-controls)
+
+// ---------- slug ----------
+
+function prKebab(s) {
+  return String(s).toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function prBuildSlug(doc) {
+  return doc.date + '_' + prKebab(doc.shortName) + '_' + doc.division;
+}
+
+function prUpdateSlugPreview() {
+  var el = document.getElementById('pr-slug-preview');
+  if (!el) return;
+  var shortName = (document.getElementById('pr-form-shortname') || {}).value || '';
+  var date      = (document.getElementById('pr-form-date') || {}).value || '';
+  var division  = (document.getElementById('pr-form-division') || {}).value || 'senior';
+  if (!shortName.trim() || !date) {
+    el.textContent = '—';
+    return;
+  }
+  el.textContent = date + '_' + prKebab(shortName) + '_' + division;
+}
+
+// ---------- validation ----------
+
+// Validates a raw contest object (from JSON import or the manual form).
+// Returns { errors: [String], doc: normalizedDoc|null }. The normalized doc
+// contains only schema fields — unknown keys are dropped.
+function prValidateContest(raw) {
+  var errors = [];
+  function isInt(v) { return typeof v === 'number' && isFinite(v) && Math.floor(v) === v; }
+
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { errors: ['Root must be a single JSON object (one contest doc).'], doc: null };
+  }
+
+  var name = typeof raw.name === 'string' ? raw.name.replace(/\s+/g, ' ').trim() : '';
+  if (!name || name.length > 200) errors.push('name: required string, 1–200 chars.');
+
+  var shortName = typeof raw.shortName === 'string' ? raw.shortName.replace(/\s+/g, ' ').trim() : '';
+  if (!shortName || shortName.length > 60) errors.push('shortName: required string, 1–60 chars.');
+
+  var date = typeof raw.date === 'string' ? raw.date.trim() : '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(new Date(date + 'T00:00:00Z').getTime())) {
+    errors.push('date: required ISO string yyyy-mm-dd.');
+  }
+
+  var season = raw.season;
+  if (season === undefined || season === null || season === '') {
+    season = /^\d{4}/.test(date) ? parseInt(date.slice(0, 4), 10) : NaN; // derive from date
+  }
+  if (!isInt(season) || season < 1990 || season > 2100) {
+    errors.push('season: integer year 1990–2100 (derived from date when omitted).');
+  }
+
+  var division = raw.division;
+  if (division !== 'senior' && division !== 'junior') {
+    errors.push('division: must be "senior" or "junior".');
+  }
+
+  var weight = (raw.weight === undefined || raw.weight === null || raw.weight === '') ? 1 : raw.weight;
+  if (typeof weight !== 'number' || !isFinite(weight) || weight < 1 || weight > 2) {
+    errors.push('weight: number between 1 and 2 (default 1).');
+  }
+
+  var sourceUrl = raw.sourceUrl;
+  if (sourceUrl === undefined || sourceUrl === null || sourceUrl === '') {
+    sourceUrl = '';
+  } else if (typeof sourceUrl !== 'string' || sourceUrl.indexOf('https://') !== 0 || sourceUrl.length > 500) {
+    errors.push('sourceUrl: optional, but must start with https:// (max 500 chars) when present.');
+    sourceUrl = '';
+  }
+
+  if (!Array.isArray(raw.results) || raw.results.length < 1 || raw.results.length > 80) {
+    errors.push('results: required array of 1–80 team rows.');
+  }
+
+  var results = [];
+  if (Array.isArray(raw.results)) {
+    // Oversized arrays already errored above — validate only the first 81 rows
+    // so a huge paste can't build hundreds of thousands of error strings.
+    raw.results.slice(0, 81).forEach(function (r, i) {
+      var rowLabel = 'results[' + i + ']';
+      if (!r || typeof r !== 'object' || Array.isArray(r)) {
+        errors.push(rowLabel + ': must be an object.');
+        return;
+      }
+      var school = typeof r.school === 'string' ? r.school.replace(/\s+/g, ' ').trim() : '';
+      if (!school || school.length > 120) errors.push(rowLabel + '.school: required string, 1–120 chars.');
+      if (!isInt(r.place) || r.place < 1) errors.push(rowLabel + '.place: required integer ≥ 1.');
+
+      var row = { school: school, place: r.place };
+      if (r.score !== undefined && r.score !== null && r.score !== '') {
+        if (typeof r.score !== 'number' || !isFinite(r.score)) {
+          errors.push(rowLabel + '.score: must be a number when present.');
+        } else {
+          row.score = r.score;
+        }
+      }
+
+      if (r.categories !== undefined && r.categories !== null) {
+        if (typeof r.categories !== 'object' || Array.isArray(r.categories)) {
+          errors.push(rowLabel + '.categories: must be an object map.');
+        } else {
+          var cats = {};
+          Object.keys(r.categories).forEach(function (k) {
+            var known = PR_CATEGORIES.some(function (c) { return c.key === k; });
+            if (!known) { errors.push(rowLabel + '.categories.' + k + ': unknown category key.'); return; }
+            var c = r.categories[k];
+            if (!c || typeof c !== 'object' || Array.isArray(c)) {
+              errors.push(rowLabel + '.categories.' + k + ': must be an object {place, score}.');
+              return;
+            }
+            if (!isInt(c.place) || c.place < 1) {
+              errors.push(rowLabel + '.categories.' + k + '.place: integer ≥ 1 required.');
+              return;
+            }
+            var entry = { place: c.place };
+            if (c.score !== undefined && c.score !== null && c.score !== '') {
+              if (typeof c.score !== 'number' || !isFinite(c.score)) {
+                errors.push(rowLabel + '.categories.' + k + '.score: must be a number when present.');
+              } else {
+                entry.score = c.score;
+              }
+            }
+            cats[k] = entry;
+          });
+          if (Object.keys(cats).length) row.categories = cats;
+        }
+      }
+      results.push(row);
+    });
+  }
+
+  var teamCount = raw.teamCount;
+  if (teamCount === undefined || teamCount === null || teamCount === '') teamCount = results.length;
+  if (!isInt(teamCount) || teamCount < 1) {
+    errors.push('teamCount: integer > 0 (defaults to results length when omitted).');
+  } else if (Array.isArray(raw.results) && teamCount < raw.results.length) {
+    errors.push('teamCount: cannot be smaller than the number of result rows.');
+  }
+
+  if (errors.length) return { errors: errors, doc: null };
+
+  var doc = {
+    name: name,
+    shortName: shortName,
+    date: date,
+    season: season,
+    division: division,
+    weight: weight,
+    teamCount: teamCount,
+    results: results
+  };
+  if (sourceUrl) doc.sourceUrl = sourceUrl;
+  return { errors: [], doc: doc };
+}
+
+// ---------- school-name consistency ----------
+
+// Shared case/whitespace-insensitive normalization used to match school
+// names both against the cross-contest consistency check and against the
+// ingest script's transient altOnlySchools hint below.
+function prNormSchool(s) {
+  return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+// Compares incoming school names against every school name already stored in
+// meat_contests (cached in _prContests). Warns — never blocks — when a
+// case/whitespace-insensitive match differs in exact spelling, since the
+// rankings engine joins on exact strings. Also flags duplicate schools within
+// the incoming contest.
+function prSchoolWarnings(doc, excludeSlug) {
+  var norm = prNormSchool;
+  var existing = {}; // normKey -> { name, contest }
+  _prContests.forEach(function (c) {
+    if (excludeSlug && c.slug === excludeSlug) return;
+    var rows = (c.data && Array.isArray(c.data.results)) ? c.data.results : [];
+    rows.forEach(function (r) {
+      if (!r || typeof r.school !== 'string') return;
+      var key = norm(r.school);
+      if (!existing[key]) existing[key] = { name: r.school, contest: (c.data.shortName || c.slug) };
+    });
+  });
+
+  var warnings = [];
+  var seen = {};
+  doc.results.forEach(function (r) {
+    var key = norm(r.school);
+    if (seen[key]) {
+      warnings.push('Duplicate school in this contest: "' + r.school + '" — enter only the highest-placing team per school.');
+    }
+    seen[key] = true;
+    var match = existing[key];
+    if (match && match.name !== r.school) {
+      warnings.push('Spelling mismatch: incoming "' + r.school + '" vs existing "' + match.name + '" (in ' + match.contest + '). Rankings join on exact strings — consider matching the existing spelling.');
+    }
+  });
+  return warnings;
+}
+
+// ---------- Firestore write ----------
+
+// Writes a contest doc at the given slug. Reads the doc first so an overwrite
+// keeps the original createdAt; updatedAt is always a fresh server timestamp.
+function prWriteContest(doc, slug) {
+  var ref = _db.collection(PR_COLLECTION).doc(slug);
+  return ref.get().then(function (snap) {
+    var payload = Object.assign({}, doc);
+    // Defense in depth: altOnlySchools is a transient import-time hint from
+    // the ingest script (never part of the meat_contests schema) and must
+    // never reach Firestore, regardless of which rows the admin excluded/kept.
+    // prValidateContest() already never copies it into doc, so this is belt
+    // and suspenders — but explicit, so a future doc-building change can't
+    // silently leak it.
+    delete payload.altOnlySchools;
+    payload.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    payload.createdAt = (snap.exists && snap.data() && snap.data().createdAt)
+      ? snap.data().createdAt
+      : firebase.firestore.FieldValue.serverTimestamp();
+    return ref.set(payload);
+  });
+}
+
+function prIsAdmin() {
+  return !!(_currentUser && _currentUser.uid === ADMIN_UID);
+}
+
+function prSetStatus(el, msg, kind) {
+  if (!el) return;
+  el.textContent = msg || '';
+  el.className = 'pr-status' + (kind === 'ok' ? ' pr-status-ok' : (kind === 'error' ? ' pr-status-error' : ''));
+}
+
+// ---------- load / manage ----------
+
+function loadPowerrankTab() {
+  var tbody = document.getElementById('pr-tbody');
+  if (tbody) tbody.innerHTML = '<tr><td colspan="5" class="admin-empty">Loading…</td></tr>';
+
+  _db.collection(PR_COLLECTION)
+    .orderBy('date', 'desc')
+    .get()
+    .then(function (snap) {
+      _prContests = snap.docs.map(function (d) { return { slug: d.id, data: d.data() }; });
+      prRenderManageTable();
+    })
+    .catch(function (err) {
+      if (tbody) {
+        tbody.innerHTML = '';
+        var tr = document.createElement('tr');
+        var td = document.createElement('td');
+        td.colSpan = 5;
+        td.className = 'admin-empty';
+        td.textContent = 'Error loading contests: ' + err.message;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+      console.error('[admin] loadPowerrankTab error:', err);
+    });
+}
+
+function prRenderManageTable() {
+  var tbody = document.getElementById('pr-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  if (!_prContests.length) {
+    var trEmpty = document.createElement('tr');
+    var tdEmpty = document.createElement('td');
+    tdEmpty.colSpan = 5;
+    tdEmpty.className = 'admin-empty';
+    tdEmpty.textContent = 'No contests yet — import or enter one above.';
+    trEmpty.appendChild(tdEmpty);
+    tbody.appendChild(trEmpty);
+    return;
+  }
+
+  _prContests.forEach(function (c) {
+    var d = c.data || {};
+    var tr = document.createElement('tr');
+
+    var tdName = document.createElement('td');
+    tdName.className = 'admin-td-name';
+    tdName.textContent = d.name || c.slug;
+    tr.appendChild(tdName);
+
+    var tdDate = document.createElement('td');
+    tdDate.className = 'admin-td-date';
+    tdDate.textContent = d.date || '—';
+    tr.appendChild(tdDate);
+
+    var tdDiv = document.createElement('td');
+    tdDiv.textContent = d.division === 'junior' ? 'Junior' : (d.division === 'senior' ? 'Senior' : '—');
+    tr.appendChild(tdDiv);
+
+    var tdTeams = document.createElement('td');
+    tdTeams.textContent = String(typeof d.teamCount === 'number' ? d.teamCount : (Array.isArray(d.results) ? d.results.length : 0));
+    tr.appendChild(tdTeams);
+
+    var tdActions = document.createElement('td');
+    tdActions.className = 'admin-td-actions pr-td-actions';
+
+    var editBtn = document.createElement('button');
+    editBtn.className = 'admin-btn-secondary admin-btn-sm';
+    editBtn.textContent = 'Edit';
+    editBtn.addEventListener('click', function () {
+      prLoadIntoForm(c);
+    });
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'admin-btn-danger admin-btn-sm';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', function () {
+      if (!prIsAdmin()) { alert('Admin access required.'); return; }
+      if (!confirm('Delete contest "' + (d.name || c.slug) + '"?\nIt will be removed from the power rankings. This cannot be undone.')) return;
+      _db.collection(PR_COLLECTION).doc(c.slug).delete()
+        .then(function () {
+          if (_prEditingSlug === c.slug) prResetForm();
+          loadPowerrankTab();
+        })
+        .catch(function (err) { alert('Error deleting contest: ' + err.message); });
+    });
+
+    tdActions.appendChild(editBtn);
+    tdActions.appendChild(delBtn);
+    tr.appendChild(tdActions);
+    tbody.appendChild(tr);
+  });
+}
+
+// ---------- import ----------
+
+function prClearImport() {
+  var ta = document.getElementById('pr-import-json');
+  if (ta) ta.value = '';
+  prSetStatus(document.getElementById('pr-import-status'), '');
+  var preview = document.getElementById('pr-import-preview');
+  if (preview) { preview.innerHTML = ''; preview.classList.add('hidden'); }
+  _prParsedImport = null;
+}
+
+function prPreviewImport() {
+  var ta       = document.getElementById('pr-import-json');
+  var statusEl = document.getElementById('pr-import-status');
+  var preview  = document.getElementById('pr-import-preview');
+  _prParsedImport = null;
+  if (preview) { preview.innerHTML = ''; preview.classList.add('hidden'); }
+
+  if (!ta || !ta.value.trim()) {
+    prSetStatus(statusEl, 'Paste a contest JSON doc first.', 'error');
+    return;
+  }
+
+  var raw;
+  try {
+    raw = JSON.parse(ta.value.trim());
+  } catch (e) {
+    prSetStatus(statusEl, 'Invalid JSON: ' + e.message, 'error');
+    return;
+  }
+
+  var v = prValidateContest(raw);
+  if (v.errors.length) {
+    prSetStatus(statusEl, v.errors.length + ' validation error' + (v.errors.length !== 1 ? 's' : '') + ' — nothing written.', 'error');
+    if (preview) {
+      preview.classList.remove('hidden');
+      preview.appendChild(prBuildMessageList('Validation Errors', v.errors, 'pr-error-list'));
+    }
+    return;
+  }
+
+  var doc  = v.doc;
+  var slug = prBuildSlug(doc);
+  var overwriting = _prContests.some(function (c) { return c.slug === slug; });
+  var warnings = prSchoolWarnings(doc, overwriting ? slug : null);
+
+  // altOnlySchools is a transient, import-only hint from the ingest script —
+  // NOT part of the meat_contests schema (prValidateContest never copies it
+  // into doc). It lists schools where every raw judgingcard.com entry that
+  // collapsed into that school was an "Alt N" row, so the captured place/score
+  // may reflect one individual, not the full team. Flag the matching result
+  // rows for admin review; the array itself is discarded after this preview.
+  var rawAltOnly = Array.isArray(raw.altOnlySchools)
+    ? raw.altOnlySchools.filter(function (s) { return typeof s === 'string' && s.trim(); })
+    : [];
+  var altOnlySet = {};
+  rawAltOnly.forEach(function (s) { altOnlySet[prNormSchool(s)] = true; });
+  var flagged = [];
+  doc.results.forEach(function (r, i) { if (altOnlySet[prNormSchool(r.school)]) flagged.push(i); });
+
+  _prParsedImport = { doc: doc, slug: slug, altOnlySchools: rawAltOnly, flagged: flagged };
+
+  prSetStatus(statusEl, 'Parsed OK — review the preview, then confirm.', 'ok');
+  if (!preview) return;
+  preview.classList.remove('hidden');
+
+  // Summary grid
+  var grid = document.createElement('div');
+  grid.className = 'pr-preview-grid';
+  var top3 = doc.results.slice().sort(function (a, b) { return a.place - b.place; }).slice(0, 3);
+  var items = [
+    ['Contest', doc.name],
+    ['Date', doc.date],
+    ['Division', doc.division === 'junior' ? 'Junior College' : 'Senior College'],
+    ['Teams', String(doc.teamCount) + ' (' + doc.results.length + ' rows)'],
+    ['Season / Weight', doc.season + ' / ' + doc.weight],
+    ['Doc ID', slug]
+  ];
+  items.forEach(function (pair) {
+    var item = document.createElement('div');
+    item.className = 'pr-preview-item';
+    var lab = document.createElement('span');
+    lab.className = 'pr-preview-label';
+    lab.textContent = pair[0];
+    var val = document.createElement('span');
+    val.className = 'pr-preview-value';
+    val.textContent = pair[1];
+    item.appendChild(lab);
+    item.appendChild(val);
+    grid.appendChild(item);
+  });
+  preview.appendChild(grid);
+
+  // Top 3
+  var top3Wrap = document.createElement('div');
+  var top3Label = document.createElement('span');
+  top3Label.className = 'pr-preview-label';
+  top3Label.textContent = 'Top 3';
+  top3Wrap.appendChild(top3Label);
+  var ol = document.createElement('ol');
+  ol.className = 'pr-preview-top3';
+  top3.forEach(function (r) {
+    var li = document.createElement('li');
+    li.textContent = r.place + '. ' + r.school + (typeof r.score === 'number' ? ' — ' + r.score : '');
+    ol.appendChild(li);
+  });
+  top3Wrap.appendChild(ol);
+  preview.appendChild(top3Wrap);
+
+  // School-name warnings (non-blocking)
+  if (warnings.length) {
+    preview.appendChild(prBuildMessageList('School-Name Warnings (non-blocking)', warnings, 'pr-warning-inner'));
+  }
+
+  // Alt-squad-only rows (non-blocking) — per-row badge + editable place/score
+  // + an explicit exclude toggle, resolved by prApplyAltRowEdits() when the
+  // admin confirms. Keep-as-is (the default) preserves today's behavior.
+  var altBlock = null;
+  if (flagged.length) {
+    altBlock = prBuildAltOnlyBlock(doc, flagged);
+    preview.appendChild(altBlock);
+  }
+
+  if (overwriting) {
+    var note = document.createElement('div');
+    note.className = 'pr-overwrite-note';
+    note.textContent = 'A doc with this ID already exists — confirming will overwrite it (createdAt is preserved).';
+    preview.appendChild(note);
+  }
+
+  // Confirm button
+  var actions = document.createElement('div');
+  actions.className = 'pr-form-actions';
+  var confirmBtn = document.createElement('button');
+  confirmBtn.className = 'admin-btn-primary';
+  confirmBtn.textContent = overwriting ? 'Confirm Overwrite' : 'Confirm Import';
+  var confirmStatus = document.createElement('span');
+  confirmStatus.className = 'pr-status';
+  confirmStatus.setAttribute('role', 'status');
+  confirmBtn.addEventListener('click', function () {
+    if (altBlock && !prApplyAltRowEdits(altBlock, _prParsedImport.doc)) {
+      prSetStatus(confirmStatus, 'Cannot exclude every row — a contest needs at least 1 result.', 'error');
+      return;
+    }
+    prConfirmImport(confirmBtn, confirmStatus);
+  });
+  actions.appendChild(confirmBtn);
+  actions.appendChild(confirmStatus);
+
+  // Only useful when there's something flagged to resolve with the full
+  // manual-entry toolkit (per-row remove already exists there).
+  if (flagged.length) {
+    var editInFormBtn = document.createElement('button');
+    editInFormBtn.className = 'admin-btn-secondary';
+    editInFormBtn.textContent = 'Edit in Manual Form First';
+    editInFormBtn.addEventListener('click', function () {
+      if (altBlock) prApplyAltRowEdits(altBlock, _prParsedImport.doc);
+      prLoadParsedImportIntoForm(_prParsedImport);
+    });
+    actions.appendChild(editInFormBtn);
+  }
+
+  preview.appendChild(actions);
+}
+
+// Builds the "Alt-Squad-Only Schools" review block for the import preview.
+// Each flagged row gets a badge, editable place/score inputs (pre-filled with
+// the parsed value), and an "Exclude from this contest" checkbox. Reads back
+// via prApplyAltRowEdits() at confirm time.
+function prBuildAltOnlyBlock(doc, flagged) {
+  var wrap = document.createElement('div');
+  wrap.className = 'pr-warning-list pr-altonly-block';
+
+  var heading = document.createElement('span');
+  heading.className = 'pr-warning-title';
+  heading.textContent = 'Alt-Squad-Only Schools — Review Before Saving';
+  wrap.appendChild(heading);
+
+  var desc = document.createElement('p');
+  desc.className = 'pr-altonly-desc';
+  desc.textContent = 'judgingcard.com had no varsity-named entry for these schools — every raw row that collapsed into them was an "Alt N" squad, so the captured place/score may reflect one individual rather than the full team. Edit the numbers, exclude the row, or keep as-is.';
+  wrap.appendChild(desc);
+
+  var list = document.createElement('div');
+  list.className = 'pr-altonly-rows';
+
+  flagged.forEach(function (idx) {
+    var r = doc.results[idx];
+    var row = document.createElement('div');
+    row.className = 'pr-altonly-row';
+    row.dataset.rowIndex = String(idx);
+
+    var head = document.createElement('div');
+    head.className = 'pr-altonly-row-head';
+    var name = document.createElement('span');
+    name.className = 'pr-altonly-school';
+    name.textContent = r.school;
+    var badge = document.createElement('span');
+    badge.className = 'pr-alt-badge';
+    badge.textContent = '⚠ unverified — alt squad only';
+    head.appendChild(name);
+    head.appendChild(badge);
+    row.appendChild(head);
+
+    var fields = document.createElement('div');
+    fields.className = 'pr-altonly-fields';
+
+    var placeLabel = document.createElement('label');
+    placeLabel.className = 'pr-altonly-field';
+    var placeSpan = document.createElement('span');
+    placeSpan.textContent = 'Place';
+    var placeInput = document.createElement('input');
+    placeInput.type = 'number';
+    placeInput.min = '1';
+    placeInput.step = '1';
+    placeInput.className = 'pr-altrow-place';
+    placeInput.value = String(r.place);
+    placeInput.setAttribute('aria-label', r.school + ' place');
+    placeLabel.appendChild(placeSpan);
+    placeLabel.appendChild(placeInput);
+
+    var scoreLabel = document.createElement('label');
+    scoreLabel.className = 'pr-altonly-field';
+    var scoreSpan = document.createElement('span');
+    scoreSpan.textContent = 'Score';
+    var scoreInput = document.createElement('input');
+    scoreInput.type = 'number';
+    scoreInput.step = 'any';
+    scoreInput.className = 'pr-altrow-score';
+    if (typeof r.score === 'number') scoreInput.value = String(r.score);
+    scoreInput.setAttribute('aria-label', r.school + ' score');
+    scoreLabel.appendChild(scoreSpan);
+    scoreLabel.appendChild(scoreInput);
+
+    var excludeLabel = document.createElement('label');
+    excludeLabel.className = 'pr-altonly-exclude';
+    var excludeCb = document.createElement('input');
+    excludeCb.type = 'checkbox';
+    excludeCb.className = 'pr-altrow-exclude';
+    excludeCb.setAttribute('aria-label', 'Exclude ' + r.school + ' from this contest');
+    var excludeText = document.createElement('span');
+    excludeText.textContent = 'Exclude from this contest';
+    excludeLabel.appendChild(excludeCb);
+    excludeLabel.appendChild(excludeText);
+
+    fields.appendChild(placeLabel);
+    fields.appendChild(scoreLabel);
+    fields.appendChild(excludeLabel);
+    row.appendChild(fields);
+
+    list.appendChild(row);
+  });
+
+  wrap.appendChild(list);
+  return wrap;
+}
+
+// Applies whatever the admin did in the alt-only block (place/score edits,
+// or exclude) back onto doc.results in place. Returns false (and leaves doc
+// untouched) if every flagged row was excluded and nothing remains, so the
+// caller can block the write instead of saving a contest with zero results.
+function prApplyAltRowEdits(container, doc) {
+  var rows = container.querySelectorAll('.pr-altonly-row');
+  var excludedIdx = {};
+  Array.prototype.forEach.call(rows, function (rowEl) {
+    var idx = parseInt(rowEl.dataset.rowIndex, 10);
+    if (!isFinite(idx) || !doc.results[idx]) return;
+    var placeEl   = rowEl.querySelector('.pr-altrow-place');
+    var scoreEl   = rowEl.querySelector('.pr-altrow-score');
+    var excludeEl = rowEl.querySelector('.pr-altrow-exclude');
+
+    if (excludeEl && excludeEl.checked) { excludedIdx[idx] = true; return; }
+
+    if (placeEl && placeEl.value !== '') {
+      var p = parseInt(placeEl.value, 10);
+      if (isFinite(p) && p >= 1) doc.results[idx].place = p;
+    }
+    if (scoreEl) {
+      if (scoreEl.value === '') {
+        delete doc.results[idx].score;
+      } else {
+        var s = parseFloat(scoreEl.value);
+        if (isFinite(s)) doc.results[idx].score = s;
+      }
+    }
+  });
+
+  var excludedCount = Object.keys(excludedIdx).length;
+  if (!excludedCount) return true;
+
+  var kept = doc.results.filter(function (_, i) { return !excludedIdx[i]; });
+  if (!kept.length) return false;
+
+  doc.results = kept;
+  if (typeof doc.teamCount === 'number') {
+    doc.teamCount = Math.max(doc.results.length, doc.teamCount - excludedCount);
+  }
+  return true;
+}
+
+function prConfirmImport(btn, statusEl) {
+  if (!_prParsedImport) { prSetStatus(statusEl, 'Nothing parsed — run Parse & Preview again.', 'error'); return; }
+  if (!prIsAdmin()) { prSetStatus(statusEl, 'Admin access required.', 'error'); return; }
+
+  var slug = _prParsedImport.slug;
+  var doc  = _prParsedImport.doc;
+  if (btn) btn.disabled = true;
+  prSetStatus(statusEl, 'Writing…');
+
+  prWriteContest(doc, slug)
+    .then(function () {
+      prClearImport();
+      prSetStatus(document.getElementById('pr-import-status'), 'Imported ' + slug + '.', 'ok');
+      loadPowerrankTab();
+    })
+    .catch(function (err) {
+      if (btn) btn.disabled = false;
+      prSetStatus(statusEl, 'Error: ' + err.message, 'error');
+      console.error('[admin] prConfirmImport error:', err);
+    });
+}
+
+// Builds a titled message list (errors or warnings) using textContent only.
+function prBuildMessageList(title, messages, extraClass) {
+  var wrap = document.createElement('div');
+  wrap.className = 'pr-warning-list' + (extraClass ? ' ' + extraClass : '');
+  var heading = document.createElement('span');
+  heading.className = 'pr-warning-title';
+  heading.textContent = title;
+  wrap.appendChild(heading);
+  var ul = document.createElement('ul');
+  var MAX_SHOWN = 50; // defense in depth — never render an unbounded list
+  messages.slice(0, MAX_SHOWN).forEach(function (m) {
+    var li = document.createElement('li');
+    li.textContent = m;
+    ul.appendChild(li);
+  });
+  if (messages.length > MAX_SHOWN) {
+    var more = document.createElement('li');
+    more.textContent = '…and ' + (messages.length - MAX_SHOWN) + ' more.';
+    ul.appendChild(more);
+  }
+  wrap.appendChild(ul);
+  return wrap;
+}
+
+// ---------- manual entry ----------
+
+function prBuildTeamRow(data, isAltOnly) {
+  _prRowSeq++;
+  var panelId = 'pr-cat-panel-' + _prRowSeq;
+
+  var row = document.createElement('div');
+  row.className = 'pr-team-row';
+
+  var main = document.createElement('div');
+  main.className = 'pr-team-main';
+
+  var schoolInput = document.createElement('input');
+  schoolInput.type = 'text';
+  schoolInput.className = 'pr-row-school';
+  schoolInput.placeholder = 'School (e.g. Oklahoma State University)';
+  schoolInput.maxLength = 120;
+  schoolInput.setAttribute('aria-label', 'School name');
+  if (data && data.school) schoolInput.value = data.school;
+
+  var placeInput = document.createElement('input');
+  placeInput.type = 'number';
+  placeInput.className = 'pr-row-place';
+  placeInput.min = '1';
+  placeInput.step = '1';
+  placeInput.placeholder = 'Place';
+  placeInput.setAttribute('aria-label', 'Overall place');
+  if (data && typeof data.place === 'number') placeInput.value = String(data.place);
+
+  var scoreInput = document.createElement('input');
+  scoreInput.type = 'number';
+  scoreInput.className = 'pr-row-score';
+  scoreInput.step = 'any';
+  scoreInput.placeholder = 'Score';
+  scoreInput.setAttribute('aria-label', 'Overall score (optional)');
+  if (data && typeof data.score === 'number') scoreInput.value = String(data.score);
+
+  var hasCats = !!(data && data.categories && Object.keys(data.categories).length);
+  var catsBtn = document.createElement('button');
+  catsBtn.type = 'button';
+  catsBtn.className = 'admin-btn-secondary admin-btn-sm pr-row-cats-toggle';
+  catsBtn.textContent = hasCats ? 'Categories (' + Object.keys(data.categories).length + ')' : 'Categories';
+  catsBtn.setAttribute('aria-expanded', 'false');
+  catsBtn.setAttribute('aria-controls', panelId);
+
+  var removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'admin-btn-danger admin-btn-sm pr-row-remove';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.setAttribute('aria-label', 'Remove team row');
+  removeBtn.addEventListener('click', function () {
+    if (schoolInput.value.trim() && !confirm('Remove the row for "' + schoolInput.value.trim() + '"?')) return;
+    row.remove();
+  });
+
+  main.appendChild(schoolInput);
+  if (isAltOnly) {
+    var altBadge = document.createElement('span');
+    altBadge.className = 'pr-alt-badge pr-alt-badge-row';
+    altBadge.textContent = '⚠ unverified — alt squad only';
+    main.appendChild(altBadge);
+  }
+  main.appendChild(placeInput);
+  main.appendChild(scoreInput);
+  main.appendChild(catsBtn);
+  main.appendChild(removeBtn);
+  row.appendChild(main);
+
+  var panel = document.createElement('div');
+  panel.className = 'pr-cat-panel hidden';
+  panel.id = panelId;
+
+  var catGrid = document.createElement('div');
+  catGrid.className = 'pr-cat-grid';
+  PR_CATEGORIES.forEach(function (cat) {
+    var group = document.createElement('div');
+    group.className = 'pr-cat-group';
+
+    var lab = document.createElement('span');
+    lab.className = 'pr-cat-label';
+    lab.textContent = cat.label;
+
+    var cp = document.createElement('input');
+    cp.type = 'number';
+    cp.className = 'pr-cat-place';
+    cp.min = '1';
+    cp.step = '1';
+    cp.placeholder = 'Pl';
+    cp.dataset.cat = cat.key;
+    cp.dataset.kind = 'place';
+    cp.setAttribute('aria-label', cat.label + ' place');
+
+    var cs = document.createElement('input');
+    cs.type = 'number';
+    cs.className = 'pr-cat-score';
+    cs.step = 'any';
+    cs.placeholder = 'Score';
+    cs.dataset.cat = cat.key;
+    cs.dataset.kind = 'score';
+    cs.setAttribute('aria-label', cat.label + ' score');
+
+    if (data && data.categories && data.categories[cat.key]) {
+      var entry = data.categories[cat.key];
+      if (typeof entry.place === 'number') cp.value = String(entry.place);
+      if (typeof entry.score === 'number') cs.value = String(entry.score);
+    }
+
+    group.appendChild(lab);
+    group.appendChild(cp);
+    group.appendChild(cs);
+    catGrid.appendChild(group);
+  });
+  panel.appendChild(catGrid);
+  row.appendChild(panel);
+
+  catsBtn.addEventListener('click', function () {
+    var open = panel.classList.toggle('hidden') === false;
+    catsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  return row;
+}
+
+// Reads the manual form into a raw contest object (same shape as import JSON).
+function prCollectFormRaw() {
+  function num(id) {
+    var el = document.getElementById(id);
+    if (!el || el.value === '') return undefined;
+    var n = parseFloat(el.value);
+    return isFinite(n) ? n : NaN;
+  }
+  function txt(id) {
+    var el = document.getElementById(id);
+    return el ? el.value : '';
+  }
+
+  var raw = {
+    name: txt('pr-form-name'),
+    shortName: txt('pr-form-shortname'),
+    date: txt('pr-form-date'),
+    division: txt('pr-form-division')
+  };
+  var season = num('pr-form-season');
+  if (season !== undefined) raw.season = season;
+  var weight = num('pr-form-weight');
+  if (weight !== undefined) raw.weight = weight;
+  var sourceUrl = txt('pr-form-sourceurl').trim();
+  if (sourceUrl) raw.sourceUrl = sourceUrl;
+
+  var results = [];
+  var rowsEl = document.getElementById('pr-team-rows');
+  var rowEls = rowsEl ? rowsEl.querySelectorAll('.pr-team-row') : [];
+  Array.prototype.forEach.call(rowEls, function (rowEl) {
+    var schoolEl = rowEl.querySelector('.pr-row-school');
+    var placeEl  = rowEl.querySelector('.pr-row-place');
+    var scoreEl  = rowEl.querySelector('.pr-row-score');
+    var school = schoolEl ? schoolEl.value.trim() : '';
+    var placeStr = placeEl ? placeEl.value : '';
+    var scoreStr = scoreEl ? scoreEl.value : '';
+
+    // Skip rows the admin left completely empty
+    var anyCat = false;
+    var catInputs = rowEl.querySelectorAll('.pr-cat-place, .pr-cat-score');
+    Array.prototype.forEach.call(catInputs, function (inp) { if (inp.value !== '') anyCat = true; });
+    if (!school && placeStr === '' && scoreStr === '' && !anyCat) return;
+
+    var r = { school: school };
+    if (placeStr !== '') r.place = parseFloat(placeStr);
+    if (scoreStr !== '') r.score = parseFloat(scoreStr);
+
+    var categories = {};
+    PR_CATEGORIES.forEach(function (cat) {
+      var cp = rowEl.querySelector('.pr-cat-place[data-cat="' + cat.key + '"]');
+      var cs = rowEl.querySelector('.pr-cat-score[data-cat="' + cat.key + '"]');
+      var pVal = cp && cp.value !== '' ? parseFloat(cp.value) : undefined;
+      var sVal = cs && cs.value !== '' ? parseFloat(cs.value) : undefined;
+      if (pVal === undefined && sVal === undefined) return;
+      var entry = {};
+      if (pVal !== undefined) entry.place = pVal;
+      if (sVal !== undefined) entry.score = sVal;
+      categories[cat.key] = entry;
+    });
+    if (Object.keys(categories).length) r.categories = categories;
+
+    results.push(r);
+  });
+  raw.results = results;
+  return raw;
+}
+
+function prSaveManual() {
+  var statusEl   = document.getElementById('pr-form-status');
+  var warningsEl = document.getElementById('pr-form-warnings');
+  var saveBtn    = document.getElementById('pr-form-save-btn');
+  if (warningsEl) { warningsEl.innerHTML = ''; warningsEl.classList.add('hidden'); }
+  prSetStatus(statusEl, '');
+
+  if (!prIsAdmin()) { prSetStatus(statusEl, 'Admin access required.', 'error'); return; }
+
+  var raw = prCollectFormRaw();
+  var v = prValidateContest(raw);
+  if (v.errors.length) {
+    prSetStatus(statusEl, 'Fix ' + v.errors.length + ' validation error' + (v.errors.length !== 1 ? 's' : '') + ' — nothing saved.', 'error');
+    if (warningsEl) {
+      warningsEl.classList.remove('hidden');
+      warningsEl.appendChild(prBuildMessageList('Validation Errors', v.errors, 'pr-error-list'));
+    }
+    return;
+  }
+
+  var doc  = v.doc;
+  var slug = prBuildSlug(doc);
+
+  // School-name consistency check (non-blocking) — shown before the write
+  var warnings = prSchoolWarnings(doc, _prEditingSlug || slug);
+  if (warnings.length && warningsEl) {
+    warningsEl.classList.remove('hidden');
+    warningsEl.appendChild(prBuildMessageList('School-Name Warnings (saving anyway)', warnings, 'pr-warning-inner'));
+  }
+
+  // Overwriting a doc we did not load for editing needs an explicit OK
+  var exists = _prContests.some(function (c) { return c.slug === slug; });
+  if (exists && slug !== _prEditingSlug) {
+    if (!confirm('A contest doc already exists at\n' + slug + '\nOverwrite it?')) return;
+  }
+
+  var renamedFrom = (_prEditingSlug && _prEditingSlug !== slug) ? _prEditingSlug : null;
+
+  if (saveBtn) saveBtn.disabled = true;
+  prSetStatus(statusEl, 'Saving…');
+
+  prWriteContest(doc, slug)
+    .then(function () {
+      // If editing changed date/shortName/division, the docId changed too —
+      // offer to remove the doc under the old id so it is not double-counted.
+      if (renamedFrom && confirm('Contest ID changed:\n' + renamedFrom + ' → ' + slug + '\nDelete the old doc so the contest is not counted twice?')) {
+        return _db.collection(PR_COLLECTION).doc(renamedFrom).delete();
+      }
+    })
+    .then(function () {
+      if (saveBtn) saveBtn.disabled = false;
+      prResetForm();
+      prSetStatus(statusEl, 'Saved ' + slug + (warnings.length ? ' (with ' + warnings.length + ' school-name warning' + (warnings.length !== 1 ? 's' : '') + ')' : '') + '.', 'ok');
+      loadPowerrankTab();
+    })
+    .catch(function (err) {
+      if (saveBtn) saveBtn.disabled = false;
+      prSetStatus(statusEl, 'Error saving: ' + err.message, 'error');
+      console.error('[admin] prSaveManual error:', err);
+    });
+}
+
+function prLoadIntoForm(contest) {
+  var d = contest.data || {};
+  _prEditingSlug = contest.slug;
+
+  var banner = document.getElementById('pr-editing-banner');
+  var slugEl = document.getElementById('pr-editing-slug');
+  if (slugEl) slugEl.textContent = contest.slug;
+  if (banner) banner.classList.remove('hidden');
+
+  function setVal(id, v) {
+    var el = document.getElementById(id);
+    if (el) el.value = (v === undefined || v === null) ? '' : String(v);
+  }
+  setVal('pr-form-name', d.name);
+  setVal('pr-form-shortname', d.shortName);
+  setVal('pr-form-date', d.date);
+  setVal('pr-form-season', d.season);
+  setVal('pr-form-division', d.division === 'junior' ? 'junior' : 'senior');
+  setVal('pr-form-weight', typeof d.weight === 'number' ? d.weight : 1);
+  setVal('pr-form-sourceurl', d.sourceUrl);
+  var seasonInput = document.getElementById('pr-form-season');
+  if (seasonInput) delete seasonInput.dataset.auto;
+
+  var rowsEl = document.getElementById('pr-team-rows');
+  if (rowsEl) {
+    rowsEl.innerHTML = '';
+    var results = Array.isArray(d.results) ? d.results : [];
+    results.slice().sort(function (a, b) { return (a.place || 0) - (b.place || 0); }).forEach(function (r) {
+      rowsEl.appendChild(prBuildTeamRow(r));
+    });
+    if (!results.length) rowsEl.appendChild(prBuildTeamRow(null));
+  }
+
+  var warningsEl = document.getElementById('pr-form-warnings');
+  if (warningsEl) { warningsEl.innerHTML = ''; warningsEl.classList.add('hidden'); }
+  prSetStatus(document.getElementById('pr-form-status'), 'Loaded ' + contest.slug + ' — edit and save.');
+  prUpdateSlugPreview();
+
+  var formCard = document.getElementById('pr-editing-banner');
+  if (formCard && formCard.scrollIntoView) formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Bridges the "Edit in Manual Form First" button on a freshly parsed import
+// preview into the manual-entry form. This is the only realistic place
+// altOnlySchools ever survives past the import textarea (Firestore docs never
+// carry it — prWriteContest strips it before every write), so rows matching
+// it get the same badge prBuildTeamRow renders in the import preview; the
+// existing per-row remove button doubles as "exclude" here.
+function prLoadParsedImportIntoForm(parsed) {
+  if (!parsed || !parsed.doc) return;
+  var d = parsed.doc;
+  _prEditingSlug = null; // treat as a fresh manual entry; slug recomputes from the fields
+
+  var banner = document.getElementById('pr-editing-banner');
+  var slugEl = document.getElementById('pr-editing-slug');
+  if (slugEl) slugEl.textContent = parsed.slug + ' (from import — review, then Save Contest below)';
+  if (banner) banner.classList.remove('hidden');
+
+  function setVal(id, v) {
+    var el = document.getElementById(id);
+    if (el) el.value = (v === undefined || v === null) ? '' : String(v);
+  }
+  setVal('pr-form-name', d.name);
+  setVal('pr-form-shortname', d.shortName);
+  setVal('pr-form-date', d.date);
+  setVal('pr-form-season', d.season);
+  setVal('pr-form-division', d.division === 'junior' ? 'junior' : 'senior');
+  setVal('pr-form-weight', typeof d.weight === 'number' ? d.weight : 1);
+  setVal('pr-form-sourceurl', d.sourceUrl);
+  var seasonInput = document.getElementById('pr-form-season');
+  if (seasonInput) delete seasonInput.dataset.auto;
+
+  var altSet = {};
+  (parsed.altOnlySchools || []).forEach(function (s) { altSet[prNormSchool(s)] = true; });
+
+  var rowsEl = document.getElementById('pr-team-rows');
+  if (rowsEl) {
+    rowsEl.innerHTML = '';
+    var results = Array.isArray(d.results) ? d.results : [];
+    results.slice().sort(function (a, b) { return (a.place || 0) - (b.place || 0); }).forEach(function (r) {
+      rowsEl.appendChild(prBuildTeamRow(r, !!altSet[prNormSchool(r.school)]));
+    });
+    if (!results.length) rowsEl.appendChild(prBuildTeamRow(null));
+  }
+
+  var warningsEl = document.getElementById('pr-form-warnings');
+  if (warningsEl) { warningsEl.innerHTML = ''; warningsEl.classList.add('hidden'); }
+  prSetStatus(document.getElementById('pr-form-status'), 'Loaded from import preview — review flagged rows (⚠), edit, then Save Contest.');
+  prUpdateSlugPreview();
+
+  if (banner && banner.scrollIntoView) banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function prResetForm() {
+  _prEditingSlug = null;
+  var banner = document.getElementById('pr-editing-banner');
+  if (banner) banner.classList.add('hidden');
+  ['pr-form-name', 'pr-form-shortname', 'pr-form-date', 'pr-form-season', 'pr-form-sourceurl'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  var divisionEl = document.getElementById('pr-form-division');
+  if (divisionEl) divisionEl.value = 'senior';
+  var weightEl = document.getElementById('pr-form-weight');
+  if (weightEl) weightEl.value = '1';
+  var seasonInput = document.getElementById('pr-form-season');
+  if (seasonInput) delete seasonInput.dataset.auto;
+  var rowsEl = document.getElementById('pr-team-rows');
+  if (rowsEl) {
+    rowsEl.innerHTML = '';
+    rowsEl.appendChild(prBuildTeamRow(null));
+  }
+  var warningsEl = document.getElementById('pr-form-warnings');
+  if (warningsEl) { warningsEl.innerHTML = ''; warningsEl.classList.add('hidden'); }
+  prSetStatus(document.getElementById('pr-form-status'), '');
+  prUpdateSlugPreview();
 }
 
 // ============================================================

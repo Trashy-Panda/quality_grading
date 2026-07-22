@@ -1,0 +1,43 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1996-04-15",
+ "season": 1996,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "University of Georgia",
+   "place": 4
+  },
+  {
+   "school": "Auburn",
+   "place": 5
+  },
+  {
+   "school": "Penn State",
+   "place": 6
+  },
+  {
+   "school": "Tennessee",
+   "place": 7
+  },
+  {
+   "school": "VPI & SU",
+   "place": 8
+  }
+ ]
+}

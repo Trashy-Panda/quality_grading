@@ -1,0 +1,47 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1993-01-18",
+ "season": 1993,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Tarleton State University",
+   "place": 1
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 2
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "Illinois Central",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "Cloud County",
+   "place": 7
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 8
+  },
+  {
+   "school": "Coffeyville",
+   "place": 9
+  }
+ ]
+}

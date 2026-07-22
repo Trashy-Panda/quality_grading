@@ -1,0 +1,47 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2020-01-18",
+ "season": 2020,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Texas A&M Commerce",
+   "place": 1
+  },
+  {
+   "school": "Australian National",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Zamorano",
+   "place": 4
+  },
+  {
+   "school": "Cisco",
+   "place": 5
+  },
+  {
+   "school": "Fort Scott",
+   "place": 6
+  },
+  {
+   "school": "Western Texas College",
+   "place": 7
+  },
+  {
+   "school": "Joliet",
+   "place": 8
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 9
+  }
+ ]
+}

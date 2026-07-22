@@ -1,0 +1,35 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1929-10-20",
+ "season": 1929,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Iowa State University",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "Missouri",
+   "place": 5
+  },
+  {
+   "school": "Penn State",
+   "place": 6
+  }
+ ]
+}

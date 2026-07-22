@@ -1,0 +1,55 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "2000-04-15",
+ "season": 2000,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "University of Illinois",
+   "place": 4
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "Kentucky",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "Tennessee",
+   "place": 9
+  },
+  {
+   "school": "Colorado State University",
+   "place": 10
+  },
+  {
+   "school": "Auburn",
+   "place": 11
+  }
+ ]
+}

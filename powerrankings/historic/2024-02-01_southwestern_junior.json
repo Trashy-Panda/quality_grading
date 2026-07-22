@@ -1,0 +1,39 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2024-02-01",
+ "season": 2024,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Coffeyville",
+   "place": 1
+  },
+  {
+   "school": "Casper",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 4
+  },
+  {
+   "school": "Fort Hays State",
+   "place": 5
+  },
+  {
+   "school": "Laramie County",
+   "place": 6
+  },
+  {
+   "school": "Fort Scott",
+   "place": 7
+  }
+ ]
+}

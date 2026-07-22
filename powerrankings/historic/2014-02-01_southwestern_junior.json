@@ -1,0 +1,47 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2014-02-01",
+ "season": 2014,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Casper",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 4
+  },
+  {
+   "school": "Australian National",
+   "place": 5
+  },
+  {
+   "school": "Laramie County",
+   "place": 6
+  },
+  {
+   "school": "Illinois Central",
+   "place": 7
+  },
+  {
+   "school": "Cloud County",
+   "place": 8
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 9
+  }
+ ]
+}

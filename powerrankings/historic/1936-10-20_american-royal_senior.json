@@ -1,0 +1,39 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1936-10-20",
+ "season": 1936,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "University of Nebraska",
+   "place": 1
+  },
+  {
+   "school": "Missouri",
+   "place": 2
+  },
+  {
+   "school": "Minnesota",
+   "place": 3
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 7
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1992-11-15",
+ "season": 1992,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 16,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Colorado State University",
+   "place": 8
+  },
+  {
+   "school": "Penn State",
+   "place": 9
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "University of Florida",
+   "place": 11
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 12
+  },
+  {
+   "school": "Tennessee",
+   "place": 13
+  },
+  {
+   "school": "Auburn",
+   "place": 14
+  },
+  {
+   "school": "Mississippi State",
+   "place": 16
+  }
+ ]
+}

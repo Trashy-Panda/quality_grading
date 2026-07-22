@@ -1,0 +1,31 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2017-10-20",
+ "season": 2017,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Fort Scott",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "Cisco",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M Kingsville",
+   "place": 5
+  }
+ ]
+}

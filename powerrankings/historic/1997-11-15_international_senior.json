@@ -1,0 +1,63 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1997-11-15",
+ "season": 1997,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Iowa State University",
+   "place": 8
+  },
+  {
+   "school": "University of Georgia",
+   "place": 9
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 10
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Arkansas",
+   "place": 12
+  },
+  {
+   "school": "VPI & SU",
+   "place": 13
+  }
+ ]
+}

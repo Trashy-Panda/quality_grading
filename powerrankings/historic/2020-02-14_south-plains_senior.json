@@ -1,0 +1,23 @@
+{
+ "name": "South Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "South Plains",
+ "date": "2020-02-14",
+ "season": 2020,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 3,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  }
+ ]
+}

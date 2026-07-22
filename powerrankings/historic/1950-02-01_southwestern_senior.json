@@ -1,0 +1,31 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1950-02-01",
+ "season": 1950,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Wisconsin",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 5
+  }
+ ]
+}

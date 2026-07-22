@@ -1,0 +1,43 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1974-10-10",
+ "season": 1974,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Colorado",
+   "place": 2
+  },
+  {
+   "school": "New Mexico",
+   "place": 3
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 4
+  },
+  {
+   "school": "Washington",
+   "place": 5
+  },
+  {
+   "school": "Idaho",
+   "place": 6
+  },
+  {
+   "school": "Montana",
+   "place": 7
+  },
+  {
+   "school": "Fresno State",
+   "place": 8
+  }
+ ]
+}

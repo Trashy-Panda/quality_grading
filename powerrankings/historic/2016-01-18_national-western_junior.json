@@ -1,0 +1,35 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2016-01-18",
+ "season": 2016,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Garden City Community College",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Australian National",
+   "place": 3
+  },
+  {
+   "school": "Fort Scott",
+   "place": 4
+  },
+  {
+   "school": "Western Texas College",
+   "place": 5
+  },
+  {
+   "school": "Cisco",
+   "place": 6
+  }
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "2003-11-15",
+ "season": 2003,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "University of Illinois",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "Iowa State University",
+   "place": 8
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 9
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "University of Georgia",
+   "place": 11
+  },
+  {
+   "school": "Missouri",
+   "place": 12
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 13
+  }
+ ]
+}

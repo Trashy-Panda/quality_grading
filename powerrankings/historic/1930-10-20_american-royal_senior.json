@@ -1,0 +1,31 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1930-10-20",
+ "season": 1930,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Missouri",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "University of Illinois",
+   "place": 5
+  }
+ ]
+}

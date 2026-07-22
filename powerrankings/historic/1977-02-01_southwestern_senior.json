@@ -1,0 +1,51 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1977-02-01",
+ "season": 1977,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 3
+  },
+  {
+   "school": "New Mexico",
+   "place": 5
+  },
+  {
+   "school": "Colorado State University",
+   "place": 6
+  },
+  {
+   "school": "Tennessee",
+   "place": 7
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 8
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 9
+  },
+  {
+   "school": "West Texas State",
+   "place": 10
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2019-10-01",
+ "season": 2019,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 2
+  },
+  {
+   "school": "Western Texas College",
+   "place": 3
+  },
+  {
+   "school": "Cisco",
+   "place": 4
+  },
+  {
+   "school": "Fort Scott",
+   "place": 5
+  }
+ ]
+}

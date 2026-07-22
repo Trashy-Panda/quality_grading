@@ -1,0 +1,39 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1973-10-10",
+ "season": 1973,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Oregon",
+   "place": 1
+  },
+  {
+   "school": "New Mexico",
+   "place": 2
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 3
+  },
+  {
+   "school": "Montana",
+   "place": 4
+  },
+  {
+   "school": "Brigham Young",
+   "place": 5
+  },
+  {
+   "school": "Washington",
+   "place": 6
+  },
+  {
+   "school": "Fresno State",
+   "place": 7
+  }
+ ]
+}

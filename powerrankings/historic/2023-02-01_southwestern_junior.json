@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2023-02-01",
+ "season": 2023,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Kanakee",
+   "place": 1
+  },
+  {
+   "school": "Casper",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "Clarendon College",
+   "place": 4
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 5
+  },
+  {
+   "school": "Coffeyville",
+   "place": 6
+  },
+  {
+   "school": "Laramie County",
+   "place": 7
+  },
+  {
+   "school": "Fort Scott",
+   "place": 8
+  }
+ ]
+}

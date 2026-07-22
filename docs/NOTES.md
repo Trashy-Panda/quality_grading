@@ -122,6 +122,104 @@ Crowdsource grading votes submitted by authenticated users on `ai_carcasses` ima
 **Note:** No unique-vote deduplication enforced at docId level (unlike submissions). If
 one-vote-per-image-per-user is needed, use docId pattern `{uid}_{imageId}` in the client.
 
+## meat_contests
+Collegiate meat judging contest results powering the Power Rankings display.
+One doc per contest per division. DocId slug: `{date}_{name}_{division}`
+(e.g. `2026-01-18_national-western_senior`).
+
+**Not currently linked from the public site.** The rankings display
+(`powerrank.js` + `powerrank.css`) lives inside admin.html's Power Rankings
+tab, behind a "Public Rankings Preview" `<details>` toggle — admin-auth-gated,
+same as the rest of that tab — while the ranking methodology is still being
+refined. It was pulled from `index.html` (and the site nav) on 2026-07-21; the
+Firestore collection itself, its rules, and read access are unchanged (still
+public read, admin-only write) since moving the *display* doesn't require
+moving the *data*.
+
+| Field | Type | Constraints |
+|---|---|---|
+| `name` | string | 1–200 chars |
+| `shortName` | string | 1–60 chars |
+| `date` | string | ISO `yyyy-mm-dd` (regex-validated) |
+| `season` | int | 2000–2100 (calendar year) |
+| `division` | string | `senior` or `junior` |
+| `weight` | number | 1–2 (International = 2, default 1) |
+| `sourceUrl` | string | optional; must start with `https://` if present |
+| `teamCount` | int | 1–80 |
+| `results` | list | size 1–80; elements `{school, place, score?, categories?}` |
+| `createdAt` | timestamp | server time on create; immutable on update |
+| `updatedAt` | timestamp | server time on every write |
+
+**Access rules:**
+- read: public (rankings render without auth)
+- create/update: admin only (`KLoBqbA2P9UkQ83urzmgpxT4Oit1`), all scalar fields validated
+- delete: admin only
+
+**Note:** Rules can't iterate list elements, so `results` element contents are
+admin-trusted (validated only as `is list` + size 1–80) — same caveat as
+`submissions.answers`. After changing `firestore.rules`, the file must be manually
+published in Firebase Console → Firestore Database → Rules → Publish (rules do not
+deploy with the site).
+
+**`teamCount` semantics differ by ingest source — both exist to keep
+`placementFactor` (rank-sensitive) from being fed a `place` larger than the
+field it's being scored against, which produces `NaN` and poisons every
+rating in that season+division:**
+- `powerrankings/ingest_judgingcard.py` (modern scrapes): after deduping raw
+  judgingcard rows (which count every alternate/practice squad as its own
+  entry) down to one best-place-per-school, the survivors are **renumbered**
+  into a clean sequential 1..M ranking and `teamCount = M`. We know the true
+  competing field here (every school that actually entered), so renumbering
+  is accurate — it only removes artifacts of squad-alternate clutter.
+- `powerrankings/ingest_historic.py` (1926–2025 PDF archive): the archive
+  only tracks a fixed set of schools as table rows across the decades, so a
+  given year's true field can include entrants who never got a row, and
+  their recorded place can legitimately exceed the row count. `teamCount =
+  max(len(results), max place seen that year)` — a defensible lower-bound
+  estimate, not a renumbering (we don't know the full historic field).
+
+**`altOnlySchools` (transient import hint, not part of the schema):**
+`ingest_judgingcard.py` flags schools whose *every* raw judgingcard entry was
+an alternate-squad row ("... Alt", "... Alt 3") with no plain-name or
+color/mascot-squad entry ever seen — meaning the captured placement/score may
+reflect a single competitor or JV squad rather than the real team (found
+live: Houston 2026 senior's "University of Nebraska" entry scored 981 vs.
+~4000+ for every real 4-person team). This is emitted as a top-level
+`altOnlySchools: ["School Name", ...]` array in the scraper's output JSON —
+**never written to Firestore.** The admin Power Rankings → Import flow reads
+it to badge affected rows with an "unverified — alt squad only" flag and a
+per-row exclude toggle; whatever the admin decides (keep, edit, or exclude)
+is what gets saved, and the hint array itself is stripped before the write.
+
+**Rating methodology (not a schema field):** a school's rating is the mean of
+its own top-5 real resultRatings this season (or however many it has, if
+fewer than 5) — no padding, no cross-season blending. An earlier version of
+the engine tried filling missing result-slots with a prior-season-informed
+estimate (carryover); this was reverted on 2026-07-21 after real-data testing
+found it could still let a thin résumé's estimated slots outscore what the
+same team actually did in a small sample (e.g. 2 real bad results padded by a
+correctly-mediocre-but-still-kinder-than-reality historic average), and could
+let a team that lost head-to-head to another program still rank above them.
+Trying to estimate what a thin résumé "would have" scored kept producing new
+edge cases; the simpler fix was to stop estimating.
+
+**Participation threshold (rating methodology, not a schema field):** a
+school only gets a numbered rank if it has at least `min(3,
+maxContestsAnyoneInThatSeasonAndDivisionPlayed)` real results this season.
+The cap on the "3" matters — some early archive seasons never tracked more
+than 1-2 contests at all, so a flat "need 3" would leave those seasons
+completely unranked; the relative cap relaxes to whatever was actually
+achievable that season. Schools below the threshold are still shown, in a
+separate "Not Yet Ranked — Limited Data This Season" list with their real
+results (no fabricated rating implying a false rank). `weight` (International
+= 2×) amplifies deviation from the field's centered average rather than
+flatly multiplying the raw value — otherwise merely attending a weighted
+contest could outscore winning an unweighted one, since placementFactor never
+drops much below ~0.90 even for a bad placement. The historic archive data
+(1926–2026, 539 docs) stays in Firestore regardless of any of the above — it
+just isn't used to blend current-season ratings anymore; it's earmarked for a
+future "program history / most championships" feature.
+
 ---
 
 # Dev Workflow Cheat Sheet

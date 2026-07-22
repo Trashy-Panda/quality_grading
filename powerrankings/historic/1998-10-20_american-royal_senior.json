@@ -1,0 +1,59 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1998-10-20",
+ "season": 1998,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Colorado State University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  },
+  {
+   "school": "Iowa State University",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 9
+  },
+  {
+   "school": "Michigan State University",
+   "place": 10
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 12
+  }
+ ]
+}

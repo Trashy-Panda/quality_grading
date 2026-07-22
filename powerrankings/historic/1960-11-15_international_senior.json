@@ -1,0 +1,115 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1960-11-15",
+ "season": 1960,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 26,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 3
+  },
+  {
+   "school": "Tennessee",
+   "place": 4
+  },
+  {
+   "school": "Kentucky",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "West Virginia",
+   "place": 7
+  },
+  {
+   "school": "North Carolina",
+   "place": 9
+  },
+  {
+   "school": "Minnesota",
+   "place": 10
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 12
+  },
+  {
+   "school": "University of Florida",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Mississippi State",
+   "place": 15
+  },
+  {
+   "school": "Penn State",
+   "place": 16
+  },
+  {
+   "school": "Missouri",
+   "place": 17
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 18
+  },
+  {
+   "school": "Michigan State University",
+   "place": 19
+  },
+  {
+   "school": "University of Illinois",
+   "place": 20
+  },
+  {
+   "school": "Connecticut",
+   "place": 21
+  },
+  {
+   "school": "Massachussets",
+   "place": 22
+  },
+  {
+   "school": "VPI & SU",
+   "place": 23
+  },
+  {
+   "school": "Clemson",
+   "place": 24
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 24
+  },
+  {
+   "school": "Cornell",
+   "place": 26
+  }
+ ]
+}

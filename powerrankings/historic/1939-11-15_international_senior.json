@@ -1,0 +1,71 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1939-11-15",
+ "season": 1939,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 15,
+ "results": [
+  {
+   "school": "Wisconsin-Madison",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Missouri",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "Minnesota",
+   "place": 6
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 8
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 9
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 10
+  },
+  {
+   "school": "University of Illinois",
+   "place": 11
+  },
+  {
+   "school": "Ontario",
+   "place": 12
+  },
+  {
+   "school": "Massachussets",
+   "place": 13
+  },
+  {
+   "school": "Iowa State University",
+   "place": 14
+  },
+  {
+   "school": "Illinois Normal",
+   "place": 15
+  }
+ ]
+}

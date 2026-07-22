@@ -1,0 +1,27 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1938-02-01",
+ "season": 1938,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 4,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Louisiana",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  }
+ ]
+}

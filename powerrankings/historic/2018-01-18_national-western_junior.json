@@ -1,0 +1,35 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2018-01-18",
+ "season": 2018,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Australian National",
+   "place": 1
+  },
+  {
+   "school": "Fort Scott",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "Zamorano",
+   "place": 5
+  },
+  {
+   "school": "Charles Sturt",
+   "place": 6
+  }
+ ]
+}

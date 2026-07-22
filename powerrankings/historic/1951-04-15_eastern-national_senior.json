@@ -1,0 +1,43 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1951-04-15",
+ "season": 1951,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "West Virginia",
+   "place": 1
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 2
+  },
+  {
+   "school": "North Carolina",
+   "place": 3
+  },
+  {
+   "school": "Massachusetts",
+   "place": 4
+  },
+  {
+   "school": "Tennessee",
+   "place": 5
+  },
+  {
+   "school": "Kentucky",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 7
+  },
+  {
+   "school": "Maryland",
+   "place": 8
+  }
+ ]
+}

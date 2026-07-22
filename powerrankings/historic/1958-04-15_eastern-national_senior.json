@@ -1,0 +1,63 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1958-04-15",
+ "season": 1958,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Wisconsin-Madison",
+   "place": 1
+  },
+  {
+   "school": "Cornell",
+   "place": 2
+  },
+  {
+   "school": "Michigan State University",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "University of Florida",
+   "place": 5
+  },
+  {
+   "school": "Rutgers",
+   "place": 6
+  },
+  {
+   "school": "Massachusetts",
+   "place": 7
+  },
+  {
+   "school": "North Carolina",
+   "place": 8
+  },
+  {
+   "school": "Connecticut",
+   "place": 9
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 10
+  },
+  {
+   "school": "VPI & SU",
+   "place": 11
+  },
+  {
+   "school": "Clemson",
+   "place": 12
+  },
+  {
+   "school": "Maryland",
+   "place": 13
+  }
+ ]
+}

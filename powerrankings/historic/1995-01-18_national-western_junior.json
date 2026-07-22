@@ -1,0 +1,55 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1995-01-18",
+ "season": 1995,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "College of the Sequoias",
+   "place": 1
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 2
+  },
+  {
+   "school": "Australian National",
+   "place": 3
+  },
+  {
+   "school": "Illinois Central",
+   "place": 4
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Barton County",
+   "place": 6
+  },
+  {
+   "school": "Cloud County",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 7
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 9
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 10
+  },
+  {
+   "school": "Coffeyville",
+   "place": 11
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2025-10-20",
+ "season": 2025,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 2
+  },
+  {
+   "school": "University of Georgia",
+   "place": 3
+  },
+  {
+   "school": "University of Arizona",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "New Mexico State University",
+   "place": 6
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 7
+  }
+ ]
+}

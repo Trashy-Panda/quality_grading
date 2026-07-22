@@ -1,0 +1,47 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2000-02-01",
+ "season": 2000,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 2
+  },
+  {
+   "school": "Western Texas College",
+   "place": 3
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "Fort Scott",
+   "place": 6
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 7
+  },
+  {
+   "school": "Coffeyville",
+   "place": 8
+  },
+  {
+   "school": "Illinois Central",
+   "place": 9
+  }
+ ]
+}

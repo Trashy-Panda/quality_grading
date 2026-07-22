@@ -1,0 +1,35 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2020-02-01",
+ "season": 2020,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Casper",
+   "place": 1
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 4
+  },
+  {
+   "school": "Coffeyville",
+   "place": 5
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 6
+  }
+ ]
+}

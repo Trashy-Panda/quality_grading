@@ -1,0 +1,55 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "2024-11-15",
+ "season": 2024,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "University of Florida",
+   "place": 9
+  },
+  {
+   "school": "Michigan State University",
+   "place": 10
+  },
+  {
+   "school": "University of Illinois",
+   "place": 11
+  }
+ ]
+}

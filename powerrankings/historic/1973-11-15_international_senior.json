@@ -1,0 +1,99 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1973-11-15",
+ "season": 1973,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 22,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "University of Illinois",
+   "place": 2
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 3
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "Michigan State University",
+   "place": 7
+  },
+  {
+   "school": "VPI & SU",
+   "place": 8
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 11
+  },
+  {
+   "school": "Missouri",
+   "place": 12
+  },
+  {
+   "school": "Minnesota",
+   "place": 13
+  },
+  {
+   "school": "Penn State",
+   "place": 13
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 14
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 15
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 16
+  },
+  {
+   "school": "Connecticut",
+   "place": 17
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 19
+  },
+  {
+   "school": "Kentucky",
+   "place": 20
+  },
+  {
+   "school": "Mississippi State",
+   "place": 21
+  },
+  {
+   "school": "Purdue University",
+   "place": 22
+  }
+ ]
+}

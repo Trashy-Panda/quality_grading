@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2025-02-01",
+ "season": 2025,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 2
+  },
+  {
+   "school": "Casper",
+   "place": 3
+  },
+  {
+   "school": "University of Arizona",
+   "place": 4
+  },
+  {
+   "school": "Fort Hays State",
+   "place": 5
+  },
+  {
+   "school": "Laramie County",
+   "place": 6
+  },
+  {
+   "school": "Fort Scott",
+   "place": 7
+  },
+  {
+   "school": "Cisco",
+   "place": 8
+  }
+ ]
+}

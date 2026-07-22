@@ -1,0 +1,55 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1964-04-15",
+ "season": 1964,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "The Ohio State University",
+   "place": 1
+  },
+  {
+   "school": "West Virginia",
+   "place": 2
+  },
+  {
+   "school": "VPI & SU",
+   "place": 3
+  },
+  {
+   "school": "Michigan State University",
+   "place": 4
+  },
+  {
+   "school": "Tennessee",
+   "place": 5
+  },
+  {
+   "school": "Cornell",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 7
+  },
+  {
+   "school": "University of Florida",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  },
+  {
+   "school": "Clemson",
+   "place": 10
+  },
+  {
+   "school": "Connecticut",
+   "place": 11
+  }
+ ]
+}

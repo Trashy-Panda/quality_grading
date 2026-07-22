@@ -1,0 +1,35 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2022-02-01",
+ "season": 2022,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Coffeyville",
+   "place": 1
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Casper",
+   "place": 4
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 5
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 6
+  }
+ ]
+}

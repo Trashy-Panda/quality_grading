@@ -1,0 +1,95 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1981-10-20",
+ "season": 1981,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "Purdue University",
+   "place": 1
+  },
+  {
+   "school": "Michigan State University",
+   "place": 2
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Colorado State University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "Kentucky",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 11
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 13
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 14
+  },
+  {
+   "school": "Iowa State University",
+   "place": 15
+  },
+  {
+   "school": "Kansas State University",
+   "place": 16
+  },
+  {
+   "school": "Mississippi",
+   "place": 17
+  },
+  {
+   "school": "Minnesota",
+   "place": 18
+  },
+  {
+   "school": "VPI & SU",
+   "place": 19
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 20
+  },
+  {
+   "school": "Penn State",
+   "place": 21
+  }
+ ]
+}

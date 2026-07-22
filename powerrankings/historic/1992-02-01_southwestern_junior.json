@@ -1,0 +1,71 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1992-02-01",
+ "season": 1992,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 15,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 2
+  },
+  {
+   "school": "Western Texas College",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Coffeyville",
+   "place": 7
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 8
+  },
+  {
+   "school": "Clarendon College",
+   "place": 9
+  },
+  {
+   "school": "Panhandle State",
+   "place": 10
+  },
+  {
+   "school": "Illinois Central",
+   "place": 11
+  },
+  {
+   "school": "Cloud County",
+   "place": 12
+  },
+  {
+   "school": "Kanakee",
+   "place": 13
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 14
+  },
+  {
+   "school": "Paris Junior College",
+   "place": 15
+  }
+ ]
+}

@@ -1,0 +1,43 @@
+{
+ "name": "South Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "South Plains",
+ "date": "2022-02-14",
+ "season": 2022,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 8
+  }
+ ]
+}

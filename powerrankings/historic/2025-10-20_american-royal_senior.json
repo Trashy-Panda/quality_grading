@@ -1,0 +1,79 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2025-10-20",
+ "season": 2025,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 17,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 4
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 7
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 8
+  },
+  {
+   "school": "University of Florida",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "Iowa State University",
+   "place": 11
+  },
+  {
+   "school": "Auburn",
+   "place": 12
+  },
+  {
+   "school": "Michigan State University",
+   "place": 13
+  },
+  {
+   "school": "Missouri",
+   "place": 14
+  },
+  {
+   "school": "Purdue University",
+   "place": 15
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 16
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 17
+  }
+ ]
+}

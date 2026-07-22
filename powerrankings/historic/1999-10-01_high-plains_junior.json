@@ -1,0 +1,39 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "1999-10-01",
+ "season": 1999,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 3
+  },
+  {
+   "school": "Western Texas College",
+   "place": 4
+  },
+  {
+   "school": "Coffeyville",
+   "place": 5
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 6
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 7
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2020-10-20",
+ "season": 2020,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  }
+ ]
+}

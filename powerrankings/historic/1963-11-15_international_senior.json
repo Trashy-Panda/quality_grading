@@ -1,0 +1,91 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1963-11-15",
+ "season": 1963,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 20,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "West Virginia",
+   "place": 2
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 3
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 4
+  },
+  {
+   "school": "Minnesota",
+   "place": 5
+  },
+  {
+   "school": "University of Illinois",
+   "place": 6
+  },
+  {
+   "school": "Michigan State University",
+   "place": 7
+  },
+  {
+   "school": "Washington",
+   "place": 8
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 9
+  },
+  {
+   "school": "Iowa State University",
+   "place": 10
+  },
+  {
+   "school": "Tennessee",
+   "place": 11
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 12
+  },
+  {
+   "school": "VPI & SU",
+   "place": 14
+  },
+  {
+   "school": "Kentucky",
+   "place": 15
+  },
+  {
+   "school": "Kansas State University",
+   "place": 16
+  },
+  {
+   "school": "Penn State",
+   "place": 17
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 18
+  },
+  {
+   "school": "Connecticut",
+   "place": 19
+  },
+  {
+   "school": "Clemson",
+   "place": 20
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1972-04-15",
+ "season": 1972,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "Michigan State University",
+   "place": 2
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 3
+  },
+  {
+   "school": "Kentucky",
+   "place": 4
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 8
+  },
+  {
+   "school": "University of Florida",
+   "place": 9
+  },
+  {
+   "school": "VPI & SU",
+   "place": 10
+  },
+  {
+   "school": "Connecticut",
+   "place": 11
+  }
+ ]
+}

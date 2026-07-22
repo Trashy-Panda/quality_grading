@@ -1,0 +1,67 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "2016-04-15",
+ "season": 2016,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 14,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "Angelo State",
+   "place": 4
+  },
+  {
+   "school": "Colorado State University",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Kansas State University",
+   "place": 8
+  },
+  {
+   "school": "Missouri",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "University of Florida",
+   "place": 11
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 12
+  },
+  {
+   "school": "Fresno State",
+   "place": 13
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 14
+  }
+ ]
+}

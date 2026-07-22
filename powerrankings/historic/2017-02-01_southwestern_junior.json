@@ -1,0 +1,39 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2017-02-01",
+ "season": 2017,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Casper",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 3
+  },
+  {
+   "school": "Australian National",
+   "place": 4
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 5
+  },
+  {
+   "school": "Laramie County",
+   "place": 6
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 7
+  }
+ ]
+}

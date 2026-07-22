@@ -1,0 +1,111 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1962-11-15",
+ "season": 1962,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 25,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "Missouri",
+   "place": 3
+  },
+  {
+   "school": "University of Illinois",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "Kentucky",
+   "place": 6
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 7
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 8
+  },
+  {
+   "school": "Kansas State University",
+   "place": 9
+  },
+  {
+   "school": "Cornell",
+   "place": 10
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 10
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Michigan State University",
+   "place": 12
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "Minnesota",
+   "place": 14
+  },
+  {
+   "school": "VPI & SU",
+   "place": 15
+  },
+  {
+   "school": "West Virginia",
+   "place": 17
+  },
+  {
+   "school": "Penn State",
+   "place": 18
+  },
+  {
+   "school": "University of Florida",
+   "place": 19
+  },
+  {
+   "school": "Tennessee",
+   "place": 20
+  },
+  {
+   "school": "Clemson",
+   "place": 21
+  },
+  {
+   "school": "Connecticut",
+   "place": 22
+  },
+  {
+   "school": "Brigham Young",
+   "place": 23
+  },
+  {
+   "school": "California Poly",
+   "place": 24
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 25
+  }
+ ]
+}

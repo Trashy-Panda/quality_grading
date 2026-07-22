@@ -1,0 +1,51 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1999-01-18",
+ "season": 1999,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Australian National",
+   "place": 3
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "Illinois Central",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 8
+  },
+  {
+   "school": "Coffeyville",
+   "place": 9
+  },
+  {
+   "school": "Weatherford",
+   "place": 10
+  }
+ ]
+}

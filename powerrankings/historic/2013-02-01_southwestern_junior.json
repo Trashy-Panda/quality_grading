@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2013-02-01",
+ "season": 2013,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Casper",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 3
+  },
+  {
+   "school": "Australian National",
+   "place": 4
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 5
+  },
+  {
+   "school": "Allen County",
+   "place": 6
+  },
+  {
+   "school": "Laramie County",
+   "place": 7
+  },
+  {
+   "school": "Illinois Central",
+   "place": 8
+  }
+ ]
+}

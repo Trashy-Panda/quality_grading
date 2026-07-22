@@ -1,0 +1,83 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1971-11-15",
+ "season": 1971,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 18,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "VPI & SU",
+   "place": 2
+  },
+  {
+   "school": "Missouri",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "University of Illinois",
+   "place": 8
+  },
+  {
+   "school": "Purdue University",
+   "place": 9
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 10
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 12
+  },
+  {
+   "school": "Iowa State University",
+   "place": 13
+  },
+  {
+   "school": "Minnesota",
+   "place": 14
+  },
+  {
+   "school": "Penn State",
+   "place": 14
+  },
+  {
+   "school": "Michigan State University",
+   "place": 15
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 16
+  },
+  {
+   "school": "Connecticut",
+   "place": 17
+  },
+  {
+   "school": "Panhandle",
+   "place": 18
+  }
+ ]
+}

@@ -1,0 +1,79 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1974-10-20",
+ "season": 1974,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 17,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "Penn State",
+   "place": 5
+  },
+  {
+   "school": "Michigan State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "Purdue University",
+   "place": 9
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "Tennessee",
+   "place": 11
+  },
+  {
+   "school": "Missouri",
+   "place": 12
+  },
+  {
+   "school": "Iowa State University",
+   "place": 13
+  },
+  {
+   "school": "Kentucky",
+   "place": 14
+  },
+  {
+   "school": "VPI & SU",
+   "place": 15
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 16
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 17
+  }
+ ]
+}

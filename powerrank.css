@@ -1,0 +1,600 @@
+/* powerrank.css — Rollmark design system
+   Team Power Rankings — collegiate meat judging poll.
+   Sibling of leaderboard.css: shares the letterboard table,
+   hero stamp, and hairline-rule vocabulary. */
+
+/* ── Screen ─────────────────────────────────────────────────── */
+
+#powerrank-screen {
+  background: var(--paper);
+  min-height: 100vh;
+  color: var(--ink);
+}
+
+/* Hero inherits .leaderboard-hero (rosette + stamp + title). */
+
+.powerrank-season-line {
+  font-family: var(--font-script);
+  font-size: 20px;
+  color: var(--ink-soft);
+}
+
+/* ── Controls row — division tabs + season select ───────────── */
+
+.powerrank-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 860px;
+  margin: 20px auto 0;
+  padding: 0 20px;
+}
+
+/* Tabs reuse .leaderboard-tabs / .leaderboard-tab; cancel the
+   leaderboard-screen-scoped auto-margins so tabs + select sit inline */
+#powerrank-screen .leaderboard-tabs {
+  margin: 0;
+}
+
+.powerrank-season-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.powerrank-season-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-soft);
+}
+
+.powerrank-season-select {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.powerrank-season-select:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.powerrank-season-select:disabled {
+  color: var(--ink-faint);
+  cursor: default;
+}
+
+/* ── Main table ─────────────────────────────────────────────── */
+/* Wrapper + table reuse .leaderboard-table-wrap / .leaderboard-table
+   (horizontal scroll container handles narrow viewports). */
+
+#powerrank-screen .leaderboard-table-wrap {
+  padding-bottom: 8px;
+}
+
+.powerrank-table {
+  min-width: 480px; /* keeps columns legible; wrap scrolls on phones */
+}
+
+.pr-col-school {
+  text-align: left;
+}
+
+.powerrank-table td.pr-col-school {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pr-col-rating,
+.pr-col-move,
+.pr-col-contests {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.powerrank-table td.pr-col-rating {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.powerrank-table td.pr-col-contests {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+}
+
+.pr-rank-num {
+  color: var(--ink-faint);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* #1 rank plate — blue-ribbon award accent (award context only) */
+.rank-badge.pr-rank-1st {
+  color: #FFFFFF;
+  background: var(--ribbon);
+  border-color: var(--ink);
+}
+
+/* Top-3 rows get a subtle paper-deep wash; #1 adds a ribbon spine */
+.pr-row-top td {
+  background: var(--paper-deep);
+}
+
+.pr-row-first td:first-child {
+  box-shadow: inset 3px 0 0 var(--ribbon);
+}
+
+/* ── Movement ───────────────────────────────────────────────── */
+/* App convention: scarlet = positive emphasis (cf. .col-pct.high-score) */
+
+.pr-move {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pr-move-up   { color: var(--red); }
+.pr-move-down { color: var(--ink-faint); }
+.pr-move-flat { color: var(--line-heavy); font-weight: 400; }
+
+.pr-new-badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: var(--radius-sm);
+  padding: 2px 7px;
+}
+
+/* ── Expandable school rows + detail roll-down ──────────────── */
+
+.pr-row[data-pr-index] {
+  cursor: pointer;
+}
+
+.pr-row[data-pr-index]:hover td {
+  background: var(--paper-deep);
+}
+
+.pr-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pr-expand-btn:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pr-chevron {
+  flex-shrink: 0;
+  color: var(--ink-faint);
+  transition: transform 150ms ease;
+}
+
+.pr-expand-btn[aria-expanded="true"] .pr-chevron {
+  transform: rotate(90deg);
+  color: var(--red);
+}
+
+/* Full-width panel row inside the same table — safe in the
+   horizontal-scroll wrapper (spans all five columns) */
+.pr-detail-row > td {
+  padding: 0;
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--line);
+}
+
+.pr-detail-panel {
+  padding: 12px 16px 14px 36px; /* left inset aligns under school names */
+}
+
+.pr-detail-head {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.pr-detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pr-detail-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pr-detail-item:last-child {
+  border-bottom: none;
+}
+
+.pr-detail-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.pr-detail-contest {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
+}
+
+.pr-detail-date {
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.pr-detail-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.pr-detail-rr {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pr-detail-flag {
+  font-family: var(--font-display);
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+}
+
+.pr-detail-flag-off {
+  color: var(--ink-faint);
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.pr-detail-note {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 8px;
+}
+
+/* Panel entrance — opacity/transform only */
+@keyframes pr-panel-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pr-detail-row:not([hidden]) .pr-detail-panel {
+  animation: pr-panel-in 0.18s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-detail-row:not([hidden]) .pr-detail-panel {
+    animation: none;
+  }
+  .pr-chevron {
+    transition: none;
+  }
+}
+
+/* ── Section band headers — letterboard strip ───────────────── */
+
+.powerrank-strip {
+  max-width: 860px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+}
+
+.powerrank-strip-header {
+  display: inline-block;
+  background: var(--board-bg);
+  color: var(--board-text);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+.powerrank-strip-sub {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin: -6px 0 14px;
+}
+
+/* ── Category cards — "Best in…" stamped badges ─────────────── */
+
+.powerrank-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.pr-card {
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 14px 16px 10px;
+}
+
+.pr-card-stamp {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  transform: rotate(-1.5deg);
+}
+
+.pr-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pr-card-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.pr-card-row:last-child {
+  border-bottom: none;
+}
+
+.pr-card-rank {
+  flex-shrink: 0;
+  width: 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.pr-card-row:first-child .pr-card-rank {
+  color: var(--red);
+}
+
+.pr-card-school {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pr-card-rating {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* ── Contests in Ranking ────────────────────────────────────── */
+
+.powerrank-contest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.pr-contest-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pr-contest-row:last-child {
+  border-bottom: none;
+}
+
+.pr-contest-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pr-contest-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
+}
+
+.pr-contest-date {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.pr-contest-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.pr-contest-winner {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Methodology footnote ───────────────────────────────────── */
+
+.powerrank-method {
+  max-width: 860px;
+  margin: 26px auto 0;
+  padding: 0 20px 56px;
+}
+
+.powerrank-method-details summary {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 4px 2px;
+}
+
+.powerrank-method-details summary:hover {
+  color: var(--red);
+}
+
+.powerrank-method-details summary:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.powerrank-method-details[open] summary {
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.powerrank-method-text {
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  max-width: 62ch;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+/* ── Row entrance — transform/opacity only ──────────────────── */
+
+@keyframes pr-row-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.pr-row {
+  animation: pr-row-in 0.25s ease both;
+}
+
+.pr-row:nth-child(2)  { animation-delay: 0.03s; }
+.pr-row:nth-child(3)  { animation-delay: 0.06s; }
+.pr-row:nth-child(4)  { animation-delay: 0.09s; }
+.pr-row:nth-child(5)  { animation-delay: 0.12s; }
+.pr-row:nth-child(n+6) { animation-delay: 0.15s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-row {
+    animation: none;
+  }
+}
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+
+@media (max-width: 560px) {
+  .powerrank-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #powerrank-screen .leaderboard-table th,
+  #powerrank-screen .leaderboard-table td {
+    padding: 10px 12px;
+  }
+
+  .powerrank-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pr-contest-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

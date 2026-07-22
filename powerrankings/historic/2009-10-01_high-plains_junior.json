@@ -1,0 +1,39 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2009-10-01",
+ "season": 2009,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Tarleton State University",
+   "place": 1
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Fort Scott",
+   "place": 4
+  },
+  {
+   "school": "Allen County",
+   "place": 5
+  },
+  {
+   "school": "Coffeyville",
+   "place": 6
+  },
+  {
+   "school": "Western Texas College",
+   "place": 7
+  }
+ ]
+}

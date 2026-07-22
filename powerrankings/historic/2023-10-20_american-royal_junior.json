@@ -1,0 +1,47 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2023-10-20",
+ "season": 2023,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Washington State",
+   "place": 2
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "University of Georgia",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 6
+  },
+  {
+   "school": "Fort Scott",
+   "place": 7
+  },
+  {
+   "school": "Zamorano",
+   "place": 8
+  },
+  {
+   "school": "Texas A&M Commerce",
+   "place": 9
+  }
+ ]
+}

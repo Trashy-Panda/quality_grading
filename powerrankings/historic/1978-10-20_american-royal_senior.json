@@ -1,0 +1,103 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1978-10-20",
+ "season": 1978,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 23,
+ "results": [
+  {
+   "school": "Tennessee",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "Michigan State University",
+   "place": 4
+  },
+  {
+   "school": "Colorado State University",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "Purdue University",
+   "place": 7
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 8
+  },
+  {
+   "school": "Iowa State University",
+   "place": 9
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "New Mexico",
+   "place": 11
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 12
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Missouri",
+   "place": 15
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 16
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 17
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 18
+  },
+  {
+   "school": "Minnesota",
+   "place": 19
+  },
+  {
+   "school": "Kentucky",
+   "place": 20
+  },
+  {
+   "school": "VPI & SU",
+   "place": 21
+  },
+  {
+   "school": "Penn State",
+   "place": 22
+  },
+  {
+   "school": "Mississippi",
+   "place": 23
+  }
+ ]
+}

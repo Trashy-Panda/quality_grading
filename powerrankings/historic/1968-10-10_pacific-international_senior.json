@@ -1,0 +1,35 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1968-10-10",
+ "season": 1968,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Washington",
+   "place": 1
+  },
+  {
+   "school": "Cal. Poly.- Pomona",
+   "place": 2
+  },
+  {
+   "school": "Montana",
+   "place": 3
+  },
+  {
+   "school": "Oregon",
+   "place": 3
+  },
+  {
+   "school": "Idaho",
+   "place": 4
+  },
+  {
+   "school": "Brigham Young",
+   "place": 6
+  }
+ ]
+}
