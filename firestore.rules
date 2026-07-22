@@ -10,7 +10,8 @@
 //  - https://firebase.google.com/docs/firestore/security/insecure-rules
 //
 //  Admin UID: KLoBqbA2P9UkQ83urzmgpxT4Oit1
-//  Last updated: 2026-07-19 (optional `answers` list on submissions)
+//  Last updated: 2026-07-20 (new `meat_contests` collection for
+//  collegiate power rankings)
 // ============================================================
 
 rules_version = '2';
@@ -259,6 +260,100 @@ service cloud.firestore {
         && request.resource.data.submittedAt == request.time;
 
       allow update: if false;
+
+      allow delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------------
+    //  meat_contests/{contestId}
+    //  Collegiate meat judging contest results feeding the public
+    //  Power Rankings section (powerrank.js). One doc per contest
+    //  per division; DocId slug: {date}_{name}_{division}.
+    //
+    //  read:   public (rankings render with no auth)
+    //  create: admin only, all fields validated
+    //  update: admin only, all fields validated
+    //  delete: admin only
+    //
+    //  Writes are admin-only, but data is still validated in the
+    //  same defensive style as the other collections — it guards
+    //  against admin-UI bugs and malformed ingest-script JSON, not
+    //  against attackers. Timestamps: createdAt/updatedAt, when
+    //  present, must be server time (request.time — the value a
+    //  FieldValue.serverTimestamp() sentinel evaluates to in
+    //  rules); on update, createdAt must be preserved when the
+    //  stored doc has one — omission is rejected, so a non-merge
+    //  set() that forgets to carry createdAt forward cannot
+    //  silently erase it (resource.data.createdAt).
+    //
+    //  `results` LIST CAVEAT (same as submissions.answers above):
+    //  rules can't iterate list elements, so validation is bounded
+    //  to type + size (1..80, matching the client-side cap).
+    //  Element contents ({school, place, score, categories}) are
+    //  admin-trusted — acceptable because only isAdmin() can write.
+    //
+    //  Documentation used for this block:
+    //  - https://firebase.google.com/docs/firestore/security/rules-conditions
+    //  - https://firebase.google.com/docs/rules/data-validation
+    //    (current home of the data-validation guide; the old
+    //    firestore/security/rules-data-validation URL now 404s)
+    //  - https://firebase.google.com/docs/firestore/security/insecure-rules
+    //    (verified: no open access, no bare `auth != null` writes)
+    // ----------------------------------------------------------
+    match /meat_contests/{contestId} {
+
+      // Shared scalar validation for create + update.
+      function validContestData() {
+        return request.resource.data.name is string
+            && request.resource.data.name.size() >= 1
+            && request.resource.data.name.size() <= 200
+            && request.resource.data.shortName is string
+            && request.resource.data.shortName.size() >= 1
+            && request.resource.data.shortName.size() <= 60
+            // ISO date yyyy-mm-dd; [0-9] used instead of \d because
+            // matches() is full-string RE2 and character classes
+            // avoid rules-language backslash-escaping pitfalls
+            && request.resource.data.date is string
+            && request.resource.data.date.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+            && request.resource.data.season is int
+            && request.resource.data.season >= 2000
+            && request.resource.data.season <= 2100
+            && request.resource.data.division in ['senior', 'junior']
+            && request.resource.data.weight is number
+            && request.resource.data.weight >= 1
+            && request.resource.data.weight <= 2
+            && request.resource.data.teamCount is int
+            && request.resource.data.teamCount > 0
+            && request.resource.data.teamCount <= 80
+            && request.resource.data.results is list
+            && request.resource.data.results.size() >= 1
+            && request.resource.data.results.size() <= 80
+            && (!('sourceUrl' in request.resource.data)
+                || (request.resource.data.sourceUrl is string
+                    && request.resource.data.sourceUrl.matches('https://.*')));
+      }
+
+      allow read: if true;
+
+      allow create: if isAdmin()
+        && validContestData()
+        // timestamps: server time only — never trust client time
+        && (!('createdAt' in request.resource.data)
+            || request.resource.data.createdAt == request.time)
+        && (!('updatedAt' in request.resource.data)
+            || request.resource.data.updatedAt == request.time);
+
+      allow update: if isAdmin()
+        && validContestData()
+        // createdAt is immutable once set — if the stored doc has
+        // one, the incoming update must include it unchanged
+        // (omitting it would erase it via non-merge set());
+        // updatedAt is server time
+        && (!('createdAt' in resource.data)
+            || (('createdAt' in request.resource.data)
+                && request.resource.data.createdAt == resource.data.createdAt))
+        && (!('updatedAt' in request.resource.data)
+            || request.resource.data.updatedAt == request.time);
 
       allow delete: if isAdmin();
     }

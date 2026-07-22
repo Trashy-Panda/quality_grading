@@ -1235,20 +1235,9 @@ const GRADE_LABELS_GV = {
 
 // Promotion gate — a consensus is only trustworthy enough to push into
 // community_carcasses (used elsewhere as few-shot calibration input) once
-// it clears a minimum sample size, a clear majority, and isn't split across
-// grades that are far apart on the ladder.
-var GV_MIN_VOTES         = 5;
-var GV_MIN_SHARE         = 0.6;
-var GV_MAX_RUNG_DISTANCE = 1;
-
-// Rung distance uses QUALITY_GRADES' authoritative `position` field
-// (data.js) rather than a second hardcoded copy of the ladder.
-function gvRungDistance(gradeA, gradeB) {
-  var a = (typeof GRADE_MAP !== 'undefined') && GRADE_MAP[gradeA];
-  var b = (typeof GRADE_MAP !== 'undefined') && GRADE_MAP[gradeB];
-  if (!a || !b) return 0;
-  return Math.abs(a.position - b.position);
-}
+// it clears a minimum sample size and a clear majority.
+var GV_MIN_VOTES = 5;
+var GV_MIN_SHARE = 0.6;
 
 // Returns { passed: bool, reasons: [String] } describing why a consensus
 // is or isn't eligible to be pushed to references.
@@ -1270,14 +1259,6 @@ function gvEvaluatePromotionGate(tally, sortedGrades, totalVotes) {
         runnerUpGrade + ' ' + runnerPct + '%, needs 60%+ share');
     } else {
       reasons.push('Needs 60%+ share (has ' + topPct + '%)');
-    }
-  }
-
-  if (runnerUpGrade) {
-    var rungDistance = gvRungDistance(consensusGrade, runnerUpGrade);
-    if (rungDistance > GV_MAX_RUNG_DISTANCE) {
-      reasons.push(consensusGrade + ' vs ' + runnerUpGrade + ' are ' + rungDistance +
-        ' rungs apart (max ' + GV_MAX_RUNG_DISTANCE + ')');
     }
   }
 

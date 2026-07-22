@@ -13,8 +13,9 @@ system, no npm, no server), Firebase Firestore + Auth as the sole backend.
   `master`, since Pages has no way to serve from anywhere but root.
 - Deploy via `deployment/deploy.bat` (merges dev → master → push).
 - Live site files (repo root): `index.html`, `style.css`, `app.js`, `auth.js`, `data.js`,
-  `weekly.js`, `leaderboard.js`, `admin.html`, `admin.js`, `admin.css`, `auth.css`,
-  `weekly.css`, `leaderboard.css`, `beefgrade.svg`, `CNAME`, `firestore.rules`.
+  `weekly.js`, `leaderboard.js`, `powerrank.js`, `admin.html`, `admin.js`, `admin.css`,
+  `auth.css`, `weekly.css`, `leaderboard.css`, `powerrank.css`, `beefgrade.svg`, `CNAME`,
+  `firestore.rules`.
   `auth.html`/`weekly.html`/`leaderboard.html` are **not** live pages — they're dev
   reference docs (their markup is already merged into `index.html`) and live in `docs/`.
 - See root `README.md` for the full repo layout (grader/, deployment/, docs/, etc.).
@@ -224,6 +225,7 @@ Step 4 → WebFetch: https://firebase.google.com/docs/firestore/security/insecur
 | `submissions/{docId}` | public | owner (validated) | never | owner or admin |
 | `weeks/{weekId}` | public | admin only | admin only | admin only |
 | `community_carcasses/{docId}` | public | any auth (validated) | never | admin only |
+| `meat_contests/{contestId}` | public | admin only (validated) | admin only (validated) | admin only |
 
 ### Schema Design Rules
 

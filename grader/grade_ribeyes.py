@@ -1,17 +1,25 @@
 """
-grade_ribeyes.py — AI Ribeye Grading Pipeline
-=============================================
-Downloads TTU Ribeyes.zip, analyzes each image using color-based
-intramuscular fat segmentation (no model file needed), then uploads
-BOTH the image AND its predicted grade to Firebase.
+grade_ribeyes.py — AI Ribeye Grading Pipeline ("Option A")
+===========================================================
+Downloads TTU Ribeyes.zip, grades each image with Claude Vision calibrated
+against fixed official USDA marbling reference photographs (grader/anchors/),
+then uploads BOTH the image AND its predicted grade to Firebase.
+
+See grader/AUDIT_AND_REDESIGN.md for the full design rationale. In short:
+  - The model never reports a grade directly — only a marbling descriptor/
+    subunit, cross-checked against interpolation between two anchor photos.
+    The grade is assigned by score_to_grade_key() in model_utils.py.
+  - k self-consistency samples per image; median score used.
+  - No few-shot images are read from community_carcasses anymore (that
+    pool is AI/consensus-derived and created a circular bias-reinforcement
+    loop — see the audit doc, root cause #2).
+  - Images that fail to parse or come back with uniformly bad image
+    quality are written with correct.qualityGrade omitted and
+    needsReview: true — never a fabricated grade.
 
 Every Firestore document contains:
   imageUrl  → Cloudinary public URL (the actual image)
-  correct   → { qualityGrade: 'CH_HI' }  (the AI-predicted grade)
-
-Grading technique: measures intramuscular fat ratio via HSV pixel
-segmentation, maps ratio to USDA marbling score (0–1100), then to
-grade key. Same core approach as USDA's Computer Vision System.
+  correct   → { qualityGrade: 'CH_HI' }  (the AI-predicted grade; absent if needsReview)
 
 Usage:
   python grader/grade_ribeyes.py --sa grader/firebase-service-account.json --cloud-name NAME --api-key KEY --api-secret SECRET
@@ -28,7 +36,6 @@ import io
 import warnings
 from collections import Counter
 
-import numpy as np
 import requests
 from tqdm import tqdm
 from PIL import Image
@@ -39,6 +46,7 @@ RIBEYES_ZIP_URL = 'https://www.depts.ttu.edu/meatscience/judging/docs/Ribeyes.zi
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'}
 CLOUDINARY_FOLDER = 'ribeyes'
 FIRESTORE_COLLECTION = 'ai_carcasses'
+PROMPT_VERSION = 'optionA-v1-2026-07-15'
 
 
 # ----------------------------------------------------------------
@@ -128,37 +136,57 @@ def init_firebase(sa_path):
     return db
 
 
-def write_firestore_doc(db, image_name, image_url, grade_key, confidence, score, original_filename):
+def write_firestore_doc(db, image_name, image_url, result, original_filename, k, calibration_offset):
     from firebase_admin import firestore
-    grade_label = _grade_label(grade_key)
+
     doc = {
-        'imageName':    image_name,
-        'imageUrl':     image_url,
-        'source':       'AI Graded — Color Analysis',
-        'correct':      {'qualityGrade': grade_key},
-        'notes':        (
-            f'AI predicted: {grade_label} | '
-            f'Marbling score: ~{score:.0f} | '
-            f'Confidence: {confidence * 100:.1f}%'
-        ),
-        'submittedBy':  'ai-pipeline',
-        'submittedAt':  firestore.SERVER_TIMESTAMP,
-        'aiScore':      float(score),
-        'aiConfidence': float(confidence),
-        'sourceFile':   original_filename,
-        'voteCount':    0,
-        'promoted':     False,
+        'imageName':   image_name,
+        'imageUrl':    image_url,
+        'source':      'AI Graded — Claude Vision (calibrated instrument, see AUDIT_AND_REDESIGN.md)',
+        'submittedBy': 'ai-pipeline',
+        'submittedAt': firestore.SERVER_TIMESTAMP,
+        'sourceFile':  original_filename,
+        'voteCount':   0,
+        'promoted':    False,
+        # Provenance — pipeline-only fields, written via admin SDK (bypasses rules).
+        'aiModel':          _model_name(),
+        'promptVersion':    PROMPT_VERSION,
+        'k':                k,
+        'calibrationOffset': calibration_offset,
+        'needsReview':      result['needs_review'],
     }
+
+    if result['needs_review']:
+        # Never fabricate a grade — leave `correct` absent and flag for human review.
+        doc['notes'] = (
+            f"AI could not confidently grade this image "
+            f"(k_valid={result['k_valid']}, k_good={result['k_good']}) — needs manual review."
+        )
+    else:
+        grade_key = result['grade_key']
+        grade_label = _grade_label(grade_key)
+        doc['correct'] = {'qualityGrade': grade_key}
+        doc['aiScore'] = float(result['score'])
+        doc['aiConfidence'] = result['confidence']
+        doc['scoreSpread'] = float(result['spread'])
+        doc['notes'] = (
+            f'AI predicted: {grade_label} | '
+            f'Marbling score: ~{result["score"]:.0f} | '
+            f'Confidence: {result["confidence"]} (spread {result["spread"]:.0f}, '
+            f'{result["k_good"]}/{result["k_valid"]} good samples)'
+        )
+
     db.collection(FIRESTORE_COLLECTION).add(doc)
 
 
+def _model_name():
+    from model_utils import MODEL
+    return MODEL
+
+
 def _grade_label(key):
-    return {
-        'PR_HI': 'High Prime',    'PR_AVG': 'Average Prime', 'PR_LO': 'Low Prime',
-        'CH_HI': 'High Choice',   'CH_AVG': 'Average Choice','CH_LO': 'Low Choice',
-        'SE_HI': 'High Select',   'SE_AVG': 'Average Select','SE_LO': 'Low Select',
-        'STD':   'Standard',      'COM':    'Commercial',
-    }.get(key, key)
+    from model_utils import GRADE_LABELS
+    return GRADE_LABELS.get(key, key)
 
 
 # ----------------------------------------------------------------
@@ -186,6 +214,9 @@ def main():
     parser.add_argument('--zip',         default=None,   help='Path to Ribeyes.zip (auto-downloads if omitted)')
     parser.add_argument('--images',      default=None,   help='Path to a folder of extracted images (skips ZIP)')
     parser.add_argument('--limit',       type=int, default=0, help='Max images (0 = all)')
+    parser.add_argument('--k',           type=int, default=3, help='Self-consistency samples per image (default 3)')
+    parser.add_argument('--calibration-offset', type=float, default=None,
+                        help='Constant score-space bias correction. Default: read the current fitted value from grader/calibration.json (see recalibrate.py); pass a number to override.')
     parser.add_argument('--dry-run',     action='store_true',
                         help='Grade images but skip all uploads (for testing grades locally)')
     parser.add_argument('--anthropic-key', default=None,
@@ -197,7 +228,7 @@ def main():
 
     # Load Cloudinary creds from file if not passed on CLI
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    creds_file = os.path.join(script_dir, 'cloudinary_creds.txt')
+    creds_file = os.path.join(script_dir, 'secrets', 'cloudinary_creds.txt')
     file_creds = _load_creds_file(creds_file)
     cloud_name = args.cloud_name or file_creds.get('cloud_name')
     api_key    = args.api_key    or file_creds.get('api_key')
@@ -205,7 +236,7 @@ def main():
 
     if not args.dry_run and not (cloud_name and api_key and api_secret):
         sys.exit('ERROR: Cloudinary credentials missing.\n'
-                 'Edit grader/cloudinary_creds.txt with your cloud_name, api_key, api_secret.')
+                 'Edit grader/secrets/cloudinary_creds.txt with your cloud_name, api_key, api_secret.')
 
     if not args.dry_run and not os.path.isfile(args.sa):
         sys.exit(f'ERROR: Service account not found: {args.sa}\n'
@@ -243,7 +274,7 @@ def main():
         image_paths = image_paths[:args.limit]
         print(f'Limiting to first {args.limit} images.\n')
 
-    print(f'{len(image_paths)} images to grade.\n')
+    print(f'{len(image_paths)} images to grade (k={args.k} samples/image).\n')
 
     # --- Step 2: Init services (skip for dry-run) ---
     db = None
@@ -251,27 +282,25 @@ def main():
         db = init_firebase(args.sa)
         init_cloudinary(cloud_name, api_key, api_secret)
     else:
-        # Still need Firebase to fetch reference images
-        if os.path.isfile(args.sa):
-            db = init_firebase(args.sa)
         print('DRY RUN — no uploads.\n')
 
-    # --- Step 2b: Fetch reference images from community_carcasses ---
-    from model_utils import analyze_marbling, build_image_name, load_reference_images, set_api_key
+    from model_utils import analyze_marbling, build_image_name, set_api_key, load_anchor_images
     if args.anthropic_key:
         set_api_key(args.anthropic_key)
-    reference_images = {}
-    if db is not None:
-        print('Loading reference images from community_carcasses...')
-        reference_images = load_reference_images(db)
-        if reference_images:
-            print(f'Loaded {len(reference_images)} reference grades: {", ".join(sorted(reference_images.keys()))}\n')
-        else:
-            print('No reference images found — grading without examples.\n')
+
+    print('Loading fixed USDA marbling anchors...')
+    anchors = load_anchor_images()
+    print(f'Loaded {len(anchors)} anchors: {", ".join(a["descriptor"] for a in anchors)}\n')
+
+    from model_utils import get_calibration_offset
+    resolved_offset = args.calibration_offset if args.calibration_offset is not None else get_calibration_offset()
+    print(f'Using calibration_offset={resolved_offset} '
+          f'({"explicit override" if args.calibration_offset is not None else "from grader/calibration.json"})\n')
 
     print('Grading and uploading...')
     t0 = time.time()
     grade_counter = Counter()
+    needs_review_count = 0
     failed = 0
     sample_results = []
 
@@ -281,19 +310,29 @@ def main():
         image_name = build_image_name(filename, i)
 
         try:
-            grade_key, confidence, score = analyze_marbling(image_path, reference_images)
+            result = analyze_marbling(
+                image_path, k=args.k, calibration_offset=resolved_offset
+            )
+
+            if result['needs_review']:
+                needs_review_count += 1
+            else:
+                grade_counter[result['grade_key']] += 1
 
             if args.dry_run:
-                grade_counter[grade_key] += 1
                 if i < 10:
-                    sample_results.append(
-                        f'  {filename[:40]:40s}  {grade_key:6s}  score={score:6.0f}  conf={confidence:.2f}'
-                    )
+                    if result['needs_review']:
+                        sample_results.append(f'  {filename[:40]:40s}  NEEDS REVIEW (k_valid={result["k_valid"]})')
+                    else:
+                        sample_results.append(
+                            f'  {filename[:40]:40s}  {result["grade_key"]:6s}  '
+                            f'score={result["score"]:6.0f}  conf={result["confidence"]:6s}  '
+                            f'spread={result["spread"]:.0f}'
+                        )
                 continue
 
             image_url = upload_image_cloudinary(image_path, public_id)
-            write_firestore_doc(db, image_name, image_url, grade_key, confidence, score, filename)
-            grade_counter[grade_key] += 1
+            write_firestore_doc(db, image_name, image_url, result, filename, args.k, resolved_offset)
 
         except Exception as e:
             tqdm.write(f'  ERROR: {filename}: {e}')
@@ -304,7 +343,7 @@ def main():
     total_done = len(image_paths) - failed
     print(f'\n{"=" * 52}')
     print(f'{"DRY RUN — " if args.dry_run else ""}DONE — {total_done}/{len(image_paths)} images processed')
-    print(f'Time: {elapsed:.0f}s | Failed: {failed}')
+    print(f'Time: {elapsed:.0f}s | Failed: {failed} | Needs review: {needs_review_count}')
 
     if sample_results:
         print('\nSample grades (first 10):')
@@ -312,16 +351,17 @@ def main():
             print(line)
 
     print(f'\nGrade distribution:')
-    grade_order = ['PR_HI','PR_AVG','PR_LO','CH_HI','CH_AVG','CH_LO','SE_HI','SE_AVG','SE_LO','STD']
+    grade_order = ['PR_HI', 'PR_AVG', 'PR_LO', 'CH_HI', 'CH_AVG', 'CH_LO', 'SE_HI', 'SE_LO', 'STD']
+    graded_total = sum(grade_counter.values())
     for key in grade_order:
         count = grade_counter.get(key, 0)
         if count > 0:
-            pct = count / total_done * 100
+            pct = count / graded_total * 100 if graded_total else 0
             bar = '#' * int(pct / 2)
             print(f'  {key:6s}  {count:4d}  ({pct:4.1f}%)  {bar}')
 
     if not args.dry_run:
-        print(f'\nImages are live in ai_carcasses — available in the "Help Train the Grading Model" section on gradethismeat.xyz')
+        print(f'\nImages are live in ai_carcasses — available in the "Help Train the Grading Model" section on beefgrading.study')
     print('=' * 52)
 
 

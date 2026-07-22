@@ -11,6 +11,7 @@ Auth) is the only backend.
 |---|---|
 | **repo root** | The live website — HTML/CSS/JS served directly by GitHub Pages. **Must stay at root** (see "Why root?" below). |
 | **`grader/`** | The Python AI grading pipeline (Claude Vision + USDA reference calibration) — see [`grader/README.md`](grader/README.md) and [`grader/AUDIT_AND_REDESIGN.md`](grader/AUDIT_AND_REDESIGN.md) for the full methodology/history. |
+| **`powerrankings/`** | Offline tooling for the collegiate meat judging Power Rankings section — judgingcard.com ingest script + methodology notes. See [`powerrankings/README.md`](powerrankings/README.md). |
 | **`deployment/`** | `deploy.bat` (the sanctioned way to ship `dev` → `master`), plus `sync.bat` and a disabled auto-sync script — see comments in each file before using. |
 | **`docs/`** | Setup/reference docs: `NOTES.md` (Firebase setup walkthrough) and three HTML files (`auth.html`, `weekly.html`, `leaderboard.html`) that are dev-reference snippets, **not live pages** — their markup is already merged into `index.html`. |
 | **`.claude/`** | Claude Code tooling config (skills, permissions) — not app code. |
@@ -22,8 +23,8 @@ Auth) is the only backend.
 |---|---|
 | `index.html` | The whole app — grading drill, auth, weekly challenge, and leaderboard are all sections within this one page. |
 | `admin.html` | Admin panel (manage community carcasses, review crowd votes, weekly challenges). |
-| `app.js` / `data.js` / `auth.js` / `weekly.js` / `leaderboard.js` / `admin.js` | Corresponding logic for each area. |
-| `style.css` / `premium.css` / `auth.css` / `weekly.css` / `leaderboard.css` / `fieldguide.css` / `admin.css` | Styling, split by area. |
+| `app.js` / `data.js` / `auth.js` / `weekly.js` / `leaderboard.js` / `powerrank.js` / `admin.js` | Corresponding logic for each area (`powerrank.js` = collegiate meat judging Power Rankings engine + section). |
+| `style.css` / `premium.css` / `auth.css` / `weekly.css` / `leaderboard.css` / `powerrank.css` / `fieldguide.css` / `admin.css` | Styling, split by area. |
 | `beefgrade.svg` | Site logo/shield icon. |
 | `firestore.rules` | Firestore security rules — published manually via Firebase Console (not deployed automatically). |
 | `CNAME` | Custom domain config for GitHub Pages (`beefgrading.study`). |
