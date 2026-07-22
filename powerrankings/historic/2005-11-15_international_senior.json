@@ -1,0 +1,71 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "2005-11-15",
+ "season": 2005,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 15,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 2
+  },
+  {
+   "school": "Iowa State University",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 7
+  },
+  {
+   "school": "Colorado State University",
+   "place": 8
+  },
+  {
+   "school": "Missouri",
+   "place": 9
+  },
+  {
+   "school": "Kansas State University",
+   "place": 10
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 11
+  },
+  {
+   "school": "Kentucky",
+   "place": 12
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Fresno State",
+   "place": 15
+  }
+ ]
+}

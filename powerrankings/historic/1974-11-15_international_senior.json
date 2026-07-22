@@ -1,0 +1,99 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1974-11-15",
+ "season": 1974,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 22,
+ "results": [
+  {
+   "school": "University of Nebraska",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "Purdue University",
+   "place": 9
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Penn State",
+   "place": 12
+  },
+  {
+   "school": "Iowa State University",
+   "place": 13
+  },
+  {
+   "school": "Kentucky",
+   "place": 14
+  },
+  {
+   "school": "VPI & SU",
+   "place": 15
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 16
+  },
+  {
+   "school": "Missouri",
+   "place": 17
+  },
+  {
+   "school": "Minnesota",
+   "place": 18
+  },
+  {
+   "school": "Mississippi State",
+   "place": 18
+  },
+  {
+   "school": "Connecticut",
+   "place": 19
+  },
+  {
+   "school": "University of Florida",
+   "place": 20
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 21
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 22
+  }
+ ]
+}

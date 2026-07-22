@@ -1,0 +1,43 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2014-10-01",
+ "season": 2014,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Fort Scott",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 4
+  },
+  {
+   "school": "Western Texas College",
+   "place": 5
+  },
+  {
+   "school": "Texas A&M Kingsville",
+   "place": 6
+  },
+  {
+   "school": "Cisco",
+   "place": 7
+  },
+  {
+   "school": "Fort Hays State",
+   "place": 8
+  }
+ ]
+}

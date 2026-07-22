@@ -1,0 +1,95 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1964-11-15",
+ "season": 1964,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 4
+  },
+  {
+   "school": "Michigan State University",
+   "place": 5
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "West Virginia",
+   "place": 7
+  },
+  {
+   "school": "Washington",
+   "place": 8
+  },
+  {
+   "school": "Kansas State University",
+   "place": 9
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "Missouri",
+   "place": 11
+  },
+  {
+   "school": "Mississippi State",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 14
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 15
+  },
+  {
+   "school": "Cornell",
+   "place": 16
+  },
+  {
+   "school": "Penn State",
+   "place": 17
+  },
+  {
+   "school": "VPI & SU",
+   "place": 18
+  },
+  {
+   "school": "Connecticut",
+   "place": 19
+  },
+  {
+   "school": "Clemson",
+   "place": 20
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 21
+  }
+ ]
+}

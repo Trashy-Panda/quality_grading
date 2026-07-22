@@ -1,0 +1,47 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1964-10-10",
+ "season": 1964,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Washington",
+   "place": 1
+  },
+  {
+   "school": "Idaho",
+   "place": 2
+  },
+  {
+   "school": "Oregon",
+   "place": 3
+  },
+  {
+   "school": "Brigham Young",
+   "place": 4
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 5
+  },
+  {
+   "school": "Montana",
+   "place": 6
+  },
+  {
+   "school": "Cal. Poly.-San Luis Obispo",
+   "place": 7
+  },
+  {
+   "school": "Chico State",
+   "place": 8
+  },
+  {
+   "school": "Fresno State",
+   "place": 9
+  }
+ ]
+}

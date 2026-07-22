@@ -1,0 +1,83 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1958-10-20",
+ "season": 1958,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 18,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Iowa State University",
+   "place": 5
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 6
+  },
+  {
+   "school": "Kentucky",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "Tennessee",
+   "place": 11
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 12
+  },
+  {
+   "school": "Minnesota",
+   "place": 13
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 15
+  },
+  {
+   "school": "Mississippi",
+   "place": 16
+  },
+  {
+   "school": "Penn State",
+   "place": 17
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 18
+  }
+ ]
+}

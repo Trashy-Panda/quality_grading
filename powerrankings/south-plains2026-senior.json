@@ -1,0 +1,480 @@
+{
+  "name": "South Plains Invitational Meat Judging",
+  "shortName": "South Plains",
+  "date": "2026-02-14",
+  "season": 2026,
+  "division": "senior",
+  "weight": 1,
+  "sourceUrl": "https://www.judgingcard.com/Results/Team.aspx?ID=27673&EID=168865",
+  "teamCount": 12,
+  "results": [
+    {
+      "school": "Texas Tech University",
+      "place": 1,
+      "score": 4302,
+      "categories": {
+        "beefGrading": {
+          "place": 2,
+          "score": 1042
+        },
+        "beefJudging": {
+          "place": 3,
+          "score": 1143
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 578
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 2185
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 1139
+        },
+        "reasons": {
+          "place": 1,
+          "score": 909
+        },
+        "specifications": {
+          "place": 1,
+          "score": 400
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 1951
+        }
+      }
+    },
+    {
+      "school": "West Texas A&M University",
+      "place": 2,
+      "score": 4277,
+      "categories": {
+        "beefGrading": {
+          "place": 1,
+          "score": 1059
+        },
+        "beefJudging": {
+          "place": 4,
+          "score": 1137
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 556
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 2196
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 1128
+        },
+        "reasons": {
+          "place": 4,
+          "score": 882
+        },
+        "specifications": {
+          "place": 3,
+          "score": 397
+        },
+        "totalPlacings": {
+          "place": 8,
+          "score": 1939
+        }
+      }
+    },
+    {
+      "school": "Oklahoma State University",
+      "place": 3,
+      "score": 4276,
+      "categories": {
+        "beefGrading": {
+          "place": 3,
+          "score": 1039
+        },
+        "beefJudging": {
+          "place": 1,
+          "score": 1149
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 558
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 2188
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 1133
+        },
+        "reasons": {
+          "place": 3,
+          "score": 882
+        },
+        "specifications": {
+          "place": 4,
+          "score": 397
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 1958
+        }
+      }
+    },
+    {
+      "school": "Kansas State University",
+      "place": 4,
+      "score": 4268,
+      "categories": {
+        "beefGrading": {
+          "place": 5,
+          "score": 1014
+        },
+        "beefJudging": {
+          "place": 2,
+          "score": 1149
+        },
+        "lambJudging": {
+          "place": 3,
+          "score": 562
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 2163
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 1152
+        },
+        "reasons": {
+          "place": 2,
+          "score": 897
+        },
+        "specifications": {
+          "place": 5,
+          "score": 391
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 1966
+        }
+      }
+    },
+    {
+      "school": "Texas A&M University",
+      "place": 5,
+      "score": 4199,
+      "categories": {
+        "beefGrading": {
+          "place": 6,
+          "score": 985
+        },
+        "beefJudging": {
+          "place": 5,
+          "score": 1132
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 568
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 2117
+        },
+        "porkJudging": {
+          "place": 5,
+          "score": 1114
+        },
+        "reasons": {
+          "place": 5,
+          "score": 864
+        },
+        "specifications": {
+          "place": 2,
+          "score": 400
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 1950
+        }
+      }
+    },
+    {
+      "school": "Tarleton State University",
+      "place": 6,
+      "score": 4195,
+      "categories": {
+        "beefGrading": {
+          "place": 4,
+          "score": 1016
+        },
+        "beefJudging": {
+          "place": 6,
+          "score": 1129
+        },
+        "lambJudging": {
+          "place": 5,
+          "score": 558
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 2145
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 1113
+        },
+        "reasons": {
+          "place": 6,
+          "score": 846
+        },
+        "specifications": {
+          "place": 7,
+          "score": 379
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 1954
+        }
+      }
+    },
+    {
+      "school": "University of Wyoming",
+      "place": 7,
+      "score": 4107,
+      "categories": {
+        "beefGrading": {
+          "place": 8,
+          "score": 941
+        },
+        "beefJudging": {
+          "place": 7,
+          "score": 1116
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 553
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 2057
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 1109
+        },
+        "reasons": {
+          "place": 7,
+          "score": 830
+        },
+        "specifications": {
+          "place": 6,
+          "score": 388
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 1948
+        }
+      }
+    },
+    {
+      "school": "University of Illinois",
+      "place": 8,
+      "score": 4054,
+      "categories": {
+        "beefGrading": {
+          "place": 7,
+          "score": 949
+        },
+        "beefJudging": {
+          "place": 8,
+          "score": 1109
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 549
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 2058
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 1082
+        },
+        "reasons": {
+          "place": 8,
+          "score": 797
+        },
+        "specifications": {
+          "place": 8,
+          "score": 365
+        },
+        "totalPlacings": {
+          "place": 7,
+          "score": 1943
+        }
+      }
+    },
+    {
+      "school": "Iowa State University",
+      "place": 9,
+      "score": 3913,
+      "categories": {
+        "beefGrading": {
+          "place": 10,
+          "score": 909
+        },
+        "beefJudging": {
+          "place": 10,
+          "score": 1066
+        },
+        "lambJudging": {
+          "place": 9,
+          "score": 547
+        },
+        "overallBeef": {
+          "place": 10,
+          "score": 1975
+        },
+        "porkJudging": {
+          "place": 8,
+          "score": 1094
+        },
+        "reasons": {
+          "place": 9,
+          "score": 768
+        },
+        "specifications": {
+          "place": 10,
+          "score": 297
+        },
+        "totalPlacings": {
+          "place": 9,
+          "score": 1939
+        }
+      }
+    },
+    {
+      "school": "University of Nebraska",
+      "place": 10,
+      "score": 3911,
+      "categories": {
+        "beefGrading": {
+          "place": 9,
+          "score": 911
+        },
+        "beefJudging": {
+          "place": 9,
+          "score": 1075
+        },
+        "lambJudging": {
+          "place": 10,
+          "score": 538
+        },
+        "overallBeef": {
+          "place": 9,
+          "score": 1986
+        },
+        "porkJudging": {
+          "place": 10,
+          "score": 1066
+        },
+        "reasons": {
+          "place": 10,
+          "score": 746
+        },
+        "specifications": {
+          "place": 9,
+          "score": 321
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 1933
+        }
+      }
+    },
+    {
+      "school": "Michigan State University",
+      "place": 11,
+      "score": 3716,
+      "categories": {
+        "beefGrading": {
+          "place": 11,
+          "score": 839
+        },
+        "beefJudging": {
+          "place": 11,
+          "score": 1036
+        },
+        "lambJudging": {
+          "place": 11,
+          "score": 529
+        },
+        "overallBeef": {
+          "place": 11,
+          "score": 1875
+        },
+        "porkJudging": {
+          "place": 11,
+          "score": 1035
+        },
+        "reasons": {
+          "place": 11,
+          "score": 695
+        },
+        "specifications": {
+          "place": 12,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 12,
+          "score": 1905
+        }
+      }
+    },
+    {
+      "school": "Purdue University",
+      "place": 12,
+      "score": 3590,
+      "categories": {
+        "beefGrading": {
+          "place": 12,
+          "score": 775
+        },
+        "beefJudging": {
+          "place": 12,
+          "score": 1008
+        },
+        "lambJudging": {
+          "place": 12,
+          "score": 528
+        },
+        "overallBeef": {
+          "place": 12,
+          "score": 1783
+        },
+        "porkJudging": {
+          "place": 12,
+          "score": 996
+        },
+        "reasons": {
+          "place": 12,
+          "score": 593
+        },
+        "specifications": {
+          "place": 11,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 10,
+          "score": 1939
+        }
+      }
+    }
+  ]
+}

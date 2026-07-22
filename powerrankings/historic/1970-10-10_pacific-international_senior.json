@@ -1,0 +1,23 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1970-10-10",
+ "season": 1970,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 3,
+ "results": [
+  {
+   "school": "University of Wyoming",
+   "place": 1
+  },
+  {
+   "school": "Washington",
+   "place": 2
+  },
+  {
+   "school": "Brigham Young",
+   "place": 3
+  }
+ ]
+}

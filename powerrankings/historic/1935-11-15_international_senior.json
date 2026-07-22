@@ -1,0 +1,55 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1935-11-15",
+ "season": 1935,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "University of Nebraska",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Iowa State University",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "Missouri",
+   "place": 5
+  },
+  {
+   "school": "Ontario",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 8
+  },
+  {
+   "school": "Massachussets",
+   "place": 9
+  },
+  {
+   "school": "Minnesota",
+   "place": 10
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 11
+  }
+ ]
+}

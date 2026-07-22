@@ -1,0 +1,99 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1983-11-15",
+ "season": 1983,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 22,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Iowa State University",
+   "place": 2
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "University of Illinois",
+   "place": 8
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 9
+  },
+  {
+   "school": "Tennessee",
+   "place": 11
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "Michigan State University",
+   "place": 13
+  },
+  {
+   "school": "Purdue University",
+   "place": 13
+  },
+  {
+   "school": "Penn State",
+   "place": 14
+  },
+  {
+   "school": "VPI & SU",
+   "place": 15
+  },
+  {
+   "school": "Kentucky",
+   "place": 16
+  },
+  {
+   "school": "Kansas State University",
+   "place": 17
+  },
+  {
+   "school": "Missouri",
+   "place": 18
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 19
+  },
+  {
+   "school": "Minnesota",
+   "place": 20
+  },
+  {
+   "school": "Connecticut",
+   "place": 21
+  },
+  {
+   "school": "University of Florida",
+   "place": 22
+  }
+ ]
+}

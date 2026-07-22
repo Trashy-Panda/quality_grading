@@ -1,0 +1,39 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2009-02-01",
+ "season": 2009,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "College of the Sequoias",
+   "place": 1
+  },
+  {
+   "school": "Casper",
+   "place": 2
+  },
+  {
+   "school": "Coffeyville",
+   "place": 3
+  },
+  {
+   "school": "Charles Sturt",
+   "place": 4
+  },
+  {
+   "school": "Allen County",
+   "place": 5
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 6
+  },
+  {
+   "school": "Laramie County",
+   "place": 7
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1940-02-01",
+ "season": 1940,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Louisiana",
+   "place": 3
+  },
+  {
+   "school": "Panhandle",
+   "place": 4
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 5
+  }
+ ]
+}

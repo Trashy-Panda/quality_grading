@@ -1,0 +1,51 @@
+{
+ "name": "South Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "South Plains",
+ "date": "2024-02-14",
+ "season": 2024,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 8
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 9
+  },
+  {
+   "school": "Michigan State University",
+   "place": 10
+  }
+ ]
+}

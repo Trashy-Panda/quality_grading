@@ -1,0 +1,55 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1997-02-01",
+ "season": 1997,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Tarleton State University",
+   "place": 1
+  },
+  {
+   "school": "Western Texas College",
+   "place": 2
+  },
+  {
+   "school": "Coffeyville",
+   "place": 3
+  },
+  {
+   "school": "Clarendon College",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "Fort Scott",
+   "place": 6
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 7
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 8
+  },
+  {
+   "school": "Barton County",
+   "place": 9
+  },
+  {
+   "school": "Illinois Central",
+   "place": 10
+  },
+  {
+   "school": "Weatherford",
+   "place": 11
+  }
+ ]
+}

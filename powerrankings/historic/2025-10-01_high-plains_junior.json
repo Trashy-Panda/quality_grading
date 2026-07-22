@@ -1,0 +1,47 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2025-10-01",
+ "season": 2025,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 2
+  },
+  {
+   "school": "University of Arizona",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "University of Georgia",
+   "place": 5
+  },
+  {
+   "school": "New Mexico State University",
+   "place": 6
+  },
+  {
+   "school": "Western Texas College",
+   "place": 7
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 8
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 9
+  }
+ ]
+}

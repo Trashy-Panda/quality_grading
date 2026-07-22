@@ -1,0 +1,83 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1988-11-15",
+ "season": 1988,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 18,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "University of Illinois",
+   "place": 4
+  },
+  {
+   "school": "University of Georgia",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 8
+  },
+  {
+   "school": "Auburn",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Kentucky",
+   "place": 12
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 13
+  },
+  {
+   "school": "Tennessee",
+   "place": 14
+  },
+  {
+   "school": "Penn State",
+   "place": 15
+  },
+  {
+   "school": "Missouri",
+   "place": 16
+  },
+  {
+   "school": "Michigan State University",
+   "place": 17
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 18
+  }
+ ]
+}

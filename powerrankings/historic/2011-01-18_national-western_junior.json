@@ -1,0 +1,47 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2011-01-18",
+ "season": 2011,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 2
+  },
+  {
+   "school": "Coffeyville",
+   "place": 3
+  },
+  {
+   "school": "Allen County",
+   "place": 4
+  },
+  {
+   "school": "Australian National",
+   "place": 5
+  },
+  {
+   "school": "Fort Scott",
+   "place": 6
+  },
+  {
+   "school": "Laramie County",
+   "place": 7
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 8
+  },
+  {
+   "school": "Western Texas College",
+   "place": 9
+  }
+ ]
+}

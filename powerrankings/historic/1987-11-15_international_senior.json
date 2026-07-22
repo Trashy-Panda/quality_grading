@@ -1,0 +1,91 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1987-11-15",
+ "season": 1987,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 20,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Iowa State University",
+   "place": 2
+  },
+  {
+   "school": "University of Georgia",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "Michigan State University",
+   "place": 7
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 8
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 9
+  },
+  {
+   "school": "Tennessee",
+   "place": 10
+  },
+  {
+   "school": "Penn State",
+   "place": 11
+  },
+  {
+   "school": "University of Illinois",
+   "place": 12
+  },
+  {
+   "school": "Auburn",
+   "place": 13
+  },
+  {
+   "school": "University of Florida",
+   "place": 14
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 15
+  },
+  {
+   "school": "VPI & SU",
+   "place": 16
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 17
+  },
+  {
+   "school": "Mississippi State",
+   "place": 18
+  },
+  {
+   "school": "Kentucky",
+   "place": 19
+  },
+  {
+   "school": "Connecticut",
+   "place": 20
+  }
+ ]
+}

@@ -1,0 +1,99 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1976-11-15",
+ "season": 1976,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 22,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "University of Illinois",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Purdue University",
+   "place": 4
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "Michigan State University",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 8
+  },
+  {
+   "school": "Missouri",
+   "place": 9
+  },
+  {
+   "school": "Penn State",
+   "place": 10
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 10
+  },
+  {
+   "school": "Iowa State University",
+   "place": 11
+  },
+  {
+   "school": "VPI & SU",
+   "place": 12
+  },
+  {
+   "school": "Colorado State University",
+   "place": 13
+  },
+  {
+   "school": "Minnesota",
+   "place": 13
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 14
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 15
+  },
+  {
+   "school": "Kentucky",
+   "place": 17
+  },
+  {
+   "school": "University of Florida",
+   "place": 18
+  },
+  {
+   "school": "Mississippi State",
+   "place": 19
+  },
+  {
+   "school": "Connecticut",
+   "place": 20
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 21
+  }
+ ]
+}

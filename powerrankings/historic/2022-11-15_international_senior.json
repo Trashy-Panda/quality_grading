@@ -1,0 +1,79 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "2022-11-15",
+ "season": 2022,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 17,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 5
+  },
+  {
+   "school": "University of Illinois",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "Iowa State University",
+   "place": 8
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 9
+  },
+  {
+   "school": "Missouri",
+   "place": 10
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 11
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 12
+  },
+  {
+   "school": "North Carolina",
+   "place": 13
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Purdue University",
+   "place": 15
+  },
+  {
+   "school": "University of Florida",
+   "place": 16
+  }
+ ]
+}

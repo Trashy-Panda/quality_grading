@@ -1,0 +1,103 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1955-11-15",
+ "season": 1955,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 23,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Tennessee",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "Kansas State University",
+   "place": 7
+  },
+  {
+   "school": "Massachussets",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  },
+  {
+   "school": "Penn State",
+   "place": 10
+  },
+  {
+   "school": "Minnesota",
+   "place": 11
+  },
+  {
+   "school": "Missouri",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 14
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 15
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 16
+  },
+  {
+   "school": "Kentucky",
+   "place": 17
+  },
+  {
+   "school": "Connecticut",
+   "place": 18
+  },
+  {
+   "school": "Michigan State University",
+   "place": 19
+  },
+  {
+   "school": "North Carolina",
+   "place": 20
+  },
+  {
+   "school": "Cornell",
+   "place": 21
+  },
+  {
+   "school": "Ontario",
+   "place": 22
+  },
+  {
+   "school": "University of Florida",
+   "place": 23
+  }
+ ]
+}

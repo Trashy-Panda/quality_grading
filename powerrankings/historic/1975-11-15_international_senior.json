@@ -1,0 +1,95 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1975-11-15",
+ "season": 1975,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 2
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Purdue University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Minnesota",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "Iowa State University",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "Penn State",
+   "place": 9
+  },
+  {
+   "school": "Tennessee",
+   "place": 10
+  },
+  {
+   "school": "VPI & SU",
+   "place": 11
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 15
+  },
+  {
+   "school": "Missouri",
+   "place": 16
+  },
+  {
+   "school": "Mississippi State",
+   "place": 17
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 17
+  },
+  {
+   "school": "Kentucky",
+   "place": 19
+  },
+  {
+   "school": "Connecticut",
+   "place": 20
+  },
+  {
+   "school": "University of Florida",
+   "place": 21
+  }
+ ]
+}

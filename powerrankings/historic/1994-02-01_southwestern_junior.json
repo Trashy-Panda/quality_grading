@@ -1,0 +1,67 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1994-02-01",
+ "season": 1994,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 14,
+ "results": [
+  {
+   "school": "Tarleton State University",
+   "place": 1
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 2
+  },
+  {
+   "school": "Coffeyville",
+   "place": 3
+  },
+  {
+   "school": "Illinois Central",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "Cloud County",
+   "place": 6
+  },
+  {
+   "school": "Clarendon College",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 8
+  },
+  {
+   "school": "Casper",
+   "place": 9
+  },
+  {
+   "school": "Barton County",
+   "place": 10
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 11
+  },
+  {
+   "school": "Kanakee",
+   "place": 12
+  },
+  {
+   "school": "Panhandle State",
+   "place": 13
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 14
+  }
+ ]
+}

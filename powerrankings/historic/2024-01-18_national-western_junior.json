@@ -1,0 +1,55 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2024-01-18",
+ "season": 2024,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Australian National",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "University of Georgia",
+   "place": 3
+  },
+  {
+   "school": "Fort Scott",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "New Mexico State University",
+   "place": 6
+  },
+  {
+   "school": "Western Texas College",
+   "place": 7
+  },
+  {
+   "school": "Texas State",
+   "place": 8
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 9
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 10
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 11
+  }
+ ]
+}

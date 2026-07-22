@@ -1,0 +1,63 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "2012-04-15",
+ "season": 2012,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Colorado State University",
+   "place": 3
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Missouri",
+   "place": 6
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "Angelo State",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "University of Illinois",
+   "place": 11
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 13
+  }
+ ]
+}

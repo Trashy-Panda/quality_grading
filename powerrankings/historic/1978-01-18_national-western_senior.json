@@ -1,0 +1,63 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1978-01-18",
+ "season": 1978,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Colorado State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 3
+  },
+  {
+   "school": "New Mexico",
+   "place": 4
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 7
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 8
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 9
+  },
+  {
+   "school": "Missouri",
+   "place": 10
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 12
+  },
+  {
+   "school": "Montana",
+   "place": 13
+  }
+ ]
+}

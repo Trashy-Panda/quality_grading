@@ -1,0 +1,47 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1930-11-15",
+ "season": 1930,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Missouri",
+   "place": 1
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 2
+  },
+  {
+   "school": "West Virginia",
+   "place": 3
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 4
+  },
+  {
+   "school": "Ontario",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Iowa State University",
+   "place": 8
+  },
+  {
+   "school": "Penn State",
+   "place": 9
+  }
+ ]
+}

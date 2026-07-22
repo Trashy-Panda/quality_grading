@@ -1,0 +1,19 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2020-10-01",
+ "season": 2020,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 2,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Fort Scott",
+   "place": 2
+  }
+ ]
+}

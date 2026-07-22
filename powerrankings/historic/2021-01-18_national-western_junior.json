@@ -1,0 +1,27 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2021-01-18",
+ "season": 2021,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 4,
+ "results": [
+  {
+   "school": "Fort Scott",
+   "place": 1
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  }
+ ]
+}

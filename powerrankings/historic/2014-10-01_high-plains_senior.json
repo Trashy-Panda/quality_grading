@@ -1,0 +1,71 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2014-10-01",
+ "season": 2014,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 15,
+ "results": [
+  {
+   "school": "Angelo State",
+   "place": 1
+  },
+  {
+   "school": "Colorado State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 5
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 6
+  },
+  {
+   "school": "Kansas State University",
+   "place": 7
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  },
+  {
+   "school": "Missouri",
+   "place": 10
+  },
+  {
+   "school": "Michigan State University",
+   "place": 11
+  },
+  {
+   "school": "Iowa State University",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 14
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 15
+  }
+ ]
+}

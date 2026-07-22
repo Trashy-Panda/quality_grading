@@ -1,0 +1,83 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1948-11-15",
+ "season": 1948,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 18,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 2
+  },
+  {
+   "school": "Ontario",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Michigan State University",
+   "place": 6
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 7
+  },
+  {
+   "school": "University of Illinois",
+   "place": 8
+  },
+  {
+   "school": "Iowa State University",
+   "place": 9
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "Massachussets",
+   "place": 11
+  },
+  {
+   "school": "Minnesota",
+   "place": 12
+  },
+  {
+   "school": "Missouri",
+   "place": 13
+  },
+  {
+   "school": "West Virginia",
+   "place": 14
+  },
+  {
+   "school": "Penn State",
+   "place": 15
+  },
+  {
+   "school": "Tennessee",
+   "place": 16
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 17
+  },
+  {
+   "school": "North Carolina",
+   "place": 18
+  }
+ ]
+}

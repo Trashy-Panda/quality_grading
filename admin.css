@@ -1311,3 +1311,485 @@ textarea {
   margin-left: 6px;
   vertical-align: middle;
 }
+
+/* ============================================================
+   POWER RANKINGS TAB — meat_contests admin
+   ============================================================ */
+
+/* number/date inputs share the base text-input treatment */
+input[type="number"],
+input[type="date"] {
+  font-family: var(--font-data);
+  font-size: 13px;
+  color: var(--ink);
+  border: 1px solid var(--rule-heavy);
+  background: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+input[type="number"]:focus,
+input[type="date"]:focus {
+  border-color: var(--ink);
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* ── Import ── */
+
+.pr-import-form {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#pr-import-json {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: var(--font-data);
+  font-size: 12px;
+}
+
+.pr-import-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pr-status {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-secondary);
+}
+
+.pr-status-ok {
+  color: var(--green);
+}
+
+.pr-status-error {
+  color: var(--alert);
+}
+
+.pr-import-preview {
+  border: 1px solid var(--rule-heavy);
+  border-radius: 6px;
+  background: var(--paper-alt);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pr-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px 16px;
+}
+
+.pr-preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pr-preview-label {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.pr-preview-value {
+  font-family: var(--font-data);
+  font-size: 13px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.pr-preview-top3 {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  font-family: var(--font-data);
+  font-size: 13px;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pr-overwrite-note {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-deep);
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+/* ── Warning / error lists ── */
+
+.pr-warning-list {
+  border: 1px solid var(--rule-heavy);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent-light);
+  padding: 8px 12px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.pr-warning-list .pr-warning-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 4px;
+}
+
+.pr-warning-list ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* nested list inside the import preview / form warnings container */
+.pr-warning-inner,
+.pr-error-list {
+  border: none;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+}
+
+.pr-error-list .pr-warning-title,
+.pr-error-list li {
+  color: var(--alert);
+}
+
+/* ── Manual entry form ── */
+
+.pr-form {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pr-editing-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--accent-deep);
+}
+
+.pr-editing-banner code {
+  font-family: var(--font-data);
+  font-size: 12px;
+}
+
+.pr-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.pr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pr-field input,
+.pr-field select {
+  width: 100%;
+  min-width: 0;
+}
+
+.pr-field-label {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.pr-field-wide {
+  grid-column: 1 / -1;
+}
+
+.pr-slug-line {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.pr-slug-line code {
+  font-family: var(--font-data);
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.pr-teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 6px;
+}
+
+.pr-teams-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.pr-team-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pr-team-row {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper-alt);
+}
+
+.pr-team-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  flex-wrap: wrap;
+}
+
+.pr-row-school {
+  flex: 2 1 220px;
+  min-width: 0;
+}
+
+.pr-row-place {
+  width: 76px;
+  flex-shrink: 0;
+}
+
+.pr-row-score {
+  width: 96px;
+  flex-shrink: 0;
+}
+
+.pr-row-remove {
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.pr-cat-panel {
+  border-top: 1px solid var(--rule);
+  padding: 10px 8px;
+  background: var(--paper);
+  border-radius: 0 0 6px 6px;
+}
+
+.pr-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 8px 16px;
+}
+
+.pr-cat-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pr-cat-label {
+  flex: 1;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pr-cat-place {
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.pr-cat-score {
+  width: 76px;
+  flex-shrink: 0;
+}
+
+.pr-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ── Manage table ── */
+
+.pr-manage-wrap {
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+
+.pr-td-actions {
+  white-space: nowrap;
+}
+
+.pr-td-actions button + button {
+  margin-left: 4px;
+}
+
+/* ── Alt-squad-only badge + review block (import preview & manual rows) ── */
+
+.pr-alt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  background: var(--paper);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.pr-alt-badge-row {
+  flex: 0 0 auto;
+}
+
+.pr-altonly-desc {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  margin: 4px 0 8px;
+  line-height: 1.5;
+}
+
+.pr-altonly-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pr-altonly-row {
+  border: 1px solid var(--rule-heavy);
+  border-radius: 6px;
+  background: var(--paper);
+  padding: 8px 10px;
+}
+
+.pr-altonly-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.pr-altonly-school {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pr-altonly-fields {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pr-altonly-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-ui);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.pr-altonly-field input {
+  width: 90px;
+}
+
+.pr-altonly-exclude {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink-secondary);
+  margin-left: auto;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .pr-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pr-row-school {
+    flex-basis: 100%;
+  }
+
+  .pr-cat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pr-altonly-exclude {
+    margin-left: 0;
+  }
+}

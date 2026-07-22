@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2008-02-01",
+ "season": 2008,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "South Dakota State University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Colorado State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 7
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 8
+  }
+ ]
+}

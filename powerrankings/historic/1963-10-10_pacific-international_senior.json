@@ -1,0 +1,27 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1963-10-10",
+ "season": 1963,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 4,
+ "results": [
+  {
+   "school": "Idaho",
+   "place": 1
+  },
+  {
+   "school": "Washington",
+   "place": 2
+  },
+  {
+   "school": "Fresno State",
+   "place": 3
+  },
+  {
+   "school": "Cal. Poly.-San Luis Obispo",
+   "place": 4
+  }
+ ]
+}

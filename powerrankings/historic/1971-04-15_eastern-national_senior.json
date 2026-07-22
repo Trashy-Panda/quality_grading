@@ -1,0 +1,43 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1971-04-15",
+ "season": 1971,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "VPI & SU",
+   "place": 2
+  },
+  {
+   "school": "Michigan State University",
+   "place": 3
+  },
+  {
+   "school": "Purdue University",
+   "place": 4
+  },
+  {
+   "school": "Tennessee",
+   "place": 5
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 8
+  },
+  {
+   "school": "Connecticut",
+   "place": 10
+  }
+ ]
+}

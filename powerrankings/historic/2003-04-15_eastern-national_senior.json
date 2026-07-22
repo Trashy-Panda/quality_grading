@@ -1,0 +1,39 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "2003-04-15",
+ "season": 2003,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "Colorado State University",
+   "place": 4
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 5
+  },
+  {
+   "school": "University of Georgia",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  }
+ ]
+}

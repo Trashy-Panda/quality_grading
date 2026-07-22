@@ -1,0 +1,103 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1977-11-15",
+ "season": 1977,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 23,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Purdue University",
+   "place": 3
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Connecticut",
+   "place": 8
+  },
+  {
+   "school": "Colorado State University",
+   "place": 9
+  },
+  {
+   "school": "VPI & SU",
+   "place": 10
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 11
+  },
+  {
+   "school": "Tennessee",
+   "place": 12
+  },
+  {
+   "school": "Michigan State University",
+   "place": 13
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 14
+  },
+  {
+   "school": "Auburn",
+   "place": 15
+  },
+  {
+   "school": "Iowa State University",
+   "place": 15
+  },
+  {
+   "school": "Minnesota",
+   "place": 16
+  },
+  {
+   "school": "Missouri",
+   "place": 17
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 18
+  },
+  {
+   "school": "University of Florida",
+   "place": 19
+  },
+  {
+   "school": "Penn State",
+   "place": 20
+  },
+  {
+   "school": "Wisconsin- River Falls",
+   "place": 21
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 22
+  }
+ ]
+}

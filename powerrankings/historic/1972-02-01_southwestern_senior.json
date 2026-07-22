@@ -1,0 +1,51 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1972-02-01",
+ "season": 1972,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 3
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 4
+  },
+  {
+   "school": "New Mexico",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "University of Florida",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "Kentucky",
+   "place": 9
+  },
+  {
+   "school": "Mississippi State",
+   "place": 10
+  }
+ ]
+}

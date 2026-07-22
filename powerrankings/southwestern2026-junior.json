@@ -1,0 +1,285 @@
+{
+  "name": "Southwestern Invitational Meat Judging",
+  "shortName": "Southwestern",
+  "date": "2026-02-01",
+  "season": 2026,
+  "division": "junior",
+  "weight": 1,
+  "sourceUrl": "https://www.judgingcard.com/Results/Team.aspx?ID=27672&EID=167755",
+  "teamCount": 7,
+  "results": [
+    {
+      "school": "Eastern Oklahoma State College",
+      "place": 1,
+      "score": 3717,
+      "categories": {
+        "beefGrading": {
+          "place": 1,
+          "score": 1016
+        },
+        "beefJudging": {
+          "place": 4,
+          "score": 1076
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 550
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 2092
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 1075
+        },
+        "reasons": {
+          "place": 4,
+          "score": 760
+        },
+        "specifications": {
+          "place": 1,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 1941
+        }
+      }
+    },
+    {
+      "school": "Garden City Community College",
+      "place": 2,
+      "score": 3694,
+      "categories": {
+        "beefGrading": {
+          "place": 2,
+          "score": 985
+        },
+        "beefJudging": {
+          "place": 3,
+          "score": 1084
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 563
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 2069
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 1062
+        },
+        "reasons": {
+          "place": 1,
+          "score": 780
+        },
+        "specifications": {
+          "place": 2,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 1929
+        }
+      }
+    },
+    {
+      "school": "Clarendon College",
+      "place": 3,
+      "score": 3640,
+      "categories": {
+        "beefGrading": {
+          "place": 5,
+          "score": 927
+        },
+        "beefJudging": {
+          "place": 1,
+          "score": 1118
+        },
+        "lambJudging": {
+          "place": 5,
+          "score": 546
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 2045
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 1049
+        },
+        "reasons": {
+          "place": 2,
+          "score": 780
+        },
+        "specifications": {
+          "place": 5,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 1933
+        }
+      }
+    },
+    {
+      "school": "New Mexico State University",
+      "place": 4,
+      "score": 3631,
+      "categories": {
+        "beefGrading": {
+          "place": 4,
+          "score": 958
+        },
+        "beefJudging": {
+          "place": 6,
+          "score": 1054
+        },
+        "lambJudging": {
+          "place": 3,
+          "score": 549
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 2012
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 1070
+        },
+        "reasons": {
+          "place": 5,
+          "score": 730
+        },
+        "specifications": {
+          "place": 4,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 1943
+        }
+      }
+    },
+    {
+      "school": "Connors State College",
+      "place": 5,
+      "score": 3588,
+      "categories": {
+        "beefGrading": {
+          "place": 7,
+          "score": 851
+        },
+        "beefJudging": {
+          "place": 2,
+          "score": 1092
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 543
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 1943
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 1102
+        },
+        "reasons": {
+          "place": 3,
+          "score": 780
+        },
+        "specifications": {
+          "place": 7,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 1957
+        }
+      }
+    },
+    {
+      "school": "University of Arizona",
+      "place": 6,
+      "score": 3533,
+      "categories": {
+        "beefGrading": {
+          "place": 6,
+          "score": 871
+        },
+        "beefJudging": {
+          "place": 5,
+          "score": 1061
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 547
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 1932
+        },
+        "porkJudging": {
+          "place": 5,
+          "score": 1054
+        },
+        "reasons": {
+          "place": 6,
+          "score": 725
+        },
+        "specifications": {
+          "place": 6,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 1937
+        }
+      }
+    },
+    {
+      "school": "Western Texas College",
+      "place": 7,
+      "score": 3493,
+      "categories": {
+        "beefGrading": {
+          "place": 3,
+          "score": 984
+        },
+        "beefJudging": {
+          "place": 7,
+          "score": 977
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 499
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 1961
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 1033
+        },
+        "reasons": {
+          "place": 7,
+          "score": 630
+        },
+        "specifications": {
+          "place": 3,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 7,
+          "score": 1879
+        }
+      }
+    }
+  ]
+}

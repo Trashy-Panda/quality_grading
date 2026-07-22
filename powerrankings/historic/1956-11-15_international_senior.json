@@ -1,0 +1,107 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1956-11-15",
+ "season": 1956,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 24,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Cornell",
+   "place": 6
+  },
+  {
+   "school": "Minnesota",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "University of Florida",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "Kansas State University",
+   "place": 11
+  },
+  {
+   "school": "Kentucky",
+   "place": 12
+  },
+  {
+   "school": "North Carolina",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 15
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 16
+  },
+  {
+   "school": "Missouri",
+   "place": 17
+  },
+  {
+   "school": "Tennessee",
+   "place": 18
+  },
+  {
+   "school": "VPI & SU",
+   "place": 19
+  },
+  {
+   "school": "Ontario",
+   "place": 20
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 21
+  },
+  {
+   "school": "Connecticut",
+   "place": 22
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 23
+  },
+  {
+   "school": "Massachussets",
+   "place": 24
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1956-02-01",
+ "season": 1956,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin",
+   "place": 2
+  },
+  {
+   "school": "Kentucky",
+   "place": 3
+  },
+  {
+   "school": "Tennessee",
+   "place": 4
+  },
+  {
+   "school": "Iowa State University",
+   "place": 5
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "Abilene Chr",
+   "place": 9
+  }
+ ]
+}

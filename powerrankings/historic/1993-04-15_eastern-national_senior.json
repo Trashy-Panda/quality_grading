@@ -1,0 +1,39 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1993-04-15",
+ "season": 1993,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "University of Georgia",
+   "place": 4
+  },
+  {
+   "school": "University of Florida",
+   "place": 5
+  },
+  {
+   "school": "Penn State",
+   "place": 6
+  },
+  {
+   "school": "VPI & SU",
+   "place": 7
+  }
+ ]
+}

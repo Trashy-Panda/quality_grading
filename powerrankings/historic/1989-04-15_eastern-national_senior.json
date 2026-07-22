@@ -1,0 +1,59 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1989-04-15",
+ "season": 1989,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "University of Illinois",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "University of Georgia",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "Michigan State University",
+   "place": 7
+  },
+  {
+   "school": "Auburn",
+   "place": 8
+  },
+  {
+   "school": "Tennessee",
+   "place": 9
+  },
+  {
+   "school": "VPI & SU",
+   "place": 10
+  },
+  {
+   "school": "Penn State",
+   "place": 11
+  },
+  {
+   "school": "Mississippi State",
+   "place": 12
+  }
+ ]
+}

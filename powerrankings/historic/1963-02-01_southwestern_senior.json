@@ -1,0 +1,51 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1963-02-01",
+ "season": 1963,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "Wisconsin",
+   "place": 3
+  },
+  {
+   "school": "Tennessee",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 6
+  },
+  {
+   "school": "Iowa State University",
+   "place": 7
+  },
+  {
+   "school": "University of Arizona",
+   "place": 8
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 9
+  },
+  {
+   "school": "New Mexico",
+   "place": 10
+  }
+ ]
+}

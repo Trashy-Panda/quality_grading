@@ -1,0 +1,63 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2019-01-18",
+ "season": 2019,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "University of Illinois",
+   "place": 5
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "University of Florida",
+   "place": 8
+  },
+  {
+   "school": "Angelo State",
+   "place": 9
+  },
+  {
+   "school": "Iowa State University",
+   "place": 10
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 11
+  },
+  {
+   "school": "Missouri",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  }
+ ]
+}

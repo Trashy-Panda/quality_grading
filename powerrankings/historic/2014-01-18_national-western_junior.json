@@ -1,0 +1,51 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2014-01-18",
+ "season": 2014,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Fort Scott",
+   "place": 2
+  },
+  {
+   "school": "Australian National",
+   "place": 3
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "Cisco",
+   "place": 6
+  },
+  {
+   "school": "Allen County",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 8
+  },
+  {
+   "school": "Fort Hays State",
+   "place": 9
+  },
+  {
+   "school": "Zamorano",
+   "place": 10
+  }
+ ]
+}

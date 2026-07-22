@@ -1,0 +1,59 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1992-01-18",
+ "season": 1992,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "College of the Sequoias",
+   "place": 1
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 2
+  },
+  {
+   "school": "Coffeyville",
+   "place": 3
+  },
+  {
+   "school": "Western Texas College",
+   "place": 4
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 5
+  },
+  {
+   "school": "Cloud County",
+   "place": 6
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 7
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 8
+  },
+  {
+   "school": "Illinois Central",
+   "place": 9
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 10
+  },
+  {
+   "school": "Kanakee",
+   "place": 11
+  },
+  {
+   "school": "Paris Junior College",
+   "place": 12
+  }
+ ]
+}

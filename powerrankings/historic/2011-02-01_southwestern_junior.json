@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2011-02-01",
+ "season": 2011,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Casper",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 3
+  },
+  {
+   "school": "Charles Sturt",
+   "place": 4
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 5
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 6
+  },
+  {
+   "school": "Allen County",
+   "place": 7
+  },
+  {
+   "school": "Laramie County",
+   "place": 8
+  }
+ ]
+}

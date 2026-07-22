@@ -1,0 +1,51 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2007-01-18",
+ "season": 2007,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Colorado State University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 7
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "Angelo State",
+   "place": 9
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 10
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1932-11-15",
+ "season": 1932,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "The Ohio State University",
+   "place": 1
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 2
+  },
+  {
+   "school": "Iowa State University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "West Virginia",
+   "place": 6
+  },
+  {
+   "school": "Ontario",
+   "place": 7
+  },
+  {
+   "school": "Massachussets",
+   "place": 8
+  },
+  {
+   "school": "Penn State",
+   "place": 9
+  }
+ ]
+}

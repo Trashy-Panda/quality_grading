@@ -1,0 +1,47 @@
+{
+ "name": "South Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "South Plains",
+ "date": "2024-02-14",
+ "season": 2024,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "University of Georgia",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Fort Scott",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 6
+  },
+  {
+   "school": "New Mexico State University",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 8
+  },
+  {
+   "school": "Texas State",
+   "place": 9
+  }
+ ]
+}

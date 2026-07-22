@@ -1,0 +1,59 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1996-01-18",
+ "season": 1996,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "Western Texas College",
+   "place": 3
+  },
+  {
+   "school": "Australian National",
+   "place": 4
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 5
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 6
+  },
+  {
+   "school": "Barton County",
+   "place": 7
+  },
+  {
+   "school": "Fort Scott",
+   "place": 8
+  },
+  {
+   "school": "Illinois Central",
+   "place": 9
+  },
+  {
+   "school": "Cloud County",
+   "place": 10
+  },
+  {
+   "school": "Carl Sandburg",
+   "place": 11
+  }
+ ]
+}

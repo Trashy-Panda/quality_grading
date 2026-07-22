@@ -1,0 +1,63 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1979-04-15",
+ "season": 1979,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Purdue University",
+   "place": 3
+  },
+  {
+   "school": "Michigan State University",
+   "place": 4
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 5
+  },
+  {
+   "school": "Auburn",
+   "place": 6
+  },
+  {
+   "school": "Tennessee",
+   "place": 7
+  },
+  {
+   "school": "Colorado State University",
+   "place": 8
+  },
+  {
+   "school": "University of Florida",
+   "place": 9
+  },
+  {
+   "school": "Mississippi State",
+   "place": 10
+  },
+  {
+   "school": "Penn State",
+   "place": 11
+  },
+  {
+   "school": "VPI & SU",
+   "place": 12
+  },
+  {
+   "school": "Connecticut",
+   "place": 13
+  }
+ ]
+}

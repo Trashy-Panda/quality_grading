@@ -1,0 +1,324 @@
+{
+  "name": "South Plains Invitational Meat Judging",
+  "shortName": "South Plains",
+  "date": "2026-02-14",
+  "season": 2026,
+  "division": "junior",
+  "weight": 1,
+  "sourceUrl": "https://www.judgingcard.com/Results/Team.aspx?ID=27673&EID=169048",
+  "teamCount": 8,
+  "results": [
+    {
+      "school": "Clarendon College",
+      "place": 1,
+      "score": 3785,
+      "categories": {
+        "beefGrading": {
+          "place": 1,
+          "score": 976
+        },
+        "beefJudging": {
+          "place": 1,
+          "score": 1148
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 557
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 2124
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 1104
+        },
+        "reasons": {
+          "place": 2,
+          "score": 850
+        },
+        "specifications": {
+          "place": 1,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 1959
+        }
+      }
+    },
+    {
+      "school": "New Mexico State University",
+      "place": 2,
+      "score": 3768,
+      "categories": {
+        "beefGrading": {
+          "place": 2,
+          "score": 974
+        },
+        "beefJudging": {
+          "place": 5,
+          "score": 1131
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 547
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 2105
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 1116
+        },
+        "reasons": {
+          "place": 3,
+          "score": 840
+        },
+        "specifications": {
+          "place": 2,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 1954
+        }
+      }
+    },
+    {
+      "school": "Garden City Community College",
+      "place": 3,
+      "score": 3760,
+      "categories": {
+        "beefGrading": {
+          "place": 4,
+          "score": 952
+        },
+        "beefJudging": {
+          "place": 4,
+          "score": 1132
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 566
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 2084
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 1110
+        },
+        "reasons": {
+          "place": 1,
+          "score": 850
+        },
+        "specifications": {
+          "place": 4,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 1958
+        }
+      }
+    },
+    {
+      "school": "University of Georgia",
+      "place": 4,
+      "score": 3699,
+      "categories": {
+        "beefGrading": {
+          "place": 3,
+          "score": 965
+        },
+        "beefJudging": {
+          "place": 2,
+          "score": 1142
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 522
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 2107
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 1070
+        },
+        "reasons": {
+          "place": 7,
+          "score": 775
+        },
+        "specifications": {
+          "place": 3,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 1959
+        }
+      }
+    },
+    {
+      "school": "Connors State College",
+      "place": 5,
+      "score": 3693,
+      "categories": {
+        "beefGrading": {
+          "place": 5,
+          "score": 941
+        },
+        "beefJudging": {
+          "place": 7,
+          "score": 1116
+        },
+        "lambJudging": {
+          "place": 3,
+          "score": 554
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 2057
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 1082
+        },
+        "reasons": {
+          "place": 5,
+          "score": 810
+        },
+        "specifications": {
+          "place": 5,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 1942
+        }
+      }
+    },
+    {
+      "school": "Eastern Oklahoma State College",
+      "place": 6,
+      "score": 3670,
+      "categories": {
+        "beefGrading": {
+          "place": 7,
+          "score": 910
+        },
+        "beefJudging": {
+          "place": 6,
+          "score": 1128
+        },
+        "lambJudging": {
+          "place": 5,
+          "score": 525
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 2038
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 1107
+        },
+        "reasons": {
+          "place": 4,
+          "score": 825
+        },
+        "specifications": {
+          "place": 7,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 1935
+        }
+      }
+    },
+    {
+      "school": "University of Arizona",
+      "place": 7,
+      "score": 3625,
+      "categories": {
+        "beefGrading": {
+          "place": 8,
+          "score": 896
+        },
+        "beefJudging": {
+          "place": 3,
+          "score": 1133
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 513
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 2029
+        },
+        "porkJudging": {
+          "place": 5,
+          "score": 1083
+        },
+        "reasons": {
+          "place": 6,
+          "score": 795
+        },
+        "specifications": {
+          "place": 8,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 7,
+          "score": 1934
+        }
+      }
+    },
+    {
+      "school": "Western Texas College",
+      "place": 8,
+      "score": 3456,
+      "categories": {
+        "beefGrading": {
+          "place": 6,
+          "score": 916
+        },
+        "beefJudging": {
+          "place": 8,
+          "score": 1048
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 512
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 1964
+        },
+        "porkJudging": {
+          "place": 8,
+          "score": 980
+        },
+        "reasons": {
+          "place": 8,
+          "score": 615
+        },
+        "specifications": {
+          "place": 6,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 8,
+          "score": 1925
+        }
+      }
+    }
+  ]
+}

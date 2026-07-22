@@ -1,0 +1,63 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "2021-11-15",
+ "season": 2021,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Angelo State",
+   "place": 5
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "North Carolina",
+   "place": 8
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 10
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Purdue University",
+   "place": 12
+  }
+ ]
+}

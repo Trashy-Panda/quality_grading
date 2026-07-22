@@ -1,0 +1,83 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1984-10-20",
+ "season": 1984,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 18,
+ "results": [
+  {
+   "school": "University of Illinois",
+   "place": 1
+  },
+  {
+   "school": "Missouri",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "University of Georgia",
+   "place": 9
+  },
+  {
+   "school": "Kansas State University",
+   "place": 10
+  },
+  {
+   "school": "Colorado State University",
+   "place": 11
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "Penn State",
+   "place": 13
+  },
+  {
+   "school": "Kentucky",
+   "place": 14
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 15
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 16
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 17
+  },
+  {
+   "school": "Minnesota",
+   "place": 18
+  }
+ ]
+}

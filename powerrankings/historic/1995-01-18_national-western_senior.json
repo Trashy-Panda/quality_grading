@@ -1,0 +1,43 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1995-01-18",
+ "season": 1995,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Kansas State University",
+   "place": 4
+  },
+  {
+   "school": "Colorado State University",
+   "place": 5
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 7
+  },
+  {
+   "school": "Idaho",
+   "place": 8
+  }
+ ]
+}

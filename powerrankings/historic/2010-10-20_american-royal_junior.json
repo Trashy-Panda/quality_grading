@@ -1,0 +1,31 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "2010-10-20",
+ "season": 2010,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Coffeyville",
+   "place": 2
+  },
+  {
+   "school": "Fort Scott",
+   "place": 3
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 4
+  },
+  {
+   "school": "Allen County",
+   "place": 5
+  }
+ ]
+}

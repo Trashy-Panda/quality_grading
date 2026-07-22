@@ -1,0 +1,91 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1969-11-15",
+ "season": 1969,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 20,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "University of Florida",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 4
+  },
+  {
+   "school": "VPI & SU",
+   "place": 6
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 7
+  },
+  {
+   "school": "Penn State",
+   "place": 8
+  },
+  {
+   "school": "Iowa State University",
+   "place": 9
+  },
+  {
+   "school": "University of Illinois",
+   "place": 10
+  },
+  {
+   "school": "Michigan State University",
+   "place": 11
+  },
+  {
+   "school": "Tennessee",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "Missouri",
+   "place": 14
+  },
+  {
+   "school": "Purdue University",
+   "place": 15
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 16
+  },
+  {
+   "school": "Mississippi State",
+   "place": 17
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 18
+  },
+  {
+   "school": "Kentucky",
+   "place": 19
+  },
+  {
+   "school": "Connecticut",
+   "place": 20
+  }
+ ]
+}

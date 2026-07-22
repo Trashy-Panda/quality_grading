@@ -1,0 +1,67 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1959-02-01",
+ "season": 1959,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 14,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "Wisconsin",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "Kentucky",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 8
+  },
+  {
+   "school": "Iowa State University",
+   "place": 9
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 10
+  },
+  {
+   "school": "Mississippi State",
+   "place": 11
+  },
+  {
+   "school": "New Mexico",
+   "place": 12
+  },
+  {
+   "school": "California Poly",
+   "place": 13
+  },
+  {
+   "school": "Abilene Chr",
+   "place": 14
+  }
+ ]
+}

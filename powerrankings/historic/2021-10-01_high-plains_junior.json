@@ -1,0 +1,35 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2021-10-01",
+ "season": 2021,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 6,
+ "results": [
+  {
+   "school": "Clarendon College",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M Commerce",
+   "place": 2
+  },
+  {
+   "school": "Fort Scott",
+   "place": 3
+  },
+  {
+   "school": "Zamorano",
+   "place": 4
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 5
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 6
+  }
+ ]
+}

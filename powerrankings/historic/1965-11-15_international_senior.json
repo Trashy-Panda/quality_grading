@@ -1,0 +1,99 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1965-11-15",
+ "season": 1965,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 22,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Michigan State University",
+   "place": 2
+  },
+  {
+   "school": "Tennessee",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "Kentucky",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "Penn State",
+   "place": 10
+  },
+  {
+   "school": "Missouri",
+   "place": 11
+  },
+  {
+   "school": "Washington",
+   "place": 11
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 12
+  },
+  {
+   "school": "Idaho",
+   "place": 13
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 14
+  },
+  {
+   "school": "VPI & SU",
+   "place": 15
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 16
+  },
+  {
+   "school": "Mississippi State",
+   "place": 17
+  },
+  {
+   "school": "West Virginia",
+   "place": 18
+  },
+  {
+   "school": "Connecticut",
+   "place": 19
+  }
+ ]
+}

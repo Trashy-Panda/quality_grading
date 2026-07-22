@@ -1,0 +1,51 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "2000-01-18",
+ "season": 2000,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Fort Scott",
+   "place": 1
+  },
+  {
+   "school": "Barton County",
+   "place": 2
+  },
+  {
+   "school": "Western Texas College",
+   "place": 3
+  },
+  {
+   "school": "Clarendon College",
+   "place": 4
+  },
+  {
+   "school": "Australian National",
+   "place": 5
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 6
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 7
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 8
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 9
+  },
+  {
+   "school": "Illinois Central",
+   "place": 10
+  }
+ ]
+}

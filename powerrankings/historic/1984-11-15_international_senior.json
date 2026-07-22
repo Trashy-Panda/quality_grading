@@ -1,0 +1,95 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1984-11-15",
+ "season": 1984,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "South Dakota State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "Colorado State University",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "Kansas State University",
+   "place": 10
+  },
+  {
+   "school": "Auburn",
+   "place": 11
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 14
+  },
+  {
+   "school": "University of Georgia",
+   "place": 15
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 16
+  },
+  {
+   "school": "VPI & SU",
+   "place": 17
+  },
+  {
+   "school": "Kentucky",
+   "place": 18
+  },
+  {
+   "school": "Mississippi State",
+   "place": 19
+  },
+  {
+   "school": "Penn State",
+   "place": 20
+  },
+  {
+   "school": "Minnesota",
+   "place": 21
+  }
+ ]
+}

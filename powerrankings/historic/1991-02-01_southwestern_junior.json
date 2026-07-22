@@ -1,0 +1,55 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1991-02-01",
+ "season": 1991,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 2
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 3
+  },
+  {
+   "school": "New Mexico Junior College",
+   "place": 4
+  },
+  {
+   "school": "Coffeyville",
+   "place": 5
+  },
+  {
+   "school": "Western Texas College",
+   "place": 6
+  },
+  {
+   "school": "Illinois Central",
+   "place": 7
+  },
+  {
+   "school": "Cloud County",
+   "place": 8
+  },
+  {
+   "school": "Clarendon College",
+   "place": 9
+  },
+  {
+   "school": "Panhandle State",
+   "place": 10
+  },
+  {
+   "school": "Paris Junior College",
+   "place": 11
+  }
+ ]
+}

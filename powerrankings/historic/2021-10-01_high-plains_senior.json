@@ -1,0 +1,59 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2021-10-01",
+ "season": 2021,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Angelo State",
+   "place": 6
+  },
+  {
+   "school": "Colorado State University",
+   "place": 7
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 9
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 10
+  },
+  {
+   "school": "Iowa State University",
+   "place": 11
+  },
+  {
+   "school": "Purdue University",
+   "place": 12
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1949-11-15",
+ "season": 1949,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Iowa State University",
+   "place": 2
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 3
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 4
+  },
+  {
+   "school": "University of Illinois",
+   "place": 5
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 7
+  },
+  {
+   "school": "West Virginia",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "Kansas State University",
+   "place": 10
+  },
+  {
+   "school": "Missouri",
+   "place": 11
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 12
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 13
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Minnesota",
+   "place": 15
+  },
+  {
+   "school": "Ontario",
+   "place": 16
+  },
+  {
+   "school": "Connecticut",
+   "place": 17
+  },
+  {
+   "school": "Massachussets",
+   "place": 18
+  },
+  {
+   "school": "Kentucky",
+   "place": 19
+  },
+  {
+   "school": "Penn State",
+   "place": 20
+  },
+  {
+   "school": "North Carolina",
+   "place": 21
+  }
+ ]
+}

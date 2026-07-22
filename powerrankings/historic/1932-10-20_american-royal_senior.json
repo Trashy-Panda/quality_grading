@@ -1,0 +1,27 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1932-10-20",
+ "season": 1932,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 4,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "Iowa State University",
+   "place": 2
+  },
+  {
+   "school": "Missouri",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  }
+ ]
+}

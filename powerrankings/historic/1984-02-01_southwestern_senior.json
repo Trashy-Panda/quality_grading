@@ -1,0 +1,63 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1984-02-01",
+ "season": 1984,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 13,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Colorado State University",
+   "place": 2
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "Tarleton State University",
+   "place": 5
+  },
+  {
+   "school": "Tennessee",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 8
+  },
+  {
+   "school": "Missouri",
+   "place": 9
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 10
+  },
+  {
+   "school": "California Poly",
+   "place": 11
+  },
+  {
+   "school": "Kansas State University",
+   "place": 12
+  },
+  {
+   "school": "New Mexico",
+   "place": 13
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1952-11-15",
+ "season": 1952,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 20,
+ "results": [
+  {
+   "school": "Wisconsin-Madison",
+   "place": 1
+  },
+  {
+   "school": "Kentucky",
+   "place": 2
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 3
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Missouri",
+   "place": 6
+  },
+  {
+   "school": "University of Illinois",
+   "place": 7
+  },
+  {
+   "school": "Michigan State University",
+   "place": 8
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 9
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 10
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 11
+  },
+  {
+   "school": "Tennessee",
+   "place": 11
+  },
+  {
+   "school": "Minnesota",
+   "place": 13
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 14
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 15
+  },
+  {
+   "school": "North Carolina",
+   "place": 16
+  },
+  {
+   "school": "West Virginia",
+   "place": 17
+  },
+  {
+   "school": "Ontario",
+   "place": 18
+  },
+  {
+   "school": "Massachussets",
+   "place": 19
+  },
+  {
+   "school": "Penn State",
+   "place": 20
+  }
+ ]
+}

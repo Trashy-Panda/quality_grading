@@ -1,0 +1,47 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1941-10-20",
+ "season": 1941,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 9,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Minnesota",
+   "place": 2
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 3
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 4
+  },
+  {
+   "school": "Penn State",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "Kansas State University",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "University of Illinois",
+   "place": 9
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1927-11-15",
+ "season": 1927,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 12,
+ "results": [
+  {
+   "school": "Iowa State University",
+   "place": 1
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Missouri",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "University of Illinois",
+   "place": 6
+  },
+  {
+   "school": "Penn State",
+   "place": 7
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 8
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 9
+  },
+  {
+   "school": "West Virginia",
+   "place": 10
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 11
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 12
+  }
+ ]
+}

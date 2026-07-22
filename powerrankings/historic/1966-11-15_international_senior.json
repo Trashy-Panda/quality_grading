@@ -1,0 +1,95 @@
+{
+ "name": "International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "International",
+ "date": "1966-11-15",
+ "season": 1966,
+ "division": "senior",
+ "weight": 2,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "VPI & SU",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 7
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 9
+  },
+  {
+   "school": "Tennessee",
+   "place": 10
+  },
+  {
+   "school": "Iowa State University",
+   "place": 11
+  },
+  {
+   "school": "West Virginia",
+   "place": 12
+  },
+  {
+   "school": "Washington",
+   "place": 13
+  },
+  {
+   "school": "University of Illinois",
+   "place": 14
+  },
+  {
+   "school": "Kentucky",
+   "place": 15
+  },
+  {
+   "school": "Connecticut",
+   "place": 16
+  },
+  {
+   "school": "Mississippi State",
+   "place": 17
+  },
+  {
+   "school": "Brigham Young",
+   "place": 18
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 19
+  }
+ ]
+}

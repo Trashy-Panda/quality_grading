@@ -1,0 +1,79 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1967-10-20",
+ "season": 1967,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 17,
+ "results": [
+  {
+   "school": "Michigan State University",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "New Mexico",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 7
+  },
+  {
+   "school": "University of Florida",
+   "place": 8
+  },
+  {
+   "school": "Missouri",
+   "place": 9
+  },
+  {
+   "school": "Iowa State University",
+   "place": 10
+  },
+  {
+   "school": "Mississippi",
+   "place": 10
+  },
+  {
+   "school": "University of Illinois",
+   "place": 12
+  },
+  {
+   "school": "Kentucky",
+   "place": 13
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 14
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 15
+  },
+  {
+   "school": "Penn State",
+   "place": 16
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 17
+  }
+ ]
+}

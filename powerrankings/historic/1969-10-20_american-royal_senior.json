@@ -1,0 +1,95 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1969-10-20",
+ "season": 1969,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "University of Nebraska",
+   "place": 1
+  },
+  {
+   "school": "Kansas State University",
+   "place": 2
+  },
+  {
+   "school": "University of Illinois",
+   "place": 3
+  },
+  {
+   "school": "Michigan State University",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 5
+  },
+  {
+   "school": "Washington",
+   "place": 6
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 7
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 8
+  },
+  {
+   "school": "VPI & SU",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 11
+  },
+  {
+   "school": "Idaho",
+   "place": 12
+  },
+  {
+   "school": "Purdue University",
+   "place": 13
+  },
+  {
+   "school": "Tennessee",
+   "place": 14
+  },
+  {
+   "school": "Iowa State University",
+   "place": 15
+  },
+  {
+   "school": "Missouri",
+   "place": 16
+  },
+  {
+   "school": "Penn State",
+   "place": 17
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 18
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 19
+  },
+  {
+   "school": "Mississippi",
+   "place": 20
+  },
+  {
+   "school": "Kentucky",
+   "place": 21
+  }
+ ]
+}

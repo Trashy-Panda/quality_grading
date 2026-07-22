@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="beefgrade.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="stylesheet" href="powerrank.css" />
 </head>
 <body>
 
@@ -67,6 +69,8 @@
       <button class="admin-tab" id="tab-btn-community" data-tab="community">Community</button>
       <button class="admin-tab" id="tab-btn-grading-votes" data-tab="grading-votes">Grading Votes</button>
       <button class="admin-tab" id="tab-btn-analytics" data-tab="analytics">Analytics</button>
+      <button class="admin-tab" id="tab-btn-powerrank" data-tab="powerrank">Power Rankings</button>
+      <button class="admin-tab" id="tab-btn-powerrank-preview" data-tab="powerrank-preview">Rankings Preview</button>
     </nav>
 
     <!-- Tab content -->
@@ -440,6 +444,193 @@
         </div>
       </div>
 
+      <!-- =============================================
+           POWER RANKINGS TAB
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-powerrank">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Power Rankings &mdash; Contests</h2>
+          <div class="admin-toolbar-controls">
+            <button id="pr-refresh-btn" class="admin-btn-secondary">Refresh</button>
+          </div>
+        </div>
+
+        <!-- ── IMPORT CONTEST JSON ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Import Contest JSON</h3>
+          <p class="admin-card-sub">Paste one contest doc produced by the ingest script (<code>powerrankings/ingest_judgingcard.py</code>). Required: <code>name</code>, <code>shortName</code>, <code>date</code> (yyyy-mm-dd), <code>division</code> (senior/junior), <code>results</code> (array of <code>{school, place}</code> rows). Parse &amp; preview before anything is written.</p>
+          <div class="pr-import-form">
+            <textarea id="pr-import-json" rows="8" spellcheck="false" placeholder='{"name":"National Western in Honor of R. Paul Clayton","shortName":"National Western","date":"2026-01-18","division":"senior","results":[{"school":"Oklahoma State University","place":1,"score":4237}]}'></textarea>
+            <div class="pr-import-controls">
+              <button id="pr-import-preview-btn" class="admin-btn-secondary">Parse &amp; Preview</button>
+              <button id="pr-import-clear-btn" class="admin-btn-secondary">Clear</button>
+              <span id="pr-import-status" class="pr-status" role="status"></span>
+            </div>
+            <div id="pr-import-preview" class="pr-import-preview hidden"></div>
+          </div>
+        </div>
+
+        <!-- ── MANUAL ENTRY ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Manual Entry</h3>
+          <p class="admin-card-sub">Enter a contest by hand. Season auto-fills from the date but stays editable. Each team row can expand to hold the 8 optional category place/score pairs.</p>
+          <div class="pr-form">
+            <div id="pr-editing-banner" class="pr-editing-banner hidden">
+              <span>Editing existing contest: <code id="pr-editing-slug"></code></span>
+              <button id="pr-edit-cancel-btn" class="admin-btn-secondary admin-btn-sm">Cancel Edit</button>
+            </div>
+            <div class="pr-form-grid">
+              <label class="pr-field pr-field-wide">
+                <span class="pr-field-label">Contest Name</span>
+                <input type="text" id="pr-form-name" maxlength="200" placeholder="National Western in Honor of R. Paul Clayton" />
+              </label>
+              <label class="pr-field">
+                <span class="pr-field-label">Short Name</span>
+                <input type="text" id="pr-form-shortname" maxlength="60" placeholder="National Western" />
+              </label>
+              <label class="pr-field">
+                <span class="pr-field-label">Date</span>
+                <input type="date" id="pr-form-date" />
+              </label>
+              <label class="pr-field">
+                <span class="pr-field-label">Season</span>
+                <input type="number" id="pr-form-season" min="1990" max="2100" step="1" placeholder="Auto" />
+              </label>
+              <label class="pr-field">
+                <span class="pr-field-label">Division</span>
+                <select id="pr-form-division">
+                  <option value="senior">Senior College</option>
+                  <option value="junior">Junior College</option>
+                </select>
+              </label>
+              <label class="pr-field">
+                <span class="pr-field-label">Weight (1&ndash;2)</span>
+                <input type="number" id="pr-form-weight" min="1" max="2" step="0.25" value="1" />
+              </label>
+              <label class="pr-field pr-field-wide">
+                <span class="pr-field-label">Source URL (optional)</span>
+                <input type="url" id="pr-form-sourceurl" placeholder="https://www.judgingcard.com/Results/Team.aspx?ID=..." />
+              </label>
+            </div>
+            <div class="pr-slug-line">Doc ID: <code id="pr-slug-preview">&mdash;</code></div>
+            <div class="pr-teams-header">
+              <span class="pr-teams-title">Team Results</span>
+              <button id="pr-add-row-btn" class="admin-btn-secondary admin-btn-sm">+ Add Team Row</button>
+            </div>
+            <div id="pr-team-rows" class="pr-team-rows"></div>
+            <div id="pr-form-warnings" class="pr-warning-list hidden" role="alert"></div>
+            <div class="pr-form-actions">
+              <button id="pr-form-save-btn" class="admin-btn-primary">Save Contest</button>
+              <span id="pr-form-status" class="pr-status" role="status"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MANAGE EXISTING CONTESTS ── -->
+        <div class="admin-card">
+          <h3 class="admin-card-label">Existing Contests</h3>
+          <p class="admin-card-sub">All docs in <code>meat_contests</code>, newest first. Edit reloads a contest into the manual form above; Delete removes it from the rankings.</p>
+          <div class="pr-manage-wrap">
+            <table class="admin-table" id="pr-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Division</th>
+                  <th>Teams</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pr-tbody">
+                <tr><td colspan="5" class="admin-empty">Loading&hellip;</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================
+           RANKINGS PREVIEW TAB
+           Admin-only preview of the rankings display while the ranking
+           methodology is still being refined. Not linked from the public
+           site (index.html) — this is the only place it currently renders.
+           ============================================= -->
+      <div class="admin-section hidden" id="tab-powerrank-preview">
+        <div class="admin-toolbar">
+          <h2 class="admin-section-title">Public Rankings Preview</h2>
+        </div>
+        <p class="admin-card-sub" style="padding: 0 4px 16px;">Admin-only preview of the public-facing rankings display &mdash; not yet linked from the live site.</p>
+
+        <div id="powerrank-screen">
+          <div class="leaderboard-hero powerrank-hero">
+            <div class="leaderboard-hero-stamp">Team Poll</div>
+            <h1 class="leaderboard-title">Power Rankings</h1>
+            <p class="powerrank-season-line">Collegiate Meat Judging</p>
+          </div>
+
+          <div class="powerrank-controls">
+            <div class="leaderboard-tabs" role="group" aria-label="Division">
+              <button id="powerrank-tab-senior" class="leaderboard-tab active" aria-pressed="true">Senior Colleges</button>
+              <button id="powerrank-tab-junior" class="leaderboard-tab" aria-pressed="false">Junior Colleges</button>
+            </div>
+            <div class="powerrank-season-field">
+              <label class="powerrank-season-label" for="powerrank-season">Season</label>
+              <select id="powerrank-season" class="powerrank-season-select"></select>
+            </div>
+          </div>
+
+          <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table powerrank-table">
+              <thead>
+                <tr>
+                  <th class="col-rank">Rank</th>
+                  <th class="pr-col-school">School</th>
+                  <th class="pr-col-rating">Rating</th>
+                  <th class="pr-col-move">Move</th>
+                  <th class="pr-col-contests">Contests</th>
+                </tr>
+              </thead>
+              <tbody id="powerrank-tbody"></tbody>
+            </table>
+          </div>
+
+          <section class="powerrank-strip" id="powerrank-provisional-block" hidden aria-label="Not yet ranked">
+            <h2 class="powerrank-strip-header">Not Yet Ranked &mdash; Limited Data This Season</h2>
+            <p class="powerrank-strip-sub">Not enough real results yet this season to compare fairly against the ranked board above. Shown here with their actual contest results instead of an estimated rating.</p>
+            <ul id="powerrank-provisional-list" class="powerrank-contest-list"></ul>
+          </section>
+
+          <section class="powerrank-strip" id="powerrank-categories" hidden aria-label="Category leaders">
+            <h2 class="powerrank-strip-header">Category Leaders</h2>
+            <p class="powerrank-strip-sub">Top three teams per category &mdash; boards appear once three contests carry the category.</p>
+            <div class="powerrank-cards" id="powerrank-cards"></div>
+          </section>
+
+          <section class="powerrank-strip" id="powerrank-contests-block" hidden aria-label="Contests in ranking">
+            <h2 class="powerrank-strip-header">Contests in Ranking</h2>
+            <ul id="powerrank-contest-list" class="powerrank-contest-list"></ul>
+          </section>
+
+          <div class="powerrank-method">
+            <details class="powerrank-method-details">
+              <summary>How these rankings work</summary>
+              <p class="powerrank-method-text">
+                Each team result earns a rating from its placing, scaled by field size, how
+                recent the contest is, the contest's weight, and the strength of the field
+                (the average rating of the top ten teams there). The solver iterates until
+                field strengths and team ratings agree, then rates each school by the average
+                of its five best results in the selected season, using only that team's own
+                real results this season &mdash; no cross-season blending. Teams need enough
+                real contests this season to be numerically ranked; thinner résumés are shown
+                separately with their actual results instead of an estimated rating. Movement
+                compares today's board against the board before the most recent contest; NEW
+                marks a school's first appearance.
+              </p>
+            </details>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /.admin-content -->
   </div><!-- /#admin-ui -->
 
@@ -448,6 +639,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="powerrank.js"></script>
   <script src="admin.js"></script>
 
 </body>

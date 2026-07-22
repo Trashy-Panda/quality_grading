@@ -1,0 +1,43 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2022-10-01",
+ "season": 2022,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "University of Georgia",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Fort Scott",
+   "place": 3
+  },
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 4
+  },
+  {
+   "school": "Texas A&M Commerce",
+   "place": 5
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 6
+  },
+  {
+   "school": "Zamorano",
+   "place": 7
+  },
+  {
+   "school": "Western Texas College",
+   "place": 8
+  }
+ ]
+}

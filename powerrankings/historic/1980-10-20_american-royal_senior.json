@@ -1,0 +1,95 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1980-10-20",
+ "season": 1980,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 21,
+ "results": [
+  {
+   "school": "Texas A&M University",
+   "place": 1
+  },
+  {
+   "school": "University of Illinois",
+   "place": 2
+  },
+  {
+   "school": "Colorado State University",
+   "place": 3
+  },
+  {
+   "school": "Iowa State University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "Kansas State University",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 6
+  },
+  {
+   "school": "Missouri",
+   "place": 8
+  },
+  {
+   "school": "Michigan State University",
+   "place": 9
+  },
+  {
+   "school": "Purdue University",
+   "place": 10
+  },
+  {
+   "school": "Penn State",
+   "place": 11
+  },
+  {
+   "school": "Kentucky",
+   "place": 12
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 13
+  },
+  {
+   "school": "Tennessee",
+   "place": 13
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 15
+  },
+  {
+   "school": "Mississippi",
+   "place": 16
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 17
+  },
+  {
+   "school": "VPI & SU",
+   "place": 18
+  },
+  {
+   "school": "Minnesota",
+   "place": 19
+  },
+  {
+   "school": "University of Florida",
+   "place": 20
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 21
+  }
+ ]
+}

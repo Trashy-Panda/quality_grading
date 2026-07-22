@@ -1,0 +1,39 @@
+{
+ "name": "Pacific International Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Pacific International",
+ "date": "1972-10-10",
+ "season": 1972,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 7,
+ "results": [
+  {
+   "school": "University of Wyoming",
+   "place": 1
+  },
+  {
+   "school": "Washington",
+   "place": 2
+  },
+  {
+   "school": "Cal. Poly.- Pomona",
+   "place": 3
+  },
+  {
+   "school": "Fresno State",
+   "place": 4
+  },
+  {
+   "school": "Brigham Young",
+   "place": 5
+  },
+  {
+   "school": "Montana",
+   "place": 6
+  },
+  {
+   "school": "Oregon",
+   "place": 7
+  }
+ ]
+}

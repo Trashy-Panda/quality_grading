@@ -1,0 +1,67 @@
+{
+ "name": "American Royal Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "American Royal",
+ "date": "1949-10-20",
+ "season": 1949,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 14,
+ "results": [
+  {
+   "school": "Oklahoma State University",
+   "place": 1
+  },
+  {
+   "school": "Wisconsin-Madison",
+   "place": 2
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "University of Illinois",
+   "place": 4
+  },
+  {
+   "school": "Kansas State University",
+   "place": 5
+  },
+  {
+   "school": "Iowa State University",
+   "place": 6
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 9
+  },
+  {
+   "school": "Michigan State University",
+   "place": 10
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 11
+  },
+  {
+   "school": "Penn State",
+   "place": 12
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 13
+  },
+  {
+   "school": "Missouri",
+   "place": 14
+  }
+ ]
+}

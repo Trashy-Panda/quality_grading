@@ -1,0 +1,31 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1995-04-15",
+ "season": 1995,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 5,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Kentucky",
+   "place": 3
+  },
+  {
+   "school": "Penn State",
+   "place": 4
+  },
+  {
+   "school": "University of Illinois",
+   "place": 5
+  }
+ ]
+}

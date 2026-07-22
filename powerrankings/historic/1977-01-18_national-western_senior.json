@@ -1,0 +1,55 @@
+{
+ "name": "National Western Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "National Western",
+ "date": "1977-01-18",
+ "season": 1977,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Colorado State University",
+   "place": 1
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 4
+  },
+  {
+   "school": "South Dakota State University",
+   "place": 5
+  },
+  {
+   "school": "New Mexico",
+   "place": 6
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 7
+  },
+  {
+   "school": "North Dakota State University",
+   "place": 8
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 9
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 10
+  },
+  {
+   "school": "Brigham Young",
+   "place": 11
+  }
+ ]
+}

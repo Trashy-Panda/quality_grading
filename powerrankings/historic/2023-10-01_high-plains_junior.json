@@ -1,0 +1,55 @@
+{
+ "name": "High Plains Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "High Plains",
+ "date": "2023-10-01",
+ "season": 2023,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 11,
+ "results": [
+  {
+   "school": "Eastern Oklahoma State College",
+   "place": 1
+  },
+  {
+   "school": "Washington State",
+   "place": 2
+  },
+  {
+   "school": "Clarendon College",
+   "place": 3
+  },
+  {
+   "school": "Oklahoma Panhandle",
+   "place": 4
+  },
+  {
+   "school": "University of Georgia",
+   "place": 5
+  },
+  {
+   "school": "Garden City Community College",
+   "place": 6
+  },
+  {
+   "school": "Fort Scott",
+   "place": 7
+  },
+  {
+   "school": "Zamorano",
+   "place": 8
+  },
+  {
+   "school": "Fort Valley State",
+   "place": 9
+  },
+  {
+   "school": "Texas A&M Commerce",
+   "place": 10
+  },
+  {
+   "school": "Western Texas College",
+   "place": 11
+  }
+ ]
+}

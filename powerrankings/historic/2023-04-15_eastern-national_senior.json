@@ -1,0 +1,51 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "2023-04-15",
+ "season": 2023,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Kansas State University",
+   "place": 1
+  },
+  {
+   "school": "West Texas A&M University",
+   "place": 2
+  },
+  {
+   "school": "Texas Tech University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 4
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 5
+  },
+  {
+   "school": "University of Wyoming",
+   "place": 6
+  },
+  {
+   "school": "Angelo State",
+   "place": 7
+  },
+  {
+   "school": "University of Illinois",
+   "place": 8
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 9
+  },
+  {
+   "school": "University of Florida",
+   "place": 10
+  }
+ ]
+}

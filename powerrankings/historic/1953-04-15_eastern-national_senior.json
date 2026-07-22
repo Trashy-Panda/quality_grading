@@ -1,0 +1,51 @@
+{
+ "name": "Eastern National Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Eastern National",
+ "date": "1953-04-15",
+ "season": 1953,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 10,
+ "results": [
+  {
+   "school": "Wisconsin-Madison",
+   "place": 1
+  },
+  {
+   "school": "The Ohio State University",
+   "place": 2
+  },
+  {
+   "school": "Michigan State University",
+   "place": 3
+  },
+  {
+   "school": "Maryland",
+   "place": 4
+  },
+  {
+   "school": "Connecticut",
+   "place": 5
+  },
+  {
+   "school": "Penn State",
+   "place": 6
+  },
+  {
+   "school": "Cornell",
+   "place": 7
+  },
+  {
+   "school": "Massachusetts",
+   "place": 8
+  },
+  {
+   "school": "North Carolina",
+   "place": 9
+  },
+  {
+   "school": "West Virginia",
+   "place": 10
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "2021-02-01",
+ "season": 2021,
+ "division": "junior",
+ "weight": 1,
+ "teamCount": 4,
+ "results": [
+  {
+   "school": "Coffeyville",
+   "place": 1
+  },
+  {
+   "school": "Clarendon College",
+   "place": 2
+  },
+  {
+   "school": "Casper",
+   "place": 3
+  },
+  {
+   "school": "College of the Sequoias",
+   "place": 4
+  }
+ ]
+}

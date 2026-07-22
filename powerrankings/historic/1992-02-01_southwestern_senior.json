@@ -1,0 +1,43 @@
+{
+ "name": "Southwestern Meat Judging Contest \u2014 100YMJ archive",
+ "shortName": "Southwestern",
+ "date": "1992-02-01",
+ "season": 1992,
+ "division": "senior",
+ "weight": 1,
+ "teamCount": 8,
+ "results": [
+  {
+   "school": "Texas Tech University",
+   "place": 1
+  },
+  {
+   "school": "Oklahoma State University",
+   "place": 2
+  },
+  {
+   "school": "Kansas State University",
+   "place": 3
+  },
+  {
+   "school": "Texas A&M University",
+   "place": 3
+  },
+  {
+   "school": "Colorado State University",
+   "place": 5
+  },
+  {
+   "school": "University of Nebraska",
+   "place": 6
+  },
+  {
+   "school": "Missouri",
+   "place": 7
+  },
+  {
+   "school": "Tennessee",
+   "place": 8
+  }
+ ]
+}
