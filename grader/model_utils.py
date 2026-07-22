@@ -1,10 +1,24 @@
 """
-model_utils.py — Claude Vision API ribeye grader + grade mapping helpers.
+model_utils.py — Claude Vision ribeye grader ("Option A": Claude as a
+calibrated instrument).
 
-Uses Claude claude-sonnet-4-6 vision to analyze ribeye cross-section images and assign
-USDA quality grades. When reference images (from community_carcasses) are
-available they are included as few-shot examples so Claude grades relative
-to known-good human-graded samples rather than from text descriptions alone.
+Design, per grader/AUDIT_AND_REDESIGN.md:
+  1. Perception is decoupled from grade assignment. Claude never reports a
+     grade — only a marbling descriptor + subunit (and a comparative
+     interpolation between two fixed anchor photos). The grade is assigned
+     by score_to_grade_key() in this file, deterministically.
+  2. Images are sent at full resolution (long side 1568px, q90) instead of
+     the old 800px/q82 thumbnail that destroyed fine marbling flecks.
+  3. Few-shot calibration uses 7 fixed OFFICIAL USDA marbling reference
+     photographs (grader/anchors/) instead of the old community_carcasses
+     lookup — that pool was itself AI/consensus-derived, so using it as a
+     calibration standard fed the grader's own bias back into itself.
+  4. Self-consistency: k calls per image, median score, spread -> confidence.
+  5. A constant score-space calibration offset (measured against vote-
+     weighted human consensus) can be applied post-hoc without touching
+     the prompt.
+  6. Parse failure / all-bad-image-quality never fabricates a grade —
+     it returns needs_review=True instead.
 
 Set ANTHROPIC_API_KEY environment variable before running, or pass
 --anthropic-key to grade_ribeyes.py.
@@ -15,13 +29,15 @@ import io
 import json
 import os
 import re
+import statistics
 import time
 
 import requests
 from PIL import Image
 
 # ----------------------------------------------------------------
-#  Grade mapping
+#  Canonical marbling score -> grade mapping (single source of truth).
+#  Mirrors USDA marbling degree bands, each subdivided into 100 subunits.
 # ----------------------------------------------------------------
 
 GRADE_LABELS = {
@@ -31,128 +47,227 @@ GRADE_LABELS = {
     'STD':    'Standard',      'COM':    'Commercial',
 }
 
-_GRADE_MAP = {
-    'high prime':           'PR_HI',
-    'average prime':        'PR_AVG',
-    'low prime':            'PR_LO',
-    'prime':                'PR_AVG',
-    'high choice':          'CH_HI',
-    'average choice':       'CH_AVG',
-    'low choice':           'CH_LO',
-    'upper 2/3 choice':     'CH_HI',
-    'choice':               'CH_AVG',
-    'high select':          'SE_HI',
-    'average select':       'SE_HI',  # map old SE_AVG → SE_HI (upper slight)
-    'low select':           'SE_LO',
-    'select':               'SE_HI',
-    'standard':             'STD',
-    'commercial':           'COM',
+# (score_floor, grade_key) descending — first match wins
+_SCORE_THRESHOLDS = [
+    (900, 'PR_HI'),
+    (800, 'PR_AVG'),
+    (700, 'PR_LO'),
+    (600, 'CH_HI'),
+    (500, 'CH_AVG'),
+    (400, 'CH_LO'),
+    (350, 'SE_HI'),
+    (300, 'SE_LO'),
+    (0,   'STD'),
+]
+
+# descriptor -> floor of its 100-point band (USDA marbling score scale)
+_DESCRIPTOR_FLOOR = {
+    'practically devoid':    100,
+    'traces':                200,
+    'slight':                300,
+    'small':                 400,
+    'modest':                500,
+    'moderate':              600,
+    'slightly abundant':     700,
+    'moderately abundant':   800,
+    'abundant':              900,
 }
 
-_DESCRIPTOR_SCORE = {
-    'abundant':               950,
-    'moderately abundant':    850,
-    'slightly abundant':      750,
-    'moderate':               650,
-    'modest':                 550,
-    'small':                  450,
-    'slight+':                385,   # upper half of Slight → SE_HI
-    'slight':                 350,   # midpoint — defaults to SE_HI boundary
-    'slight-':                315,   # lower half of Slight → SE_LO
-    'traces':                 250,
-    'practically devoid':     150,
-}
-
-# Which grades to try to fetch as reference examples (one per tier)
-_REFERENCE_GRADES = ['PR_AVG', 'CH_HI', 'CH_AVG', 'CH_LO', 'SE_HI', 'SE_LO', 'STD']
-
-_SYSTEM_PROMPT_BASE = """You are a certified USDA beef grader with 20 years of experience grading ribeye cross-sections.
-
-Grade the LAST image in this message using official USDA quality grade standards.
-
-GRADE SCALE (8 grades, highest to lowest):
-- Abundant (900-999)           → High Prime
-- Moderately Abundant (800-899) → Average Prime
-- Slightly Abundant (700-799)  → Low Prime
-- Moderate (600-699)           → High Choice
-- Modest (500-599)             → Average Choice
-- Small (400-499)              → Low Choice
-- Slight upper half (350-399)  → High Select   ← USE THIS, it is a real grade
-- Slight lower half (300-349)  → Low Select
-- Traces/Practically Devoid (<300) → Standard
-
-CRITICAL — FINE vs COARSE MARBLING:
-- Fine marbling = many small, diffuse flecks distributed evenly across the entire muscle = HIGHER grade
-- Coarse marbling = fewer large clumps or streaks = LOWER grade for same apparent percentage
-- A ribeye with fine, evenly distributed marbling grades ONE LEVEL HIGHER than one with the same fat percentage in coarse deposits
-- Look at fleck SIZE (small dots vs large blobs), DISTRIBUTION (even vs patchy), and DENSITY (count of flecks per cm²)
-
-WHAT TO IGNORE: external fat cap, seam fat between muscle groups, bone. Grade ONLY the longissimus dorsi (the large central eye muscle).
-
-Respond ONLY with valid JSON (no markdown):
-{
-  "grade": "High Choice",
-  "marbling_descriptor": "Moderate",
-  "marbling_score": 650,
-  "confidence": "high",
-  "reasoning": "one sentence describing fleck size, distribution, and density"
-}
-
-grade must be EXACTLY one of: High Prime, Average Prime, Low Prime, High Choice, Average Choice, Low Choice, High Select, Low Select, Standard
-confidence must be one of: high, medium, low"""
-
-_SYSTEM_PROMPT_NO_REF = _SYSTEM_PROMPT_BASE.replace(
-    'Grade the LAST image in this message',
-    'Grade the image'
-)
+_VALID_DESCRIPTORS = set(_DESCRIPTOR_FLOOR)
 
 
-def _img_to_b64(path_or_url, from_url=False):
-    """Load an image from a local path or URL, resize to max 800px, return base64 JPEG."""
-    if from_url:
-        r = requests.get(path_or_url, timeout=15)
-        r.raise_for_status()
-        img = Image.open(io.BytesIO(r.content)).convert('RGB')
-    else:
-        img = Image.open(path_or_url).convert('RGB')
+def score_to_grade_key(score):
+    """Deterministic score (0-999+) -> grade key. The only place a grade is assigned."""
+    score = float(score)
+    for floor, key in _SCORE_THRESHOLDS:
+        if score >= floor:
+            return key
+    return 'STD'
 
-    img.thumbnail((800, 800), Image.LANCZOS)
+
+# ----------------------------------------------------------------
+#  Fixed USDA marbling anchors (replaces the old circular
+#  community_carcasses few-shot lookup).
+# ----------------------------------------------------------------
+
+_ANCHORS_DIR = os.path.join(os.path.dirname(__file__), 'anchors')
+_ANCHORS_MANIFEST = os.path.join(_ANCHORS_DIR, 'manifest.json')
+
+_anchor_cache = None
+
+
+def _img_bytes_to_b64(img, max_side=1568, quality=90):
+    """Resize (preserving aspect) to at most max_side on the long edge, re-encode JPEG."""
+    img = img.convert('RGB')
+    if max(img.size) > max_side:
+        img.thumbnail((max_side, max_side), Image.LANCZOS)
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=82)
+    img.save(buf, format='JPEG', quality=quality)
     return base64.standard_b64encode(buf.getvalue()).decode()
 
 
-def load_reference_images(db):
+def _img_to_b64(path_or_url, from_url=False, max_side=1568, quality=90):
+    if from_url:
+        r = requests.get(path_or_url, timeout=20)
+        r.raise_for_status()
+        img = Image.open(io.BytesIO(r.content))
+    else:
+        img = Image.open(path_or_url)
+    return _img_bytes_to_b64(img, max_side=max_side, quality=quality)
+
+
+def load_anchor_images():
     """
-    Fetch one example image per grade tier from community_carcasses.
-    Returns dict: { 'CH_HI': <base64_str>, 'SE_AVG': <base64_str>, ... }
+    Load the 7 fixed official USDA marbling reference photos.
+    Returns a list of dicts: {descriptor, score, grade_key, b64}, ordered low -> high.
+    Cached in-process — anchors never change during a run.
     """
-    refs = {}
-    try:
-        snap = db.collection('community_carcasses').limit(200).get()
-        docs = [d.to_dict() for d in snap]
-    except Exception as e:
-        print(f'  Warning: could not fetch community_carcasses: {e}')
-        return refs
+    global _anchor_cache
+    if _anchor_cache is not None:
+        return _anchor_cache
 
-    # Build a pool of docs per grade
-    by_grade = {}
-    for doc in docs:
-        grade = (doc.get('correct') or {}).get('qualityGrade')
-        url = doc.get('imageUrl', '')
-        if grade and url.startswith('https://'):
-            by_grade.setdefault(grade, []).append(url)
+    with open(_ANCHORS_MANIFEST, 'r', encoding='utf-8') as f:
+        manifest = json.load(f)
 
-    for grade in _REFERENCE_GRADES:
-        if grade not in by_grade:
-            continue
-        url = by_grade[grade][0]
-        try:
-            refs[grade] = _img_to_b64(url, from_url=True)
-        except Exception as e:
-            print(f'  Warning: could not load reference for {grade}: {e}')
+    anchors = []
+    for entry in manifest['anchors']:
+        path = os.path.join(_ANCHORS_DIR, entry['file'])
+        img = Image.open(path)
+        anchors.append({
+            'descriptor': entry['descriptor'],
+            'score':      entry['score'],
+            'grade_key':  entry['grade_key'],
+            'b64':        _img_bytes_to_b64(img, max_side=1568, quality=90),
+        })
+    _anchor_cache = anchors
+    return anchors
 
-    return refs
+
+# ----------------------------------------------------------------
+#  Prompt
+# ----------------------------------------------------------------
+
+_SYSTEM_PROMPT = """You are assisting official USDA beef quality grading by measuring intramuscular marbling in ribeye cross-sections.
+
+You are shown a sequence of ANCHOR images: official USDA marbling reference photographs, each labeled with its descriptor and numeric marbling score. These are your fixed calibration standards. Below Slight (score < 300) there is no reference photo — that range (Traces, Practically Devoid) means only faint traces of fat or none at all.
+
+For the TARGET image (the final image, unlabeled):
+1. Name the anchor with clearly LESS marbling than the target, and the anchor with clearly MORE marbling than the target. If the target has less marbling than every anchor, set lower_anchor to "None" and upper_anchor to "Slight".
+2. Interpolate: on a 0-100 scale, where does the target sit between those two anchors? 0 = matches the lower anchor exactly, 100 = matches the upper anchor exactly.
+3. Independently, name the marbling descriptor band the target falls in (Practically Devoid, Traces, Slight, Small, Modest, Moderate, Slightly Abundant, Moderately Abundant, or Abundant) and a subunit 0-99 within that band (e.g. Modest, subunit 30 means solidly early-Modest).
+4. Note whether the marbling flecks are fine and evenly dispersed, a mixed pattern, or coarse and clumped — fine, even dispersion at a given fat percentage reads as the higher end of its descriptor band; coarse, clumped fat at the same percentage reads as the lower end. Let this judgment inform which subunit you pick, don't report it separately from your subunit choice.
+5. Flag image quality problems (glare, underexposure, blur) that make judgment unreliable.
+
+This dataset spans the FULL range from Standard to High Prime. Most images are NOT average Choice — do not default to the middle of the scale. Judge only the longissimus dorsi (the large central eye muscle). Ignore external fat cap, seam fat between muscle groups, connective tissue sheen, and bone.
+
+Respond ONLY with valid JSON (no markdown fences):
+{
+  "lower_anchor": "None | Slight | Small | Modest | Moderate | Slightly Abundant | Moderately Abundant | Abundant",
+  "upper_anchor": "Slight | Small | Modest | Moderate | Slightly Abundant | Moderately Abundant | Abundant",
+  "interp": 0-100,
+  "descriptor": "Practically Devoid | Traces | Slight | Small | Modest | Moderate | Slightly Abundant | Moderately Abundant | Abundant",
+  "subunit": 0-99,
+  "fineness": "fine | mixed | coarse",
+  "image_quality": "good | glare | dark | blurry"
+}"""
+
+
+def _build_anchor_content(anchors):
+    """Build the reusable anchor-image content blocks, cache_control on the last one."""
+    content = [{
+        'type': 'text',
+        'text': (
+            'ANCHORS — official USDA marbling reference photographs, in ascending order '
+            'of marbling. Use these as your fixed calibration standard for every image '
+            'you grade in this session.'
+        )
+    }]
+    for i, a in enumerate(anchors):
+        content.append({
+            'type': 'text',
+            'text': f"ANCHOR {i + 1}: {a['descriptor']} (score {a['score']})"
+        })
+        content.append({
+            'type': 'image',
+            'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': a['b64']}
+        })
+    # Mark the end of the reusable prefix for prompt caching (Anthropic ephemeral cache).
+    content[-1]['cache_control'] = {'type': 'ephemeral'}
+    return content
+
+
+# ----------------------------------------------------------------
+#  API client
+# ----------------------------------------------------------------
+
+_client = None
+_api_key = None
+
+
+def set_api_key(key):
+    global _api_key, _client
+    _api_key = key.strip()
+    _client = None
+
+
+# ----------------------------------------------------------------
+#  Cost governor — approximate, based on real per-call token usage.
+#  Rates are estimates (Sonnet-tier list pricing as of this writing) and
+#  exist to give a hard stop during test/eval runs, not exact billing.
+# ----------------------------------------------------------------
+
+_PRICE_PER_MTOK = {
+    'input':       3.00,
+    'output':      15.00,
+    'cache_write': 3.75,
+    'cache_read':  0.30,
+}
+
+_budget_usd = None
+_spent_usd = 0.0
+_call_log = []
+
+
+class BudgetExceeded(Exception):
+    pass
+
+
+def set_budget(usd):
+    """Set (or clear with None) a hard spend cap. Raises BudgetExceeded once
+    cumulative estimated spend would meet or exceed it, checked before every
+    API call so we stop BEFORE overspending, not after."""
+    global _budget_usd, _spent_usd, _call_log
+    _budget_usd = usd
+    _spent_usd = 0.0
+    _call_log = []
+
+
+def get_spent():
+    return _spent_usd
+
+
+def _check_budget():
+    if _budget_usd is not None and _spent_usd >= _budget_usd:
+        raise BudgetExceeded(
+            f'Estimated spend ${_spent_usd:.2f} has reached the ${_budget_usd:.2f} cap — stopping before another call.'
+        )
+
+
+def _record_usage(usage):
+    global _spent_usd
+    inp   = getattr(usage, 'input_tokens', 0) or 0
+    out   = getattr(usage, 'output_tokens', 0) or 0
+    cwrite = getattr(usage, 'cache_creation_input_tokens', 0) or 0
+    cread  = getattr(usage, 'cache_read_input_tokens', 0) or 0
+    cost = (
+        inp    / 1e6 * _PRICE_PER_MTOK['input']
+        + out   / 1e6 * _PRICE_PER_MTOK['output']
+        + cwrite / 1e6 * _PRICE_PER_MTOK['cache_write']
+        + cread  / 1e6 * _PRICE_PER_MTOK['cache_read']
+    )
+    _spent_usd += cost
+    _call_log.append({'input': inp, 'output': out, 'cache_write': cwrite, 'cache_read': cread, 'cost': cost})
+    return cost
 
 
 def _get_client():
@@ -161,116 +276,200 @@ def _get_client():
     except ImportError:
         raise ImportError('Run: pip install anthropic')
     key = (_api_key or os.environ.get('ANTHROPIC_API_KEY', '')).strip()
-    # Fall back to api_key.txt next to this file
     if not key:
-        key_file = os.path.join(os.path.dirname(__file__), 'api_key.txt')
+        key_file = os.path.join(os.path.dirname(__file__), 'secrets', 'api_key.txt')
         if os.path.isfile(key_file):
             key = open(key_file).read().strip()
     if not key:
-        raise ValueError('No API key found. Add it to grader/api_key.txt')
+        raise ValueError('No API key found. Add it to grader/secrets/api_key.txt')
     return anthropic.Anthropic(api_key=key)
 
 
-_client = None
-_api_key = None
+MODEL = 'claude-sonnet-5'
 
 
-def set_api_key(key):
-    """Call this before analyze_marbling to set the key directly."""
-    global _api_key, _client
-    _api_key = key.strip()
-    _client = None  # force re-init with new key
+# ----------------------------------------------------------------
+#  Response parsing — never fabricates a grade key.
+# ----------------------------------------------------------------
 
-
-def _parse_grade_response(text):
+def _parse_sample(text):
+    """Parse one API response into a sample dict, or None if unparseable."""
     try:
         data = json.loads(text.strip())
     except json.JSONDecodeError:
         m = re.search(r'\{.*\}', text, re.DOTALL)
-        if m:
+        if not m:
+            return None
+        try:
             data = json.loads(m.group())
-        else:
-            return 'SE_AVG', 0.4, 350.0
+        except json.JSONDecodeError:
+            return None
 
-    grade_key = _GRADE_MAP.get(data.get('grade', '').lower().strip(), 'SE_HI')
-    confidence = {'high': 0.90, 'medium': 0.70, 'low': 0.50}.get(
-        data.get('confidence', 'medium').lower(), 0.70
+    descriptor = str(data.get('descriptor', '')).lower().strip()
+    if descriptor not in _VALID_DESCRIPTORS:
+        return None
+    try:
+        subunit = float(data.get('subunit', 0))
+    except (TypeError, ValueError):
+        subunit = 0.0
+    subunit = max(0.0, min(99.0, subunit))
+    descriptor_score = _DESCRIPTOR_FLOOR[descriptor] + subunit
+
+    # Cross-check against the anchor-interpolation estimate, when available.
+    interp_score = None
+    anchors = load_anchor_images()
+    anchor_by_desc = {a['descriptor'].lower(): a['score'] for a in anchors}
+    lower_name = str(data.get('lower_anchor', '')).lower().strip()
+    upper_name = str(data.get('upper_anchor', '')).lower().strip()
+    try:
+        interp = max(0.0, min(100.0, float(data.get('interp', 50))))
+    except (TypeError, ValueError):
+        interp = 50.0
+
+    if lower_name == 'none':
+        # Target sits below the lowest anchor (Slight, score 300+interp-scaled below).
+        upper_score = anchor_by_desc.get(upper_name, 300)
+        interp_score = 300 - (100 - interp) * 2.0  # extrapolate down toward Practically Devoid
+    elif lower_name in anchor_by_desc and upper_name in anchor_by_desc:
+        lo, hi = anchor_by_desc[lower_name], anchor_by_desc[upper_name]
+        interp_score = lo + (hi - lo) * (interp / 100.0)
+
+    flagged_inconsistent = (
+        interp_score is not None and abs(interp_score - descriptor_score) > 50
     )
-    score = float(data.get('marbling_score', 0))
-    if score == 0:
-        score = float(_DESCRIPTOR_SCORE.get(
-            data.get('marbling_descriptor', '').lower().strip(), 350
-        ))
-    return grade_key, confidence, score
+
+    return {
+        'descriptor_score':    descriptor_score,
+        'interp_score':        interp_score,
+        'score':               descriptor_score,  # primary score used downstream
+        'fineness':            data.get('fineness', 'mixed'),
+        'image_quality':       data.get('image_quality', 'good'),
+        'inconsistent':        flagged_inconsistent,
+        'raw':                 data,
+    }
 
 
-def analyze_marbling(image_path, reference_images=None, max_retries=3):
+# ----------------------------------------------------------------
+#  Main entry point
+# ----------------------------------------------------------------
+
+_CALIBRATION_FILE = os.path.join(os.path.dirname(__file__), 'calibration.json')
+
+
+def get_calibration_offset():
+    """Read the current data-driven offset from calibration.json (see recalibrate.py). Falls back to 0.0."""
+    if os.path.isfile(_CALIBRATION_FILE):
+        try:
+            with open(_CALIBRATION_FILE, 'r', encoding='utf-8') as f:
+                return float(json.load(f).get('calibration_offset', 0.0))
+        except (ValueError, KeyError, json.JSONDecodeError):
+            return 0.0
+    return 0.0
+
+
+def analyze_marbling(image_path, from_url=False, k=3, calibration_offset=None,
+                      max_retries=3):
     """
-    Analyze a ribeye image and return (grade_key, confidence, marbling_score).
+    Analyze a ribeye image with k self-consistency samples.
 
-    reference_images: dict of { grade_key: base64_jpeg_str } from load_reference_images().
-    When provided, they are prepended to the prompt as few-shot examples.
+    calibration_offset: constant score-space correction. If None (default),
+    reads the current fitted value from grader/calibration.json (see
+    recalibrate.py) — pass an explicit number to override for A/B testing.
+
+    Returns a dict:
+      {
+        'grade_key':  str or None (None means needs_review),
+        'score':      float or None (median, post-calibration-offset),
+        'spread':     float or None (max-min across samples used),
+        'confidence': 'high' | 'medium' | 'low' | None,
+        'k_valid':    int (samples that parsed successfully),
+        'k_good':     int (of those, samples with image_quality == 'good'),
+        'needs_review': bool,
+        'samples':    list of raw parsed sample dicts (for provenance/debugging),
+      }
+
+    Never fabricates a grade: if every sample fails to parse, or every parsed
+    sample reports bad image quality, needs_review is True and grade_key is None.
     """
     global _client
     if _client is None:
         _client = _get_client()
 
-    target_b64 = _img_to_b64(image_path)
+    if calibration_offset is None:
+        calibration_offset = get_calibration_offset()
 
-    # Build message content
-    content = []
+    anchors = load_anchor_images()
+    anchor_content = _build_anchor_content(anchors)
+    target_b64 = _img_to_b64(image_path, from_url=from_url)
 
-    if reference_images:
-        content.append({
-            'type': 'text',
-            'text': (
-                'Below are reference ribeye images with their known USDA grades. '
-                'Use these as your calibration standard, then grade the FINAL image.\n'
-            )
-        })
-        for grade_key, b64 in reference_images.items():
-            label = GRADE_LABELS.get(grade_key, grade_key)
-            content.append({'type': 'text', 'text': f'REFERENCE — {label} ({grade_key}):'})
-            content.append({
-                'type': 'image',
-                'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': b64}
-            })
-        content.append({'type': 'text', 'text': '\nNow grade this ribeye:'})
+    content = list(anchor_content) + [
+        {'type': 'text', 'text': 'Now grade this TARGET ribeye:'},
+        {'type': 'image', 'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': target_b64}},
+    ]
+
+    samples = []
+    for _ in range(k):
+        _check_budget()  # raises BudgetExceeded before spending on another call
+        text = None
+        for attempt in range(max_retries):
+            try:
+                response = _client.messages.create(
+                    model=MODEL,
+                    max_tokens=600,
+                    system=_SYSTEM_PROMPT,
+                    messages=[{'role': 'user', 'content': content}],
+                )
+                _record_usage(response.usage)  # log spend regardless of parse outcome below
+                text = next((b.text for b in response.content if b.type == 'text'), None)
+                break
+            except Exception as e:
+                err = str(e).lower()
+                if 'overloaded' in err or 'rate' in err:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
+        if text is None:
+            continue
+        parsed = _parse_sample(text)
+        if parsed is not None:
+            samples.append(parsed)
+
+    k_valid = len(samples)
+    good = [s for s in samples if s['image_quality'] == 'good']
+    use = good if good else samples
+    k_good = len(good)
+
+    if not use:
+        return {
+            'grade_key': None, 'score': None, 'spread': None, 'confidence': None,
+            'k_valid': k_valid, 'k_good': k_good, 'needs_review': True,
+            'samples': samples,
+        }
+
+    scores = [s['score'] for s in use]
+    median_score = statistics.median(scores)
+    spread = max(scores) - min(scores) if len(scores) > 1 else 0.0
+
+    if spread < 50:
+        confidence = 'high'
+    elif spread < 100:
+        confidence = 'medium'
     else:
-        content.append({'type': 'text', 'text': 'Grade this ribeye cross-section.'})
+        confidence = 'low'
 
-    content.append({
-        'type': 'image',
-        'source': {'type': 'base64', 'media_type': 'image/jpeg', 'data': target_b64}
-    })
+    calibrated = median_score + calibration_offset
+    grade_key = score_to_grade_key(calibrated)
 
-    system = _SYSTEM_PROMPT_BASE if reference_images else _SYSTEM_PROMPT_NO_REF
-
-    for attempt in range(max_retries):
-        try:
-            import anthropic
-            response = _client.messages.create(
-                model='claude-sonnet-4-6',
-                max_tokens=250,
-                system=system,
-                messages=[{'role': 'user', 'content': content}]
-            )
-            return _parse_grade_response(response.content[0].text)
-        except Exception as e:
-            err = str(e)
-            if 'overloaded' in err.lower() or 'rate' in err.lower():
-                time.sleep(2 ** attempt)
-                continue
-            raise
-
-    return 'SE_AVG', 0.4, 350.0
-
-
-def preprocess_image(image_path, target_size=(224, 224)):
-    img = Image.open(image_path).convert('RGB')
-    img = img.resize(target_size, Image.LANCZOS)
-    import numpy as np
-    return np.array(img, dtype=float) / 255.0
+    return {
+        'grade_key':    grade_key,
+        'score':        calibrated,
+        'spread':       spread,
+        'confidence':   confidence,
+        'k_valid':      k_valid,
+        'k_good':       k_good,
+        'needs_review': False,
+        'samples':      samples,
+    }
 
 
 def build_image_name(filename, index):

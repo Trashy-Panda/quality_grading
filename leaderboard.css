@@ -4,9 +4,36 @@
 /* ── Leaderboard Screen ─────────────────────────────────────── */
 
 #leaderboard-screen {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
   background: var(--paper);
   min-height: 100vh;
   color: var(--ink);
+}
+
+/* Faint corner overprint — same technique as setup/field guide.
+   Negative z-index (contained by #leaderboard-screen's own stacking
+   context) keeps it strictly behind every normal-flow child. */
+.leaderboard-overprint {
+  --art: url(assets/art-ribeye.png);
+  position: absolute;
+  top: 60px;
+  left: -70px;
+  width: 300px;
+  aspect-ratio: 899 / 685;
+  color: var(--ink);
+  opacity: 0.055;
+  transform: rotate(-10deg);
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 767px) {
+  .leaderboard-overprint {
+    display: none;
+  }
 }
 
 /* Page nav inherits from global .page-nav styles in style.css */

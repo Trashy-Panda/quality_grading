@@ -27,6 +27,7 @@ const DB_COLLECTIONS = {
   community_carcasses:  'community_carcasses',
   ai_carcasses:         'ai_carcasses',
   grading_votes:        'grading_votes',
+  meat_contests:        'meat_contests',
 };
 
 // ============================================================
@@ -48,18 +49,23 @@ const DB_COLLECTIONS = {
 //  High Choice (8) and Low Prime (9) are in different families
 //  and are NEVER treated as equivalent in scoring.
 // ------------------------------------------------------------------
+// `position` is spaced so the 9 actively-used grades sit on consecutive
+// integers (STD=1 ... PR_HI=9) — real neighbors are always exactly 1 apart.
+// The 2 collegiateOnly grades are slotted at the half-step matching their
+// conceptual spot (SE_AVG between SE_LO/SE_HI, COM below STD) so sort order
+// stays correct without reintroducing a gap into the main ladder's spacing.
 const QUALITY_GRADES = [
-  { key: 'PR_HI',  label: 'High Prime',      family: 'Prime',      sub: 'High',    position: 11 },
-  { key: 'PR_AVG', label: 'Average Prime',    family: 'Prime',      sub: 'Average', position: 10 },
-  { key: 'PR_LO',  label: 'Low Prime',        family: 'Prime',      sub: 'Low',     position:  9 },
-  { key: 'CH_HI',  label: 'High Choice',      family: 'Choice',     sub: 'High',    position:  8 },
-  { key: 'CH_AVG', label: 'Average Choice',   family: 'Choice',     sub: 'Average', position:  7 },
-  { key: 'CH_LO',  label: 'Low Choice',       family: 'Choice',     sub: 'Low',     position:  6 },
-  { key: 'SE_HI',  label: 'High Select',      family: 'Select',     sub: 'High',    position:  5 },
-  { key: 'SE_AVG', label: 'Average Select',   family: 'Select',     sub: 'Average', position:  4, collegiateOnly: true },
-  { key: 'SE_LO',  label: 'Low Select',       family: 'Select',     sub: 'Low',     position:  3 },
-  { key: 'STD',    label: 'Standard',         family: 'Standard',   sub: null,      position:  2 },
-  { key: 'COM',    label: 'Commercial',       family: 'Commercial', sub: null,      position:  1, collegiateOnly: true },
+  { key: 'PR_HI',  label: 'High Prime',      family: 'Prime',      sub: 'High',    position: 9 },
+  { key: 'PR_AVG', label: 'Average Prime',    family: 'Prime',      sub: 'Average', position: 8 },
+  { key: 'PR_LO',  label: 'Low Prime',        family: 'Prime',      sub: 'Low',     position: 7 },
+  { key: 'CH_HI',  label: 'High Choice',      family: 'Choice',     sub: 'High',    position: 6 },
+  { key: 'CH_AVG', label: 'Average Choice',   family: 'Choice',     sub: 'Average', position: 5 },
+  { key: 'CH_LO',  label: 'Low Choice',       family: 'Choice',     sub: 'Low',     position: 4 },
+  { key: 'SE_HI',  label: 'High Select',      family: 'Select',     sub: 'High',    position: 3 },
+  { key: 'SE_AVG', label: 'Average Select',   family: 'Select',     sub: 'Average', position: 2.5, collegiateOnly: true },
+  { key: 'SE_LO',  label: 'Low Select',       family: 'Select',     sub: 'Low',     position: 2 },
+  { key: 'STD',    label: 'Standard',         family: 'Standard',   sub: null,      position: 1 },
+  { key: 'COM',    label: 'Commercial',       family: 'Commercial', sub: null,      position: 0.5, collegiateOnly: true },
 ];
 
 // Quick lookup map: key → grade object

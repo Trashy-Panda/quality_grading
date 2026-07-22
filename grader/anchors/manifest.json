@@ -1,0 +1,16 @@
+{
+  "_comment": "Official USDA beef ribeye marbling reference photographs. US government works — public domain under 17 U.S.C. 105 (not copyrighted). Source: USDA AMS 'Beef Grading Shields' page.",
+  "_source_page": "https://www.ams.usda.gov/grades-standards/beef/shields-and-marbling-pictures",
+  "_fetched": "2026-07-15",
+  "_score_convention": "Each anchor photo depicts the LOWER LIMIT ('00' subunit) of its descriptor band, not the midpoint. Confirmed against 7 CFR / USDA AMS 'United States Standards for Grades of Carcass Beef' (eff. 2017), §54.104(o): 'the quality grade ... standards ... describe beef which is representative of the lower limits of each quality grade' and 'Illustrations of the lower limits of nine of these ten degrees of marbling are available from the USDA.' Corrected 2026-07-15 — scores were previously mislabeled at each band's midpoint.",
+  "anchors": [
+    { "file": "01_slight.jpg",              "descriptor": "Slight",               "score": 300, "grade_key": "SE_LO", "score_range": [300, 399] },
+    { "file": "02_small.jpg",               "descriptor": "Small",                "score": 400, "grade_key": "CH_LO", "score_range": [400, 499] },
+    { "file": "03_modest.jpg",              "descriptor": "Modest",               "score": 500, "grade_key": "CH_AVG", "score_range": [500, 599] },
+    { "file": "04_moderate.jpg",            "descriptor": "Moderate",             "score": 600, "grade_key": "CH_HI", "score_range": [600, 699] },
+    { "file": "05_slightly_abundant.jpg",   "descriptor": "Slightly Abundant",    "score": 700, "grade_key": "PR_LO", "score_range": [700, 799] },
+    { "file": "06_moderately_abundant.png", "descriptor": "Moderately Abundant",  "score": 800, "grade_key": "PR_AVG", "score_range": [800, 899] },
+    { "file": "07_abundant.png",            "descriptor": "Abundant",             "score": 900, "grade_key": "PR_HI", "score_range": [900, 999] }
+  ],
+  "_note_on_low_end": "USDA does not publish official reference photos below Slight (Practically Devoid / Traces, score < 300, grade STD). These bands are described to the model in text only — genuinely negligible marbling is rare in fed cattle and largely absent from contest photography."
+}

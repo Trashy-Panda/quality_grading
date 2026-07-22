@@ -1,0 +1,357 @@
+/* fieldguide.css — Rollmark design system
+   Grade Field Guide — the letterboard study card.
+   Uses global tokens from style.css (:root). */
+
+#fieldguide-screen {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--paper);
+  min-height: 100vh;
+  color: var(--ink);
+}
+
+/* Faint overprint — same ink-over-content technique as the landing hero.
+   Negative z-index (contained by #fieldguide-screen's own stacking
+   context) keeps it strictly behind every normal-flow child. */
+.fg-overprint {
+  --art: url(assets/art-rib.png);
+  position: absolute;
+  top: 0;
+  right: -40px;
+  width: 340px;
+  aspect-ratio: 1400 / 1053;
+  color: var(--ink);
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.fg-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 36px 20px 64px;
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+
+.fg-hero {
+  position: relative;
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.fg-postmark {
+  position: absolute;
+  top: -6px;
+  right: 0;
+  opacity: 0.5;
+}
+
+.fg-eyebrow {
+  display: block;
+  font-family: var(--font-script);
+  font-size: 26px;
+  color: var(--red);
+  line-height: 1.2;
+  transform: rotate(-2deg);
+  margin-bottom: 2px;
+}
+
+.fg-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4.4vw, 2.3rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  line-height: 1.12;
+  margin: 0 0 10px;
+}
+
+.fg-sub {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  max-width: 48ch;
+  margin: 0 auto;
+}
+
+/* ── Sections ───────────────────────────────────────────────── */
+
+.fg-section {
+  margin-top: 40px;
+}
+
+/* Letterboard band section header — torn strip (sawtooth edges,
+   same mask technique as the .ticket receipt system) */
+.fg-board-header {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--board-text);
+  background: var(--board-bg);
+  padding: 16px 18px 13px;
+  margin: 0 0 18px;
+  text-align: center;
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
+    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
+    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'%3E%3C/path%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
+}
+
+.fg-lead {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 14px;
+  text-align: center;
+}
+
+/* Prose sections — no box, just measured text between ornaments */
+.fg-section--prose {
+  text-align: center;
+}
+
+.fg-prose-heading {
+  font-family: var(--font-script);
+  font-size: 27px;
+  font-weight: 400;
+  color: var(--red);
+  margin: 4px 0 10px;
+  transform: rotate(-1.5deg);
+}
+
+.fg-body {
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin: 0 auto;
+  max-width: 58ch;
+  text-align: left;
+}
+
+.fg-note {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+  margin: 14px 0 0;
+}
+
+/* ── Grade ladder ───────────────────────────────────────────── */
+
+.fg-ladder {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.fg-rung {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-card);
+}
+.fg-rung:last-child { border-bottom: none; }
+
+/* Family boundary — the heavy rule where contests are won */
+.fg-rung--boundary {
+  border-top: 2px solid var(--ink);
+}
+
+.fg-rung-grade {
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
+}
+
+.fg-rung-family {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+}
+
+.fg-rung--prime .fg-rung-grade { color: var(--red); }
+.fg-rung--prime .fg-rung-family {
+  background: var(--red);
+  border-color: var(--ink);
+  color: var(--poster-cream);
+}
+.fg-rung--choice .fg-rung-family {
+  background: var(--board-bg);
+  color: var(--board-text);
+}
+.fg-rung--select .fg-rung-family {
+  background: var(--paper-deep);
+}
+.fg-rung--standard .fg-rung-family {
+  background: transparent;
+  color: var(--ink-faint);
+  border-color: var(--ink-faint);
+}
+
+/* ── Marbling specimens — butcher-chart rows w/ USDA photos ── */
+
+.fg-specimen-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fg-specimen-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 9px 4px;
+  border-bottom: 1px dashed var(--line);
+}
+.fg-specimen-row:last-child {
+  border-bottom: none;
+}
+
+/* Clickable thumbnail — opens the shared image modal full screen */
+.fg-specimen-view {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.fg-specimen-view:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+/* alternate rows lean the specimen slightly — pinned prints, not a grid */
+.fg-specimen-row:nth-child(odd) .fg-specimen-view { transform: rotate(-1.6deg); }
+.fg-specimen-row:nth-child(even) .fg-specimen-view { transform: rotate(1.3deg); }
+
+/* Zoom badge — signals the photo is tappable */
+.fg-specimen-view::after {
+  content: '';
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5EFE2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.fg-specimen-img {
+  display: block;
+  width: 68px;
+  height: 86px;
+  object-fit: cover;
+  background: var(--paper-card);
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.fg-specimen-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fg-specimen-row--nophoto {
+  padding-left: 90px;
+}
+
+.fg-marbling-degree {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.fg-marbling-grade {
+  font-family: var(--font-script);
+  font-size: 19px;
+  color: var(--red);
+  line-height: 1.15;
+}
+
+/* ── Scoring menu — dotted-leader price list, no box ────────── */
+
+.fg-scoring-menu {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.fg-scoring-menu .scoring-explainer-list {
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+
+.fg-footer {
+  margin-top: 44px;
+  text-align: center;
+}
+
+.fg-footer .btn-primary {
+  margin-top: 8px;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .fg-postmark { display: none; }
+  .fg-overprint { display: none; }
+  .fg-rung {
+    padding: 9px 12px;
+  }
+  .fg-rung-grade { font-size: 12px; }
+  .fg-specimen-row {
+    gap: 14px;
+  }
+  .fg-specimen-img {
+    width: 60px;
+    height: 78px;
+  }
+  .fg-specimen-row--nophoto {
+    padding-left: 78px;
+  }
+}

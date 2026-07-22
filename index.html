@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Beef Carcass Grading Drill</title>
-  <meta name="description" content="Competition-style beef carcass quality grading practice for FFA and collegiate meat judging. Grade real ribeye images against USDA standards, get instant feedback, and compete on the weekly leaderboard." />
+  <meta name="description" content="Competition-style beef carcass quality grading practice for FFA, 4-H, and collegiate meat judging. Grade real ribeye images against USDA standards, get instant feedback, and compete on the weekly leaderboard." />
   <meta name="theme-color" content="#C8102E" />
   <meta property="og:title" content="Beef Carcass Grading Drill" />
   <meta property="og:description" content="Grade real carcasses against USDA standards. Instant feedback, weekly leaderboard, free to practice." />
@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
   <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="stylesheet" href="fieldguide.css" />
   <link rel="stylesheet" href="premium.css" />
 </head>
 <body>
@@ -51,12 +52,11 @@
   <header id="app-header" class="hidden">
     <div class="brand">
       <button id="brand-home-btn" class="brand-home-btn" title="Home" aria-label="Go to home screen">
-        <span class="brand-badge"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
-        <span class="brand-name">Beef Grading Drill</span>
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </button>
     </div>
     <div class="header-right">
-      <span id="header-score" class="score-display">0 / 0 pts</span>
+      <span id="header-score" class="score-display" aria-live="polite">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
@@ -71,77 +71,93 @@
   </header>
 
   <!-- ===================================================
-       LANDING HERO
+       LANDING PAGE — scrolling broadsheet
        =================================================== -->
   <section id="landing-hero" aria-label="Welcome">
-    <span id="main-content" aria-hidden="true"></span>
 
-    <!-- Centered content area -->
-    <div class="landing-hero-inner">
-      <div class="landing-shield">
-        <svg class="shield-mark shield-mark--cream" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
-      </div>
-
-      <div class="landing-content">
-        <p class="landing-script" aria-hidden="true">welcome to the rail.</p>
-        <h1 class="landing-headline">Beef Carcass Quality Grading Drill</h1>
-
-        <p class="landing-subtext">Competition-style practice for FFA and collegiate meat judging competitors. Grade ribeye images against USDA standards.</p>
-
-        <div class="landing-stats">
-          <div class="landing-stat">
-            <span class="landing-stat-value">10 pts</span>
-            <span class="landing-stat-label">per carcass, instant feedback</span>
-          </div>
-          <div class="landing-stat">
-            <span class="landing-stat-value">Weekly</span>
-            <span class="landing-stat-label">public leaderboard rankings</span>
-          </div>
-          <div class="landing-stat">
-            <span class="landing-stat-value">Free</span>
-            <span class="landing-stat-label">no account needed to practice</span>
-          </div>
+    <!-- 1. Brand block — the OG-card composition at viewport scale
+         (skip-link target). Overprints ride the TOP layer. -->
+    <div class="landing-brand" id="main-content" tabindex="-1">
+      <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
+      <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
+      <div class="landing-brand-inner">
+        <div class="landing-shield">
+          <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+        </div>
+        <div class="landing-content">
+          <p class="landing-script" aria-hidden="true">Meat Judging</p>
+          <h1 class="landing-headline">Quality Grading Drills</h1>
+          <p class="landing-subtext">Competition-style practice for FFA, 4-H, and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
+          <button class="landing-cta" id="landing-setup-btn">
+            Start Grading
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
         </div>
       </div>
-
-      <!-- Action cards -->
-      <div class="landing-action-cards">
-        <div class="landing-action-card landing-action-card--primary">
-          <h3>Practice Drill</h3>
-          <p>Grade at your own pace. No account needed.</p>
-          <button class="card-btn" id="landing-start-btn">Start Practice &rarr;</button>
-        </div>
-        <div class="landing-action-card">
-          <h3>Weekly Challenge</h3>
-          <p>Compete against other graders. Scores post to a public leaderboard.</p>
-          <button class="card-btn" id="landing-weekly-btn">Start Weekly &rarr;</button>
-        </div>
-      </div>
-
-      <!-- Auth note -->
-      <p class="landing-auth-note">
-        Have a score to submit?
-        <button id="landing-signin-link">Sign In</button>
-      </p>
     </div>
 
-    <!-- Poster border ticker -->
+    <!-- 2. Study the standard — field guide feeder -->
+    <div class="landing-study">
+      <div class="landing-study-text">
+        <p class="landing-study-script" aria-hidden="true">know your beef</p>
+        <h2 class="landing-study-title">Study the Standard</h2>
+        <p class="landing-study-body">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
+        <button class="landing-study-link" id="landing-fieldguide-btn">Open the Field Guide &rarr;</button>
+      </div>
+      <div class="landing-study-specimens" aria-hidden="true">
+        <figure class="landing-specimen">
+          <img src="assets/anchors/01_slight.jpg" alt="" loading="lazy" />
+          <figcaption>Slight</figcaption>
+        </figure>
+        <figure class="landing-specimen">
+          <img src="assets/anchors/03_modest.jpg" alt="" loading="lazy" />
+          <figcaption>Modest</figcaption>
+        </figure>
+        <figure class="landing-specimen">
+          <img src="assets/anchors/07_abundant.jpg" alt="" loading="lazy" />
+          <figcaption>Abundant</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- 3. This week's board — letterboard band -->
+    <div class="landing-board">
+      <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
+      <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
+      <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
+    </div>
+
+    <!-- 4. Footer -->
     <div class="landing-ticker" aria-hidden="true">
       <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
     </div>
+    <footer class="landing-footer">
+      <p class="landing-auth-note">
+        <span class="landing-note-script" aria-hidden="true">welcome to the rail.</span>
+        Have a score to submit?
+        <button id="landing-signin-link">Sign In</button>
+      </p>
+      <svg class="landing-arch" viewBox="0 0 220 56" aria-hidden="true" focusable="false">
+        <path id="landing-arch-path" d="M12,48 Q110,8 208,48" fill="none"/>
+        <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
+      </svg>
+    </footer>
   </section>
 
   <!-- ===================================================
        HOME SCREEN
        =================================================== -->
   <main id="home-screen" class="screen hidden">
+    <span class="setup-overprint art-mask" aria-hidden="true"></span>
 
     <!-- Settings page top nav -->
-    <div class="page-nav">
+    <nav class="page-nav" aria-label="Session setup">
       <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
-        <span class="page-nav-emoji"><svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg></span>
-        <span class="page-nav-label">Session Setup</span>
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </button>
+      <div class="page-nav-links">
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+      </div>
       <div class="page-nav-auth">
         <button id="home-signin-btn" class="home-signin-btn">Sign In</button>
         <div id="home-user-area" class="home-user-area hidden">
@@ -150,12 +166,20 @@
           <button id="home-signout-btn" class="auth-signout-btn">Sign Out</button>
         </div>
       </div>
+    </nav>
+
+    <!-- Mode switcher — Practice vs Weekly -->
+    <div class="setup-switcher-wrap">
+      <div class="setup-switcher" role="tablist" aria-label="Session mode">
+        <button id="setup-tab-practice" class="setup-tab active" role="tab" aria-selected="true">Practice</button>
+        <button id="setup-tab-weekly" class="setup-tab" role="tab" aria-selected="false">Weekly Challenge</button>
+      </div>
     </div>
 
     <!-- PRACTICE PATH -->
     <div class="home-setup-single" id="practice-setup-view">
       <div class="setup-title-block">
-        <span class="setup-eyebrow" aria-hidden="true">practice makes prime</span>
+        <span class="setup-eyebrow" aria-hidden="true">grade at your own pace.</span>
         <h1 class="home-panel-header">Practice Drill</h1>
         <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
       </div>
@@ -164,8 +188,9 @@
         Begin Session
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
+      <p id="start-error" class="submit-error hidden" role="alert"></p>
 
-      <div class="star-rule" aria-hidden="true">&#9733;</div>
+      <hr class="zigzag-rule zigzag-rule--red" aria-hidden="true" />
 
       <!-- Practice Carcasses -->
       <div class="home-card" id="practice-carcasses-card">
@@ -183,8 +208,8 @@
       </div>
 
       <div class="home-setup-footer-links">
-        <button id="switch-to-weekly-link" class="setup-footer-link">Compete in this week&#x2019;s challenge instead &rarr;</button>
         <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
+        <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
       </div>
     </div><!-- /#practice-setup-view -->
 
@@ -206,7 +231,7 @@
           <!-- Division toggle — routes leaderboard only, full grades always used -->
           <div class="weekly-division-label">Select your division for rankings</div>
           <div class="weekly-ruleset-toggle">
-            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School</button>
+            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School (FFA/4-H)</button>
             <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
           </div>
           <div class="weekly-card-meta" id="weekly-card-meta">
@@ -225,7 +250,7 @@
       </div>
 
       <div class="home-setup-footer-links">
-        <button id="switch-to-practice-link" class="setup-footer-link">Just want to practice, no leaderboard? &rarr;</button>
+        <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
       </div>
     </div><!-- /#weekly-setup-view -->
 
@@ -285,7 +310,7 @@
         <div id="submit-error" class="submit-error hidden"></div>
 
         <!-- Feedback Panel -->
-        <div id="feedback-panel" class="feedback-panel hidden">
+        <div id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
           <p id="feedback-quality"></p>
           <p id="feedback-notes" class="hidden"></p>
         </div>
@@ -328,13 +353,13 @@
 
     <div class="scoring-explainer">
       <span class="explainer-art art-mask" aria-hidden="true"></span>
-      <h3>How scoring works — 10 pts per carcass</h3>
+      <h3>How scoring works: 10 pts per carcass</h3>
       <ul class="scoring-explainer-list">
-        <li><span class="pts-chip">10</span> Exact match</li>
-        <li><span class="pts-chip">9</span> &#x2153; grade off (1 subdivision)</li>
-        <li><span class="pts-chip">7</span> &#x2154; grade off (2 subdivisions)</li>
-        <li><span class="pts-chip">4</span> 1 full grade off (3 subdivisions)</li>
-        <li><span class="pts-chip pts-chip-zero">0</span> More than 1 full grade off</li>
+        <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
+        <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
+        <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
+        <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
+        <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
       </ul>
       <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).</p>
     </div>
@@ -424,23 +449,26 @@
 
   <!-- LEADERBOARD SCREEN -->
   <main id="leaderboard-screen" class="screen hidden">
-    <div class="page-nav">
+    <span class="leaderboard-overprint art-mask" aria-hidden="true"></span>
+    <nav class="page-nav" aria-label="Leaderboard">
       <button class="page-nav-back" id="leaderboard-back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         Home
       </button>
+      <div class="page-nav-links">
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+      </div>
       <span class="page-nav-brand">
-        <span class="page-nav-emoji">🏆</span>
-        <span class="page-nav-label">Weekly Leaderboard</span>
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </span>
-    </div>
+    </nav>
     <div class="leaderboard-hero">
       <div class="leaderboard-hero-stamp">WEEK RANKINGS</div>
       <h1 class="leaderboard-title">Leaderboard</h1>
       <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
     </div>
     <div class="leaderboard-tabs">
-      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA)</button>
+      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA/4-H)</button>
       <button id="leaderboard-tab-collegiate" class="leaderboard-tab">College</button>
     </div>
     <div class="leaderboard-table-wrap">
@@ -456,6 +484,161 @@
         </thead>
         <tbody id="leaderboard-tbody"></tbody>
       </table>
+    </div>
+  </main>
+
+  <!-- ===================================================
+       GRADE FIELD GUIDE
+       =================================================== -->
+  <main id="fieldguide-screen" class="screen hidden">
+    <span class="fg-overprint art-mask" aria-hidden="true"></span>
+
+    <nav class="page-nav" aria-label="Field guide">
+      <button class="page-nav-back" id="fieldguide-back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back
+      </button>
+      <div class="page-nav-links">
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+      </div>
+      <span class="page-nav-brand">
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
+      </span>
+    </nav>
+
+    <div class="fg-inner">
+
+      <header class="fg-hero">
+        <span class="fg-postmark postmark" aria-hidden="true">Reference<br />&#9733; official &#9733;<br />BG.Study</span>
+        <span class="fg-eyebrow" aria-hidden="true">know your beef</span>
+        <h1 class="fg-title">Grade Field Guide</h1>
+        <p class="fg-sub">The USDA quality-grade ladder, the marbling behind it, and how the drill scores you. All on one card.</p>
+        <hr class="zigzag-rule zigzag-rule--red zigzag-rule--wide" aria-hidden="true" />
+      </header>
+
+      <!-- 1. The grade ladder -->
+      <section class="fg-section" aria-labelledby="fg-ladder-heading">
+        <h2 id="fg-ladder-heading" class="fg-board-header">Quality Grade Ladder (A Maturity)</h2>
+        <ol class="fg-ladder" reversed>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">High Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Average Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Low Prime</span><span class="fg-rung-family">Prime</span></li>
+          <li class="fg-rung fg-rung--choice fg-rung--boundary"><span class="fg-rung-grade">High Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Average Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--choice"><span class="fg-rung-grade">Low Choice</span><span class="fg-rung-family">Choice</span></li>
+          <li class="fg-rung fg-rung--select fg-rung--boundary"><span class="fg-rung-grade">High Select</span><span class="fg-rung-family">Select</span></li>
+          <li class="fg-rung fg-rung--select"><span class="fg-rung-grade">Low Select</span><span class="fg-rung-family">Select</span></li>
+          <li class="fg-rung fg-rung--standard fg-rung--boundary"><span class="fg-rung-grade">Standard</span><span class="fg-rung-family">Standard</span></li>
+        </ol>
+        <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong>; the Choice&#8202;/&#8202;Select line especially is where contests are won and lost. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
+      </section>
+
+      <!-- 2. Marbling degrees — specimen chart with USDA anchor photos -->
+      <section class="fg-section" aria-labelledby="fg-marbling-heading">
+        <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
+        <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree. Tap any photo to view it full screen.</p>
+        <ol class="fg-specimen-list">
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/07_abundant.jpg" data-full-alt="USDA reference photo: Abundant marbling, minimum of the degree" aria-label="View full screen: Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Abundant</span>
+              <span class="fg-marbling-grade">High Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/06_moderately_abundant.jpg" data-full-alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" aria-label="View full screen: Moderately Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Moderately Abundant</span>
+              <span class="fg-marbling-grade">Average Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/05_slightly_abundant.jpg" data-full-alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" aria-label="View full screen: Slightly Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Slightly Abundant</span>
+              <span class="fg-marbling-grade">Low Prime</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/04_moderate.jpg" data-full-alt="USDA reference photo: Moderate marbling, minimum of the degree" aria-label="View full screen: Moderate marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Moderate</span>
+              <span class="fg-marbling-grade">High Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/03_modest.jpg" data-full-alt="USDA reference photo: Modest marbling, minimum of the degree" aria-label="View full screen: Modest marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Modest</span>
+              <span class="fg-marbling-grade">Average Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/02_small.jpg" data-full-alt="USDA reference photo: Small marbling, minimum of the degree" aria-label="View full screen: Small marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Small</span>
+              <span class="fg-marbling-grade">Low Choice</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row">
+            <button class="fg-specimen-view" data-full-src="assets/anchors/01_slight.jpg" data-full-alt="USDA reference photo: Slight marbling, minimum of the degree" aria-label="View full screen: Slight marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
+            </button>
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Slight&sup1;</span>
+              <span class="fg-marbling-grade">Select</span>
+            </div>
+          </li>
+          <li class="fg-specimen-row fg-specimen-row--nophoto">
+            <div class="fg-specimen-text">
+              <span class="fg-marbling-degree">Traces &amp; Practically Devoid&sup2;</span>
+              <span class="fg-marbling-grade">Standard</span>
+            </div>
+          </li>
+        </ol>
+        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight 50&ndash;100 grades High Select, Slight 0&ndash;50 grades Low Select.<br />&sup2; USDA publishes no reference photo below Slight; genuinely negligible marbling is rare in fed cattle.<br />Photographs: official USDA marbling references (public domain).</p>
+      </section>
+
+      <!-- 3. Maturity — plain prose, no box -->
+      <section class="fg-section fg-section--prose" aria-labelledby="fg-maturity-heading">
+        <hr class="zigzag-rule" aria-hidden="true" />
+        <h2 id="fg-maturity-heading" class="fg-prose-heading">A word on maturity</h2>
+        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity, so this drill assumes every carcass is <strong>A maturity</strong> (roughly 9&ndash;30 months, nearly all fed cattle) and grades it straight off the marbling. In the ring, maturity is read from the actual bones and lean, detail a photo can't show, similar to how certain yield-grade traits can knock a carcass out of eligibility for a quality grade its marbling alone would earn. This drill isolates the marbling half of that call; a maturity study tool may be a future addition.</p>
+        <hr class="zigzag-rule" aria-hidden="true" />
+      </section>
+
+      <!-- 4. How scoring works -->
+      <section class="fg-section" aria-labelledby="fg-scoring-heading">
+        <h2 id="fg-scoring-heading" class="fg-board-header">How the Drill Scores</h2>
+        <div class="fg-scoring-menu">
+          <ul class="scoring-explainer-list">
+            <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
+            <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
+            <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
+            <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
+            <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
+          </ul>
+          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts).</p>
+        </div>
+      </section>
+
+      <div class="fg-footer">
+        <hr class="zigzag-rule" aria-hidden="true" />
+        <button id="fieldguide-drill-btn" class="btn-primary">Put It to Practice &rarr;</button>
+      </div>
+
     </div>
   </main>
 
@@ -579,22 +762,12 @@
         }, 260);
       }
 
-      // Practice Drill button
-      const landingStartBtn = document.getElementById('landing-start-btn');
-      if (landingStartBtn) {
-        landingStartBtn.addEventListener('click', () => {
+      // Start Grading — the landing's single job: get people to the setup page
+      const landingSetupBtn = document.getElementById('landing-setup-btn');
+      if (landingSetupBtn) {
+        landingSetupBtn.addEventListener('click', () => {
           folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('practice');
-          });
-        });
-      }
-
-      // Weekly Challenge button
-      const landingWeeklyBtn = document.getElementById('landing-weekly-btn');
-      if (landingWeeklyBtn) {
-        landingWeeklyBtn.addEventListener('click', () => {
-          folderNavigateTo(() => {
-            if (typeof renderHomeScreen === 'function') renderHomeScreen('weekly');
+            if (typeof renderHomeScreen === 'function') renderHomeScreen();
           });
         });
       }
@@ -604,6 +777,25 @@
       if (landingSigninLink) {
         landingSigninLink.addEventListener('click', () => {
           if (typeof openAuthModal === 'function') openAuthModal();
+        });
+      }
+
+      // ── Landing section links ──────────────────────────────────
+      const landingFieldguideBtn = document.getElementById('landing-fieldguide-btn');
+      if (landingFieldguideBtn) {
+        landingFieldguideBtn.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            // true = came from landing (already hidden by the exit animation)
+            if (typeof showFieldGuideScreen === 'function') showFieldGuideScreen(true);
+          });
+        });
+      }
+      const landingLeaderboardBtn = document.getElementById('landing-leaderboard-btn');
+      if (landingLeaderboardBtn) {
+        landingLeaderboardBtn.addEventListener('click', () => {
+          folderNavigateTo(() => {
+            if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
+          });
         });
       }
 
@@ -618,16 +810,6 @@
       document.getElementById('brand-home-btn').addEventListener('click', () => {
         renderHomeScreen();
       });
-
-      // Setup screen cross-links between Practice and Weekly views
-      const switchToWeeklyLink = document.getElementById('switch-to-weekly-link');
-      if (switchToWeeklyLink) {
-        switchToWeeklyLink.addEventListener('click', () => renderHomeScreen('weekly'));
-      }
-      const switchToPracticeLink = document.getElementById('switch-to-practice-link');
-      if (switchToPracticeLink) {
-        switchToPracticeLink.addEventListener('click', () => renderHomeScreen('practice'));
-      }
 
       // Contribute link on Practice setup opens the crowdsource-grading modal directly
       const openContributeLink = document.getElementById('open-contribute-link');

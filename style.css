@@ -14,6 +14,7 @@
   --paper-deep: #ECE4D2;   /* fills, hover, zero-feedback */
   --paper-card: #FBF7EE;   /* card surface */
   --line:       #DCD2BC;   /* hairline rules */
+  --line-heavy: #C9BEA6;   /* resting borders on interactive tiles */
 
   /* ink */
   --ink:        #1E1B16;
@@ -161,6 +162,67 @@ body::before {
   border-top-color: var(--poster-line);
 }
 
+/* Zigzag print rule — El Felix / vintage price-card divider.
+   width:100% is required (not just max-width): inside a flex column
+   with align-items other than stretch, a bare <hr> has no intrinsic
+   content size and collapses to 0 width, rendering nothing even
+   though the background is set correctly. */
+.zigzag-rule {
+  width: 100%;
+  height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%231E1B16' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center / 16px 8px;
+  border: none;
+  margin: 18px auto;
+  max-width: 180px;
+}
+.zigzag-rule--red {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%23C8102E' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+.zigzag-rule--wide { max-width: 320px; }
+
+/* Postmark stamp — circular dashed-ring mark (Brick Creative ref) */
+.postmark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 92px;
+  border: 1.5px dashed var(--red);
+  border-radius: 50%;
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-align: center;
+  line-height: 1.5;
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Duotone print treatment — single-ink photo on cream (Jack's ref).
+   DECORATIVE USE ONLY — never on drill grading images, where
+   marbling color fidelity is the whole point. */
+.duotone-red {
+  position: relative;
+  background: var(--red);
+  overflow: hidden;
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+}
+.duotone-red > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.15) brightness(1.05);
+  mix-blend-mode: screen;
+}
+
 /* ── Shield logo (SVG <use> instances of #gtm-shield) ─────────
    Official artwork: single-color paths, lettering knocked out —
    recolor with `color` alone. */
@@ -230,30 +292,6 @@ body::before {
 }
 .brand-home-btn:hover { background: var(--paper-deep); }
 
-.brand-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  line-height: 1;
-  flex-shrink: 0;
-}
-.brand-badge svg {
-  display: block;
-  height: 30px;
-  width: auto;
-}
-
-.brand-name {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  white-space: nowrap;
-  color: var(--ink);
-}
-
 .header-right {
   display: flex;
   align-items: center;
@@ -293,24 +331,15 @@ body::before {
   color: var(--ink);
 }
 
-/* ── Landing Hero (#landing-hero) — THE scarlet poster ──────── */
+/* ── Landing Page (#landing-hero) — scrolling broadsheet ──────
+   Printed-menu rhythm: cream masthead + brand block, deep-cream
+   drills band with receipt tickets, cream study section, ink
+   letterboard band, ticker + small-print footer. One warm red
+   ink; overprint art is always INK at low opacity. */
 #landing-hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--poster-bg);
-  color: var(--poster-cream);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: visible;
-}
-
-/* Skip-link anchor span — out of layout flow */
-#landing-hero > span#main-content {
-  position: absolute;
-  width: 0;
-  height: 0;
+  background: var(--paper);
+  color: var(--ink);
   overflow: hidden;
 }
 
@@ -321,186 +350,323 @@ body::before {
   transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
-/* Poster grid: giant shield left, content right, cards across the bottom */
-.landing-hero-inner {
-  max-width: 1080px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 56px 32px 88px;
-  display: grid;
-  grid-template-columns: minmax(230px, 320px) 1fr;
-  column-gap: 56px;
+/* ── 1. Brand block — the OG card at viewport scale ─────────── */
+.landing-brand {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+}
+.landing-brand:focus { outline: none; }
+
+.landing-brand-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(210px, 300px) 1fr;
+  column-gap: 116px;
+  align-items: center;
+}
+
+/* Torn seam into the next (deep-cream) band — the zigzag motif as
+   a scroll transition rather than a flat border. */
+.landing-brand::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 10px;
+  z-index: 1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 10 L10 0 L20 10 Z' fill='%23ECE4D2'/%3E%3C/svg%3E") repeat-x bottom / 20px 10px;
+  pointer-events: none;
+}
+
+/* Overprint art — TOP layer, ink poured over the composition.
+   The rib's straight edges sit flush with the page's top + right
+   (OG-card placement); the hard hat anchors bottom-left. */
+.landing-overprint {
+  position: absolute;
+  color: var(--ink);
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+
+.landing-overprint--rib {
+  --art: url(assets/art-rib.png);
+  top: 0;
+  right: 0;
+  width: min(420px, 38vw);
+  aspect-ratio: 1400 / 1053;
+  opacity: 0.12;
+}
+
+/* Flipped so the brim faces into the composition, not off the edge */
+.landing-overprint--hardhat {
+  --art: url(assets/art-hardhat.png);
+  bottom: -16px;
+  left: -26px;
+  width: min(300px, 34vw);
+  aspect-ratio: 1109 / 789;
+  opacity: 0.11;
+  transform: scaleX(-1) rotate(-7deg);
+}
+
+.landing-shield {
+  position: relative;
+  z-index: 1;
+  line-height: 0;
+  justify-self: center;
+}
+.landing-shield svg {
+  width: clamp(210px, 24vw, 300px);
+  height: auto;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
 }
 
 .landing-content {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Brush-script lead-in above the headline */
+/* Script lead-in over tracked caps — the OG-card lockup */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-size: clamp(2.1rem, 3.6vw, 3rem);
   font-weight: 400;
-  color: var(--poster-cream);
-  line-height: 1.2;
-  margin: 0 0 10px;
+  color: var(--red);
+  line-height: 1.15;
+  margin: 0 0 4px;
   transform: rotate(-2deg);
   transform-origin: left bottom;
 }
 
-/* Main headline — vintage MEAT-ad caps (the shield carries the brand) */
+/* Flat scarlet caps under the script — the OG-card lockup, one ink */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
   font-weight: 700;
-  color: var(--poster-cream);
+  color: var(--red);
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  line-height: 1.1;
-  margin: 0;
+  line-height: 1.14;
+  margin: 8px 0 0;
   max-width: 20ch;
   text-wrap: balance;
 }
 
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: 17px;
-  color: var(--poster-dim);
-  line-height: 1.65;
-  margin-top: 20px;
-  max-width: 52ch;
-}
-
-/* Stat callouts — pure gap layout (wrap-safe) */
-.landing-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px 44px;
-  margin-top: 44px;
-}
-
-.landing-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.landing-stat-value {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--poster-cream);
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.1;
-}
-
-.landing-stat-label {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--poster-dim);
-}
-
-/* Action cards — full-width bottom row, paper tickets on the poster */
-.landing-action-cards {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 44px;
-}
-
-.landing-action-card {
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  padding: 26px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 4px 4px 0 rgba(30, 27, 22, 0.35);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-.landing-action-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(30, 27, 22, 0.35);
-}
-
-.landing-action-card h3 {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--ink);
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
-}
-
-.landing-action-card p {
-  font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 16.5px;
   color: var(--ink-soft);
-  flex-grow: 1;
-  margin-bottom: 20px;
-  line-height: 1.55;
+  line-height: 1.65;
+  margin-top: 18px;
+  max-width: 50ch;
 }
 
-/* Card CTAs — outlined ink block by default */
-.landing-action-card .card-btn {
-  width: 100%;
-  background: transparent;
-  color: var(--ink);
-  border: var(--border-ink);
-  padding: 13px 20px;
+/* The landing's single job: send people to the setup page.
+   Flat scarlet, no border — cohesive with the shield, not a shout.
+   Same directional chevron as every other primary CTA on the site. */
+.landing-cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 28px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  padding: 15px 30px;
+  background: var(--red);
+  color: var(--poster-cream);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+.landing-cta svg {
+  flex-shrink: 0;
+}
+.landing-cta:hover { background: var(--red-deep); }
+.landing-cta:active { transform: translateY(1px); }
+.landing-cta:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ── 2. Study the standard — deep-cream band, field guide feeder ── */
+.landing-study {
+  background: var(--paper-deep);
+  padding: 76px max(32px, calc((100vw - 980px) / 2));
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 48px;
+  align-items: center;
+}
+
+.landing-study-script {
+  font-family: var(--font-script);
+  font-size: 24px;
+  color: var(--red);
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
+  margin: 0 0 2px;
+}
+
+.landing-study-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  margin: 0 0 10px;
+}
+
+.landing-study-body {
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 44ch;
+  margin: 0 0 20px;
+}
+
+.landing-study-link {
+  align-self: flex-start;
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
-  cursor: pointer;
+  color: var(--ink);
+  background: transparent;
+  border: var(--border-ink);
   border-radius: var(--radius-sm);
+  padding: 12px 22px;
+  cursor: pointer;
   transition: background 140ms ease, color 140ms ease;
 }
-.landing-action-card .card-btn:hover {
+.landing-study-link:hover {
   background: var(--ink);
   color: var(--board-text);
 }
-
-/* Primary card CTA — the ink letterboard block */
-.landing-action-card--primary .card-btn {
-  background: var(--board-bg);
-  border-color: var(--ink);
-  color: var(--board-text);
-}
-.landing-action-card--primary .card-btn:hover {
-  background: var(--red);
-  color: var(--poster-cream);
-}
-
-.landing-action-card .card-btn:focus-visible {
+.landing-study-link:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* Auth note — spans below both columns */
-.landing-auth-note {
-  grid-column: 1 / -1;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--poster-dim);
-  margin-top: 28px;
+/* Anchor specimens — small framed photos, fanned like prints */
+.landing-study-specimens {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.landing-specimen {
+  margin: 0;
+  background: var(--paper-card);
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  padding: 7px 7px 5px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.landing-specimen:nth-child(1) { transform: rotate(-3deg); }
+.landing-specimen:nth-child(2) { transform: rotate(1.5deg) translateY(-10px); }
+.landing-specimen:nth-child(3) { transform: rotate(3.5deg); }
+
+.landing-specimen img {
+  display: block;
+  width: 88px;
+  height: 118px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.landing-specimen figcaption {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  padding-top: 5px;
+}
+
+/* ── 5. This week's board — letterboard band ────────────────── */
+.landing-board {
+  background: var(--board-bg);
+  border-top: var(--border-ink);
+  padding: 44px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  flex-wrap: wrap;
   text-align: center;
 }
 
-/* Poster border ticker — pinned to the hero's bottom edge */
+.landing-board-rosette {
+  --art: url(assets/art-rosette.png);
+  width: 40px;
+  aspect-ratio: 565 / 939;
+  color: var(--ribbon);
+  transform: rotate(-5deg);
+  flex-shrink: 0;
+}
+
+.landing-board-line {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--board-text);
+  line-height: 1.6;
+  max-width: 40ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.landing-board-link {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--board-text);
+  background: transparent;
+  border: 1.5px solid var(--board-dim);
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+.landing-board-link:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+.landing-board-link:focus-visible {
+  outline: 2px solid var(--board-text);
+  outline-offset: 2px;
+}
+
+/* ── 6. Footer — ticker + small print ───────────────────────── */
 .landing-ticker {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-top: 1px solid var(--poster-line);
+  background: var(--board-bg);
+  border-top: 1px solid rgba(245, 239, 226, 0.18);
   padding: 11px 0;
   overflow: hidden;
   white-space: nowrap;
@@ -510,15 +676,40 @@ body::before {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
-  color: var(--poster-dim);
+  color: var(--board-dim);
   user-select: none;
   pointer-events: none;
+}
+
+.landing-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 34px 20px 40px;
+}
+
+.landing-auth-note {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin: 0;
+  text-align: center;
+}
+
+.landing-note-script {
+  font-family: var(--font-script);
+  font-size: 17px;
+  color: var(--red);
+  margin-right: 10px;
+  display: inline-block;
+  transform: rotate(-2deg);
 }
 
 .landing-auth-note button {
   background: none;
   border: none;
-  color: var(--poster-cream);
+  color: var(--red);
   cursor: pointer;
   font-family: var(--font-ui);
   font-size: 13px;
@@ -528,10 +719,31 @@ body::before {
   padding: 2px 4px;
   border-radius: var(--radius-sm);
 }
-.landing-auth-note button:hover { color: #FFFFFF; }
+.landing-auth-note button:hover { color: var(--red-deep); }
 .landing-auth-note button:focus-visible {
-  outline: 2px solid var(--poster-cream);
+  outline: 2px solid var(--red);
   outline-offset: 2px;
+}
+
+.landing-arch {
+  width: 170px;
+  height: auto;
+  pointer-events: none;
+}
+.landing-arch-text {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  fill: var(--red);
+}
+
+/* Dotted leader — used by the scoring-menu price lines
+   (summary explainer + field guide). */
+.ticket-leader {
+  flex: 1;
+  border-bottom: 2px dotted var(--line);
+  transform: translateY(-3px);
 }
 
 /* ── Screen Layout ──────────────────────────────────────────── */
@@ -539,6 +751,33 @@ body::before {
   width: 100%;
   padding: 0;
   margin: 0;
+}
+
+#home-screen {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Faint corner overprint — same ink-over-content technique as the
+   landing hero, dialed way down so it reads as texture, not noise.
+   Negative z-index (contained by #home-screen's own stacking context)
+   keeps it strictly behind every normal-flow child. Hard hat here,
+   ribeye on the leaderboard, rib on the field guide — one asset per
+   page rather than repeating the same mark everywhere. */
+.setup-overprint {
+  --art: url(assets/art-hardhat.png);
+  position: absolute;
+  top: 100px;
+  right: -70px;
+  width: 320px;
+  aspect-ratio: 1109 / 789;
+  color: var(--ink);
+  opacity: 0.055;
+  transform: rotate(8deg);
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ── Page nav (setup / leaderboard top bar) ─────────────────── */
@@ -594,6 +833,17 @@ body::before {
   color: var(--ink);
 }
 
+/* Script wordmark brand — replaces the shield where it's too small to read */
+.page-nav-script {
+  font-family: var(--font-script);
+  font-size: 21px;
+  color: var(--red);
+  line-height: 1.1;
+  display: inline-block;
+  transform: rotate(-2deg);
+  padding: 2px 0;
+}
+
 .page-nav-back {
   display: inline-flex;
   align-items: center;
@@ -622,19 +872,48 @@ body::before {
   gap: 10px;
 }
 
+/* Slash-separated caps nav — every screen except the landing */
+.page-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.pnav-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  padding: 4px 2px;
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+.pnav-link:hover { color: var(--red); }
+.pnav-link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pnav-sep {
+  color: var(--line-heavy);
+  font-size: 12px;
+  user-select: none;
+}
+
 /* ── Session setup: single-column entry-point views ─────────── */
 .home-setup-single {
   max-width: 620px;
   margin: 0 auto;
-  padding: 48px 20px 64px;
+  padding: 32px 20px 64px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.setup-title-block {
-  text-align: center;
-  margin-bottom: 8px;
 }
 
 /* Brush-script eyebrow above setup titles */
@@ -659,6 +938,54 @@ body::before {
   text-wrap: balance;
 }
 
+/* Mode switcher — segmented Practice / Weekly control */
+.setup-switcher-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 34px 20px 0;
+}
+
+.setup-switcher {
+  display: flex;
+  width: fit-content;
+  background: var(--paper-card);
+  border: var(--border-ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.setup-tab {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  padding: 10px 24px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 140ms ease, color 140ms ease;
+}
+.setup-tab:hover:not(.active) {
+  background: var(--paper-deep);
+  color: var(--ink);
+}
+.setup-tab.active {
+  background: var(--ink);
+  color: var(--board-text);
+}
+.setup-tab:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: -2px;
+}
+
+.setup-title-block {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
 .setup-subtitle {
   font-family: var(--font-ui);
   font-size: 15px;
@@ -668,10 +995,11 @@ body::before {
 
 .home-setup-footer-links {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 4px 18px;
+  margin-top: 4px;
 }
 
 .setup-footer-link {
@@ -760,36 +1088,41 @@ body::before {
   border-top: 1px dashed var(--line);
 }
 
+/* Stamped-plate checkbox — replaces the iOS-style slider (de-tech).
+   Checked state stamps a cream star on a scarlet plate. */
 .custom-set-toggle input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 42px;
+  width: 24px;
   height: 24px;
-  border-radius: var(--radius-pill);
-  background: var(--paper-deep);
+  border-radius: 4px;
+  background: var(--paper-card);
   border: 1.5px solid var(--ink);
   flex-shrink: 0;
   cursor: pointer;
   position: relative;
-  transition: background 160ms ease;
+  transition: background 140ms ease;
 }
 .custom-set-toggle input[type="checkbox"]::after {
-  content: '';
+  content: '\2605';
   position: absolute;
-  top: 2.5px;
-  left: 2.5px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--ink);
-  transition: transform 160ms ease, background 160ms ease;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--poster-cream);
+  opacity: 0;
+  transform: scale(1.5);
+  transition: opacity 140ms ease, transform 140ms ease;
 }
 .custom-set-toggle input[type="checkbox"]:checked {
   background: var(--red);
 }
 .custom-set-toggle input[type="checkbox"]:checked::after {
-  transform: translateX(17px);
-  background: var(--poster-cream);
+  opacity: 1;
+  transform: scale(1);
 }
 .custom-set-toggle input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--red);
@@ -1074,17 +1407,18 @@ body::before {
   letter-spacing: 0.05em;
   white-space: nowrap;
   padding: 11px 12px;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--line-heavy);
   cursor: pointer;
   flex: 1 1 auto;   /* basis = label width — never narrower than the text */
   min-width: 0;
   background: var(--paper-card);
   color: var(--ink);
   border-radius: var(--radius-sm);
-  transition: background 120ms ease, color 120ms ease;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 .grade-btn:hover {
   background: var(--paper-deep);
+  border-color: var(--ink);
 }
 .grade-btn.active {
   background: var(--red);
@@ -1155,11 +1489,18 @@ body::before {
 
 /* Feedback Panel */
 .feedback-panel {
-  border-radius: var(--radius-md);
-  padding: 18px 22px;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 22px 22px 18px;
   font-family: var(--font-ui);
   font-size: 14.5px;
   line-height: 1.6;
+  /* Torn receipt-stub top edge */
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 9px) no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='9'%3E%3Cpath d='M0 9 L8 0 L16 9 Z'/%3E%3C/svg%3E") repeat-x top / 16px 9px,
+    linear-gradient(#000, #000) 0 9px / 100% calc(100% - 9px) no-repeat;
 }
 .feedback-panel.feedback-perfect {
   background: var(--board-bg);
@@ -1397,31 +1738,23 @@ body::before {
   color: var(--ink-soft);
 }
 
+/* Dotted-leader menu lines: "Exact match ......... 10" */
 .scoring-explainer-list li {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .pts-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 34px;
-  height: 26px;
-  padding: 0 8px;
-  background: var(--ink);
-  color: var(--paper-card);
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
-  border-radius: var(--radius-sm);
+  color: var(--ink);
   flex-shrink: 0;
 }
 .pts-chip-zero {
-  background: var(--red);
-  color: var(--poster-cream);
+  color: var(--red);
 }
 
 .scoring-explainer-note {
@@ -2061,30 +2394,73 @@ body::before {
   .carcass-image-wrap { min-height: 220px; }
 }
 
+/* Slash nav collapses at narrow widths — brand/back + auth keep the bar
+   usable; all destinations stay reachable through in-page content links. */
+@media (max-width: 700px) {
+  .page-nav-links {
+    display: none;
+  }
+}
+
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
-  #landing-hero {
-    min-height: 100svh;
+  .setup-overprint {
+    display: none;
   }
-  .landing-hero-inner {
+  .landing-brand {
+    min-height: 100svh;
+    padding: 44px 20px;
+  }
+  .landing-brand-inner {
     grid-template-columns: 1fr;
-    padding: 40px 20px 72px;
-    row-gap: 28px;
+    row-gap: 26px;
+  }
+  .landing-overprint--rib {
+    width: 52vw;
+    opacity: 0.1;
+    --rest-opacity: 0.1;  /* keeps the entrance animation's fill in sync */
+  }
+  .landing-overprint--hardhat {
+    width: 40vw;
+    opacity: 0.1;
+    --rest-opacity: 0.1;
   }
   .landing-shield svg {
-    width: 160px;
+    width: 156px;
   }
   .landing-content {
     text-align: center;
     align-items: center;
   }
+  .landing-script {
+    transform-origin: center bottom;
+  }
   .landing-headline {
-    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+    font-size: clamp(1.5rem, 6.6vw, 2rem);
     max-width: none;
   }
-  .landing-action-cards {
+  .landing-subtext {
+    font-size: 15px;
+  }
+  .landing-cta {
+    align-self: center;
+  }
+  .landing-study {
     grid-template-columns: 1fr;
-    margin-top: 8px;
+    padding: 52px 20px;
+    gap: 34px;
+    text-align: center;
+  }
+  .landing-study-script { transform-origin: center bottom; }
+  .landing-study-link { align-self: center; }
+  .landing-study-specimens { justify-content: center; }
+  .landing-specimen img {
+    width: 76px;
+    height: 102px;
+  }
+  .landing-board {
+    padding: 36px 20px;
+    gap: 18px;
   }
   .landing-ticker {
     font-size: 9px;
@@ -2096,19 +2472,6 @@ body::before {
     font-size: 9px;
   }
   .cert-rosette { width: 44px; }
-  .landing-subtext {
-    font-size: 15px;
-  }
-  .landing-stats {
-    gap: 16px 28px;
-    margin-top: 24px;
-    justify-content: center;
-  }
-  .landing-stat-value { font-size: 19px; }
-  .landing-auth-note {
-    grid-column: 1;
-    margin-top: 8px;
-  }
 
   .home-setup-single {
     padding: 32px 16px 48px;

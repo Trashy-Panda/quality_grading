@@ -264,10 +264,12 @@
   line-height: 1.55;
 }
 
-/* Divider rule */
+/* Divider rule — zigzag print ornament */
 .auth-modal-divider {
   border: none;
-  border-top: 1px dashed var(--line);
+  height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%231E1B16' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center / 16px 8px;
+  opacity: 0.35;
   margin: 16px 0;
 }
 

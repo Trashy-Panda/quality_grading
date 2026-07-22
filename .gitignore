@@ -8,8 +8,15 @@ grader/firebase-service-account.json
 grader/api_key.txt
 grader/cloudinary_creds.txt
 grader/tmp/
+grader/**/firebase-service-account.json
+grader/**/api_key.txt
+grader/**/cloudinary_creds.txt
+grader/**/tmp/
 *.keras
 *.h5
+__pycache__/
+*.pyc
+grader/output/
 
 # OS noise
 .DS_Store

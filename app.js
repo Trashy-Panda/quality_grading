@@ -121,12 +121,11 @@ function cacheElements() {
 
   // Home
   el.startBtn       = document.getElementById('start-btn');
+  el.startError     = document.getElementById('start-error');
   el.managePhotosBtn= document.getElementById('manage-photos-btn');
   el.practiceView   = document.getElementById('practice-setup-view');
   el.weeklyView     = document.getElementById('weekly-setup-view');
   el.useCustomSetToggle = document.getElementById('use-custom-set-toggle');
-  el.switchToWeeklyLink  = document.getElementById('switch-to-weekly-link');
-  el.switchToPracticeLink= document.getElementById('switch-to-practice-link');
   el.openContributeLink  = document.getElementById('open-contribute-link');
 
   // Drill
@@ -203,6 +202,15 @@ function renderHomeScreen(mode) {
   showScreen('home');
   el.practiceView.classList.toggle('hidden', activeMode !== 'practice');
   el.weeklyView.classList.toggle('hidden', activeMode !== 'weekly');
+  // Mode switcher tabs mirror the active view
+  const tabPractice = document.getElementById('setup-tab-practice');
+  const tabWeekly = document.getElementById('setup-tab-weekly');
+  if (tabPractice && tabWeekly) {
+    tabPractice.classList.toggle('active', activeMode === 'practice');
+    tabPractice.setAttribute('aria-selected', String(activeMode === 'practice'));
+    tabWeekly.classList.toggle('active', activeMode === 'weekly');
+    tabWeekly.setAttribute('aria-selected', String(activeMode === 'weekly'));
+  }
   window._isWeeklySession = activeMode === 'weekly';
   if (activeMode === 'weekly' && typeof renderWeeklyCard === 'function') {
     renderWeeklyCard();
@@ -364,6 +372,8 @@ function onSubmit() {
   state.answers.push({
     carcassId: c.id,
     carcassName: c.imageName,
+    userKey: state.selectedKey,
+    correctKey: c.correct.qualityGrade,
     userQualityLabel: userLabel,
     correctQualityLabel: correctLabel,
     score,
@@ -404,14 +414,39 @@ function onNext() {
 //  IMAGE MODAL
 // ------------------------------------------------------------------
 
+let _imageModalReturnFocus = null;
+
+// Shared full-screen image viewer — used by the drill's carcass image and
+// by any clickable reference photo (e.g. field guide marbling specimens).
+function openImageModal(src, alt) {
+  _imageModalReturnFocus = document.activeElement;
+  el.imageModalImg.src = src;
+  el.imageModalImg.alt = alt || '';
+  el.imageModal.classList.remove('hidden');
+  el.imageModalClose.focus();
+}
+
+function closeImageModal() {
+  el.imageModal.classList.add('hidden');
+  if (_imageModalReturnFocus && typeof _imageModalReturnFocus.focus === 'function') {
+    _imageModalReturnFocus.focus();
+  }
+  _imageModalReturnFocus = null;
+}
+
 function initImageModal() {
   el.carcassImage.addEventListener('click', () => {
-    el.imageModalImg.src = el.carcassImage.src;
-    el.imageModal.classList.remove('hidden');
+    openImageModal(el.carcassImage.src, el.carcassImage.alt);
   });
-  el.imageModalClose.addEventListener('click', () => el.imageModal.classList.add('hidden'));
+  el.imageModalClose.addEventListener('click', closeImageModal);
   el.imageModal.addEventListener('click', e => {
-    if (e.target === el.imageModal) el.imageModal.classList.add('hidden');
+    if (e.target === el.imageModal) closeImageModal();
+  });
+  // Field guide specimen photos
+  document.querySelectorAll('.fg-specimen-view').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openImageModal(btn.dataset.fullSrc, btn.dataset.fullAlt);
+    });
   });
 }
 
@@ -635,7 +670,7 @@ function attachUrlDotChecks(container) {
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'Showing sample carcasses — be the first to add real ones via Manage Photos';
+    el.communitySetSub.textContent = 'No community carcasses yet - add real ones via Manage Photos';
   } else {
     el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
   }
@@ -781,11 +816,23 @@ function buildCustomQualitySelector() {
   });
 }
 
+let _settingsReturnFocus = null;
+
 function openSettings() {
   cancelEdit();
   renderCustomList();
   renderCommunityList();
+  _settingsReturnFocus = document.activeElement;
   el.settingsModal.classList.remove('hidden');
+  el.settingsClose.focus();
+}
+
+function closeSettings() {
+  el.settingsModal.classList.add('hidden');
+  if (_settingsReturnFocus && typeof _settingsReturnFocus.focus === 'function') {
+    _settingsReturnFocus.focus();
+  }
+  _settingsReturnFocus = null;
 }
 
 // ------------------------------------------------------------------
@@ -954,6 +1001,17 @@ async function submitContributeGrade(imageId, imageUrl, gradeKey) {
       submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
 
+    // Bump voteCount so this image rotates out of the low-vote pool.
+    // The vote above is already recorded and is the source of truth, so a
+    // failure here should never block the user's grade from having counted.
+    try {
+      await window._db.collection(DB_COLLECTIONS.ai_carcasses).doc(imageId).update({
+        voteCount: firebase.firestore.FieldValue.increment(1)
+      });
+    } catch (voteCountErr) {
+      // Non-fatal: image ordering is a display aid, not the source of truth.
+    }
+
     _contributeState.sessionCount++;
     const progressEl = document.getElementById('contribute-progress-text');
     if (progressEl) {
@@ -995,6 +1053,68 @@ async function loadContributeStats() {
 }
 
 // ------------------------------------------------------------------
+//  SLASH NAV — shared page-nav links (every screen but the landing)
+// ------------------------------------------------------------------
+
+function pageNavGo(target) {
+  const lbScreen = document.getElementById('leaderboard-screen');
+  const fgScreen = document.getElementById('fieldguide-screen');
+  if (lbScreen && !lbScreen.classList.contains('hidden') && typeof hideLeaderboardScreen === 'function') {
+    hideLeaderboardScreen();
+  }
+  if (fgScreen && !fgScreen.classList.contains('hidden')) {
+    hideFieldGuideScreen();
+  }
+  if (target === 'practice' || target === 'weekly') {
+    renderHomeScreen(target);
+  } else if (target === 'leaderboard' && typeof showLeaderboardScreen === 'function') {
+    showLeaderboardScreen();
+  } else if (target === 'fieldguide') {
+    showFieldGuideScreen();
+  }
+}
+
+// ------------------------------------------------------------------
+//  FIELD GUIDE SCREEN
+// ------------------------------------------------------------------
+
+let _fieldGuideReturn = 'landing'; // 'landing' or 'home'
+
+// fromLanding: pass true when invoked from the landing nav (the landing
+// exit animation hides the hero before this runs, so it can't be detected).
+function showFieldGuideScreen(fromLanding) {
+  const landing = document.getElementById('landing-hero');
+  _fieldGuideReturn = (fromLanding === true ||
+    (landing && !landing.classList.contains('hidden'))) ? 'landing' : 'home';
+
+  document.querySelectorAll('main.screen').forEach(s => s.classList.add('hidden'));
+  const drill = document.getElementById('drill-screen');
+  if (drill) drill.classList.add('hidden');
+  const header = document.getElementById('app-header');
+  if (header) header.classList.add('hidden');
+  if (landing) landing.classList.add('hidden');
+
+  const fg = document.getElementById('fieldguide-screen');
+  if (fg) fg.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function hideFieldGuideScreen() {
+  const fg = document.getElementById('fieldguide-screen');
+  if (fg) fg.classList.add('hidden');
+  if (_fieldGuideReturn === 'landing') {
+    const landing = document.getElementById('landing-hero');
+    if (landing) {
+      landing.classList.remove('hidden', 'landing-exit');
+      landing.style.opacity = '';
+    }
+  } else {
+    const home = document.getElementById('home-screen');
+    if (home) home.classList.remove('hidden');
+  }
+}
+
+// ------------------------------------------------------------------
 //  INITIALIZATION
 // ------------------------------------------------------------------
 
@@ -1014,16 +1134,56 @@ function init() {
 
   // Start
   el.startBtn.addEventListener('click', () => {
-    let deck;
+    // No silent fallback to DEFAULT_CARCASSES — placeholders never enter a deck.
+    let deck, emptyMsg;
     if (el.useCustomSetToggle.checked) {
-      const custom = getCustomList();
-      deck = custom.length ? custom : DEFAULT_CARCASSES;
+      deck = getCustomList();
+      emptyMsg = 'Your personal set is empty. Add images in Manage Photos, or uncheck the toggle to use community carcasses.';
     } else {
-      deck = state.communitySet.length ? state.communitySet : DEFAULT_CARCASSES;
+      deck = state.communitySet;
+      emptyMsg = 'No practice carcasses are available right now. Try Refresh in Manage Photos, or check back soon.';
     }
-    if (!deck.length) { alert('No carcasses available. Please add images in Manage Photos.'); return; }
+    if (!deck.length) {
+      if (el.startError) {
+        el.startError.textContent = emptyMsg;
+        el.startError.classList.remove('hidden');
+      }
+      return;
+    }
+    if (el.startError) el.startError.classList.add('hidden');
     startSession(deck);
   });
+
+  // Clear the start error when the deck source changes
+  el.useCustomSetToggle.addEventListener('change', () => {
+    if (el.startError) el.startError.classList.add('hidden');
+  });
+
+  // Setup mode switcher tabs
+  const setupTabPractice = document.getElementById('setup-tab-practice');
+  if (setupTabPractice) setupTabPractice.addEventListener('click', () => renderHomeScreen('practice'));
+  const setupTabWeekly = document.getElementById('setup-tab-weekly');
+  if (setupTabWeekly) setupTabWeekly.addEventListener('click', () => renderHomeScreen('weekly'));
+
+  // Field guide back / practice buttons
+  const fgBackBtn = document.getElementById('fieldguide-back-btn');
+  if (fgBackBtn) fgBackBtn.addEventListener('click', hideFieldGuideScreen);
+  // "Review the Field Guide" links on the setup views
+  document.querySelectorAll('.setup-fieldguide-link').forEach(btn => {
+    btn.addEventListener('click', () => showFieldGuideScreen());
+  });
+
+  // Slash nav — same links row on setup, leaderboard, and field guide
+  document.querySelectorAll('.pnav-link').forEach(btn => {
+    btn.addEventListener('click', () => pageNavGo(btn.dataset.nav));
+  });
+  const fgDrillBtn = document.getElementById('fieldguide-drill-btn');
+  if (fgDrillBtn) {
+    fgDrillBtn.addEventListener('click', () => {
+      document.getElementById('fieldguide-screen').classList.add('hidden');
+      renderHomeScreen('practice');
+    });
+  }
 
   // Drill actions
   el.submitBtn.addEventListener('click', onSubmit);
@@ -1037,9 +1197,16 @@ function init() {
   el.settingsBtn.addEventListener('click', openSettings);
   el.managePhotosBtn.addEventListener('click', openSettings);
 
-  el.settingsClose.addEventListener('click', () => el.settingsModal.classList.add('hidden'));
+  el.settingsClose.addEventListener('click', closeSettings);
   el.settingsModal.addEventListener('click', e => {
-    if (e.target === el.settingsModal) el.settingsModal.classList.add('hidden');
+    if (e.target === el.settingsModal) closeSettings();
+  });
+
+  // Escape closes whichever modal is open (topmost first)
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!el.imageModal.classList.contains('hidden')) { closeImageModal(); return; }
+    if (!el.settingsModal.classList.contains('hidden')) closeSettings();
   });
 
   el.addCustomBtn.addEventListener('click', onSaveCustom);

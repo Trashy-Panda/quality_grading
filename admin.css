@@ -1179,6 +1179,16 @@ td.admin-empty {
   font-weight: bold;
   font-family: 'Courier New', monospace;
 }
+.gv-gate-note {
+  margin-top: 8px;
+  padding: 8px;
+  color: #d97706;
+  background: #2a2410;
+  border: 1px solid #d97706;
+  font-size: .75em;
+  font-family: 'Courier New', monospace;
+  line-height: 1.4;
+}
 
 /* ============================================================
    ROLLMARK REFINEMENTS — appended layer
@@ -1232,4 +1242,72 @@ textarea {
   height: 24px;
   width: auto;
   display: block;
+}
+
+/* ============================================================
+   ANALYTICS TAB
+   ============================================================ */
+
+.an-dist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.an-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.an-dist-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-secondary);
+  width: 72px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.an-dist-track {
+  flex: 1;
+  height: 14px;
+  background: var(--paper-alt);
+  border: 1px solid var(--rule-heavy);
+  border-radius: 3px;
+  overflow: hidden;
+  display: block;
+}
+
+.an-dist-bar {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  min-width: 0;
+}
+
+.an-dist-count {
+  font-family: var(--font-data);
+  font-size: 12px;
+  color: var(--ink);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.an-now {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  vertical-align: middle;
 }
