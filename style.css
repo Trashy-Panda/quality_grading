@@ -162,8 +162,13 @@ body::before {
   border-top-color: var(--poster-line);
 }
 
-/* Zigzag print rule — El Felix / vintage price-card divider */
+/* Zigzag print rule — El Felix / vintage price-card divider.
+   width:100% is required (not just max-width): inside a flex column
+   with align-items other than stretch, a bare <hr> has no intrinsic
+   content size and collapses to 0 width, rendering nothing even
+   though the background is set correctly. */
 .zigzag-rule {
+  width: 100%;
   height: 8px;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%231E1B16' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center / 16px 8px;
   border: none;
@@ -781,17 +786,19 @@ body::before {
 /* Faint corner overprint — same ink-over-content technique as the
    landing hero, dialed way down so it reads as texture, not noise.
    Negative z-index (contained by #home-screen's own stacking context)
-   keeps it strictly behind every normal-flow child. */
+   keeps it strictly behind every normal-flow child. Hard hat here,
+   ribeye on the leaderboard, rib on the field guide — one asset per
+   page rather than repeating the same mark everywhere. */
 .setup-overprint {
-  --art: url(assets/art-ribeye.png);
+  --art: url(assets/art-hardhat.png);
   position: absolute;
-  top: 90px;
-  right: -60px;
-  width: 300px;
-  aspect-ratio: 899 / 685;
+  top: 100px;
+  right: -70px;
+  width: 320px;
+  aspect-ratio: 1109 / 789;
   color: var(--ink);
-  opacity: 0.05;
-  transform: rotate(9deg);
+  opacity: 0.055;
+  transform: rotate(8deg);
   z-index: -1;
   pointer-events: none;
   user-select: none;

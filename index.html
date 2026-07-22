@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="auth.css" />
   <link rel="stylesheet" href="weekly.css" />
   <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="stylesheet" href="powerrank.css" />
   <link rel="stylesheet" href="fieldguide.css" />
   <link rel="stylesheet" href="premium.css" />
 </head>
@@ -157,7 +158,7 @@
         <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
       </button>
       <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
       </div>
       <div class="page-nav-auth">
         <button id="home-signin-btn" class="home-signin-btn">Sign In</button>
@@ -450,13 +451,14 @@
 
   <!-- LEADERBOARD SCREEN -->
   <main id="leaderboard-screen" class="screen hidden">
+    <span class="leaderboard-overprint art-mask" aria-hidden="true"></span>
     <nav class="page-nav" aria-label="Leaderboard">
       <button class="page-nav-back" id="leaderboard-back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         Home
       </button>
       <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
       </div>
       <span class="page-nav-brand">
         <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
@@ -487,6 +489,84 @@
     </div>
   </main>
 
+  <!-- POWER RANKINGS SCREEN -->
+  <main id="powerrank-screen" class="screen hidden">
+    <nav class="page-nav" aria-label="Power rankings">
+      <button class="page-nav-back" id="powerrank-back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Home
+      </button>
+      <div class="page-nav-links">
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+      </div>
+      <span class="page-nav-brand">
+        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
+      </span>
+    </nav>
+
+    <div class="leaderboard-hero powerrank-hero">
+      <div class="leaderboard-hero-stamp">Team Poll</div>
+      <h1 class="leaderboard-title">Power Rankings</h1>
+      <p class="powerrank-season-line">Collegiate Meat Judging</p>
+    </div>
+
+    <div class="powerrank-controls">
+      <div class="leaderboard-tabs" role="group" aria-label="Division">
+        <button id="powerrank-tab-senior" class="leaderboard-tab active" aria-pressed="true">Senior Colleges</button>
+        <button id="powerrank-tab-junior" class="leaderboard-tab" aria-pressed="false">Junior Colleges</button>
+      </div>
+      <div class="powerrank-season-field">
+        <label class="powerrank-season-label" for="powerrank-season">Season</label>
+        <select id="powerrank-season" class="powerrank-season-select"></select>
+      </div>
+    </div>
+
+    <div class="leaderboard-table-wrap">
+      <table class="leaderboard-table powerrank-table">
+        <thead>
+          <tr>
+            <th class="col-rank">Rank</th>
+            <th class="pr-col-school">School</th>
+            <th class="pr-col-rating">Rating</th>
+            <th class="pr-col-move">Move</th>
+            <th class="pr-col-contests">Contests</th>
+          </tr>
+        </thead>
+        <tbody id="powerrank-tbody"></tbody>
+      </table>
+    </div>
+
+    <section class="powerrank-strip" id="powerrank-categories" hidden aria-label="Category leaders">
+      <h2 class="powerrank-strip-header">Category Leaders</h2>
+      <p class="powerrank-strip-sub">Top three teams per category &mdash; boards appear once three contests carry the category.</p>
+      <div class="powerrank-cards" id="powerrank-cards"></div>
+    </section>
+
+    <section class="powerrank-strip" id="powerrank-contests-block" hidden aria-label="Contests in ranking">
+      <h2 class="powerrank-strip-header">Contests in Ranking</h2>
+      <ul id="powerrank-contest-list" class="powerrank-contest-list"></ul>
+    </section>
+
+    <div class="powerrank-method">
+      <details class="powerrank-method-details">
+        <summary>How these rankings work</summary>
+        <p class="powerrank-method-text">
+          Each team result earns a rating from its placing, scaled by field size, how
+          recent the contest is, the contest's weight, and the strength of the field
+          (the average rating of the top ten teams there). The solver iterates until
+          field strengths and team ratings agree, then rates each school by the average
+          of its five best results in the selected season. Schools with fewer than five
+          contests have their remaining slots filled from their own rating over their
+          five most recent prior seasons, damped halfway toward a league-average
+          baseline, so a single hot meet can't top the board and thin résumés are
+          judged against their own recent form rather than a blind assumption. Movement compares today's
+          board against the board before the most recent contest; NEW marks a school's
+          first appearance.
+        </p>
+      </details>
+    </div>
+  </main>
+
   <!-- ===================================================
        GRADE FIELD GUIDE
        =================================================== -->
@@ -499,7 +579,7 @@
         Back
       </button>
       <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
       </div>
       <span class="page-nav-brand">
         <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
@@ -744,6 +824,7 @@
   <script src="app.js"></script>
   <script src="weekly.js"></script>
   <script src="leaderboard.js"></script>
+  <script src="powerrank.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const landing   = document.getElementById('landing-hero');
