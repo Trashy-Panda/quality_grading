@@ -4,19 +4,19 @@
 *.local
 secrets/
 config.local.js
-grader/firebase-service-account.json
-grader/api_key.txt
-grader/cloudinary_creds.txt
-grader/tmp/
-grader/**/firebase-service-account.json
-grader/**/api_key.txt
-grader/**/cloudinary_creds.txt
-grader/**/tmp/
+beefgrading.study/grader/firebase-service-account.json
+beefgrading.study/grader/api_key.txt
+beefgrading.study/grader/cloudinary_creds.txt
+beefgrading.study/grader/tmp/
+beefgrading.study/grader/**/firebase-service-account.json
+beefgrading.study/grader/**/api_key.txt
+beefgrading.study/grader/**/cloudinary_creds.txt
+beefgrading.study/grader/**/tmp/
 *.keras
 *.h5
 __pycache__/
 *.pyc
-grader/output/
+beefgrading.study/grader/output/
 
 # OS noise
 .DS_Store
