@@ -1,0 +1,44 @@
+name: Deploy Pages from beefgrading.study/
+
+# Publishes the beefgrading.study/ folder as the GitHub Pages site. This
+# decouples "what's in the repo" from "what Pages serves" — the site no
+# longer has to live at repo root just because Pages used to read master's
+# raw branch tree literally. See beefgrading.study/README.md's "Why root?"
+# section (now historical) for the failure mode this replaces.
+#
+# NOTE: this workflow has no effect until the repo's Settings -> Pages
+# publishing source is switched from "Deploy from a branch" to "GitHub
+# Actions" — that's a manual, one-time step, not something this file does.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'beefgrading.study'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

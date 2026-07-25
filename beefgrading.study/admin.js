@@ -68,10 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   _db = firebase.firestore();
   _auth = firebase.auth();
-  // powerrank.js (documented dependency: auth.js's window._db) expects a
-  // global — admin.html doesn't load auth.js, so expose the same instance
-  // under that name here instead of duplicating Firebase init.
-  window._db = _db;
 
   // 4. Auth state listener
   _auth.onAuthStateChanged(onAuthStateChanged);
@@ -91,8 +87,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (tabAnalytics) tabAnalytics.addEventListener('click', function () { switchTab('analytics'); });
   const tabPowerrank = document.getElementById('tab-btn-powerrank');
   if (tabPowerrank) tabPowerrank.addEventListener('click', function () { switchTab('powerrank'); });
-  const tabPowerrankPreview = document.getElementById('tab-btn-powerrank-preview');
-  if (tabPowerrankPreview) tabPowerrankPreview.addEventListener('click', function () { switchTab('powerrank-preview'); });
   const anRefreshBtn = document.getElementById('an-refresh-btn');
   if (anRefreshBtn) anRefreshBtn.addEventListener('click', function () { loadAnalyticsTab(); });
 
@@ -296,7 +290,7 @@ function switchTab(name) {
   _currentTab = name;
 
   // Update tab button active states
-  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes', 'analytics', 'powerrank', 'powerrank-preview'].forEach(function (t) {
+  ['leaderboard', 'weekly', 'users', 'community', 'grading-votes', 'analytics', 'powerrank'].forEach(function (t) {
     const btn = document.getElementById('tab-btn-' + t);
     const section = document.getElementById('tab-' + t);
     if (btn) {
@@ -330,8 +324,6 @@ function switchTab(name) {
     loadAnalyticsTab();
   } else if (name === 'powerrank') {
     loadPowerrankTab();
-  } else if (name === 'powerrank-preview') {
-    if (typeof showPowerRankScreen === 'function') showPowerRankScreen();
   }
 }
 

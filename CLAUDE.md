@@ -5,20 +5,34 @@
 Static GitHub Pages site at **beefgrading.study**. Stack: vanilla HTML/CSS/JS (no build
 system, no npm, no server), Firebase Firestore + Auth as the sole backend.
 
-- Branch `dev` → work here. Branch `master` → production (auto-deploys via GitHub Pages,
-  serving `master`'s repo root literally — no build step). **Live site files
-  (`index.html`, `admin.html`, and every CSS/JS/SVG they reference) must stay at repo
-  root** — this was already learned the hard way once (see commit `adaa82e`): moving
-  them into a subfolder breaks production the next time `deploy.bat` merges `dev` into
-  `master`, since Pages has no way to serve from anywhere but root.
-- Deploy via `deployment/deploy.bat` (merges dev → master → push).
-- Live site files (repo root): `index.html`, `style.css`, `app.js`, `auth.js`, `data.js`,
-  `weekly.js`, `leaderboard.js`, `powerrank.js`, `admin.html`, `admin.js`, `admin.css`,
-  `auth.css`, `weekly.css`, `leaderboard.css`, `powerrank.css`, `beefgrade.svg`, `CNAME`,
+All project files (the site itself, `grader/`, `docs/`, `deployment/`, `powerrankings/`,
+`README.md`) live under **`beefgrading.study/`** at repo root — a single project folder,
+sibling to `.claude/`/`.agents/` (shared across other projects, not part of this one).
+`CLAUDE.md` itself stays at the true repo root (Claude Code auto-loads project
+instructions from the working directory) — everything else moved.
+
+- Branch `dev` → work here. Branch `master` → production. `beefgrading.study/deployment/
+  deploy.bat` merges `dev` into `master` and pushes exactly as before — that mechanism
+  didn't change; `deploy.bat` cds to the absolute repo root first, so it's location-
+  agnostic.
+- **Publishing changed**: GitHub Pages is now (or will be, once the one-time Settings →
+  Pages cutover to "GitHub Actions" happens) fed by
+  `.github/workflows/deploy-pages.yml`, which publishes `beefgrading.study/` as the site
+  on every push to `master` — decoupled from repo layout, unlike the old branch-based
+  serving. **Historical note**: live site files used to have to stay at repo root because
+  Pages read `master`'s branch tree literally with no build step — moving them into a
+  subfolder broke production once (commit `adaa82e`). That failure mode no longer applies
+  now that a build/publish step sits between the repo and what Pages serves.
+- Live site files (`beefgrading.study/`): `index.html`, `style.css`, `app.js`, `auth.js`,
+  `data.js`, `weekly.js`, `leaderboard.js`, `powerrank.js`, `admin.html`, `admin.js`,
+  `admin.css`, `auth.css`, `weekly.css`, `leaderboard.css`, `powerrank.css`, `fieldguide.css`,
+  `premium.css`, `beefgrade.svg`, `og-card.png`, `assets/`, `404.html`, `CNAME`,
   `firestore.rules`.
   `auth.html`/`weekly.html`/`leaderboard.html` are **not** live pages — they're dev
-  reference docs (their markup is already merged into `index.html`) and live in `docs/`.
-- See root `README.md` for the full repo layout (grader/, deployment/, docs/, etc.).
+  reference docs (their markup is already merged into `index.html`) and live in
+  `beefgrading.study/docs/`.
+- See `beefgrading.study/README.md` for the full repo layout (`grader/`, `deployment/`,
+  `docs/`, `powerrankings/`, etc.).
 
 ---
 
@@ -240,7 +254,7 @@ Step 4 → WebFetch: https://firebase.google.com/docs/firestore/security/insecur
 
 1. Publish in Firebase Console → Firestore → Rules
 2. Test each permission scenario in the Firebase Rules Playground
-3. Document schema changes in `docs/NOTES.md`
+3. Document schema changes in `beefgrading.study/docs/NOTES.md`
 
 ### Firebase Web Config Note
 
