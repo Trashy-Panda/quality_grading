@@ -42,7 +42,7 @@
 /* ── Leaderboard Hero Header ────────────────────────────────── */
 
 .leaderboard-hero {
-  max-width: 860px;
+  max-width: var(--measure-page);
   margin: 0 auto;
   padding: 40px 20px 8px;
   text-align: center;
@@ -64,7 +64,7 @@
 .leaderboard-hero-stamp {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
@@ -90,7 +90,7 @@
 
 .leaderboard-week-label {
   font-family: var(--font-script);
-  font-size: 20px;
+  font-size: 1.25rem;
   color: var(--ink-soft);
 }
 
@@ -117,7 +117,7 @@
 
 .leaderboard-tab {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
@@ -148,7 +148,7 @@
 /* ── Table Wrapper ──────────────────────────────────────────── */
 
 .leaderboard-table-wrap {
-  max-width: 860px;
+  max-width: var(--measure-page);
   margin: 20px auto 0;
   padding: 0 20px 56px;
   overflow-x: auto;
@@ -160,7 +160,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 13.5px;
+  font-size: 0.875rem;
   background: var(--paper-card);
   border: var(--border-ink);
   border-radius: var(--radius-md);
@@ -172,22 +172,22 @@
   background: var(--board-bg);
   color: var(--board-text);
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
-  padding: 12px 16px;
+  padding: 0.85rem 1rem;
   text-align: left;
   white-space: nowrap;
 }
 
 .leaderboard-table td {
-  padding: 12px 16px;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
   vertical-align: middle;
   font-family: var(--font-ui);
-  font-size: 13.5px;
+  font-size: 0.875rem;
 }
 
 .leaderboard-table tr:last-child td {
@@ -203,7 +203,7 @@
 
 .leaderboard-table td.col-rank {
   font-variant-numeric: tabular-nums;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--ink);
   text-align: center;
@@ -260,7 +260,7 @@
 }
 
 .leaderboard-table td.col-date {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--ink-faint);
 }
 
@@ -294,7 +294,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -329,7 +329,7 @@
 }
 
 .leaderboard-skeleton td {
-  padding: 12px 16px;
+  padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -347,14 +347,14 @@
   text-align: center;
   padding: 44px 16px;
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--ink-faint);
 }
 
 .leaderboard-empty strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
@@ -368,14 +368,14 @@
   text-align: center;
   padding: 44px 16px;
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--ink-faint);
 }
 
 .leaderboard-signin strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);

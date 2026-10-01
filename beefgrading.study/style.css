@@ -122,6 +122,36 @@
   --z-modal-full: 600;  /* contribute, full-screen takeover */
   --z-toast:      700;
   --z-skip:       800;  /* skip-link must out-rank everything above */
+
+  /* container measures. Previously every surface hard-coded its own cap
+     (860 / 760 / 1040 / 1080), so on a large display the whole product sat
+     stranded in a narrow column. Fluid now: grow with the viewport, still
+     bounded so line length stays readable. */
+  --measure-page:  min(1180px, 92vw);   /* tables, boards, standard sections */
+  --measure-wide:  min(1440px, 94vw);   /* hero lockups, drill layout */
+  --measure-prose: min(68ch, 90vw);     /* long-form reading */
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LARGE-DISPLAY SCALING
+   ─────────────────────────────────────────────────────────────
+   Every media query in this project used to be max-width, i.e. the layout
+   only ever adapted DOWNWARD. On a 27" or 4K panel the site therefore
+   rendered exactly as it does at 1280px: small type marooned in the middle
+   of a very wide screen.
+
+   Scaling the ROOT font size is the lever, because every rem and clamp()
+   value in the system keys off it, so type, spacing and the ch-based
+   measures all grow together in proportion. Bounded deliberately: this
+   lifts a 16px base to 19px, not to a cartoon size. */
+@media (min-width: 1500px) {
+  html { font-size: 17px; }
+}
+@media (min-width: 1800px) {
+  html { font-size: 18px; }
+}
+@media (min-width: 2200px) {
+  html { font-size: 19px; }
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -140,7 +170,10 @@ html, body {
   height: 100%;
   font-family: var(--font-ui);
   color: var(--ink);
-  font-size: 16px;
+  /* 1rem, NOT a hard 16px: a fixed px here would cancel the large-display
+     root scaling above before it reached a single element, and would also
+     override a user's own browser font-size preference. */
+  font-size: 1rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -1366,7 +1399,7 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 .drill-layout {
-  max-width: 1080px;
+  max-width: var(--measure-wide);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;

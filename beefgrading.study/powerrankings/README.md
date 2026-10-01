@@ -72,9 +72,18 @@ can verify/correct/exclude them (this is how the Houston-2026-senior
 caught and gets resolved).
 
 The `*2026-senior.json` / `*2026-junior.json` files are real scraped contests
-(National Western, Southwestern, South Plains, Houston — American Division =
-senior colleges, National Division = junior colleges; at Houston, B = senior,
-A = junior), ready to import.
+(National Western, Southwestern, South Plains, Houston, Eastern National —
+American Division = senior colleges, National Division = junior colleges; at
+Houston, B = senior, A = junior), ready to import.
+
+Eastern National 2026 is **senior-only**: the event lists an American Division
+and a separate all-alternates contest (`EID=183121`, every row suffixed
+"- Alt"), with no National Division. The alternates contest is deliberately
+NOT ingested — its entries are JV/alternate squads, so importing it would hand
+schools a second, duplicate team result for the same fixture. Note that
+`normalize_school` does not currently clean the dash form of that suffix
+("Texas Tech University - Alt" → "Texas Tech University -"), so an
+all-alternates page would also need a regex fix before it could be scraped.
 
 ## ingest_historic.py — 100 Years of Meat Judging archive
 

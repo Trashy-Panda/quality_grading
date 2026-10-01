@@ -29,10 +29,13 @@
   user-select: none;
 }
 
+/* Was a hard 760px. This is the one screen students genuinely read, so it
+   gets a prose measure that grows with the root scale instead of staying
+   pinned narrow on a large display. */
 .fg-inner {
-  max-width: 760px;
+  max-width: var(--measure-page);
   margin: 0 auto;
-  padding: 36px 20px 64px;
+  padding: clamp(36px, 5vh, 64px) 20px clamp(64px, 8vh, 96px);
 }
 
 /* ── Hero ───────────────────────────────────────────────────── */
@@ -53,7 +56,7 @@
 .fg-eyebrow {
   display: block;
   font-family: var(--font-script);
-  font-size: 26px;
+  font-size: 1.625rem;
   color: var(--red);
   line-height: 1.2;
   transform: rotate(-2deg);
@@ -72,7 +75,7 @@
 
 .fg-sub {
   font-family: var(--font-ui);
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: var(--ink-soft);
   line-height: 1.6;
   max-width: 48ch;
@@ -89,7 +92,7 @@
    same mask technique as the .ticket receipt system) */
 .fg-board-header {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
@@ -110,7 +113,7 @@
 
 .fg-lead {
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--ink-soft);
   line-height: 1.6;
   margin: 0 0 14px;
@@ -124,7 +127,7 @@
 
 .fg-prose-heading {
   font-family: var(--font-script);
-  font-size: 27px;
+  font-size: 1.6875rem;
   font-weight: 400;
   color: var(--red);
   margin: 4px 0 10px;
@@ -133,7 +136,7 @@
 
 .fg-body {
   font-family: var(--font-ui);
-  font-size: 14.5px;
+  font-size: 0.9062rem;
   color: var(--ink-soft);
   line-height: 1.7;
   margin: 0 auto;
@@ -143,7 +146,7 @@
 
 .fg-note {
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--ink-faint);
   line-height: 1.6;
   margin: 14px 0 0;
@@ -178,7 +181,7 @@
 
 .fg-rung-grade {
   font-family: var(--font-display);
-  font-size: 13.5px;
+  font-size: 0.8438rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
@@ -187,7 +190,7 @@
 
 .fg-rung-family {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
@@ -225,14 +228,26 @@
   padding: 0;
 }
 
+/* Specimen plates. These were 68x86 thumbnails rendered from 863x1313
+   source: roughly one seventh of the available resolution, on the single
+   screen whose entire purpose is close visual comparison of marbling.
+   Now a real two-column plate layout off assets/anchors-full. */
+.fg-specimen-list {
+  display: grid;
+  gap: clamp(20px, 3vw, 36px);
+}
+
+@media (min-width: 720px) {
+  .fg-specimen-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .fg-specimen-row {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 9px 4px;
-  border-bottom: 1px dashed var(--line);
-}
-.fg-specimen-row:last-child {
+  gap: clamp(16px, 2vw, 26px);
+  padding: 0;
   border-bottom: none;
 }
 
@@ -273,30 +288,42 @@
   pointer-events: none;
 }
 
+/* 2:3 portrait matches anchors 01-05 natively. 06/07 are square USDA
+   originals; rather than pretend they match, they get their own ratio
+   below so neither set is distorted or hard-cropped. */
 .fg-specimen-img {
   display: block;
-  width: 68px;
-  height: 86px;
+  width: clamp(132px, 17vw, 232px);
+  aspect-ratio: 2 / 3;
+  height: auto;
   object-fit: cover;
-  background: var(--paper-card);
+  background: var(--surface, var(--paper-card));
   border: 1.5px solid var(--ink);
-  border-radius: 3px;
-  padding: 4px;
+  border-radius: var(--radius-sm);
+  padding: 5px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* The two Prime-tier anchors were cropped square from their source. Honest
+   about it instead of forcing a match that would visibly distort them. */
+.fg-specimen-row--square .fg-specimen-img {
+  aspect-ratio: 1 / 1;
 }
 
 .fg-specimen-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  min-width: 0;
 }
 
 .fg-specimen-row--nophoto {
-  padding-left: 90px;
+  padding-left: clamp(132px, 17vw, 232px);
 }
 
 .fg-marbling-degree {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -306,7 +333,7 @@
 
 .fg-marbling-grade {
   font-family: var(--font-script);
-  font-size: 19px;
+  font-size: 1.1875rem;
   color: var(--red);
   line-height: 1.15;
 }
@@ -322,7 +349,7 @@
   margin: 0;
   padding: 0;
   gap: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
@@ -344,7 +371,7 @@
   .fg-rung {
     padding: 9px 12px;
   }
-  .fg-rung-grade { font-size: 12px; }
+  .fg-rung-grade { font-size: 0.75rem; }
   .fg-specimen-row {
     gap: 14px;
   }
