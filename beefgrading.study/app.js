@@ -314,7 +314,8 @@ function renderCarcass(index) {
   const total = state.carcasses.length;
 
   el.progressText.textContent = `Carcass ${index + 1} of ${total}`;
-  el.progressBar.style.width = ((index / total) * 100) + '%';
+  // scaleX fraction, not width %: see #progress-bar in style.css
+  el.progressBar.style.setProperty('--progress', total ? index / total : 0);
 
   const earned = sessionTotal();
   const max = state.answers.length * 10;

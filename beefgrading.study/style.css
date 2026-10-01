@@ -614,40 +614,41 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 /* ── 2. Study the standard - deep-cream band, field guide feeder ── */
+/* First bone section after the dark open. Sits on --paper (not --paper-deep)
+   so the handoff out of the hero lands on the page's true ground; the torn
+   seam is filled with this exact colour. */
 .landing-study {
-  background: var(--paper-deep);
-  padding: 76px max(32px, calc((100vw - 980px) / 2));
+  background: var(--paper);
+  padding: clamp(88px, 11vh, 144px) max(32px, calc((100vw - 1060px) / 2));
   display: grid;
   grid-template-columns: minmax(260px, 1fr) auto;
-  gap: 48px;
+  gap: clamp(40px, 5vw, 72px);
   align-items: center;
 }
 
-.landing-study-script {
-  font-family: var(--font-script);
-  font-size: 24px;
-  color: var(--red);
-  transform: rotate(-2deg);
-  transform-origin: left bottom;
-  margin: 0 0 2px;
-}
-
+/* The "know your beef" script lead-in is gone. Yellowtail was running in
+   eight separate places across the site, which is what made it read as
+   decoration; held to the hero kicker and the nav wordmark it reads as a
+   signature instead. */
 .landing-study-title {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+  margin: 0 0 14px;
+  text-wrap: balance;
 }
 
 .landing-study-body {
   font-family: var(--font-ui);
-  font-size: 14.5px;
+  font-size: 1rem;
   color: var(--ink-soft);
   line-height: 1.65;
-  max-width: 44ch;
-  margin: 0 0 20px;
+  max-width: 48ch;
+  margin: 0 0 26px;
+  text-wrap: pretty;
 }
 
 .landing-study-link {
@@ -713,36 +714,58 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 /* ── 5. This week's board - letterboard band ────────────────── */
+/* The second dark moment: a full-bleed graphite band, not the old thin
+   letterboard strip. Given real vertical weight so it reads as a deliberate
+   interruption in the bone rhythm rather than a divider. */
 .landing-board {
-  background: var(--board-bg);
-  border-top: var(--border-ink);
-  padding: 44px 32px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--band-bg);
+  padding: clamp(80px, 10vh, 132px) 32px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 26px;
-  flex-wrap: wrap;
+  gap: 28px;
   text-align: center;
+}
+
+/* The rosette finally doing award work at legible scale instead of serving
+   as a 40px trinket: oversized, ribbon blue, low opacity, behind the copy. */
+.landing-board::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: min(420px, 60vw);
+  aspect-ratio: 565 / 939;
+  background-color: var(--ribbon);
+  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
+  mask: url(assets/art-rosette.png) center / contain no-repeat;
+  opacity: 0.16;
+  pointer-events: none;
 }
 
 .landing-board-rosette {
   --art: url(assets/art-rosette.png);
-  width: 40px;
+  width: 46px;
   aspect-ratio: 565 / 939;
   color: var(--ribbon);
-  transform: rotate(-5deg);
   flex-shrink: 0;
 }
 
 .landing-board-line {
   font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: clamp(1.25rem, 2.6vw, 2rem);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--board-text);
-  line-height: 1.6;
-  max-width: 40ch;
+  letter-spacing: -0.01em;
+  color: var(--band-text);
+  line-height: 1.22;
+  max-width: 24ch;
   margin: 0;
   text-wrap: balance;
 }
@@ -772,21 +795,36 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 /* ── 6. Footer - ticker + small print ───────────────────────── */
+/* This never actually moved: it was overflow:hidden + nowrap with no
+   animation, so it rendered as a string clipped at the viewport edge.
+   A ticker that doesn't tick is just truncated text. Now it runs, with
+   the loop stopped outright under reduced motion (premium.css). */
 .landing-ticker {
-  background: var(--board-bg);
-  border-top: 1px solid rgba(245, 239, 226, 0.18);
-  padding: 11px 0;
+  background: var(--band-bg);
+  border-top: 1px solid rgba(var(--band-rgb), 0.4);
+  box-shadow: inset 0 1px 0 rgba(244, 244, 240, 0.08);
+  padding: 12px 0;
   overflow: hidden;
   white-space: nowrap;
-  text-align: center;
   font-family: var(--font-display);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
-  color: var(--board-dim);
+  color: var(--band-dim);
   user-select: none;
   pointer-events: none;
+}
+
+.landing-ticker span {
+  display: inline-block;
+  padding-left: 100%;   /* start off the right edge */
+  animation: p-ticker 64s linear infinite;
+}
+
+@keyframes p-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }
 
 .landing-footer {
@@ -805,14 +843,6 @@ table, .score-value, .stat-value, input[type="number"],
   text-align: center;
 }
 
-.landing-note-script {
-  font-family: var(--font-script);
-  font-size: 17px;
-  color: var(--red);
-  margin-right: 10px;
-  display: inline-block;
-  transform: rotate(-2deg);
-}
 
 .landing-auth-note button {
   background: none;
@@ -1470,11 +1500,20 @@ table, .score-value, .stat-value, input[type="number"],
   overflow: hidden;
 }
 
+/* Driven by transform, not width. Animating `width` forces layout on every
+   frame, and this is the most-watched transition in the product (it runs on
+   every single answer). scaleX composites instead. app.js sets --progress
+   as a 0-1 fraction. */
 #progress-bar {
   height: 100%;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left center;
   background: var(--red);
-  transition: width 300ms ease;
+  transition: transform 300ms var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  #progress-bar { transition: none; }
 }
 
 /* Grade Selector */
@@ -2570,7 +2609,6 @@ table, .score-value, .stat-value, input[type="number"],
     gap: 34px;
     text-align: center;
   }
-  .landing-study-script { transform-origin: center bottom; }
   .landing-study-link { align-self: center; }
   .landing-study-specimens { justify-content: center; }
   .landing-specimen img {

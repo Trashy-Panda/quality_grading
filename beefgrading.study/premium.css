@@ -4,6 +4,84 @@
    No colors, no layout, no typography overrides. */
 
 /* ─────────────────────────────────────────────────────────────
+   SCROLL REVEALS (paired with scroll.js)
+   ─────────────────────────────────────────────────────────────
+   scroll.js adds `.is-in` via IntersectionObserver; all motion is here.
+   Transform + opacity only, so these composite and never trigger layout.
+   The reduced-motion branch at the bottom of this file neutralises the
+   resting state, and scroll.js additionally never builds an observer under
+   `reduce`, so content is simply present. */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.6s var(--ease-out) var(--reveal-delay, 0ms),
+    transform 0.6s var(--ease-out) var(--reveal-delay, 0ms);
+}
+[data-reveal="fade"]  { transform: none; }
+[data-reveal="rise"]  { transform: translateY(42px); }
+[data-reveal="scale"] { transform: scale(0.96); }
+
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger: the container is observed once, children cascade off --i,
+   which scroll.js stamps on each child by index. */
+[data-reveal="stagger"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+[data-reveal="stagger"] > * {
+  opacity: 0;
+  transform: translateY(16px);
+}
+[data-reveal="stagger"].is-in > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.5s var(--ease-out) calc(var(--i, 0) * 45ms),
+    transform 0.5s var(--ease-out) calc(var(--i, 0) * 45ms);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLL-LINKED (progressive enhancement, off the main thread)
+   ─────────────────────────────────────────────────────────────
+   Native CSS scroll-driven animation. Where unsupported, the reveals
+   above are the entire experience and still look deliberate. No JS, no
+   scroll listener, no rAF. */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The hero plate drifts slower than the page: real parallax depth on
+       the one surface big enough to show it. */
+    .landing-brand::before {
+      animation: p-heroDrift linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+    /* The lockup settles back and fades as the next band overtakes it. */
+    .landing-brand-inner {
+      animation: p-heroSettle linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+
+@keyframes p-heroDrift {
+  from { transform: scale(1.06) translateY(-1.5%); }
+  to   { transform: scale(1.06) translateY(4%); }
+}
+@keyframes p-heroSettle {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0.25; transform: scale(0.97); }
+}
+
+/* ─────────────────────────────────────────────────────────────
    KEYFRAME ANIMATIONS
    ───────────────────────────────────────────────────────────── */
 
@@ -61,13 +139,17 @@
 
 @media (prefers-reduced-motion: no-preference) {
 
-  /* ── Landing (scrolling broadsheet) ── */
+  /* ── Landing (scrolling broadsheet) ──
+     --rest-opacity is deliberately NOT declared here. Each element owns
+     its own resting opacity in style.css next to the `opacity` it mirrors,
+     and p-inkSoak reads it. This file used to redeclare it (0.12 / 0.11),
+     and because premium.css loads last it silently won, so the animation
+     settled on a different value than the stylesheet declared. One owner,
+     no cross-file drift. */
   .landing-overprint--rib {
-    --rest-opacity: 0.12;
     animation: p-inkSoak 1.1s ease 0.3s both;
   }
   .landing-overprint--hardhat {
-    --rest-opacity: 0.11;
     animation: p-inkSoak 1.1s ease 0.5s both;
   }
   .landing-shield svg {
@@ -173,14 +255,38 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   REDUCED MOTION - kill everything decorative
-   ───────────────────────────────────────────────────────────── */
+   REDUCED MOTION
+   ─────────────────────────────────────────────────────────────
+   This used to be a blanket `*, *::before, *::after` override forcing
+   every animation AND transition to 0.01ms. It was both redundant and
+   harmful:
+
+   - Redundant, because every entrance animation in this file already
+     sits inside the `prefers-reduced-motion: no-preference` block above,
+     so none of it applies under `reduce` in the first place. The two
+     keyframes in powerrank.css carry their own `reduce` guards too.
+   - Harmful, because it also flattened all ~52 hover, focus and
+     active transitions site-wide. A reduced-motion user got no visual
+     feedback on any button, tab, input or table row. Reduced motion
+     means "don't move me", not "give me a dead interface": a 140ms
+     colour fade is not a vestibular trigger.
+
+   What genuinely needs suppressing is large/continuous movement, and
+   that is handled at each site. Only the global scroll behaviour and
+   the looping ticker belong here. */
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html { scroll-behavior: auto; }
+
+  /* Continuous loops are the one thing that must stop outright. */
+  .landing-ticker span { animation: none !important; }
+
+  /* Scroll reveals resolve instantly (scroll.js also stamps .is-in
+     immediately and never builds an observer under reduce; this is the
+     CSS-side belt to that braces). */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

@@ -99,30 +99,29 @@
 
     <!-- 2. Study the standard - field guide feeder -->
     <div class="landing-study">
-      <div class="landing-study-text">
-        <p class="landing-study-script" aria-hidden="true">know your beef</p>
+      <div class="landing-study-text" data-reveal>
         <h2 class="landing-study-title">Study the Standard</h2>
         <p class="landing-study-body">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
         <button class="landing-study-link" id="landing-fieldguide-btn">Open the Field Guide &rarr;</button>
       </div>
-      <div class="landing-study-specimens" aria-hidden="true">
+      <div class="landing-study-specimens" data-reveal="stagger" aria-hidden="true">
         <figure class="landing-specimen">
-          <img src="assets/anchors/01_slight.jpg" alt="" loading="lazy" />
+          <img src="assets/anchors/01_slight.jpg" alt="" loading="lazy" decoding="async" />
           <figcaption>Slight</figcaption>
         </figure>
         <figure class="landing-specimen">
-          <img src="assets/anchors/03_modest.jpg" alt="" loading="lazy" />
+          <img src="assets/anchors/03_modest.jpg" alt="" loading="lazy" decoding="async" />
           <figcaption>Modest</figcaption>
         </figure>
         <figure class="landing-specimen">
-          <img src="assets/anchors/07_abundant.jpg" alt="" loading="lazy" />
+          <img src="assets/anchors/07_abundant.jpg" alt="" loading="lazy" decoding="async" />
           <figcaption>Abundant</figcaption>
         </figure>
       </div>
     </div>
 
-    <!-- 3. This week's board - letterboard band -->
-    <div class="landing-board">
+    <!-- 3. This week's board - full-bleed graphite band -->
+    <div class="landing-board" data-reveal="fade">
       <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
       <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
       <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
@@ -132,9 +131,8 @@
     <div class="landing-ticker" aria-hidden="true">
       <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
     </div>
-    <footer class="landing-footer">
+    <footer class="landing-footer" data-reveal="fade">
       <p class="landing-auth-note">
-        <span class="landing-note-script" aria-hidden="true">welcome to the rail.</span>
         Have a score to submit?
         <button id="landing-signin-link">Sign In</button>
       </p>
@@ -829,6 +827,7 @@
   <script src="weekly.js"></script>
   <script src="leaderboard.js"></script>
   <script src="powerrank.js"></script>
+  <script src="scroll.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const landing   = document.getElementById('landing-hero');

@@ -289,6 +289,11 @@ function renderLeaderboardRows(docs) {
   });
 
   tbody.innerHTML = rows.join('');
+  // Rows arrive from a live Firestore listener, so re-scan after each
+  // render. No-op if scroll.js isn't loaded on this page.
+  if (typeof window.initScrollReveals === 'function') {
+    window.initScrollReveals(document.getElementById('leaderboard-screen'));
+  }
 }
 
 /* ── _buildSkeletonRows ────────────────────────────────────── */

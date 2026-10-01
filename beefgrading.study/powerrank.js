@@ -599,6 +599,11 @@ function _prRender(contests) {
   _prRenderProvisional(rows.filter((r) => !r.qualified));
   _prRenderCategories(divisionContests, seasonScope);
   _prRenderContestList(seasonScope);
+  // Rows are built here at runtime, so the observer has to be told about
+  // them after render. No-op if scroll.js isn't loaded on this page.
+  if (typeof window.initScrollReveals === 'function') {
+    window.initScrollReveals(document.getElementById('powerrank-screen'));
+  }
 }
 
 function _prOrdinal(n) {
