@@ -4,7 +4,7 @@
    Kraft-cream paper · warm ink · brand scarlet · tracked caps
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 /* ============================================================
    TOKENS — remapped to Rollmark (style.css); legacy names kept
@@ -29,7 +29,7 @@
   --alert-light:    #F6E3DC;
   --pending:        #57503F;
   --pending-light:  #ECE4D2;
-  --font-ui:      'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-ui:      'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-display: 'Jost', 'Futura PT', 'Century Gothic', var(--font-ui);
   --font-data:    ui-monospace, 'Cascadia Mono', Consolas, monospace;
   --shadow-card:    0 2px 0 rgba(30, 27, 22, 0.14);
@@ -53,6 +53,7 @@ body {
   font-family: var(--font-ui);
   color: var(--ink);
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 a {
@@ -152,6 +153,7 @@ a {
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 42px);
+  min-height: calc(100dvh - 42px);
   padding: 2rem 1.5rem;
 }
 
@@ -933,7 +935,7 @@ td.admin-empty {
   padding: 8px 16px;
   border-bottom: 1px solid var(--rule);
   background: var(--accent-light);
-  border-left: 3px solid var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 .community-edit-fields {
@@ -1166,11 +1168,13 @@ td.admin-empty {
   font-family: 'Courier New', monospace;
 }
 .gv-grade-key { width: 52px; color: #aaa; }
-.gv-grade-bar { flex: 1; height: 8px; background: #333; }
-.gv-grade-fill { display: block; height: 100%; background: #555; }
-.gv-winner .gv-grade-key { color: #fff; font-weight: bold; }
-.gv-winner .gv-grade-fill { background: #cc0000; }
-.gv-grade-count { width: 20px; text-align: right; color: #666; }
+/* Was raw #333/#555/#fff/#cc0000/#666: off-system greys that didn't match
+   the Rollmark palette anywhere else in the panel. Re-tokenised. */
+.gv-grade-bar { flex: 1; height: 8px; background: var(--paper-deep); }
+.gv-grade-fill { display: block; height: 100%; background: var(--ink-tertiary); }
+.gv-winner .gv-grade-key { color: var(--ink); font-weight: 700; }
+.gv-winner .gv-grade-fill { background: var(--accent); }
+.gv-grade-count { width: 20px; text-align: right; color: var(--ink-tertiary); }
 .gv-push-btn { width: 100%; margin-top: 4px; font-size: .8em; padding: 8px; }
 .gv-promoted-badge {
   margin-top: 8px;
@@ -1438,8 +1442,7 @@ input[type="date"]:focus {
 /* ── Warning / error lists ── */
 
 .pr-warning-list {
-  border: 1px solid var(--rule-heavy);
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 6px;
   background: var(--accent-light);
   padding: 8px 12px;
@@ -1468,9 +1471,8 @@ input[type="date"]:focus {
 /* nested list inside the import preview / form warnings container */
 .pr-warning-inner,
 .pr-error-list {
-  border: none;
-  border-left: 3px solid var(--accent);
-  border-radius: 0 6px 6px 0;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
 }
 
 .pr-error-list .pr-warning-title,

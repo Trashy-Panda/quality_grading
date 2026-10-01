@@ -7,6 +7,12 @@
    2px ink borders · flat print elevation · paper grain
    ============================================================ */
 
+/* Single locked light mode, deliberately (no prefers-color-scheme branch):
+   students use this on a lab bench or classroom projector under bright
+   fluorescent light, grading against physical USDA cards whose cream stock
+   this palette reproduces. The paper IS the product metaphor; a dark variant
+   would break the reference match it exists to teach. */
+
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* paper */
@@ -54,13 +60,39 @@
   --shadow-md: 0 2px 0 rgba(30, 27, 22, 0.14);
   --shadow-lg: 0 14px 40px rgba(30, 27, 22, 0.16);
 
-  /* type */
+  /* type
+     Jost (display) + IBM Plex (body/data superfamily) + Yellowtail (brand
+     script, used sparingly). Plex replaces Inter: Inter is the reflex UI
+     default and reads generic; Plex carries industrial/technical character
+     that suits a grading instrument, and pairs on a real contrast axis
+     against geometric Jost. Column alignment for scores/ratings comes from
+     font-variant-numeric below, not a 4th downloaded family; --font-mono
+     falls back to the system stack so code/IDs cost no extra payload. */
   --font-display: 'Jost', 'Futura PT', 'Century Gothic', system-ui, sans-serif;
   --font-script:  'Yellowtail', cursive;
-  --font-ui:      'Inter', system-ui, -apple-system, Arial, sans-serif;
+  --font-ui:      'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-data:    var(--font-ui);
-  --track-stamp:  0.09em;   /* USDA-stamp tracking — headlines, buttons, labels */
+  --font-mono:    ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, monospace;
+  --track-stamp:  0.09em;   /* USDA-stamp tracking: headlines, buttons, labels */
   --track-wide:   0.16em;   /* eyebrows, stamps, letterboard headers */
+
+  /* motion: strong curves, not the weak CSS built-ins */
+  --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:   140ms;
+  --dur-base:   200ms;
+  --dur-slow:   280ms;
+
+  /* z-index: a named scale matching the real layer order. Author against
+     these, never a raw 999/9998. Local stacking contexts (z-index 0/1/2
+     inside a section) are correct CSS and stay as-is. */
+  --z-sticky:     100;  /* app header, page nav */
+  --z-dropdown:   200;
+  --z-overlay:    400;  /* settings scrim */
+  --z-modal:      500;  /* image lightbox */
+  --z-modal-full: 600;  /* contribute, full-screen takeover */
+  --z-toast:      700;
+  --z-skip:       800;  /* skip-link must out-rank everything above */
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -87,18 +119,14 @@ html, body {
 body {
   background: var(--paper);
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
-/* Paper grain — fixed print texture over everything */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 240px 240px;
+/* Numerals: tabular + lining everywhere, so scores, ratings and ranks sit in
+   true columns and never shift width as digits change during live updates. */
+table, .score-value, .stat-value, input[type="number"],
+[class*="-rating"], [class*="-score"], [class*="-rank"], [class*="-place"] {
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 .hidden {
@@ -119,7 +147,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
   text-decoration: none;
-  z-index: 9999;
+  z-index: var(--z-skip);
   border-radius: var(--radius-sm);
 }
 .skip-link:focus {
@@ -267,7 +295,7 @@ body::before {
   height: 58px;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
   border-bottom: var(--border-ink);
 }
 
@@ -360,7 +388,14 @@ body::before {
   justify-content: center;
   padding: 48px 32px;
 }
+/* Mouse clicks shouldn't ring the whole hero, but keyboard users must still
+   see where they are: suppress :focus only, keep a real :focus-visible ring. */
 .landing-brand:focus { outline: none; }
+.landing-brand:focus-visible {
+  outline: 3px solid var(--poster-cream);
+  outline-offset: 6px;
+  border-radius: var(--radius-sm);
+}
 
 .landing-brand-inner {
   position: relative;
@@ -1508,17 +1543,18 @@ body::before {
   color: var(--board-text);
 }
 .feedback-panel.feedback-perfect strong { color: var(--red-lift); }
+/* State reads from the wash + a full-strength border. (A heavy border-left
+   accent stripe is the single most over-used AI callout pattern; the tint
+   and the border already carry the signal.) */
 .feedback-panel.feedback-partial {
   background: var(--red-wash);
-  border: 1.5px solid var(--red-wash-border);
-  border-left: 5px solid var(--red);
+  border: 2px solid var(--red);
   color: var(--ink);
 }
 .feedback-panel.feedback-partial strong { color: var(--red); }
 .feedback-panel.feedback-zero {
   background: var(--paper-deep);
-  border: 1.5px solid var(--line);
-  border-left: 5px solid var(--ink);
+  border: 2px solid var(--ink);
   color: var(--ink);
 }
 .feedback-panel.feedback-zero strong { color: var(--red); }
@@ -1770,7 +1806,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: rgba(22, 18, 12, 0.88);
-  z-index: 500;
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1807,7 +1843,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: rgba(30, 27, 22, 0.55);
-  z-index: 400;
+  z-index: var(--z-overlay);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1950,12 +1986,21 @@ body::before {
   width: 100%;
   transition: border-color 140ms ease;
 }
+/* A border-colour swap alone is too weak to read as focus (and invisible to
+   anyone who can't separate red from ink). Pair it with a real offset ring. */
 .form-row input:focus,
 .form-row select:focus,
 .form-row textarea:focus,
 .json-textarea:focus {
   outline: none;
   border-color: var(--red);
+}
+.form-row input:focus-visible,
+.form-row select:focus-visible,
+.form-row textarea:focus-visible,
+.json-textarea:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 2px;
 }
 
 .form-row textarea,
@@ -2091,7 +2136,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: var(--paper);
-  z-index: 600;
+  z-index: var(--z-modal-full);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
