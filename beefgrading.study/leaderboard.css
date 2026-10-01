@@ -1,5 +1,5 @@
-/* leaderboard.css — Rollmark design system
-   Weekly Grading Rankings — the letterboard menu */
+/* leaderboard.css - Rollmark design system
+   Weekly Grading Rankings - the letterboard menu */
 
 /* ── Leaderboard Screen ─────────────────────────────────────── */
 
@@ -13,7 +13,7 @@
   color: var(--ink);
 }
 
-/* Faint corner overprint — same technique as setup/field guide.
+/* Faint corner overprint - same technique as setup/field guide.
    Negative z-index (contained by #leaderboard-screen's own stacking
    context) keeps it strictly behind every normal-flow child. */
 .leaderboard-overprint {
@@ -94,7 +94,7 @@
   color: var(--ink-soft);
 }
 
-/* ── Tabs — segmented ink-bordered control ──────────────────── */
+/* ── Tabs - segmented ink-bordered control ──────────────────── */
 
 .leaderboard-tabs {
   display: inline-flex;
@@ -154,7 +154,7 @@
   overflow-x: auto;
 }
 
-/* ── Data Table — letterboard header, paper rows ────────────── */
+/* ── Data Table - letterboard header, paper rows ────────────── */
 
 .leaderboard-table {
   width: 100%;
@@ -287,7 +287,7 @@
   flex-shrink: 0;
 }
 
-/* ── Rank Badges — stamped plates ───────────────────────────── */
+/* ── Rank Badges - stamped plates ───────────────────────────── */
 
 .rank-badge {
   display: inline-flex;

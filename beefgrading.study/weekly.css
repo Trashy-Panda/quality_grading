@@ -1,4 +1,4 @@
-/* weekly.css — Rollmark design system
+/* weekly.css - Rollmark design system
    Weekly Challenge card + injected weekly.js UI */
 
 /* ── Weekly Challenge Card ──────────────────────────────────── */
@@ -28,7 +28,7 @@
   gap: 12px;
 }
 
-/* "WEEKLY CHALLENGE" badge — rotated scarlet stamp */
+/* "WEEKLY CHALLENGE" badge - rotated scarlet stamp */
 .weekly-stamp {
   font-family: var(--font-display);
   font-size: 10px;
@@ -47,7 +47,7 @@
   transform: rotate(-1.5deg);
 }
 
-/* Countdown — ink chip, tabular numerals */
+/* Countdown - ink chip, tabular numerals */
 .weekly-countdown {
   font-family: var(--font-ui);
   font-variant-numeric: tabular-nums;
@@ -85,7 +85,7 @@
   margin: 8px 0 8px;
 }
 
-/* Division toggle — segmented ink-bordered control */
+/* Division toggle - segmented ink-bordered control */
 .weekly-ruleset-toggle {
   display: inline-flex;
   gap: 0;

@@ -1,6 +1,6 @@
-/* premium.css — Motion layer
+/* premium.css - Motion layer
    Modern Mono+Scarlet design system.
-   Loads after all other stylesheets — animation/transition only.
+   Loads after all other stylesheets - animation/transition only.
    No colors, no layout, no typography overrides. */
 
 /* ─────────────────────────────────────────────────────────────
@@ -33,7 +33,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Rubber-stamp thunk — scale down + rotation settle.
+/* Rubber-stamp thunk - scale down + rotation settle.
    Target elements carry their own resting rotation via a CSS var. */
 @keyframes p-stampIn {
   0%   { opacity: 0; transform: scale(1.25) rotate(3deg); }
@@ -41,14 +41,14 @@
   100% { opacity: 1; transform: scale(1) rotate(var(--stamp-rot, -5deg)); }
 }
 
-/* Ink soak — fade decorative overprint layers up to their resting
+/* Ink soak - fade decorative overprint layers up to their resting
    opacity (element sets --rest-opacity to its own resting value). */
 @keyframes p-inkSoak {
   from { opacity: 0; }
   to   { opacity: var(--rest-opacity, 0.1); }
 }
 
-/* Opacity-only fade — for elements whose resting transform (tilt)
+/* Opacity-only fade - for elements whose resting transform (tilt)
    must not be overridden by an animation's transform keyframes. */
 @keyframes p-fadeIn {
   from { opacity: 0; }
@@ -87,7 +87,7 @@
     animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
   }
 
-  /* ── Setup views — elements enter when screen becomes visible ── */
+  /* ── Setup views - elements enter when screen becomes visible ── */
   #home-screen:not(.hidden) .setup-switcher-wrap {
     animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
   }
@@ -115,7 +115,7 @@
     --stamp-rot: -5deg;
     animation: p-stampIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
   }
-  /* Certified Prime — slams in late, harder overshoot */
+  /* Certified Prime - slams in late, harder overshoot */
   #summary-screen:not(.hidden) .summary-cert-stamp:not(.hidden) {
     --stamp-rot: 8deg;
     animation: p-stampIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
@@ -173,7 +173,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   REDUCED MOTION — kill everything decorative
+   REDUCED MOTION - kill everything decorative
    ───────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

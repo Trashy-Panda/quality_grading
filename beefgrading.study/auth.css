@@ -1,4 +1,4 @@
-/* auth.css — Rollmark design system
+/* auth.css - Rollmark design system
    Sign-in modal + header/nav auth chips */
 
 /* ── Utility ────────────────────────────────────────────────── */
@@ -264,7 +264,7 @@
   line-height: 1.55;
 }
 
-/* Divider rule — zigzag print ornament */
+/* Divider rule - zigzag print ornament */
 .auth-modal-divider {
   border: none;
   height: 8px;
@@ -309,7 +309,7 @@
   margin-bottom: 0;
 }
 
-/* Google — outlined ink block */
+/* Google - outlined ink block */
 .auth-google-btn {
   background: var(--paper-card);
   color: var(--ink);
@@ -319,7 +319,7 @@
   background: var(--paper-deep);
 }
 
-/* GitHub — ink letterboard block */
+/* GitHub - ink letterboard block */
 .auth-github-btn {
   background: var(--board-bg);
   color: var(--board-text);

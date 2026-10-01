@@ -72,11 +72,11 @@
   </header>
 
   <!-- ===================================================
-       LANDING PAGE — scrolling broadsheet
+       LANDING PAGE - scrolling broadsheet
        =================================================== -->
   <section id="landing-hero" aria-label="Welcome">
 
-    <!-- 1. Brand block — the OG-card composition at viewport scale
+    <!-- 1. Brand block - the OG-card composition at viewport scale
          (skip-link target). Overprints ride the TOP layer. -->
     <div class="landing-brand" id="main-content" tabindex="-1">
       <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <!-- 2. Study the standard — field guide feeder -->
+    <!-- 2. Study the standard - field guide feeder -->
     <div class="landing-study">
       <div class="landing-study-text">
         <p class="landing-study-script" aria-hidden="true">know your beef</p>
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <!-- 3. This week's board — letterboard band -->
+    <!-- 3. This week's board - letterboard band -->
     <div class="landing-board">
       <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
       <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
@@ -169,7 +169,7 @@
       </div>
     </nav>
 
-    <!-- Mode switcher — Practice vs Weekly -->
+    <!-- Mode switcher - Practice vs Weekly -->
     <div class="setup-switcher-wrap">
       <div class="setup-switcher" role="tablist" aria-label="Session mode">
         <button id="setup-tab-practice" class="setup-tab active" role="tab" aria-selected="true">Practice</button>
@@ -229,7 +229,7 @@
         </div>
         <div class="weekly-card-body">
           <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
-          <!-- Division toggle — routes leaderboard only, full grades always used -->
+          <!-- Division toggle - routes leaderboard only, full grades always used -->
           <div class="weekly-division-label">Select your division for rankings</div>
           <div class="weekly-ruleset-toggle">
             <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School (FFA/4-H)</button>
@@ -617,7 +617,7 @@
         <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong>. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
       </section>
 
-      <!-- 2. Marbling degrees — specimen chart with USDA anchor photos -->
+      <!-- 2. Marbling degrees - specimen chart with USDA anchor photos -->
       <section class="fg-section" aria-labelledby="fg-marbling-heading">
         <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
         <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree. Tap any photo to view it full screen.</p>
@@ -695,7 +695,7 @@
         <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight 50&ndash;100 grades High Select, Slight 0&ndash;50 grades Low Select.<br />&sup2; USDA publishes no reference photo below Slight; genuinely negligible marbling is rare in fed cattle.<br />Photographs: official USDA marbling references (public domain).</p>
       </section>
 
-      <!-- 3. Maturity — plain prose, no box -->
+      <!-- 3. Maturity - plain prose, no box -->
       <section class="fg-section fg-section--prose" aria-labelledby="fg-maturity-heading">
         <hr class="zigzag-rule" aria-hidden="true" />
         <h2 id="fg-maturity-heading" class="fg-prose-heading">A word on maturity</h2>
@@ -820,7 +820,7 @@
   </div>
 
   <script src="data.js"></script>
-  <!-- Firebase compat SDKs — must load before auth.js -->
+  <!-- Firebase compat SDKs - must load before auth.js -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -834,7 +834,7 @@
       const landing   = document.getElementById('landing-hero');
       const homeScreen = document.getElementById('home-screen');
 
-      // app.js init() shows home-screen — re-hide it so landing shows first
+      // app.js init() shows home-screen - re-hide it so landing shows first
       homeScreen.classList.add('hidden');
 
       // ── Landing navigation helper ───────────────────────────────
@@ -847,7 +847,7 @@
         }, 260);
       }
 
-      // Start Grading — the landing's single job: get people to the setup page
+      // Start Grading - the landing's single job: get people to the setup page
       const landingSetupBtn = document.getElementById('landing-setup-btn');
       if (landingSetupBtn) {
         landingSetupBtn.addEventListener('click', () => {

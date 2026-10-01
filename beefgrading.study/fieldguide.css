@@ -1,5 +1,5 @@
-/* fieldguide.css — Rollmark design system
-   Grade Field Guide — the letterboard study card.
+/* fieldguide.css - Rollmark design system
+   Grade Field Guide - the letterboard study card.
    Uses global tokens from style.css (:root). */
 
 #fieldguide-screen {
@@ -12,7 +12,7 @@
   color: var(--ink);
 }
 
-/* Faint overprint — same ink-over-content technique as the landing hero.
+/* Faint overprint - same ink-over-content technique as the landing hero.
    Negative z-index (contained by #fieldguide-screen's own stacking
    context) keeps it strictly behind every normal-flow child. */
 .fg-overprint {
@@ -85,7 +85,7 @@
   margin-top: 40px;
 }
 
-/* Letterboard band section header — torn strip (sawtooth edges,
+/* Letterboard band section header - torn strip (sawtooth edges,
    same mask technique as the .ticket receipt system) */
 .fg-board-header {
   font-family: var(--font-display);
@@ -117,7 +117,7 @@
   text-align: center;
 }
 
-/* Prose sections — no box, just measured text between ornaments */
+/* Prose sections - no box, just measured text between ornaments */
 .fg-section--prose {
   text-align: center;
 }
@@ -171,7 +171,7 @@
 }
 .fg-rung:last-child { border-bottom: none; }
 
-/* Family boundary — the heavy rule where contests are won */
+/* Family boundary - the heavy rule where contests are won */
 .fg-rung--boundary {
   border-top: 2px solid var(--ink);
 }
@@ -217,7 +217,7 @@
   border-color: var(--ink-faint);
 }
 
-/* ── Marbling specimens — butcher-chart rows w/ USDA photos ── */
+/* ── Marbling specimens - butcher-chart rows w/ USDA photos ── */
 
 .fg-specimen-list {
   list-style: none;
@@ -236,7 +236,7 @@
   border-bottom: none;
 }
 
-/* Clickable thumbnail — opens the shared image modal full screen */
+/* Clickable thumbnail - opens the shared image modal full screen */
 .fg-specimen-view {
   position: relative;
   display: block;
@@ -251,11 +251,11 @@
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
-/* alternate rows lean the specimen slightly — pinned prints, not a grid */
+/* alternate rows lean the specimen slightly - pinned prints, not a grid */
 .fg-specimen-row:nth-child(odd) .fg-specimen-view { transform: rotate(-1.6deg); }
 .fg-specimen-row:nth-child(even) .fg-specimen-view { transform: rotate(1.3deg); }
 
-/* Zoom badge — signals the photo is tappable */
+/* Zoom badge - signals the photo is tappable */
 .fg-specimen-view::after {
   content: '';
   position: absolute;
@@ -311,7 +311,7 @@
   line-height: 1.15;
 }
 
-/* ── Scoring menu — dotted-leader price list, no box ────────── */
+/* ── Scoring menu - dotted-leader price list, no box ────────── */
 
 .fg-scoring-menu {
   max-width: 480px;

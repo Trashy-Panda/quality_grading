@@ -1,5 +1,5 @@
-/* powerrank.css — Rollmark design system
-   Team Power Rankings — collegiate meat judging poll.
+/* powerrank.css - Rollmark design system
+   Team Power Rankings - collegiate meat judging poll.
    Sibling of leaderboard.css: shares the letterboard table,
    hero stamp, and hairline-rule vocabulary. */
 
@@ -20,7 +20,7 @@
   color: var(--ink-soft);
 }
 
-/* ── Controls row — division tabs + season select ───────────── */
+/* ── Controls row - division tabs + season select ───────────── */
 
 .powerrank-controls {
   display: flex;
@@ -123,7 +123,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* #1 rank plate — blue-ribbon award accent (award context only) */
+/* #1 rank plate - blue-ribbon award accent (award context only) */
 .rank-badge.pr-rank-1st {
   color: var(--paper-card);
   background: var(--ribbon);
@@ -208,7 +208,7 @@
   color: var(--red);
 }
 
-/* Full-width panel row inside the same table — safe in the
+/* Full-width panel row inside the same table - safe in the
    horizontal-scroll wrapper (spans all five columns) */
 .pr-detail-row > td {
   padding: 0;
@@ -316,7 +316,7 @@
   margin-top: 8px;
 }
 
-/* Panel entrance — opacity/transform only */
+/* Panel entrance - opacity/transform only */
 @keyframes pr-panel-in {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -335,7 +335,7 @@
   }
 }
 
-/* ── Section band headers — letterboard strip ───────────────── */
+/* ── Section band headers - letterboard strip ───────────────── */
 
 .powerrank-strip {
   max-width: 860px;
@@ -364,7 +364,7 @@
   margin: -6px 0 14px;
 }
 
-/* ── Category cards — "Best in…" stamped badges ─────────────── */
+/* ── Category cards - "Best in…" stamped badges ─────────────── */
 
 .powerrank-cards {
   display: grid;
@@ -554,7 +554,7 @@
   padding-top: 10px;
 }
 
-/* ── Row entrance — transform/opacity only ──────────────────── */
+/* ── Row entrance - transform/opacity only ──────────────────── */
 
 @keyframes pr-row-in {
   from { opacity: 0; transform: translateX(-8px); }

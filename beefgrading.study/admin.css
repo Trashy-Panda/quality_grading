@@ -1,5 +1,5 @@
 /* ============================================================
-   ADMIN PANEL — admin.css
+   ADMIN PANEL - admin.css
    ROLLMARK design system. Self-contained.
    Kraft-cream paper · warm ink · brand scarlet · tracked caps
    ============================================================ */
@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 /* ============================================================
-   TOKENS — remapped to Rollmark (style.css); legacy names kept
+   TOKENS - remapped to Rollmark (style.css); legacy names kept
    so the rest of this file works unchanged
    ============================================================ */
 
@@ -120,7 +120,7 @@ a {
   color: var(--ink-secondary);
 }
 
-/* Header buttons — text style */
+/* Header buttons - text style */
 .admin-header-btn {
   display: inline-flex;
   align-items: center;
@@ -365,7 +365,7 @@ a {
   color: var(--paper);
 }
 
-/* Small variant — used for inline delete buttons */
+/* Small variant - used for inline delete buttons */
 .admin-btn-sm {
   padding: 4px 10px;
   font-size: 10px;
@@ -1197,7 +1197,7 @@ td.admin-empty {
 }
 
 /* ============================================================
-   ROLLMARK REFINEMENTS — appended layer
+   ROLLMARK REFINEMENTS - appended layer
    Softens the old square/offset-shadow DNA to match style.css
    ============================================================ */
 
@@ -1319,7 +1319,7 @@ textarea {
 }
 
 /* ============================================================
-   POWER RANKINGS TAB — meat_contests admin
+   POWER RANKINGS TAB - meat_contests admin
    ============================================================ */
 
 /* number/date inputs share the base text-input treatment */
