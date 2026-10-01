@@ -35,7 +35,10 @@
   /* scarlet */
   --red:             #C8102E;
   --red-deep:        #A00D25;
-  --red-lift:        #FF6B52;  /* on dark band surfaces only */
+  --red-lift:        #FF3B55;  /* on dark band surfaces only; stays in the
+                                  scarlet hue family. The old #FF5A45 was
+                                  tuned to lift off warm brown and reads
+                                  orange and dated against cool graphite. */
   --red-wash:        #FBE9E4;
   --red-wash-border: #E8BCB0;
 
@@ -50,13 +53,24 @@
 
   /* band locals - full-bleed dark surfaces.
      Deliberately NOT the old #201D18 flat "letterboard" panel: these are
-     now photographic bands (macro marbling / rail atmosphere) and this
-     colour is the base the imagery sits on and the scrim falls to, not a
-     painted menu board. Cooler and deeper than the kraft-era ink so
-     photography reads as photography instead of a tinted rectangle. */
-  --band-bg:    #121010;
-  --band-text:  #F7F5F0;
-  --band-dim:   #A8A294;
+     photographic bands now, and this is the base the imagery sits on and
+     the scrim falls to, not a painted menu board.
+     COOL graphite, not warm brown-black: a warm dark against bone white
+     reads as a stain, and it is exactly the kraft residue being removed.
+     The locked --ribbon #3B67C4 is cool, so a cool dark is the only
+     coherent third colour. bone + graphite + scarlet is the editorial
+     triad this is reaching for. */
+  --band-bg:    #14151A;
+  --band-rgb:   20, 21, 26;
+  --band-text:  #F4F4F0;
+  --band-dim:   #8E8E86;   /* secondary text on FLAT graphite only */
+  /* Over photography the effective background is brighter than flat
+     graphite, so --band-dim and --red-lift both drop under 4.5:1. These
+     two are measured against the actual scrimmed hero plate, not assumed:
+     7.7:1 and 4.8:1 at the brightest pixel beneath the lockup. Re-measure
+     if the plate image is ever swapped. */
+  --on-photo:      #BFBDB4;
+  --on-photo-red:  #FF5C72;
   /* legacy aliases - 66 call sites across 6 stylesheets still name these;
      revalued rather than renamed to avoid a blind 2500-line find/replace. */
   --board-bg:   var(--band-bg);
@@ -424,15 +438,15 @@ table, .score-value, .stat-value, input[type="number"],
   z-index: -1;
   background:
     linear-gradient(100deg,
-      rgba(18, 16, 16, 0.94) 0%,
-      rgba(18, 16, 16, 0.86) 38%,
-      rgba(18, 16, 16, 0.58) 72%,
-      rgba(18, 16, 16, 0.44) 100%),
+      rgba(var(--band-rgb), 0.96) 0%,
+      rgba(var(--band-rgb), 0.90) 38%,
+      rgba(var(--band-rgb), 0.70) 72%,
+      rgba(var(--band-rgb), 0.58) 100%),
     linear-gradient(to bottom,
-      rgba(18, 16, 16, 0.55) 0%,
-      rgba(18, 16, 16, 0) 28%,
-      rgba(18, 16, 16, 0) 70%,
-      rgba(18, 16, 16, 0.75) 100%),
+      rgba(var(--band-rgb), 0.55) 0%,
+      rgba(var(--band-rgb), 0) 28%,
+      rgba(var(--band-rgb), 0) 70%,
+      rgba(var(--band-rgb), 0.78) 100%),
     var(--hero-plate) center / cover no-repeat;
 }
 /* Mouse clicks shouldn't ring the whole hero, but keyboard users must still
@@ -457,24 +471,29 @@ table, .score-value, .stat-value, input[type="number"],
 
 /* Torn seam into the next (deep-cream) band - the zigzag motif as
    a scroll transition rather than a flat border. */
+/* The dark-to-bone handoff. The sawtooth is filled with the colour of the
+   section BELOW, so the next band appears to tear up through the plate.
+   Taller now (16px) because it has real contrast to carry: on cream-on-cream
+   it was a texture, here it is the seam between the two halves of the page. */
 .landing-brand::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 10px;
-  z-index: 1;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 10 L10 0 L20 10 Z' fill='%23ECE4D2'/%3E%3C/svg%3E") repeat-x bottom / 20px 10px;
+  height: 16px;
+  z-index: 3;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='16'%3E%3Cpath d='M0 16 L14 0 L28 16 Z' fill='%23FAFAF7'/%3E%3C/svg%3E") repeat-x bottom / 28px 16px;
   pointer-events: none;
 }
 
-/* Overprint art - TOP layer, ink poured over the composition.
-   The rib's straight edges sit flush with the page's top + right
-   (OG-card placement); the hard hat anchors bottom-left. */
+/* Overprint art - now LIGHT stencils over a dark plate, not ink over cream.
+   Promoted from near-invisible 0.05-0.12 corner watermarks to real
+   architectural masses: on a photographic ground these read as etched
+   light rather than smudges, so they can finally carry weight. */
 .landing-overprint {
   position: absolute;
-  color: var(--ink);
+  color: var(--band-text);
   z-index: 2;
   pointer-events: none;
   user-select: none;
@@ -482,21 +501,23 @@ table, .score-value, .stat-value, input[type="number"],
 
 .landing-overprint--rib {
   --art: url(assets/art-rib.png);
-  top: 0;
-  right: 0;
-  width: min(420px, 38vw);
+  top: -4%;
+  right: -6%;
+  width: min(680px, 52vw);
   aspect-ratio: 1400 / 1053;
-  opacity: 0.12;
+  opacity: 0.1;
+  --rest-opacity: 0.1;
 }
 
 /* Flipped so the brim faces into the composition, not off the edge */
 .landing-overprint--hardhat {
   --art: url(assets/art-hardhat.png);
-  bottom: -16px;
-  left: -26px;
-  width: min(300px, 34vw);
+  bottom: -5%;
+  left: -5%;
+  width: min(420px, 38vw);
   aspect-ratio: 1109 / 789;
-  opacity: 0.11;
+  opacity: 0.08;
+  --rest-opacity: 0.08;
   transform: scaleX(-1) rotate(-7deg);
 }
 
@@ -509,8 +530,9 @@ table, .score-value, .stat-value, input[type="number"],
 .landing-shield svg {
   width: clamp(210px, 24vw, 300px);
   height: auto;
+  color: var(--band-text);
   transform: rotate(-4deg);
-  filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
+  filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.45));
 }
 
 .landing-content {
@@ -525,26 +547,25 @@ table, .score-value, .stat-value, input[type="number"],
    hierarchy and left nothing on the page in charge. */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
   font-weight: 400;
-  color: var(--red);
+  color: var(--on-photo-red);   /* measured 4.8:1 on the scrimmed plate */
   line-height: 1.1;
   margin: 0;
-  transform: rotate(-2deg);
-  transform-origin: left bottom;
 }
 
-/* The headline now carries the page: display scale, ink (not scarlet) so the
-   red stays a real accent on the kicker and CTA instead of flooding the
-   lockup. Optical tightening at size; balanced wrap so it breaks evenly. */
+/* The headline carries the page: display scale, knocked out in bone over the
+   photographic plate. Scarlet stays an accent on the kicker and CTA instead
+   of flooding the lockup. lh 1.06 (not 1.02) because uppercase Jost 700 at
+   -0.02em needs the extra room across two or three lines. */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 6.4vw, 5.25rem);
+  font-size: clamp(2.75rem, 7vw, 6rem);
   font-weight: 700;
-  color: var(--ink);
+  color: var(--band-text);
   text-transform: uppercase;
-  letter-spacing: -0.015em;
-  line-height: 1.02;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
   margin: 14px 0 0;
   max-width: 13ch;
   text-wrap: balance;
@@ -552,9 +573,9 @@ table, .score-value, .stat-value, input[type="number"],
 
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: clamp(1rem, 1.25vw, 1.125rem);
-  color: var(--ink-soft);
-  line-height: 1.6;
+  font-size: clamp(1rem, 1.25vw, 1.1875rem);
+  color: var(--on-photo);   /* measured 7.7:1 on the scrimmed plate */
+  line-height: 1.65;
   margin-top: 22px;
   max-width: 46ch;
   text-wrap: pretty;
@@ -2529,15 +2550,16 @@ table, .score-value, .stat-value, input[type="number"],
     text-align: center;
     align-items: center;
   }
-  .landing-script {
-    transform-origin: center bottom;
-  }
+  /* The desktop hierarchy fix has to propagate here too. This override used
+     to force the h1 down to ~25.7px at 390px while the script kicker floors
+     at 21.6px: a 1.19 ratio, under the 1.25 minimum, so the decoration
+     nearly tied the headline on exactly the viewport most students use. */
   .landing-headline {
-    font-size: clamp(1.5rem, 6.6vw, 2rem);
-    max-width: none;
+    font-size: clamp(2rem, 9.5vw, 2.75rem);
+    max-width: 14ch;
   }
   .landing-subtext {
-    font-size: 15px;
+    font-size: 15.5px;
   }
   .landing-cta {
     align-self: center;
