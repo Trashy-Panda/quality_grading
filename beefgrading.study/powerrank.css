@@ -12,12 +12,29 @@
   color: var(--ink);
 }
 
-/* Hero inherits .leaderboard-hero (rosette + stamp + title). */
+/* Hero inherits .leaderboard-hero, so it picks up the full-bleed graphite
+   competition band and the oversized ribbon rosette automatically. Only the
+   season line needs restating for the dark ground. */
 
 .powerrank-season-line {
   font-family: var(--font-script);
-  font-size: 1.25rem;
-  color: var(--ink-soft);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  color: var(--on-photo-red);
+}
+
+/* The leaderboard demotes .leaderboard-title because there the WEEK is the
+   news. Here there is no week: "Power Rankings" is the headline, so restore
+   it to display scale and let the season line act as the subtitle. */
+#powerrank-screen .leaderboard-title {
+  font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  color: var(--band-text);
+  margin-bottom: 8px;
+  text-wrap: balance;
+}
+#powerrank-screen .powerrank-season-line {
+  color: var(--on-photo-red);
 }
 
 /* ── Controls row - division tabs + season select ───────────── */

@@ -335,17 +335,6 @@ table, .score-value, .stat-value, input[type="number"],
   user-select: none;
 }
 
-.landing-shield {
-  line-height: 0;
-  justify-self: center;
-}
-.landing-shield svg {
-  width: clamp(230px, 26vw, 330px);
-  height: auto;
-  transform: rotate(-4deg);
-  filter: drop-shadow(0 4px 10px rgba(30, 27, 22, 0.16));
-}
-
 /* ── Global Header (#app-header - shown during drill) ──────── */
 #app-header {
   background: var(--paper);
@@ -491,14 +480,15 @@ table, .score-value, .stat-value, input[type="number"],
   border-radius: var(--radius-sm);
 }
 
+/* Single column now: the shield left the grid to become the background mass,
+   so the lockup is one asymmetric block sitting against it rather than a
+   centred two-column badge-plus-text arrangement. */
 .landing-brand-inner {
   position: relative;
   z-index: 1;
-  max-width: 1040px;
+  max-width: var(--measure-wide);
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(210px, 300px) 1fr;
-  column-gap: 116px;
+  display: flex;
   align-items: center;
 }
 
@@ -554,18 +544,36 @@ table, .score-value, .stat-value, input[type="number"],
   transform: scaleX(-1) rotate(-7deg);
 }
 
-.landing-shield {
-  position: relative;
-  z-index: 1;
-  line-height: 0;
-  justify-self: center;
-}
-.landing-shield svg {
-  width: clamp(210px, 24vw, 300px);
+/* The shield as architecture, not as a logo.
+   It is vector and single-colour, so rendering it at 760px costs exactly
+   the same as 300px and stays sharp at any DPR. Cropped by the right edge
+   so it reads as a structural mass the composition sits against, rather
+   than a badge floating in the layout. The real, legible mark lives small
+   and sharp down in .landing-mark. */
+.landing-shield-mass {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: clamp(-220px, -10vw, -60px);
+  translate: 0 -50%;
+  width: clamp(420px, 52vw, 820px);
   height: auto;
   color: var(--band-text);
-  transform: rotate(-4deg);
-  filter: drop-shadow(0 6px 22px rgba(0, 0, 0, 0.45));
+  opacity: 0.07;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The actual brand mark: small, sharp, scarlet, next to the CTA. */
+.landing-mark {
+  display: inline-flex;
+  line-height: 0;
+}
+.landing-mark .shield-mark {
+  width: 46px;
+  height: auto;
+  color: var(--on-photo-red);
+  opacity: 0.95;
 }
 
 .landing-content {
@@ -617,14 +625,21 @@ table, .score-value, .stat-value, input[type="number"],
 /* The landing's single job: send people to the setup page.
    Flat scarlet, no border - cohesive with the shield, not a shout.
    Same directional chevron as every other primary CTA on the site. */
+/* CTA + brand mark share a row so the mark reads as a maker's stamp beside
+   the action rather than a floating badge. */
+.landing-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 34px;
+}
+
 .landing-cta {
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-top: 28px;
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 0.9375rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: var(--track-stamp);
@@ -2615,8 +2630,16 @@ table, .score-value, .stat-value, input[type="number"],
     opacity: 0.1;
     --rest-opacity: 0.1;
   }
-  .landing-shield svg {
-    width: 156px;
+  /* The mass still reads at phone width, just pulled further off-edge and
+     fainter so it never competes with the headline. */
+  .landing-shield-mass {
+    right: -34vw;
+    width: 92vw;
+    opacity: 0.055;
+  }
+  .landing-actions {
+    justify-content: center;
+    margin-top: 26px;
   }
   .landing-content {
     text-align: center;

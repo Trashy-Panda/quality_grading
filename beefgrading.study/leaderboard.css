@@ -41,57 +41,75 @@
 
 /* ── Leaderboard Hero Header ────────────────────────────────── */
 
+/* Full-bleed graphite competition band. The week is the news here, so it
+   gets the large slot; "Leaderboard" is the small label telling you what
+   kind of page this is. That ordering used to be inverted. */
 .leaderboard-hero {
-  max-width: var(--measure-page);
-  margin: 0 auto;
-  padding: 40px 20px 8px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--band-bg);
+  color: var(--band-text);
+  max-width: none;
+  margin: 0;
+  padding: clamp(44px, 7vh, 88px) 20px clamp(40px, 6vh, 72px);
   text-align: center;
 }
 
-/* Blue-ribbon rosette above the stamp badge (award context) */
+/* Oversized ribbon rosette behind the band: the award language stated once,
+   at scale, instead of a 52px trinket perched above a badge. */
 .leaderboard-hero::before {
   content: '';
-  display: block;
-  width: 52px;
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: min(360px, 56vw);
   aspect-ratio: 565 / 939;
-  margin: 0 auto 10px;
-  background: var(--ribbon);
+  background-color: var(--ribbon);
   -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
   mask: url(assets/art-rosette.png) center / contain no-repeat;
-  transform: rotate(-5deg);
+  opacity: 0.17;
+  pointer-events: none;
 }
 
 .leaderboard-hero-stamp {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
-  color: var(--red);
+  color: var(--band-dim);
   background: transparent;
-  border: 1.5px solid var(--red);
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
-  transform: rotate(-1.5deg);
+  border: none;
+  padding: 0;
+  margin-bottom: 14px;
 }
 
+/* Demoted: the page label, not the headline. */
 .leaderboard-title {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-size: 0.8125rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--ink);
-  margin-bottom: 6px;
-  line-height: 1.12;
+  letter-spacing: var(--track-wide);
+  color: var(--on-photo-red);
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
 
+/* Promoted: the week IS the news. */
 .leaderboard-week-label {
-  font-family: var(--font-script);
-  font-size: 1.25rem;
-  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4.6vw, 3.25rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  color: var(--band-text);
+  text-wrap: balance;
 }
 
 /* ── Tabs - segmented ink-bordered control ──────────────────── */
@@ -305,19 +323,41 @@
   border: 1.5px solid var(--ink);
 }
 
+/* Podium plates. Ribbon blue is reserved for first place across the whole
+   product (it is the stock-show blue ribbon), so it finally does award work
+   here instead of only appearing in power rankings. */
 .rank-1st {
-  color: var(--poster-cream);
-  background: var(--red);
+  color: var(--paper-card);
+  background: var(--ribbon);
+  border-color: var(--ink);
 }
 
 .rank-2nd {
-  color: var(--board-text);
-  background: var(--board-bg);
+  color: var(--band-text);
+  background: var(--band-bg);
 }
 
 .rank-3rd {
   color: var(--ink);
   background: transparent;
+}
+
+/* The champion row: rosette in the name cell at legible size, plus a
+   ribbon spine. This is the one row allowed to shout. */
+.leaderboard-table tr:has(.rank-1st) td {
+  background: color-mix(in srgb, var(--ribbon) 7%, var(--paper-card));
+}
+.leaderboard-table tr:has(.rank-1st) td:first-child {
+  box-shadow: inset 3px 0 0 var(--ribbon);
+}
+.leaderboard-table tr:has(.rank-1st) .leaderboard-name-cell::before {
+  content: '';
+  flex-shrink: 0;
+  width: 26px;
+  aspect-ratio: 565 / 939;
+  background-color: var(--ribbon);
+  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
+  mask: url(assets/art-rosette.png) center / contain no-repeat;
 }
 
 /* ── Skeleton Loading Rows ──────────────────────────────────── */

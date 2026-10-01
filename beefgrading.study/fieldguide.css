@@ -297,7 +297,7 @@
   aspect-ratio: 2 / 3;
   height: auto;
   object-fit: cover;
-  background: var(--surface, var(--paper-card));
+  background: var(--paper-card);
   border: 1.5px solid var(--ink);
   border-radius: var(--radius-sm);
   padding: 5px;
