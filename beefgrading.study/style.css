@@ -9,44 +9,59 @@
 
 /* Single locked light mode, deliberately (no prefers-color-scheme branch):
    students use this on a lab bench or classroom projector under bright
-   fluorescent light, grading against physical USDA cards whose cream stock
-   this palette reproduces. The paper IS the product metaphor; a dark variant
-   would break the reference match it exists to teach. */
+   fluorescent light, judging real meat against printed USDA references.
+   The working surfaces stay bone white so marbling photography is read
+   under neutral light, the way it is on the rail; a site-wide dark theme
+   would shift the perceived colour of the very thing being graded.
+   Dark appears deliberately instead, as full-bleed photographic bands. */
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  /* paper */
-  --paper:      #F5EFE2;   /* page bg — warm kraft cream */
-  --paper-deep: #ECE4D2;   /* fills, hover, zero-feedback */
-  --paper-card: #FBF7EE;   /* card surface */
-  --line:       #DCD2BC;   /* hairline rules */
-  --line-heavy: #C9BEA6;   /* resting borders on interactive tiles */
+  /* paper — bone white, NOT kraft/beige. The old #F5EFE2 cream read as
+     the reflex "premium consumer" palette and was the single biggest
+     reason the site looked homemade. Bone keeps the print metaphor
+     (this is still paper) while reading as a real publication. */
+  --paper:      #FAFAF7;   /* page bg — bone white */
+  --paper-deep: #F0EFEA;   /* recessed fills, hover, zero-feedback */
+  --paper-card: #FFFFFE;   /* raised card surface */
+  --line:       #DEDCD4;   /* hairline rules */
+  --line-heavy: #C4C1B6;   /* resting borders on interactive tiles */
 
   /* ink */
-  --ink:        #1E1B16;
-  --ink-soft:   #57503F;   /* secondary text */
-  --ink-faint:  #6E675A;   /* tertiary text */
+  --ink:        #16140F;   /* near-black */
+  --ink-soft:   #5A554A;   /* secondary text */
+  --ink-faint:  #6B6557;   /* tertiary text (4.5:1 on --paper) */
 
   /* scarlet */
   --red:             #C8102E;
   --red-deep:        #A00D25;
-  --red-lift:        #FF5A45;  /* on ink/board surfaces only */
-  --red-wash:        #F6E3DC;
-  --red-wash-border: #E5B8AC;
+  --red-lift:        #FF6B52;  /* on dark band surfaces only */
+  --red-wash:        #FBE9E4;
+  --red-wash-border: #E8BCB0;
 
   /* stock-show blue — AWARD moments only (blue ribbon = 1st place) */
   --ribbon: #3B67C4;
 
-  /* poster locals — the scarlet landing field */
+  /* poster locals — the scarlet field */
   --poster-bg:    #C8102E;
-  --poster-cream: #F5EFE2;
-  --poster-line:  rgba(245, 239, 226, 0.35);
-  --poster-dim:   #EFD9CE;
+  --poster-cream: #FAFAF7;
+  --poster-line:  rgba(250, 250, 247, 0.35);
+  --poster-dim:   #F9E4DF;  /* 4.82:1 on --poster-bg; #F6D9D2 failed at 4.42 */
 
-  /* letterboard locals — ink menu-board surfaces */
-  --board-bg:   #201D18;
-  --board-text: #F5EFE2;
-  --board-dim:  #B8AE99;
+  /* band locals — full-bleed dark surfaces.
+     Deliberately NOT the old #201D18 flat "letterboard" panel: these are
+     now photographic bands (macro marbling / rail atmosphere) and this
+     colour is the base the imagery sits on and the scrim falls to, not a
+     painted menu board. Cooler and deeper than the kraft-era ink so
+     photography reads as photography instead of a tinted rectangle. */
+  --band-bg:    #121010;
+  --band-text:  #F7F5F0;
+  --band-dim:   #A8A294;
+  /* legacy aliases — 66 call sites across 6 stylesheets still name these;
+     revalued rather than renamed to avoid a blind 2500-line find/replace. */
+  --board-bg:   var(--band-bg);
+  --board-text: var(--band-text);
+  --board-dim:  var(--band-dim);
 
   /* shape — print plates, not pills */
   --radius-sm:   6px;
@@ -55,10 +70,10 @@
   --radius-pill: 999px;
   --border-ink:  2px solid var(--ink);
 
-  /* elevation — flat print; borders carry structure */
-  --shadow-sm: 0 1px 2px rgba(30, 27, 22, 0.07);
-  --shadow-md: 0 2px 0 rgba(30, 27, 22, 0.14);
-  --shadow-lg: 0 14px 40px rgba(30, 27, 22, 0.16);
+  /* elevation — flat print; borders carry structure (rgb matches --ink) */
+  --shadow-sm: 0 1px 2px rgba(22, 20, 15, 0.06);
+  --shadow-md: 0 2px 0 rgba(22, 20, 15, 0.12);
+  --shadow-lg: 0 18px 48px rgba(22, 20, 15, 0.18);
 
   /* type
      Jost (display) + IBM Plex (body/data superfamily) + Yellowtail (brand
@@ -473,39 +488,44 @@ table, .score-value, .stat-value, input[type="number"],
   flex-direction: column;
 }
 
-/* Script lead-in over tracked caps — the OG-card lockup */
+/* Script kicker: a true accent ABOVE the headline, not a competitor to it.
+   It used to render larger than the h1 (48px vs 43px), which inverted the
+   hierarchy and left nothing on the page in charge. */
 .landing-script {
   font-family: var(--font-script);
-  font-size: clamp(2.1rem, 3.6vw, 3rem);
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
   font-weight: 400;
   color: var(--red);
-  line-height: 1.15;
-  margin: 0 0 4px;
+  line-height: 1.1;
+  margin: 0;
   transform: rotate(-2deg);
   transform-origin: left bottom;
 }
 
-/* Flat scarlet caps under the script — the OG-card lockup, one ink */
+/* The headline now carries the page: display scale, ink (not scarlet) so the
+   red stays a real accent on the kicker and CTA instead of flooding the
+   lockup. Optical tightening at size; balanced wrap so it breaks evenly. */
 .landing-headline {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+  font-size: clamp(2.75rem, 6.4vw, 5.25rem);
   font-weight: 700;
-  color: var(--red);
+  color: var(--ink);
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.14;
-  margin: 8px 0 0;
-  max-width: 20ch;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 13ch;
   text-wrap: balance;
 }
 
 .landing-subtext {
   font-family: var(--font-ui);
-  font-size: 16.5px;
+  font-size: clamp(1rem, 1.25vw, 1.125rem);
   color: var(--ink-soft);
-  line-height: 1.65;
-  margin-top: 18px;
-  max-width: 50ch;
+  line-height: 1.6;
+  margin-top: 22px;
+  max-width: 46ch;
+  text-wrap: pretty;
 }
 
 /* The landing's single job: send people to the setup page.
