@@ -26,6 +26,28 @@
   <link rel="stylesheet" href="powerrank.css" />
   <link rel="stylesheet" href="fieldguide.css" />
   <link rel="stylesheet" href="premium.css" />
+
+  <!-- Scroll reveals rest at opacity:0, so content must never depend on JS to
+       become readable. Two distinct failure modes, both covered here:
+
+       1. Scripting disabled: this inline script never runs, .js-reveals is
+          never added, and the resting rule in premium.css (scoped to
+          .js-reveals) never matches. Content renders plainly. Setting the
+          class here in <head> rather than from scroll.js also avoids a
+          flash of visible-then-hidden content.
+       2. Scripting enabled but scroll.js fails to arrive (404, blocked by a
+          school network filter, CSP, a dead connection). The <noscript>
+          route does NOT fire here, which is the trap. The failsafe below
+          removes the class if scroll.js has not registered in time, so the
+          page degrades to fully visible instead of silently blank. -->
+  <script>
+    document.documentElement.classList.add('js-reveals');
+    setTimeout(function () {
+      if (typeof window.initScrollReveals !== 'function') {
+        document.documentElement.classList.remove('js-reveals');
+      }
+    }, 2500);
+  </script>
 </head>
 <body>
 

@@ -1809,13 +1809,17 @@ table, .score-value, .stat-value, input[type="number"],
   letter-spacing: var(--track-wide);
 }
 
+/* The payoff number. It was running at clamp(2.5rem, 7vw, 3.5rem), which is
+   smaller than the landing h1 and under-powered for the one number the whole
+   session exists to produce. */
 .summary-score {
   font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(2.5rem, 7vw, 3.5rem);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: clamp(3.5rem, 11vw, 5.5rem);
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.05;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .summary-pct {
@@ -1886,10 +1890,13 @@ table, .score-value, .stat-value, input[type="number"],
 }
 #summary-table tr:last-child td { border-bottom: none; }
 
-#summary-table tr.row-good td:first-child { box-shadow: inset 3px 0 0 var(--ink); }
-#summary-table tr.row-ok td:first-child   { box-shadow: inset 3px 0 0 var(--ink-faint); }
-#summary-table tr.row-bad td:first-child  { box-shadow: inset 3px 0 0 var(--red); }
+/* These were inset 3px left spines, which is the banned side-stripe accent
+   wearing a box-shadow costume: preflight only matches the `border-left`
+   spelling, so it passed the script while being the same pattern. The row
+   tint already carries the state, so the stripes are gone and the miss case
+   keeps the one that means something. */
 #summary-table tr.row-bad td { background: var(--red-wash); }
+#summary-table tr.row-bad td:first-child { font-weight: 600; }
 
 /* Scoring explainer - ticket stub after the table */
 .scoring-explainer {
