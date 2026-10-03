@@ -12,23 +12,6 @@
   color: var(--ink);
 }
 
-/* Faint overprint - same ink-over-content technique as the landing hero.
-   Negative z-index (contained by #fieldguide-screen's own stacking
-   context) keeps it strictly behind every normal-flow child. */
-.fg-overprint {
-  --art: url(assets/art-rib.png);
-  position: absolute;
-  top: 0;
-  right: -40px;
-  width: 340px;
-  aspect-ratio: 1400 / 1053;
-  color: var(--ink);
-  opacity: 0.05;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* Was a hard 760px. This is the one screen students genuinely read, so it
    gets a prose measure that grows with the root scale instead of staying
    pinned narrow on a large display. */
@@ -42,7 +25,7 @@
 
 .fg-hero {
   position: relative;
-  text-align: center;
+  text-align: left;
   padding: 8px 0 4px;
 }
 
@@ -59,27 +42,26 @@
   font-size: 1.625rem;
   color: var(--red);
   line-height: 1.2;
-  transform: rotate(-2deg);
   margin-bottom: 2px;
 }
 
 .fg-title {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 4.4vw, 2.3rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.12;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
   margin: 0 0 10px;
 }
 
 .fg-sub {
   font-family: var(--font-ui);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--ink-soft);
-  line-height: 1.6;
-  max-width: 48ch;
-  margin: 0 auto;
+  line-height: 1.65;
+  max-width: var(--measure-prose);
+  margin: 0;
 }
 
 /* ── Sections ───────────────────────────────────────────────── */
@@ -113,48 +95,66 @@
 
 .fg-lead {
   font-family: var(--font-ui);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--ink-soft);
-  line-height: 1.6;
-  margin: 0 0 14px;
-  text-align: center;
+  line-height: 1.65;
+  max-width: var(--measure-prose);
+  margin: 0 0 18px;
+  text-align: left;
 }
 
 /* Prose sections - no box, just measured text between ornaments */
 .fg-section--prose {
-  text-align: center;
+  text-align: left;
 }
 
+/* Plain section header: mono number + Jost caps title + hairline rule */
+.fg-head,
 .fg-prose-heading {
-  font-family: var(--font-script);
-  font-size: 1.6875rem;
-  font-weight: 400;
-  color: var(--red);
-  margin: 4px 0 10px;
-  transform: rotate(-1.5deg);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+  color: var(--ink);
+  margin: 0 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--hair);
+}
+.fg-head-num { color: var(--ink-faint); }
+.fg-board-header .fg-head-num {
+  color: var(--board-text);
+  opacity: 0.7;
+  margin-right: 10px;
 }
 
 .fg-body {
   font-family: var(--font-ui);
-  font-size: 0.9062rem;
+  font-size: 1rem;
   color: var(--ink-soft);
-  line-height: 1.7;
-  margin: 0 auto;
-  max-width: 58ch;
+  line-height: 1.65;
+  margin: 0;
+  max-width: var(--measure-prose);
   text-align: left;
 }
 
 .fg-note {
   font-family: var(--font-ui);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--ink-faint);
-  line-height: 1.6;
+  line-height: 1.65;
+  max-width: var(--measure-prose);
   margin: 14px 0 0;
 }
 
 /* ── Grade ladder ───────────────────────────────────────────── */
 
 .fg-ladder {
+  max-width: 720px;
+  margin-right: auto;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -266,9 +266,6 @@
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
-/* alternate rows lean the specimen slightly - pinned prints, not a grid */
-.fg-specimen-row:nth-child(odd) .fg-specimen-view { transform: rotate(-1.6deg); }
-.fg-specimen-row:nth-child(even) .fg-specimen-view { transform: rotate(1.3deg); }
 
 /* Zoom badge - signals the photo is tappable */
 .fg-specimen-view::after {
@@ -280,7 +277,7 @@
   height: 20px;
   border-radius: 50%;
   background-color: var(--ink);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5EFE2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FAFAF7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 12px 12px;
@@ -332,10 +329,13 @@
 }
 
 .fg-marbling-grade {
-  font-family: var(--font-script);
-  font-size: 1.1875rem;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--red);
-  line-height: 1.15;
+  line-height: 1.3;
 }
 
 /* ── Scoring menu - dotted-leader price list, no box ────────── */
@@ -367,7 +367,6 @@
 
 @media (max-width: 640px) {
   .fg-postmark { display: none; }
-  .fg-overprint { display: none; }
   .fg-rung {
     padding: 9px 12px;
   }
@@ -376,10 +375,17 @@
     gap: 14px;
   }
   .fg-specimen-img {
-    width: 60px;
-    height: 78px;
+    width: 96px;
+    height: auto;
   }
   .fg-specimen-row--nophoto {
-    padding-left: 78px;
+    padding-left: 0;
   }
+}
+
+/* Left-aligned reading column: ornament rules sit on the left edge too */
+.fg-hero .zigzag-rule,
+.fg-section--prose .zigzag-rule {
+  margin-left: 0;
+  margin-right: auto;
 }

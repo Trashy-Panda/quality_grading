@@ -122,6 +122,12 @@
   white-space: nowrap;
 }
 
+.powerrank-table th.pr-col-rating,
+.powerrank-table th.pr-col-move,
+.powerrank-table th.pr-col-contests {
+  text-align: right;
+}
+
 .powerrank-table td.pr-col-rating {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
