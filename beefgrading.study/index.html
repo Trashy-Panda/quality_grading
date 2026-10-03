@@ -101,8 +101,8 @@
     <!-- 1. Brand block - the OG-card composition at viewport scale
          (skip-link target). Overprints ride the TOP layer. -->
     <div data-mode="carbon" class="landing-brand" id="main-content" tabindex="-1">
-      <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
-      <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
+      <span class="landing-corner landing-corner--l label-mono" aria-hidden="true">USDA quality grading</span>
+      <span class="landing-corner landing-corner--r label-mono" aria-hidden="true">FFA / 4-H / Collegiate</span>
       <!-- Architectural mass. Uses the carcass stencil, NOT the shield: the
            shield artwork has its wordmark baked into the path, so at any size
            big enough to read as architecture the lettering crops mid-word and
@@ -130,6 +130,7 @@
 
     <!-- 2. Study the standard - field guide feeder -->
     <div class="landing-study">
+      <p class="label-mono landing-label">01 / Study</p>
       <div class="landing-study-text" data-reveal>
         <h2 class="landing-study-title">Study the Standard</h2>
         <p class="landing-study-body">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
@@ -151,9 +152,46 @@
       </div>
     </div>
 
-    <!-- 3. This week's board - full-bleed graphite band -->
+    <!-- 2b. The grade ladder -->
+    <div class="landing-ladder" data-reveal>
+      <p class="label-mono landing-label">02 / The ladder</p>
+      <h2 class="landing-ladder-title">Nine grades, one call</h2>
+      <p class="landing-ladder-body">Every carcass lands on one rung. The drill scores how close your call is.</p>
+      <ol class="landing-ladder-list" data-reveal="stagger">
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">High Prime</span><span class="landing-ladder-family label-mono">Prime</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Average Prime</span><span class="landing-ladder-family label-mono">Prime</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Low Prime</span><span class="landing-ladder-family label-mono">Prime</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">High Choice</span><span class="landing-ladder-family label-mono">Choice</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Average Choice</span><span class="landing-ladder-family label-mono">Choice</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Low Choice</span><span class="landing-ladder-family label-mono">Choice</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">High Select</span><span class="landing-ladder-family label-mono">Select</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Low Select</span><span class="landing-ladder-family label-mono">Select</span></li>
+        <li class="landing-ladder-row"><span class="landing-ladder-grade">Standard</span><span class="landing-ladder-family label-mono">Standard</span></li>
+      </ol>
+    </div>
+
+    <!-- 2c. The drill -->
+    <div class="landing-drill" data-reveal>
+      <p class="label-mono landing-label">03 / The drill</p>
+      <div class="landing-drill-grid">
+        <figure class="landing-drill-photo">
+          <img src="assets/anchors-full/04_moderate.jpg" alt="USDA marbling reference: Moderate" loading="lazy">
+        </figure>
+        <div class="landing-drill-text">
+          <h2 class="landing-drill-title">Look. Call it. Get scored.</h2>
+          <p class="landing-drill-body">One ribeye at a time. Pick the grade, lock it in, and see how far off you were.</p>
+          <button class="landing-cta" id="landing-setup-btn-2">
+            Start Grading
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. This week's board - full-bleed graphite band -->
     <div data-mode="carbon" class="landing-board" data-reveal="fade">
       <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
+      <p class="label-mono landing-label">04 / The board</p>
       <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
       <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
     </div>
@@ -886,6 +924,10 @@
           });
         });
       }
+
+      // Second Start Grading CTA (drill band) forwards to the hero CTA
+      const landingSetupBtn2 = document.getElementById('landing-setup-btn-2');
+      if (landingSetupBtn2) landingSetupBtn2.addEventListener('click', () => landingSetupBtn.click());
 
       // Sign In link below cards
       const landingSigninLink = document.getElementById('landing-signin-link');

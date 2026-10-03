@@ -485,9 +485,9 @@ table, .score-value, .stat-value, input[type="number"],
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 32px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 96px 32px var(--s-3);
   background-color: var(--band-bg);
   color: var(--band-text);
   --hero-plate: url(assets/hero-marbling.jpg);
@@ -547,44 +547,10 @@ table, .score-value, .stat-value, input[type="number"],
   left: 0;
   right: 0;
   bottom: 0;
-  height: 16px;
+  height: 8px;
   z-index: 3;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='16'%3E%3Cpath d='M0 16 L14 0 L28 16 Z' fill='%23FAFAF7'/%3E%3C/svg%3E") repeat-x bottom / 28px 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M0 8 L7 0 L14 8 Z' fill='%23FAFAF7'/%3E%3C/svg%3E") repeat-x bottom / 14px 8px;
   pointer-events: none;
-}
-
-/* Overprint art - now LIGHT stencils over a dark plate, not ink over cream.
-   Promoted from near-invisible 0.05-0.12 corner watermarks to real
-   architectural masses: on a photographic ground these read as etched
-   light rather than smudges, so they can finally carry weight. */
-.landing-overprint {
-  position: absolute;
-  color: var(--band-text);
-  z-index: 2;
-  pointer-events: none;
-  user-select: none;
-}
-
-.landing-overprint--rib {
-  --art: url(assets/art-rib.png);
-  top: -4%;
-  right: -6%;
-  width: min(680px, 52vw);
-  aspect-ratio: 1400 / 1053;
-  opacity: 0.1;
-  --rest-opacity: 0.1;
-}
-
-/* Flipped so the brim faces into the composition, not off the edge */
-.landing-overprint--hardhat {
-  --art: url(assets/art-hardhat.png);
-  bottom: -5%;
-  left: -5%;
-  width: min(420px, 38vw);
-  aspect-ratio: 1109 / 789;
-  opacity: 0.08;
-  --rest-opacity: 0.08;
-  transform: scaleX(-1) rotate(-7deg);
 }
 
 /* The shield as architecture, not as a logo.
@@ -615,7 +581,7 @@ table, .score-value, .stat-value, input[type="number"],
   line-height: 0;
 }
 .landing-mark .shield-mark {
-  width: 46px;
+  width: 64px;
   height: auto;
   color: var(--on-photo-red);
   opacity: 0.95;
@@ -712,12 +678,13 @@ table, .score-value, .stat-value, input[type="number"],
    seam is filled with this exact colour. */
 .landing-study {
   background: var(--paper);
-  padding: clamp(88px, 11vh, 144px) max(32px, calc((100vw - 1060px) / 2));
+  padding: var(--s-3) max(32px, calc((100vw - 1060px) / 2)) var(--s-4);
   display: grid;
   grid-template-columns: minmax(260px, 1fr) auto;
-  gap: clamp(40px, 5vw, 72px);
+  gap: var(--s-1) clamp(40px, 5vw, 72px);
   align-items: center;
 }
+.landing-study > .landing-label { grid-column: 1 / -1; }
 
 /* The "know your beef" script lead-in is gone. Yellowtail was running in
    eight separate places across the site, which is what made it read as
@@ -805,6 +772,98 @@ table, .score-value, .stat-value, input[type="number"],
   color: var(--ink-soft);
   padding-top: 5px;
 }
+
+/* ── Hero corner labels ── */
+.landing-corner {
+  position: absolute;
+  top: 28px;
+  z-index: 2;
+  color: var(--on-photo);
+  pointer-events: none;
+}
+.landing-corner--l { left: 28px; }
+.landing-corner--r { right: 28px; }
+.landing-label { margin: 0; }
+@media (max-width: 767px) {
+  .landing-corner--l { left: 20px; top: 24px; }
+}
+
+/* ── 02. Grade ladder (bone) ── */
+.landing-ladder {
+  background: var(--paper);
+  padding: var(--s-3) max(32px, calc((100vw - 1060px) / 2)) var(--s-4);
+}
+.landing-ladder-title, .landing-drill-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+  margin: var(--s-1) 0 14px;
+  text-wrap: balance;
+}
+.landing-ladder-body, .landing-drill-body {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 48ch;
+  margin: 0 0 var(--s-1);
+}
+.landing-ladder-list {
+  list-style: none;
+  margin: var(--s-1) 0 0;
+  padding: 0;
+  max-width: 720px;
+  border-top: 1px solid var(--hair);
+}
+.landing-ladder-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--hair);
+}
+.landing-ladder-grade {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-stamp);
+}
+
+/* ── 03. The drill (paper-deep) ── */
+.landing-drill {
+  background: var(--paper-deep);
+  padding: var(--s-3) max(32px, calc((100vw - 1060px) / 2)) var(--s-4);
+}
+.landing-drill-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: clamp(40px, 6vw, 88px);
+  align-items: center;
+  margin-top: var(--s-1);
+}
+.landing-drill-photo {
+  margin: 0;
+  width: 300px;
+  max-width: 100%;
+  background: var(--paper-card);
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  padding: 12px;
+}
+.landing-drill-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+.landing-drill-title { margin-top: 0; }
+.landing-drill-body { margin-bottom: 26px; }
+.landing-board > .landing-label { position: relative; z-index: 1; }
 
 /* ── 5. This week's board - letterboard band ────────────────── */
 /* The second dark moment: a full-bleed graphite band, not the old thin
@@ -2666,21 +2725,11 @@ table, .score-value, .stat-value, input[type="number"],
   }
   .landing-brand {
     min-height: 100svh;
-    padding: 44px 20px;
+    padding: 72px 20px var(--s-2);
   }
   .landing-brand-inner {
     grid-template-columns: 1fr;
     row-gap: 26px;
-  }
-  .landing-overprint--rib {
-    width: 52vw;
-    opacity: 0.1;
-    --rest-opacity: 0.1;  /* keeps the entrance animation's fill in sync */
-  }
-  .landing-overprint--hardhat {
-    width: 40vw;
-    opacity: 0.1;
-    --rest-opacity: 0.1;
   }
   /* The mass still reads at phone width, just pulled further off-edge and
      fainter so it never competes with the headline. */
@@ -2690,13 +2739,14 @@ table, .score-value, .stat-value, input[type="number"],
     opacity: 0.055;
   }
   .landing-actions {
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 26px;
   }
   .landing-content {
-    text-align: center;
-    align-items: center;
+    text-align: left;
+    align-items: flex-start;
   }
+  .landing-corner--r { display: none; }
   /* The desktop hierarchy fix has to propagate here too. This override used
      to force the h1 down to ~25.7px at 390px while the script kicker floors
      at 21.6px: a 1.19 ratio, under the 1.25 minimum, so the decoration
@@ -2709,14 +2759,19 @@ table, .score-value, .stat-value, input[type="number"],
     font-size: 15.5px;
   }
   .landing-cta {
-    align-self: center;
+    align-self: flex-start;
   }
   .landing-study {
     grid-template-columns: 1fr;
-    padding: 52px 20px;
+    padding: var(--s-2) 20px var(--s-3);
     gap: 34px;
     text-align: center;
   }
+  .landing-study > .landing-label { text-align: left; }
+  .landing-ladder, .landing-drill { padding: var(--s-2) 20px var(--s-3); }
+  .landing-drill-grid { grid-template-columns: 1fr; gap: 28px; }
+  .landing-drill-photo { width: min(300px, 100%); }
+  .landing-board > .landing-label { align-self: flex-start; }
   .landing-study-link { align-self: center; }
   .landing-study-specimens { justify-content: center; }
   .landing-specimen img {

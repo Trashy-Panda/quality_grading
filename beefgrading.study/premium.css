@@ -151,12 +151,6 @@
      and because premium.css loads last it silently won, so the animation
      settled on a different value than the stylesheet declared. One owner,
      no cross-file drift. */
-  .landing-overprint--rib {
-    animation: p-inkSoak 1.1s ease 0.3s both;
-  }
-  .landing-overprint--hardhat {
-    animation: p-inkSoak 1.1s ease 0.5s both;
-  }
   /* The small brand mark still stamps in; the oversized background shield
      does not, because slamming an 820px mass is theatre, not feedback. */
   .landing-mark .shield-mark {
