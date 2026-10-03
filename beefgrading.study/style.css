@@ -390,7 +390,7 @@ table, .score-value, .stat-value, input[type="number"],
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  border-bottom: var(--border-ink);
+  border-bottom: 1px solid var(--line-heavy);
 }
 
 .brand {
@@ -1052,7 +1052,7 @@ table, .score-value, .stat-value, input[type="number"],
 /* ── Page nav (setup / leaderboard top bar) ─────────────────── */
 .page-nav {
   background: var(--paper);
-  border-bottom: var(--border-ink);
+  border-bottom: 1px solid var(--line-heavy);
   padding: 0 20px;
   height: 58px;
   display: flex;
@@ -1508,13 +1508,15 @@ table, .score-value, .stat-value, input[type="number"],
 /* ── Drill Screen ───────────────────────────────────────────── */
 #drill-screen {
   padding: 24px 20px 48px;
+  background: var(--paper-deep);
+  min-height: calc(100vh - 58px);
 }
 
 .drill-layout {
   max-width: var(--measure-wide);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
   gap: 24px;
   align-items: start;
 }
@@ -1526,9 +1528,9 @@ table, .score-value, .stat-value, input[type="number"],
 .carcass-image-wrap {
   position: relative;
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--line-heavy);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 1px 2px rgba(22,20,15,.06), 0 12px 32px -8px rgba(22,20,15,.14);
   overflow: hidden;
   min-height: 320px;
   display: flex;
@@ -1565,8 +1567,8 @@ table, .score-value, .stat-value, input[type="number"],
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: rgba(30, 27, 22, 0.8);
-  color: var(--board-text);
+  background: rgba(20, 21, 26, 0.82);
+  color: var(--band-text);
   font-family: var(--font-display);
   font-size: 10px;
   font-weight: 600;
@@ -1587,7 +1589,7 @@ table, .score-value, .stat-value, input[type="number"],
 /* Progress + meta */
 .drill-meta {
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--line-heavy);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   padding: 18px 22px;
@@ -1628,10 +1630,12 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 .progress-label {
-  font-family: var(--font-ui);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-soft);
   white-space: nowrap;
 }
@@ -1664,19 +1668,19 @@ table, .score-value, .stat-value, input[type="number"],
 /* Grade Selector */
 .grade-panel {
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--line-heavy);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   padding: 20px 22px;
 }
 
 .panel-label {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--ink);
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
   margin-bottom: 12px;
 }
 
@@ -1684,42 +1688,61 @@ table, .score-value, .stat-value, input[type="number"],
   margin-top: 16px;
 }
 
+/* Each group is ONE segmented plate: single ink outer border, buttons flush,
+   1px hairline dividers (the 1px gap shows the container background). */
 #family-btns, #sub-btns {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 1px;
+  background: var(--line-heavy);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
 /* Grade buttons - JS-built .grade-btn.family-btn / .grade-btn.sub-btn */
 .grade-btn {
   font-family: var(--font-display);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
-  padding: 11px 12px;
-  border: 1.5px solid var(--line-heavy);
+  padding: 12px 14px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
   cursor: pointer;
   flex: 1 1 auto;   /* basis = label width - never narrower than the text */
   min-width: 0;
   background: var(--paper-card);
   color: var(--ink);
-  border-radius: var(--radius-sm);
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  transition: background 120ms ease, color 120ms ease, transform 120ms ease;
 }
-.grade-btn:hover {
-  background: var(--paper-deep);
-  border-color: var(--ink);
-}
-.grade-btn.active {
+.grade-btn:hover { background: var(--paper-deep); }
+.grade-btn:active { transform: scale(0.97); }
+.grade-btn.active,
+.grade-btn.active:hover {
   background: var(--red);
-  border-color: var(--ink);
   color: var(--poster-cream);
 }
 .grade-btn:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
+  outline: 3px solid var(--red);
+  outline-offset: -3px;
+  position: relative;
+  z-index: 1;
+}
+.grade-btn.active:focus-visible {
+  outline-color: var(--ink);
+}
+.grade-btn:disabled {
+  cursor: not-allowed;
+  background: var(--paper-deep);
+  color: var(--ink-faint);
+}
+.grade-btn.active:disabled {
+  background: var(--ink-soft);
+  color: var(--poster-cream);
 }
 
 /* Selected grade display */
@@ -1745,14 +1768,14 @@ table, .score-value, .stat-value, input[type="number"],
   letter-spacing: normal;
   color: var(--ink-faint);
 }
-/* family-* variants - a chosen grade is a stamped grade */
+/* family-* variants - ink-ruled readout; scarlet stays on the selected button and the submit action */
 .grade-display.family-prime,
 .grade-display.family-choice,
 .grade-display.family-select,
 .grade-display.family-standard {
-  background: var(--red);
+  background: var(--paper-card);
   border: 1.5px solid var(--ink);
-  color: var(--poster-cream);
+  color: var(--ink);
 }
 
 /* Action Buttons */
@@ -1795,16 +1818,14 @@ table, .score-value, .stat-value, input[type="number"],
     linear-gradient(#000, #000) 0 9px / 100% calc(100% - 9px) no-repeat;
 }
 .feedback-panel.feedback-perfect {
-  background: var(--board-bg);
-  border: var(--border-ink);
-  color: var(--board-text);
+  background: var(--band-bg);
+  border: 2px solid var(--band-bg);
+  color: var(--band-text);
 }
-.feedback-panel.feedback-perfect strong { color: var(--red-lift); }
-/* State reads from the wash + a full-strength border. (A heavy border-left
-   accent stripe is the single most over-used AI callout pattern; the tint
-   and the border already carry the signal.) */
+.feedback-panel.feedback-perfect strong { color: var(--on-photo-red); }
+/* State reads from the border colour and fill alone, no side stripes. */
 .feedback-panel.feedback-partial {
-  background: var(--red-wash);
+  background: var(--paper-card);
   border: 2px solid var(--red);
   color: var(--ink);
 }
@@ -1819,7 +1840,6 @@ table, .score-value, .stat-value, input[type="number"],
 #feedback-notes {
   margin-top: 8px;
   font-size: 13px;
-  opacity: 0.85;
 }
 
 /* ── Summary Screen ─────────────────────────────────────────── */
@@ -2797,7 +2817,16 @@ table, .score-value, .stat-value, input[type="number"],
   }
 
   #drill-screen { padding: 16px 12px 40px; }
-  .grade-btn { font-size: 12px; padding: 11px 10px; letter-spacing: 0.04em; }
+  #app-header { padding: 0 12px; }
+  #app-header .header-right { gap: 6px; }
+  #app-header .brand-home-btn { padding: 6px 4px; }
+  #app-header .score-display { padding: 5px 8px; }
+  #app-header #auth-signin-btn { padding: 8px 12px; }
+  #app-header .page-nav-script { font-size: 16px; }
+  #app-header .score-display { font-size: 12px; }
+  #app-header .icon-btn { width: 34px; height: 34px; }
+  #app-header #auth-signin-btn { font-size: 11px; }
+  .grade-btn { font-size: 12px; padding: 12px 10px; letter-spacing: 0.04em; min-height: 44px; }
 
   #summary-screen { padding: 32px 16px 48px; }
   .summary-actions { flex-direction: column; }
