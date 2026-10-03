@@ -103,9 +103,13 @@
     <div class="landing-brand" id="main-content" tabindex="-1">
       <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
       <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
-      <!-- Architectural shield: vector, so this costs nothing at any size and
-           stays retina-perfect. Cropped by the viewport edge on purpose. -->
-      <svg class="landing-shield-mass" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg>
+      <!-- Architectural mass. Uses the carcass stencil, NOT the shield: the
+           shield artwork has its wordmark baked into the path, so at any size
+           big enough to read as architecture the lettering crops mid-word and
+           looks like a broken logo. This silhouette is wordless, is the
+           tallest asset available (421x1185), and is otherwise unused on this
+           page. The real mark stays small and sharp beside the CTA. -->
+      <span class="landing-mass art-mask" aria-hidden="true"></span>
       <div class="landing-brand-inner">
         <div class="landing-content">
           <p class="landing-script" aria-hidden="true">Meat Judging</p>

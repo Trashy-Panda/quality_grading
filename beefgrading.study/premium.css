@@ -163,8 +163,13 @@
     --stamp-rot: 0deg;
     animation: p-stampIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
   }
-  .landing-shield-mass {
-    animation: p-fadeIn 1.4s ease 0.15s both;
+  /* p-inkSoak, not p-fadeIn: p-fadeIn ends at opacity:1 and `both` fill makes
+     that final keyframe win over the stylesheet, so the 7% resting opacity in
+     style.css was silently defeated and the mass rendered nearly solid.
+     p-inkSoak resolves to var(--rest-opacity) instead. Same bug class as the
+     overprint --rest-opacity conflict fixed earlier in this file. */
+  .landing-mass {
+    animation: p-inkSoak 1.4s ease 0.15s both;
   }
   .landing-script {
     animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
