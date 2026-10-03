@@ -65,26 +65,23 @@
   top: 50%;
   left: 50%;
   translate: -50% -50%;
-  width: min(360px, 56vw);
+  width: min(300px, 46vw);
   aspect-ratio: 565 / 939;
   background-color: var(--ribbon);
   -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
   mask: url(assets/art-rosette.png) center / contain no-repeat;
-  opacity: 0.17;
+  opacity: 0.1;
   pointer-events: none;
 }
 
 .leaderboard-hero-stamp {
   display: inline-block;
-  font-family: var(--font-display);
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--band-dim);
-  background: transparent;
-  border: none;
-  padding: 0;
+  letter-spacing: 0.1em;
+  color: var(--on-photo);
   margin-bottom: 14px;
 }
 
@@ -187,13 +184,14 @@
 }
 
 .leaderboard-table th {
-  background: var(--board-bg);
-  color: var(--board-text);
-  font-family: var(--font-display);
+  background: var(--paper-deep);
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
+  letter-spacing: 0.1em;
   padding: 0.85rem 1rem;
   text-align: left;
   white-space: nowrap;
@@ -343,12 +341,9 @@
 }
 
 /* The champion row: rosette in the name cell at legible size, plus a
-   ribbon spine. This is the one row allowed to shout. */
+   ribbon tint. This is the one row allowed to shout. */
 .leaderboard-table tr:has(.rank-1st) td {
   background: color-mix(in srgb, var(--ribbon) 7%, var(--paper-card));
-}
-.leaderboard-table tr:has(.rank-1st) td:first-child {
-  box-shadow: inset 3px 0 0 var(--ribbon);
 }
 .leaderboard-table tr:has(.rank-1st) .leaderboard-name-cell::before {
   content: '';
@@ -385,10 +380,10 @@
 
 .leaderboard-empty {
   text-align: center;
-  padding: 44px 16px;
+  padding: 56px 16px;
   font-family: var(--font-ui);
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
 }
 
 .leaderboard-empty strong {
@@ -406,10 +401,10 @@
 
 .leaderboard-signin {
   text-align: center;
-  padding: 44px 16px;
+  padding: 56px 16px;
   font-family: var(--font-ui);
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
 }
 
 .leaderboard-signin strong {

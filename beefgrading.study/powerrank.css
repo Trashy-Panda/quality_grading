@@ -147,14 +147,14 @@
   border-color: var(--ink);
 }
 
-/* Top-3 rows get a subtle paper-deep wash; #1 adds a ribbon spine */
+/* Top-3 rows get a subtle paper-deep wash; #1 is tinted ribbon */
 .pr-row-top td {
   background: var(--paper-deep);
 }
-
-.pr-row-first td:first-child {
-  box-shadow: inset 3px 0 0 var(--ribbon);
+.pr-row-first td {
+  background: color-mix(in srgb, var(--ribbon) 7%, var(--paper-card));
 }
+
 
 /* ── Movement ───────────────────────────────────────────────── */
 /* App convention: scarlet = positive emphasis (cf. .col-pct.high-score) */
@@ -530,8 +530,12 @@
 
 .powerrank-method {
   max-width: var(--measure-page);
-  margin: 26px auto 0;
+  margin: 32px auto 0;
   padding: 0 20px 56px;
+}
+.powerrank-method-details {
+  border-top: 1px solid var(--hair);
+  padding-top: 12px;
 }
 
 .powerrank-method-details summary {
@@ -542,6 +546,9 @@
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
   color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.1em;
   cursor: pointer;
   padding: 4px 2px;
 }
@@ -563,12 +570,11 @@
 
 .powerrank-method-text {
   font-family: var(--font-ui);
-  font-size: 0.7812rem;
+  font-size: 0.8125rem;
   line-height: 1.6;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   max-width: 62ch;
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
+  margin: 0;
 }
 
 /* ── Row entrance - transform/opacity only ──────────────────── */
@@ -615,4 +621,15 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Champion school: small rosette before the name, same mark as the weekly board */
+.pr-row-first .pr-expand-btn::before {
+  content: '';
+  flex-shrink: 0;
+  width: 14px;
+  aspect-ratio: 565 / 939;
+  background-color: var(--ribbon);
+  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
+  mask: url(assets/art-rosette.png) center / contain no-repeat;
 }
