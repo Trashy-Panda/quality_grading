@@ -130,6 +130,49 @@
   --measure-page:  min(1180px, 92vw);   /* tables, boards, standard sections */
   --measure-wide:  min(1440px, 94vw);   /* hero lockups, drill layout */
   --measure-prose: min(68ch, 90vw);     /* long-form reading */
+
+  /* spacing rhythm: section-scale steps for the numbered bands built in
+     later packets. --s-1 is a gutter, --s-4 is a hero-to-band break. */
+  --s-1: 24px;
+  --s-2: 48px;
+  --s-3: 88px;
+  --s-4: 144px;
+
+  /* hairlines: one rule colour per surface family, at the same 16% weight */
+  --hair-on-paper:  rgba(22, 20, 15, 0.16);
+  --hair-on-carbon: rgba(244, 244, 240, 0.16);
+
+  /* semantic surface aliases, paper by default. Components read these
+     instead of --paper/--band-*, so a band flips with one attribute
+     (see [data-mode="carbon"] below). */
+  --bg:          var(--paper);
+  --fg:          var(--ink);
+  --fg-2:        var(--ink-soft);
+  --hair:        var(--hair-on-paper);
+  --accent-text: var(--red);
+}
+
+/* carbon mode: remaps the aliases above for dark graphite bands. Put
+   data-mode="carbon" on any band and its descendants read the dark values. */
+[data-mode="carbon"] {
+  --bg:          var(--band-bg);
+  --fg:          var(--band-text);
+  --fg-2:        var(--band-dim);
+  --hair:        var(--hair-on-carbon);
+  --accent-text: var(--on-photo-red);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+/* label-mono: small tracked mono caption, the corner/band label voice.
+   Not applied anywhere yet; later packets attach it to band numbers. */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-2);
 }
 
 /* ─────────────────────────────────────────────────────────────
