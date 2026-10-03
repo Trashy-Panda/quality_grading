@@ -213,13 +213,16 @@ html, body {
   height: 100%;
   font-family: var(--font-ui);
   color: var(--ink);
-  /* 1rem, NOT a hard 16px: a fixed px here would cancel the large-display
-     root scaling above before it reached a single element, and would also
-     override a user's own browser font-size preference. */
-  font-size: 1rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Font size is set on body ONLY. It used to sit in the `html, body` rule
+   above, which comes after the large-display breakpoints with the same
+   specificity, so it reset html to 1rem (16px) and the root scaling never
+   applied at any width. 1rem rather than a hard px so body follows the
+   scaled root and a user's browser font-size preference. */
+body { font-size: 1rem; }
 
 body {
   background: var(--paper);

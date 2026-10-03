@@ -271,7 +271,7 @@ async function renderWeeklyCard() {
     statusEl.innerHTML = `
       <div class="weekly-score-display">${pctVal}%</div>
       <div class="weekly-score-label">Your Score</div>
-      <div class="weekly-rank">${earnedVal} / ${maxVal} pts &mdash; Submitted</div>`;
+      <div class="weekly-rank">${earnedVal} / ${maxVal} pts, submitted</div>`;
 
     actionsEl.innerHTML = `
       <button id="weekly-leaderboard-btn" class="btn-weekly-primary">
@@ -288,12 +288,12 @@ async function renderWeeklyCard() {
     // Not yet submitted
     const displayName = user.displayName ? user.displayName.split(' ')[0] : 'Competitor';
     statusEl.innerHTML = `
-      <div class="weekly-rank">Signed in as <strong>${_escapeHtml(displayName)}</strong> &mdash; score not yet submitted</div>`;
+      <div class="weekly-rank">Signed in as <strong>${_escapeHtml(displayName)}</strong>. Score not yet submitted</div>`;
 
     if (carcasses.length === 0) {
       // No admin-configured deck — nothing to start
       actionsEl.innerHTML = `
-        <div class="weekly-rank">Check back soon &mdash; a new challenge posts when the week&rsquo;s carcasses are selected.</div>`;
+        <div class="weekly-rank">Check back soon. A new challenge posts when the week&rsquo;s carcasses are selected.</div>`;
       return;
     }
 

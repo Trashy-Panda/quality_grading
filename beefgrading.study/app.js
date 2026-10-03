@@ -277,7 +277,7 @@ function onSubClick(key) {
 
 function updateGradeDisplay() {
   if (!state.selectedKey) {
-    el.gradeDisplay.textContent = '— select a grade —';
+    el.gradeDisplay.textContent = 'Select a grade';
     el.gradeDisplay.className = 'grade-display unset';
     return;
   }
@@ -387,7 +387,7 @@ function onSubmit() {
   else                 el.feedbackPanel.classList.add('feedback-zero');
 
   el.feedbackQuality.innerHTML =
-    `<strong>${score}/10 pts</strong> — You: ${userLabel} &nbsp;|&nbsp; Correct: ${correctLabel}`;
+    `<strong>${score}/10 pts</strong> &nbsp;|&nbsp; You: ${userLabel} &nbsp;|&nbsp; Correct: ${correctLabel}`;
 
   if (c.notes && score < 10) {
     el.feedbackNotes.textContent = c.notes;
@@ -785,7 +785,7 @@ async function onSubmitToCommunity() {
 function renderCommunityList() {
   if (!el.communityList) return;
   if (!state.communitySet.length) {
-    el.communityStatus.textContent = 'No community carcasses yet — use "Submit to Community" to add the first one!';
+    el.communityStatus.textContent = 'No community carcasses yet. Use "Submit to Community" to add the first one!';
     el.communityList.innerHTML = '';
     return;
   }
