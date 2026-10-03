@@ -5,9 +5,9 @@
 
 .weekly-card {
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--ink);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   overflow: hidden;
   width: 100%;
   margin: 0;
@@ -16,7 +16,7 @@
 
 /* Standalone treatment when the card is the whole screen */
 .weekly-card-standalone {
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
 }
 
 /* Header strip */

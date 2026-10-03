@@ -1049,27 +1049,6 @@ table, .score-value, .stat-value, input[type="number"],
   overflow: hidden;
 }
 
-/* Faint corner overprint - same ink-over-content technique as the
-   landing hero, dialed way down so it reads as texture, not noise.
-   Negative z-index (contained by #home-screen's own stacking context)
-   keeps it strictly behind every normal-flow child. Hard hat here,
-   ribeye on the leaderboard, rib on the field guide - one asset per
-   page rather than repeating the same mark everywhere. */
-.setup-overprint {
-  --art: url(assets/art-hardhat.png);
-  position: absolute;
-  top: 100px;
-  right: -70px;
-  width: 320px;
-  aspect-ratio: 1109 / 789;
-  color: var(--ink);
-  opacity: 0.055;
-  transform: rotate(8deg);
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* ── Page nav (setup / leaderboard top bar) ─────────────────── */
 .page-nav {
   background: var(--paper);
@@ -1206,24 +1185,26 @@ table, .score-value, .stat-value, input[type="number"],
   gap: 20px;
 }
 
-/* Brush-script eyebrow above setup titles */
+/* Mono label eyebrow above setup titles */
 .setup-eyebrow {
-  font-family: var(--font-script);
-  font-size: 26px;
-  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
   line-height: 1.2;
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   display: block;
-  transform: rotate(-2deg);
 }
 
 .home-panel-header {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
   font-weight: 700;
   color: var(--ink);
   text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
+  letter-spacing: -0.01em;
   line-height: 1.12;
   text-wrap: balance;
 }
@@ -1263,12 +1244,15 @@ table, .score-value, .stat-value, input[type="number"],
   color: var(--ink);
 }
 .setup-tab.active {
-  background: var(--ink);
-  color: var(--board-text);
+  background: var(--band-bg);
+  color: var(--band-text);
 }
 .setup-tab:focus-visible {
   outline: 2px solid var(--red);
-  outline-offset: -2px;
+  outline-offset: 2px;
+}
+.setup-tab.active:focus-visible {
+  outline-color: var(--ink);
 }
 
 .setup-title-block {
@@ -1308,12 +1292,21 @@ table, .score-value, .stat-value, input[type="number"],
 }
 .setup-footer-link:hover { color: var(--red); }
 
+/* Nav sign-in is secondary on the setup screen so Begin Session stays the one primary */
+#home-screen .home-signin-btn {
+  background: transparent;
+  color: var(--ink);
+}
+#home-screen .home-signin-btn:hover {
+  background: var(--paper-deep);
+}
+
 /* ── Cards ──────────────────────────────────────────────────── */
 .home-card {
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--ink);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   overflow: hidden;
   width: 100%;
 }
@@ -1841,10 +1834,11 @@ table, .score-value, .stat-value, input[type="number"],
 
 .summary-hero {
   position: relative;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  background: var(--band-bg);
+  color: var(--band-text);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
   padding: 40px 32px;
   text-align: center;
   display: flex;
@@ -1859,7 +1853,9 @@ table, .score-value, .stat-value, input[type="number"],
   line-height: 0;
   transform: rotate(-5deg);
   margin-bottom: 2px;
+  color: var(--on-photo-red);
 }
+.summary-stamp .shield-mark { color: var(--on-photo-red); }
 .summary-stamp svg {
   width: 92px;
   height: auto;
@@ -1869,9 +1865,8 @@ table, .score-value, .stat-value, input[type="number"],
 .summary-eyebrow {
   font-family: var(--font-script);
   font-size: 26px;
-  color: var(--red);
+  color: var(--on-photo-red);
   line-height: 1.2;
-  transform: rotate(-2deg);
 }
 
 /* "CERTIFIED PRIME" - perfect-session blue ribbon (toggled by app.js at 100%)
@@ -1891,7 +1886,7 @@ table, .score-value, .stat-value, input[type="number"],
   letter-spacing: var(--track-wide);
   line-height: 1.4;
   text-align: center;
-  color: var(--ribbon);
+  color: var(--band-text);
   transform: rotate(8deg);
   pointer-events: none;
   user-select: none;
@@ -1905,12 +1900,12 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 .summary-hero-label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--band-dim);
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
+  letter-spacing: 0.1em;
 }
 
 /* The payoff number. It was running at clamp(2.5rem, 7vw, 3.5rem), which is
@@ -1919,9 +1914,9 @@ table, .score-value, .stat-value, input[type="number"],
 .summary-score {
   font-family: var(--font-display);
   font-variant-numeric: tabular-nums lining-nums;
-  font-size: clamp(3.5rem, 11vw, 5.5rem);
+  font-size: clamp(2.75rem, 11vw, 5.5rem);
   font-weight: 700;
-  color: var(--ink);
+  color: var(--band-text);
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -1936,19 +1931,19 @@ table, .score-value, .stat-value, input[type="number"],
   border-radius: var(--radius-sm);
 }
 .summary-pct.pct-green {
-  background: var(--board-bg);
-  border: 1.5px solid var(--ink);
-  color: var(--board-text);
+  background: var(--red);
+  border: 1.5px solid var(--red);
+  color: var(--band-text);
 }
 .summary-pct.pct-yellow {
   background: transparent;
-  border: 1.5px solid var(--ink);
-  color: var(--ink);
+  border: 1.5px solid var(--band-text);
+  color: var(--band-text);
 }
 .summary-pct.pct-red {
-  background: var(--red);
-  border: 1.5px solid var(--ink);
-  color: var(--poster-cream);
+  background: transparent;
+  border: 1.5px solid var(--band-dim);
+  color: var(--band-dim);
 }
 
 .summary-actions {
@@ -1961,9 +1956,9 @@ table, .score-value, .stat-value, input[type="number"],
 /* Summary table */
 .summary-table-wrap {
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--ink);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
   overflow-x: auto;
 }
 
@@ -1975,13 +1970,14 @@ table, .score-value, .stat-value, input[type="number"],
 }
 
 #summary-table th {
-  background: var(--board-bg);
-  color: var(--board-text);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 11px;
+  background: var(--paper-deep);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: var(--track-wide);
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--hair);
   text-align: left;
   padding: 12px 18px;
   white-space: nowrap;
@@ -1989,7 +1985,7 @@ table, .score-value, .stat-value, input[type="number"],
 
 #summary-table td {
   padding: 12px 18px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--hair);
   color: var(--ink);
 }
 #summary-table tr:last-child td { border-bottom: none; }
@@ -2021,10 +2017,15 @@ table, .score-value, .stat-value, input[type="number"],
   width: 240px;
   aspect-ratio: 899 / 685;
   color: var(--ink);
-  opacity: 0.07;
+  opacity: 0.05;
   transform: rotate(-8deg);
+  z-index: 0;
+  pointer-events: none;
 }
 
+.scoring-explainer h3,
+.scoring-explainer-list,
+.scoring-explainer-note { position: relative; z-index: 1; }
 .scoring-explainer h3 {
   font-family: var(--font-display);
   font-size: 13px;
@@ -2041,7 +2042,8 @@ table, .score-value, .stat-value, input[type="number"],
   flex-direction: column;
   gap: 8px;
   font-family: var(--font-ui);
-  font-size: 13.5px;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--ink-soft);
 }
 
@@ -2067,9 +2069,9 @@ table, .score-value, .stat-value, input[type="number"],
 .scoring-explainer-note {
   margin-top: 14px;
   font-family: var(--font-ui);
-  font-size: 12.5px;
-  color: var(--ink-faint);
-  line-height: 1.55;
+  font-size: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
 }
 
 /* ── Image Modal ────────────────────────────────────────────── */
@@ -2720,9 +2722,6 @@ table, .score-value, .stat-value, input[type="number"],
 
 /* ── Responsive: mobile ─────────────────────────────────────── */
 @media (max-width: 767px) {
-  .setup-overprint {
-    display: none;
-  }
   .landing-brand {
     min-height: 100svh;
     padding: 72px 20px var(--s-2);
