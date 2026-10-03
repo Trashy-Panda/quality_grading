@@ -26,3 +26,6 @@ desktop.ini
 # Editor
 *.swp
 *~
+
+# Playwright MCP scratch output
+.playwright-mcp/
