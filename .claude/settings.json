@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Notion__notion-fetch",
+      "Bash(curl -s \"https://registry.npmjs.org/@bjclopes/homebridge-ledstrip-bledom\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cd \"C:/Users/gunny/code/.claude/skills/design-taste/reference\" && sed -n '/## \u00a711/,/^## \u00a7/p' design-systems.md 2>/dev/null | head -80)",
+      "Bash(python ingest_judgingcard.py \"https://www.judgingcard.com/Results/Team.aspx?ID=29582&EID=182541\" --division senior --out \"C:/Users/gunny/AppData/Local/Temp/claude/c--Users-gunny-code/a2f00563-959b-4bc7-8b0c-440bf74f32b9/scratchpad/eastern-national-2026-senior.json\")",
+      "Edit(./beefgrading.study/**)",
+      "Write(./beefgrading.study/**)",
+      "Bash(git status *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git diff)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git add *)",
+      "PowerShell(git commit *)",
+      "Bash(node --check *)",
+      "Bash(node ../.claude/skills/design-taste/scripts/preflight.mjs *)",
+      "Bash(node */hallmark/scripts/*)",
+      "Bash(python C:/Users/gunny/AppData/Local/Temp/claude/c--Users-gunny-code/c8e67d5b-e1fe-4214-81b3-5eb15e1fb134/scratchpad/devserver.py)",
+      "Bash(curl * http://localhost:8000*)",
+      "Bash(curl http://localhost:8000*)",
+      "mcp__playwright"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\gunny\\code\\.claude\\skills\\design-taste\\reference"
+    ]
+  }
+}
