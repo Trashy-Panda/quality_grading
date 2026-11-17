@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fleece Grader</title>
+<meta name="description" content="Scan and score wool-judging grading sheets from a phone photo.">
+<meta name="theme-color" content="#1c1916">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;800&family=Red+Hat+Text:wght@400;500;700&family=Red+Hat+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1 class="brand">Fleece Grader</h1>
+  <nav class="tabs" id="tabs" aria-label="Steps">
+    <button type="button" class="tab" data-tab="session" aria-current="page">1 Session</button>
+    <button type="button" class="tab" data-tab="scan">2 Scan</button>
+    <button type="button" class="tab" data-tab="review">3 Review</button>
+    <button type="button" class="tab" data-tab="results">4 Results</button>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <section id="view-session" class="view" aria-label="Session"></section>
+  <section id="view-scan" class="view" aria-label="Scan" hidden></section>
+  <section id="view-review" class="view" aria-label="Review" hidden></section>
+  <section id="view-results" class="view" aria-label="Results" hidden></section>
+</main>
+<div id="busy" class="busy" role="status" aria-live="polite" hidden>
+  <div class="busy-card"><p id="busy-text">Working</p><div class="spin" id="busy-spin" aria-hidden="true" hidden></div><div class="bar"><i></i></div></div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
