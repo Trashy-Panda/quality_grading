@@ -1,6 +1,7 @@
 // Fleece Grader UI. Vanilla ES module; state in memory + localStorage.
-import { loadCV, readSheet, readSheetWithCorners, drawOverlay } from './omr.js';
-import { scoreSheet, fieldFromRead, yieldFromDigits, FIELDS as SCORE_FIELDS } from './scoring.js';
+// Markup follows docs/DESIGN.md v3 (comp A fleece screens): a stage plus one sheet per screen.
+import { loadCV, readSheet, readSheetWithCorners } from './omr.js';
+import { scoreSheet, scoreField, fieldFromRead, yieldFromDigits, FIELDS as SCORE_FIELDS } from './scoring.js';
 
 const LABELS = {
   grade: ['70s', '64s', '62s', '60s', '58s', '56s', '54s', '50s', '48s', '46s'],
@@ -8,6 +9,11 @@ const LABELS = {
   purity: ['Good', 'Poor'],
   character: ['Good', 'Avg', 'Poor'],
 };
+// Full names for the key list and pickers; short names for the narrow review cells.
+const LONG = { grade: LABELS.grade, length: ['Staple', 'French combing', 'Clothing'], purity: ['Good', 'Poor'], character: ['Good', 'Average', 'Poor'] };
+const SHORT = { grade: LABELS.grade, length: ['Staple', 'French', 'Cloth'], purity: ['Good', 'Poor'], character: ['Good', 'Avg', 'Poor'] };
+// Average fibre diameter per grade, shown beside each grade in the key picker.
+const GRADE_D = ['20.59 µ or finer', '20.60 to 22.04 µ', '22.05 to 23.49 µ', '23.50 to 24.94 µ', '24.95 to 26.39 µ', '26.40 to 27.84 µ', '27.85 to 29.29 µ', '29.30 to 30.99 µ', '31.00 to 32.69 µ', '32.70 to 34.39 µ'];
 const FIELD_NAMES = { grade: 'Grade', length: 'Length', yield: 'Yield', purity: 'Purity', character: 'Character' };
 const SIMPLE = ['grade', 'length', 'purity', 'character'];
 const ORDER = ['grade', 'length', 'yield', 'purity', 'character'];
@@ -19,6 +25,7 @@ const S = {
   key: Array.from({ length: 20 }, emptyFleece),
   sheets: [], cornerId: null, reviewId: null, resultId: null,
   edit: null, onlyFlags: false, nextId: 1,
+  kRow: 0, kField: 'grade', adjust: false, detail: false,
 };
 
 // ---------- helpers ----------
@@ -29,7 +36,12 @@ const $ = (id) => document.getElementById(id);
 const tick = (ms = 30) => new Promise((r) => setTimeout(r, ms));
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } }
+const ic = (name) => `<svg class="ic" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const wideMq = window.matchMedia('(min-width: 900px)');
+const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
 function label(f, v) { return v == null ? '' : f === 'yield' ? String(v) : LABELS[f][v]; }
+function longLabel(f, v) { return v == null ? '' : f === 'yield' ? String(v) : LONG[f][v]; }
 function keyHas(k) { return !!k && SCORE_FIELDS.some((f) => Number.isInteger(k[f])); }
 function sheetKey() { return S.key.map((k, i) => (i < S.n ? k : emptyFleece())); }
 let toastTimer = null;
@@ -38,6 +50,15 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3500);
 }
 function busy(msg, spin) { const b = $('busy'); if (msg) { $('busy-text').textContent = msg; $('busy-spin').hidden = !spin; b.hidden = false; } else b.hidden = true; }
+// Re-focus the control that had focus before a re-render (keyboard users keep their place).
+function focusKey() {
+  const a = document.activeElement;
+  if (!a || !a.closest || !a.closest('main') || !a.dataset) return null;
+  const d = a.dataset; if (!d.act && !d.tab) return null;
+  return ['act', 'row', 'field', 'val', 'id'].filter((k) => d[k] !== undefined).map((k) => `[data-${k}="${d[k]}"]`).join('');
+}
+function refocus(sel) { if (!sel) return; const el = document.querySelector('main ' + sel); if (el) el.focus({ preventScroll: true }); }
+function scrollTo(el, block) { if (el) el.scrollIntoView({ block: block || 'nearest', behavior: reduceMq.matches ? 'auto' : 'smooth' }); }
 
 // ---------- persistence ----------
 function save() {
@@ -68,7 +89,7 @@ function fieldInfo(sh, i, f) {
   const k = S.key[i] ? S.key[i][f] : null;
   const keyed = Number.isInteger(k) && i < S.n;
   const corr = corrOf(sh, i, f);
-  let student, status, slash = null, slashBad = false;
+  let student, status, slash = null, slashBad = false, cands = [];
   if (f === 'yield') {
     const t = readOf(sh, i, 'yieldTens'), o = readOf(sh, i, 'yieldOnes');
     const sts = [t && t.status, o && o.status];
@@ -80,11 +101,12 @@ function fieldInfo(sh, i, f) {
     status = rd ? rd.status : 'blank';
     student = fieldFromRead(rd);
     if (rd && rd.slashStatus === 'ok' && Number.isInteger(rd.slash)) slash = rd.slash;
+    if (rd && status !== 'ok' && rd.fill) rd.fill.forEach((x, n) => { if (x >= 0.3) cands.push(n); });
   }
   if (slash != null && keyed && slash !== k) slashBad = true;
   const confirmed = corr !== undefined;
   if (confirmed) student = corr;
-  return { student, status, confirmed, keyed, key: k, need: keyed && !confirmed && status !== 'ok', audit: slashBad, slash };
+  return { student, status, confirmed, keyed, key: k, need: keyed && !confirmed && status !== 'ok', audit: slashBad, slash, cands };
 }
 function answersOf(sh) {
   if (!sh.res) return (sh.saved && sh.saved.answers) || [];
@@ -101,61 +123,158 @@ function flagsOf(sh) {
   return { need, audit };
 }
 function resultOf(sh) { return scoreSheet(answersOf(sh), sheetKey()); }
+function flagList(sh) {
+  const out = [];
+  for (let i = 0; i < S.n; i++) for (const f of ORDER) { const fi = fieldInfo(sh, i, f); if (fi.need || fi.audit) out.push({ row: i, field: f }); }
+  return out;
+}
+function firstFlag(sh) { const l = flagList(sh); return l.length ? l[0] : null; }
+function nextFlag(sh, from) {
+  const l = flagList(sh).filter((x) => !(x.row === from.row && x.field === from.field));
+  if (!l.length) return null;
+  const pos = (x) => x.row * 10 + ORDER.indexOf(x.field);
+  return l.find((x) => pos(x) > pos(from)) || l[0];
+}
+function sheetById(id) { return S.sheets.find((s) => s.id === id) || null; }
 
 // ---------- nav ----------
 const VIEWS = { session: renderSession, scan: renderScan, review: renderReview, results: renderResults };
 function setTab(t) {
   S.tab = t;
-  document.querySelectorAll('.tab').forEach((b) => { if (b.dataset.tab === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  document.querySelectorAll('.tab').forEach((b) => {
+    const on = b.dataset.tab === t;
+    b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+  });
   for (const k of Object.keys(VIEWS)) $('view-' + k).hidden = k !== t;
+  if (t === 'review') {
+    const sh = sheetById(S.reviewId) || S.sheets[S.sheets.length - 1];
+    if (sh && sh.res && (!S.edit || S.edit.row >= S.n)) S.edit = firstFlag(sh);
+  }
   VIEWS[t]();
   window.scrollTo(0, 0);
 }
-function rerender() { const y = window.scrollY; VIEWS[S.tab](); window.scrollTo(0, y); }
+function rerender() { const y = window.scrollY, fk = focusKey(); VIEWS[S.tab](); window.scrollTo(0, y); refocus(fk); }
+function openReview(id) { S.reviewId = id; const sh = sheetById(id); S.edit = sh && sh.res ? firstFlag(sh) : null; setTab('review'); }
 
-// ---------- session ----------
-function segHtml(f, i, k) {
-  const cls = f === 'grade' ? 'c5' : f === 'purity' ? 'c2' : 'c3';
-  const labs = f === 'length' ? ['Staple', 'French', 'Cloth'] : LABELS[f];
-  return `<div class="seg ${cls}" role="group" aria-label="${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}">` +
-    labs.map((l, v) => `<button type="button" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${k[f] === v}">${escapeHtml(l)}</button>`).join('') + '</div>';
+// ---------- shared template pieces ----------
+function ctaHtml(text, state, act, extra) {
+  return `<button type="button" class="cta" data-act="${act}"${extra || ''}><span>${escapeHtml(text)}</span><span class="cta-s">${state ? escapeHtml(state) + ' ' : ''}${ic('arrow')}</span></button>`;
 }
-function keyRowHtml(i) {
-  const k = S.key[i];
-  return `<div class="card keyrow" data-keyrow="${i}">
-    <div class="keyhead"><span class="num">${i + 1}</span><span class="muted">Fleece ${i + 1}</span></div>
-    <div class="keygrid">
-      <div><span class="lab">Grade</span>${segHtml('grade', i, k)}</div>
-      <div><span class="lab">Length</span>${segHtml('length', i, k)}</div>
-      <div><span class="lab">Yield</span><input type="number" inputmode="numeric" min="0" max="99" step="1" data-act="key-yield" data-row="${i}" value="${k.yield == null ? '' : k.yield}" aria-label="Yield for fleece ${i + 1}" placeholder="0-99"></div>
-      <div><span class="lab">Purity</span>${segHtml('purity', i, k)}</div>
-      <div><span class="lab">Character</span>${segHtml('character', i, k)}</div>
-    </div></div>`;
+function emptyView(title, sub, ctaText, act) {
+  return `<div class="stage"><header class="k-head"><div class="k-top"><h2 class="h2">${escapeHtml(title)}</h2></div><p class="k-sub">${escapeHtml(sub)}</p></header></div>
+    <div class="sheet">${ctaHtml(ctaText, '', act)}</div>`;
+}
+
+// ---------- session: the key ----------
+function keyDone(k) { return ORDER.every((f) => k[f] != null); }
+function keyedCount() { let c = 0; for (let i = 0; i < S.n; i++) if (keyDone(S.key[i])) c++; return c; }
+function firstIncomplete() { for (let i = 0; i < S.n; i++) if (!keyDone(S.key[i])) return i; return 0; }
+function lastWith(f, v, i) { for (let j = i - 1; j >= 0; j--) if (S.key[j][f] === v) return j + 1; return 0; }
+
+// The picker for one simple field of the active fleece: choice rows, aria-pressed on each.
+function segHtml(f, i, k) {
+  const rows = LONG[f].map((l, v) => {
+    const on = k[f] === v, prev = lastWith(f, v, i);
+    const mark = `${prev ? 'Fleece ' + prev : ''}${on ? ic('check') : ''}`;
+    if (f === 'grade') return `<button type="button" class="pk" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-d">${escapeHtml(GRADE_D[v])}</span><span class="pk-m">${mark}</span></button>`;
+    return `<button type="button" class="pk pk--b" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-m">${mark}</span></button>`;
+  }).join('');
+  return `<div class="pick pick-fade" role="tabpanel" aria-label="${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}">${rows}</div>`;
+}
+function keyYieldHtml(i, k) {
+  return `<div class="k-yield" role="tabpanel" aria-label="Yield for fleece ${i + 1}"><label class="fld"><span class="lab">Yield for fleece ${i + 1}</span><input type="number" inputmode="numeric" enterkeyhint="next" min="0" max="99" step="1" data-act="key-yield" data-row="${i}" value="${k.yield == null ? '' : k.yield}" aria-label="Yield for fleece ${i + 1}" placeholder="0 to 99"></label><p>A whole number from 0 to 99.</p></div>`;
+}
+function keyValsHtml(i) {
+  const k = S.key[i], on = i === S.kRow;
+  return ORDER.map((f) => {
+    const empty = k[f] == null;
+    const cls = [empty ? 'e' : '', on && f === S.kField ? 'cur' : ''].filter(Boolean).join(' ');
+    const txt = empty ? FIELD_NAMES[f] : longLabel(f, k[f]);
+    return `<span${cls ? ` class="${cls}"` : ''}>${escapeHtml(txt)}</span>`;
+  }).join('');
+}
+function keyRowInner(i) {
+  const k = S.key[i], on = i === S.kRow;
+  const spoken = ORDER.map((f) => `${FIELD_NAMES[f]} ${k[f] == null ? 'not set' : longLabel(f, k[f])}`).join(', ');
+  return `<button type="button" class="fl${on ? ' is-on' : ''}" data-act="key-open" data-row="${i}"${on ? ' aria-current="true"' : ''} aria-label="Fleece ${i + 1}. ${escapeHtml(spoken)}"><span class="num">${i + 1}</span><span class="fl-v">${keyValsHtml(i)}</span></button>`;
+}
+function keyRowHtml(i) { return `<li data-keyrow="${i}">${keyRowInner(i)}</li>`; }
+function keySheetHtml() {
+  const i = S.kRow, f = S.kField, k = S.key[i], fi = ORDER.indexOf(f);
+  const tabs = ORDER.map((x) => `<button type="button" role="tab" data-act="key-tab" data-row="${i}" data-field="${x}" aria-selected="${x === f}"${x === f ? '' : ' tabindex="-1"'}>${escapeHtml(FIELD_NAMES[x])}</button>`).join('');
+  const panel = f === 'yield' ? keyYieldHtml(i, k) : segHtml(f, i, k);
+  const lastField = fi === ORDER.length - 1;
+  const text = !lastField ? 'Next, ' + FIELD_NAMES[ORDER[fi + 1]] : i < S.n - 1 ? 'Next, fleece ' + (i + 2) : 'Done, scan sheets';
+  return `<div class="ftabs" role="tablist" aria-label="Fleece ${i + 1} fields">${tabs}</div>${panel}${ctaHtml(text, `Fleece ${i + 1} of ${S.n}`, 'key-next')}`;
+}
+function updateKeyMeta() {
+  const c = keyedCount(), n = S.n;
+  const cnt = $('key-count'); if (cnt) cnt.textContent = `${c} of ${n} keyed`;
+  const p = $('key-prog'); if (p) { p.setAttribute('aria-label', `${c} of ${n} fleeces keyed`); p.firstElementChild.style.transform = `scaleX(${n ? c / n : 0})`; }
+}
+function renderKeySheet() {
+  const sh = $('key-sheet'); if (!sh) return;
+  const old = sh.querySelector('.pick'), top = old ? old.scrollTop : 0, fk = focusKey();
+  sh.innerHTML = keySheetHtml();
+  const nu = sh.querySelector('.pick');
+  if (nu) {
+    nu.scrollTop = top;
+    const on = nu.querySelector('[aria-pressed="true"]');
+    if (on && top === 0 && on.offsetTop + on.offsetHeight > nu.clientHeight - 24) nu.scrollTop = Math.max(0, Math.floor((on.offsetTop - nu.clientHeight / 3) / on.offsetHeight) * on.offsetHeight);
+  }
+  refocus(fk);
 }
 function renderKeyRows() {
+  if (S.kRow >= S.n) S.kRow = S.n - 1;
   $('keyrows').innerHTML = Array.from({ length: S.n }, (_, i) => keyRowHtml(i)).join('');
+  renderKeySheet(); updateKeyMeta();
+}
+function refreshKeyRow(i, withSheet = true) {
+  const li = document.querySelector(`[data-keyrow="${i}"]`); if (!li) return;
+  li.innerHTML = keyRowInner(i);
+  updateKeyMeta();
+  if (withSheet) renderKeySheet();
+}
+function setKeyActive(row, field, scroll) {
+  const prev = S.kRow;
+  S.kRow = row; S.kField = field;
+  if (prev !== row) refreshKeyRow(prev, false);
+  refreshKeyRow(row, true);
+  if (scroll) { const li = document.querySelector(`[data-keyrow="${row}"]`); scrollTo(li && li.firstElementChild, 'nearest'); }
 }
 function renderSession() {
   const v = $('view-session');
   v.innerHTML = `
-    <div><h2>Session</h2><p class="muted">Set the official key. Only fleeces with a key are graded.</p></div>
-    <div class="card">
-      <label class="fld">Practice name<input type="text" id="s-name" value="${escapeHtml(S.name)}" autocomplete="off" placeholder="e.g. Spring practice"></label>
-      <label class="fld">Number of fleeces<input type="number" inputmode="numeric" id="s-n" min="1" max="20" value="${S.n}"></label>
-      <div class="row">
-        <button type="button" class="btn" data-act="scan-key">Scan official key sheet</button>
-        <button type="button" class="btn ghost" data-act="clear-key">Clear key</button>
-        <button type="button" class="btn primary" data-act="goto-scan">Next: scan sheets</button>
+    <div class="stage">
+      <header class="k-head">
+        <div class="k-top"><h2 class="h2">Session</h2><p class="mut" id="key-count"></p></div>
+        <p class="k-sub">Set the official key. Only fleeces with a key are graded.</p>
+        <div class="prog" id="key-prog" role="img" aria-label=""><i></i></div>
+      </header>
+      <div class="k-fields">
+        <label class="fld"><span class="lab">Practice name</span><input type="text" id="s-name" value="${escapeHtml(S.name)}" autocomplete="off" placeholder="e.g. Spring practice"></label>
+        <div><span class="lab">Number of fleeces</span>
+          <div class="step">
+            <button type="button" data-act="n-dec" aria-label="Fewer fleeces">${ic('minus')}</button>
+            <input type="number" inputmode="numeric" id="s-n" min="1" max="20" value="${S.n}" aria-label="Number of fleeces">
+            <button type="button" data-act="n-inc" aria-label="More fleeces">${ic('plus')}</button>
+          </div></div>
+      </div>
+      <div class="k-acts">
+        <button type="button" class="tbtn" data-act="scan-key">${ic('corners')}Scan official key sheet</button>
+        <button type="button" class="tbtn tbtn--q" data-act="clear-key">Clear key</button>
       </div>
       <div id="key-notice"></div>
+      <ol id="keyrows" class="k-list"></ol>
     </div>
-    <div id="keyrows" class="view" style="display:flex;flex-direction:column;gap:8px"></div>`;
+    <div class="sheet" id="key-sheet"></div>`;
+  if (S.kRow >= S.n) S.kRow = 0;
   renderKeyRows();
 }
-function refreshKeyRow(i) {
-  const row = document.querySelector(`[data-keyrow="${i}"]`); if (!row) return;
-  const k = S.key[i];
-  row.querySelectorAll('button[data-act="key"]').forEach((b) => b.setAttribute('aria-pressed', String(k[b.dataset.field] === Number(b.dataset.val))));
+function setN(n) {
+  S.n = Math.max(1, Math.min(20, Math.round(Number(n) || 20)));
+  const el = $('s-n'); if (el) el.value = S.n;
+  save(); renderKeyRows();
 }
 async function scanKey(file) {
   busy('Loading OpenCV'); await tick();
@@ -171,8 +290,9 @@ async function scanKey(file) {
       if (keyHas(k)) filled++;
       S.key[i] = k;
     }
-    save(); if (S.tab === 'session') { renderKeyRows(); }
-    $('key-notice').innerHTML = `<div class="notice">Key loaded from the scan for ${filled} fleeces. Check every row, then fix anything the scan missed.</div>`;
+    save(); if (S.tab === 'session') { S.kRow = firstIncomplete(); S.kField = 'grade'; renderKeyRows(); }
+    const nt = $('key-notice');
+    if (nt) nt.innerHTML = `<p class="k-note">${ic('check')}<span>Key loaded from the scan for ${plural(filled, 'fleece')}. Check every row, then fix anything the scan missed.</span></p>`;
   } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
 }
 
@@ -181,7 +301,6 @@ function defaultCorners(src) {
   const w = src.width, h = src.height, mx = w * 0.1, my = h * 0.1;
   return [{ x: mx, y: my }, { x: w - mx, y: my }, { x: w - mx, y: h - my }, { x: mx, y: h - my }];
 }
-function sheetById(id) { return S.sheets.find((s) => s.id === id) || null; }
 async function addFiles(files) {
   const list = Array.from(files || []); if (!list.length) return;
   busy('Loading OpenCV'); await tick();
@@ -201,75 +320,111 @@ async function addFiles(files) {
       else { sh.err = (res.warnings && res.warnings[0]) || 'Could not find the grading table. Drag the corners and re-read.'; if (sh.src) sh.corners = defaultCorners(sh.src); }
     } catch (e) { sh.err = 'Read failed: ' + e.message; }
   }
-  busy(); S.cornerId = lastId; save();
+  busy(); S.cornerId = lastId; S.adjust = false; save();
   if (S.tab !== 'scan') setTab('scan'); else rerender();
 }
 function statusText(sh) {
   if (sh.err) return { t: sh.err, err: true };
-  if (!sh.res) return { t: 'Saved scores only (image not kept)', err: false };
+  if (!sh.res) return { t: 'Saved scores only, the photo is not kept.', err: false };
   const fl = flagsOf(sh);
-  return { t: `Read. ${fl.need} to confirm, ${fl.audit} grading checks.`, err: false };
+  return { t: `Read. ${fl.need} to confirm, ${plural(fl.audit, 'grading check')}.`, err: false };
+}
+function scanSel() { return sheetById(S.cornerId) || S.sheets[S.sheets.length - 1] || null; }
+function thumbOf(sh) {
+  if (!sh.src) return '';
+  if (!sh.thumb) {
+    const s = 128 / Math.max(sh.src.width, sh.src.height), c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(sh.src.width * s)); c.height = Math.max(1, Math.round(sh.src.height * s));
+    c.getContext('2d').drawImage(sh.src, 0, 0, c.width, c.height);
+    sh.thumb = c.toDataURL('image/jpeg', 0.6);
+  }
+  return sh.thumb;
+}
+function emptyFinder(sel) {
+  const msg = sel ? ['Photo not kept', 'Scores are saved. Scan this sheet again to review it.'] : ['No sheets yet', 'Take a photo or upload photos, one per sheet.'];
+  return `<div class="vf vf--empty">
+    <svg class="vf-guide" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 22V0h22M78 0h22v22M100 108v22H78M22 130H0v-22"/></svg>
+    <p class="vf-msg">${escapeHtml(msg[0])}<span>${escapeHtml(msg[1])}</span></p>
+    <p class="vf-hint">One photo per sheet, flat, with the whole table in frame.</p></div>`;
 }
 function renderScan() {
-  const v = $('view-scan');
-  const cards = S.sheets.map((sh) => {
-    const st = statusText(sh);
-    return `<div class="card sheetcard" data-sheet="${sh.id}">
-      <h3><span>${escapeHtml(sh.file || 'Sheet')}</span><span class="status${st.err ? ' err' : ''}">${escapeHtml(st.t)}</span></h3>
-      <label class="fld">Student name<input type="text" data-act="name" data-id="${sh.id}" value="${escapeHtml(sh.name)}" autocomplete="off"></label>
-      <div class="row">
-        ${sh.src ? `<button type="button" class="btn small" data-act="corners" data-id="${sh.id}">${S.cornerId === sh.id ? 'Hide corners' : 'Adjust corners'}</button>` : ''}
-        ${sh.res ? `<button type="button" class="btn small primary" data-act="review" data-id="${sh.id}">Review</button>` : ''}
-        <button type="button" class="btn small ghost" data-act="remove" data-id="${sh.id}">Remove</button>
-      </div></div>`;
-  }).join('');
+  const v = $('view-scan'), sel = scanSel();
+  if (sel) S.cornerId = sel.id;
+  if (!sel || !sel.src) S.adjust = false;
+  const stack = S.sheets.length ? `<div class="stack" role="list" aria-label="Scan stack">${S.sheets.map((s, n) => {
+    const th = thumbOf(s);
+    return `<button type="button" class="stk${sel && s.id === sel.id ? ' is-on' : ''}" role="listitem" data-act="select-sheet" data-sheet="${s.id}" data-id="${s.id}" aria-label="${escapeHtml(s.name)}${sel && s.id === sel.id ? ', selected' : ''}">${th ? `<img src="${escapeHtml(th)}" alt="">` : '<span class="ph0"></span>'}<b>${n + 1}</b></button>`;
+  }).join('')}</div>` : '';
+  let info = '', acts = '';
+  if (sel) {
+    const st = statusText(sel);
+    info = `<div class="s-info">
+      <label class="fld"><span class="lab">Student name</span><input type="text" data-act="name" data-id="${sel.id}" value="${escapeHtml(sel.name)}" autocomplete="off"></label>
+      <p class="s-st${st.err ? ' is-err' : ''}">${st.err ? '' : ic('check')}<span>${escapeHtml(st.t)}</span></p></div>`;
+    acts = `<div class="s-acts">
+      ${sel.src ? `<button type="button" class="tbtn tbtn--q" data-act="corners" data-id="${sel.id}">${S.adjust ? 'Hide corners' : 'Adjust corners'}</button>` : ''}
+      ${S.adjust ? `<button type="button" class="ibtn go" data-act="reread" data-id="${sel.id}">Re-read</button>` : `<button type="button" class="tbtn tbtn--q" data-act="remove" data-id="${sel.id}">Remove</button>${sel.res ? `<button type="button" class="tbtn go" data-act="review" data-id="${sel.id}">Review${ic('arrow')}</button>` : ''}`}
+    </div>`;
+  }
   v.innerHTML = `
-    <div><h2>Scan sheets</h2><p class="muted">One photo per sheet, flat, with the whole table in frame.</p></div>
-    <div class="card">
-      <div class="row">
-        <button type="button" class="btn primary grow" data-act="pick-cam">Take photo</button>
-        <button type="button" class="btn grow" data-act="pick-up">Upload photos</button>
+    <div class="stage"><div id="corner-slot"></div></div>
+    <div class="sheet">
+      ${stack}${info}${acts}
+      <div class="cap">
+        <button type="button" class="tbtn tbtn--q" data-act="pick-up">${ic('up')}Upload photos</button>
+        <button type="button" class="shutter" data-act="pick-cam" aria-label="Take photo"><span></span></button>
+        <span class="sp" aria-hidden="true"></span>
       </div>
-      ${S.sheets.length ? '' : '<p class="muted">No sheets yet.</p>'}
-    </div>
-    ${cards}
-    <div id="corner-slot"></div>`;
-  const csh = sheetById(S.cornerId);
-  if (csh && csh.src) mountCorners($('corner-slot'), csh);
+    </div>`;
+  if (sel && sel.src) mountCorners($('corner-slot'), sel); else $('corner-slot').innerHTML = emptyFinder(sel);
 }
 function mountCorners(slot, sh) {
-  const src = sh.src, scale = Math.min(1, 1400 / src.width);
-  slot.innerHTML = `<div class="card"><h3>Table corners: ${escapeHtml(sh.name)}</h3>
-    <p class="muted">Drag the four handles onto the outer corners of the table border, then re-read.</p>
-    <div class="cornerbox" id="cbox"></div>
-    <button type="button" class="btn primary block" data-act="reread" data-id="${sh.id}">Re-read</button></div>`;
+  const src = sh.src, scale = Math.min(1, 1400 / src.width), W = src.width, H = src.height;
+  const found = !sh.err;
+  const tag = S.adjust ? `<p class="vf-tag">${ic('corners')}Drag each corner onto the table</p>` : found ? `<p class="vf-tag">${ic('check')}Table found, hold steady</p>` : `<p class="vf-tag vf-tag--warn">${ic('corners')}Table not found, adjust the corners</p>`;
+  slot.innerHTML = `<div class="vf"><div class="vf-box" id="cbox" style="--ar:${(W / H).toFixed(4)}"></div>
+    <div class="vf-top">${tag}<p class="vf-tag">${S.sheets.length} in stack</p></div>
+    <p class="vf-hint">${S.adjust ? 'Then tap Re-read.' : 'One photo per sheet, flat, with the whole table in frame.'}</p></div>`;
   const box = $('cbox');
   const c = document.createElement('canvas');
-  c.width = Math.round(src.width * scale); c.height = Math.round(src.height * scale);
+  c.width = Math.round(W * scale); c.height = Math.round(H * scale);
   c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+  c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Photo of ' + sh.name);
   box.appendChild(c);
   const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
-  const poly = document.createElementNS(ns, 'polygon');
-  poly.setAttribute('fill', 'rgba(200,16,46,0.12)'); poly.setAttribute('stroke', '#c8102e'); poly.setAttribute('stroke-width', '2'); poly.setAttribute('vector-effect', 'non-scaling-stroke');
-  svg.appendChild(poly); box.appendChild(svg);
-  const names = ['top left', 'top right', 'bottom right', 'bottom left'];
-  const hs = sh.corners.map((p, idx) => {
-    const h = document.createElement('div'); h.className = 'h'; h.tabIndex = 0; h.setAttribute('role', 'slider'); h.setAttribute('aria-label', 'Corner ' + names[idx]);
-    box.appendChild(h); return h;
-  });
+  const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
+  const mk = (cls) => { const e = document.createElementNS(ns, cls === 'vf-poly' ? 'polygon' : 'path'); e.setAttribute('class', cls); svg.appendChild(e); return e; };
+  const poly = mk('vf-poly'), halo = mk('br-halo'), br = mk('br');
+  box.appendChild(svg);
   const place = () => {
-    poly.setAttribute('points', sh.corners.map((p) => `${p.x / src.width * 100},${p.y / src.height * 100}`).join(' '));
-    hs.forEach((h, idx) => { h.style.left = (sh.corners[idx].x / src.width * 100) + '%'; h.style.top = (sh.corners[idx].y / src.height * 100) + '%'; });
+    const P = sh.corners;
+    poly.setAttribute('points', P.map((p) => `${p.x},${p.y}`).join(' '));
+    let d = '';
+    for (let n = 0; n < 4; n++) {
+      const a = P[(n + 3) % 4], b = P[n], z = P[(n + 1) % 4];
+      const la = Math.hypot(a.x - b.x, a.y - b.y) || 1, lz = Math.hypot(z.x - b.x, z.y - b.y) || 1, L = 0.12 * Math.min(la, lz);
+      d += `M${b.x + (a.x - b.x) / la * L} ${b.y + (a.y - b.y) / la * L}L${b.x} ${b.y}L${b.x + (z.x - b.x) / lz * L} ${b.y + (z.y - b.y) / lz * L}`;
+    }
+    halo.setAttribute('d', d); br.setAttribute('d', d);
+    if (hs) hs.forEach((h, idx) => { h.style.left = (P[idx].x / W * 100) + '%'; h.style.top = (P[idx].y / H * 100) + '%'; });
   };
+  let hs = null;
+  if (S.adjust) {
+    const names = ['top left', 'top right', 'bottom right', 'bottom left'];
+    hs = sh.corners.map((p, idx) => {
+      const h = document.createElement('div'); h.className = 'h'; h.tabIndex = 0; h.setAttribute('role', 'slider'); h.setAttribute('aria-label', 'Corner ' + names[idx]);
+      box.appendChild(h); return h;
+    });
+  }
   place();
+  if (!hs) return;
   hs.forEach((h, idx) => {
     let drag = false;
     h.addEventListener('pointerdown', (e) => { drag = true; h.setPointerCapture(e.pointerId); e.preventDefault(); });
     h.addEventListener('pointermove', (e) => {
       if (!drag) return;
       const r = box.getBoundingClientRect();
-      sh.corners[idx] = { x: Math.max(0, Math.min(src.width, (e.clientX - r.left) / r.width * src.width)), y: Math.max(0, Math.min(src.height, (e.clientY - r.top) / r.height * src.height)) };
+      sh.corners[idx] = { x: Math.max(0, Math.min(W, (e.clientX - r.left) / r.width * W)), y: Math.max(0, Math.min(H, (e.clientY - r.top) / r.height * H)) };
       place();
     });
     const end = () => { drag = false; };
@@ -277,7 +432,7 @@ function mountCorners(slot, sh) {
     h.addEventListener('keydown', (e) => {
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!d) return;
       e.preventDefault(); const st = e.shiftKey ? 20 : 4;
-      sh.corners[idx] = { x: Math.max(0, Math.min(src.width, sh.corners[idx].x + d[0] * st)), y: Math.max(0, Math.min(src.height, sh.corners[idx].y + d[1] * st)) };
+      sh.corners[idx] = { x: Math.max(0, Math.min(W, sh.corners[idx].x + d[0] * st)), y: Math.max(0, Math.min(H, sh.corners[idx].y + d[1] * st)) };
       place();
     });
   });
@@ -287,7 +442,8 @@ async function reread(sh) {
   try {
     const res = await readSheetWithCorners(sh.src, sh.corners, { marginCrops: true });
     if (res.ok) {
-      sh.res = res; sh.ov = null; sh.err = null; sh.warnings = res.warnings || [];
+      sh.res = res; sh.photoUrl = null; sh.err = null; sh.warnings = res.warnings || [];
+      S.adjust = false;
       toast('Re-read done.');
     }
     else { sh.err = (res.warnings && res.warnings[0]) || 'Read failed. Adjust corners.'; }
@@ -298,79 +454,196 @@ async function reread(sh) {
 // ---------- review ----------
 function chipHtml(sh, i, f, rs) {
   const fi = fieldInfo(sh, i, f), res = rs.fleeces[i];
-  const off = res && res.graded && res.fields[f] ? res.fields[f].off : 0;
-  let txt;
-  if (fi.student != null) txt = label(f, fi.student);
-  else if (fi.confirmed) txt = 'blank (confirmed)';
-  else txt = fi.status === 'multiple' ? 'multiple marks' : fi.status === 'unsure' ? 'unsure' : 'blank';
-  let cls = 'chip';
-  if (fi.need) cls += ' need'; else if (fi.audit) cls += ' audit'; else if (fi.keyed && off > 0) cls += ' wrong'; else if (fi.keyed) cls += ' ok';
-  const keyTxt = fi.keyed ? `key ${label(f, fi.key)}` : 'no key';
-  const extra = fi.audit ? ` | grader slash ${label(f, fi.slash)}` : '';
-  const pts = fi.keyed ? (off ? ` | -${off}` : ' | 0') : '';
-  return `<button type="button" class="${cls}" data-act="edit" data-row="${i}" data-field="${f}" aria-expanded="${!!(S.edit && S.edit.row === i && S.edit.field === f)}"><b>${escapeHtml(FIELD_NAMES[f])}</b>${escapeHtml(txt)}<span class="k"> ${escapeHtml(keyTxt + pts + extra)}</span></button>`;
+  const graded = !!(res && res.graded);
+  const off = graded && res.fields[f] ? res.fields[f].off : 0;
+  const on = !!(S.edit && S.edit.row === i && S.edit.field === f);
+  let main, sub = '', cls = 'cell', state;
+  if (fi.student != null) main = f === 'yield' ? String(fi.student) : SHORT[f][fi.student];
+  else if (fi.need) main = fi.status === 'blank' ? 'Blank' : 'Unsure';
+  else main = fi.confirmed || fi.keyed ? 'Blank' : '-';
+  if (fi.need) { cls += ' is-need'; sub = 'confirm'; state = 'needs a look'; }
+  else if (fi.audit) { cls += ' is-audit'; sub = 'slash ' + label(f, fi.slash); state = 'grader slash disagrees with the key'; }
+  else if (graded && fi.keyed && off > 0) { cls += ' is-miss'; sub = 'key ' + label(f, fi.key); state = `${off} points off, key ${longLabel(f, fi.key)}`; }
+  else if (!fi.keyed) { cls += ' is-off'; state = 'no key'; }
+  else state = 'matches the key';
+  if (on) cls += ' is-on';
+  const said = fi.student != null ? longLabel(f, fi.student) : main;
+  return `<button type="button" class="${cls}" data-act="edit" data-row="${i}" data-field="${f}"${on ? ' aria-current="true"' : ''} aria-label="Fleece ${i + 1} ${escapeHtml(FIELD_NAMES[f])}, ${escapeHtml(said)}, ${escapeHtml(state)}">${escapeHtml(main)}${sub ? `<i>${escapeHtml(sub)}</i>` : ''}</button>`;
+}
+function edStatus(fi, f) {
+  if (fi.need) return fi.status === 'multiple' ? 'Two marks read' : fi.status === 'unsure' ? 'Faint read' : 'No mark read';
+  if (fi.audit) return `Grader slash says ${label(f, fi.slash)}`;
+  if (fi.confirmed) return 'Confirmed';
+  return fi.student == null ? 'Blank' : 'Read cleanly';
+}
+function optRow(sh, i, f, v, fi) {
+  const isS = fi.student === v, isK = fi.keyed && fi.key === v;
+  const off = fi.keyed ? scoreField(f, v, fi.key).off : 0;
+  let m = '';
+  if (isK) m = `Official key, 0 points${ic('check')}`;
+  else if (isS) m = `${fi.keyed ? '-' + off + ' points' : 'Selected'}${ic('check')}`;
+  else if (fi.cands.includes(v)) m = 'Scan saw a mark';
+  return `<button type="button" class="pk pk--b${isK ? ' is-key' : ''}" data-act="set" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${isS}"><span class="pk-v">${escapeHtml(longLabel(f, v))}</span><span class="pk-m">${m}</span></button>`;
 }
 function editorHtml(sh, i, f) {
-  const cur = fieldInfo(sh, i, f);
+  const fi = fieldInfo(sh, i, f), flags = flagList(sh);
   let body;
   if (f === 'yield') {
-    body = `<label class="fld">Yield (0-99)<input type="number" inputmode="numeric" min="0" max="99" step="1" id="ed-yield" value="${cur.student == null ? '' : cur.student}"></label>
-      <div class="row"><button type="button" class="btn small primary" data-act="set-yield" data-row="${i}">Set yield</button></div>`;
+    body = `<div class="ed-y"><label class="fld"><span class="lab">${fi.keyed ? 'Yield, official key ' + escapeHtml(fi.key) : 'Yield, 0 to 99'}</span><input type="number" inputmode="numeric" min="0" max="99" step="1" id="ed-yield" value="${fi.student == null ? '' : fi.student}"></label>
+      <button type="button" class="ibtn" data-act="set-yield" data-row="${i}">Set yield</button></div>
+      ${sh.res.marginCrops ? `<div class="ed-crop"><span class="lab">Written on the sheet</span><span data-crop="${i}"></span></div>` : ''}`;
   } else {
-    const cls = f === 'grade' ? 'c5' : f === 'purity' ? 'c2' : 'c3';
-    body = `<div class="seg ${cls}">` + LABELS[f].map((l, v) => `<button type="button" data-act="set" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${cur.student === v}">${escapeHtml(l)}</button>`).join('') + '</div>';
+    const blankOn = fi.confirmed && fi.student == null;
+    const bOff = fi.keyed ? scoreField(f, null, fi.key).off : 0;
+    body = `<div class="pick pick-fade" role="group" aria-label="Correct ${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}">${LONG[f].map((_, v) => optRow(sh, i, f, v, fi)).join('')}
+      <button type="button" class="pk pk--b" data-act="set" data-row="${i}" data-field="${f}" data-val="blank" aria-pressed="${blankOn}"><span class="pk-v">Blank</span><span class="pk-m">${blankOn ? `${fi.keyed ? '-' + bOff + ' points' : 'Selected'}${ic('check')}` : ''}</span></button></div>`;
   }
   const hasCorr = corrOf(sh, i, f) !== undefined;
-  return `<div class="editor"><span class="lab">Correct ${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}</span>${body}
-    <div class="row"><button type="button" class="btn small" data-act="set" data-row="${i}" data-field="${f}" data-val="blank">Blank</button>
-    ${hasCorr ? `<button type="button" class="btn small ghost" data-act="unset" data-row="${i}" data-field="${f}">Use scan read</button>` : ''}
-    <button type="button" class="btn small ghost" data-act="close-edit">Close</button></div></div>`;
+  const links = `<div class="links">${f === 'yield' ? `<button type="button" data-act="set" data-row="${i}" data-field="yield" data-val="blank">Blank</button>` : ''}${hasCorr ? `<button type="button" data-act="unset" data-row="${i}" data-field="${f}">Use scan read</button>` : ''}<button type="button" data-act="close-edit">Close</button></div>`;
+  const cta = flags.length ? ctaHtml(fi.need ? 'Confirm, next flag' : 'Next flag', `${flags.length} flagged`, 'confirm-next') : ctaHtml('See results', '', 'goto-results');
+  return `<div class="ed-h"><b>Fleece ${i + 1}, ${escapeHtml(FIELD_NAMES[f])}</b><span>${escapeHtml(edStatus(fi, f))}</span></div>${body}${cta}${links}`;
 }
+function reviewSheetHtml(sh) {
+  if (S.edit && S.edit.row < S.n) return editorHtml(sh, S.edit.row, S.edit.field);
+  const flags = flagList(sh);
+  return `<div class="ed-h"><b>${flags.length ? 'Check your sheet' : 'Nothing flagged'}</b><span>${escapeHtml(plural(flags.length, 'flag') + ' to check')}</span></div>
+    <p class="empty">${flags.length ? 'Tap a mark on the photo or a row in the list to check it.' : 'Every mark read cleanly. Tap any row to change an answer.'}</p>
+    ${flags.length ? ctaHtml('Next flag', `${flags.length} flagged`, 'next-flag') : ctaHtml('See results', '', 'goto-results')}`;
+}
+
+// The photo is a window onto the rows around the active fleece, in the columns of the active field.
+const GROUPS = [['grade', 'grade'], ['length', 'length'], ['yieldTens', 'yield'], ['yieldOnes', 'yield'], ['purity', 'purity'], ['character', 'character']];
+function photoUrl(sh) {
+  if (!sh.photoUrl) {
+    const v = sh.res.view, c = document.createElement('canvas');
+    c.width = Math.round(v.x1 - v.x0); c.height = Math.round(v.y1 - v.y0);
+    c.getContext('2d').drawImage(sh.res.warpedCanvas, -v.x0, -v.y0);
+    sh.photoUrl = c.toDataURL('image/jpeg', 0.85);
+  }
+  return sh.photoUrl;
+}
+function effIdx(sh, r, gname) {
+  if (gname === 'yieldTens' || gname === 'yieldOnes') {
+    const fi = fieldInfo(sh, r, 'yield');
+    if (fi.confirmed) return fi.student == null ? null : gname === 'yieldTens' ? Math.floor(fi.student / 10) : fi.student % 10;
+    const rd = readOf(sh, r, gname);
+    return rd && rd.status === 'ok' && Number.isInteger(rd.value) ? rd.value : null;
+  }
+  return fieldInfo(sh, r, gname).student;
+}
+function keyIdx(r, gname) {
+  if (r >= S.n) return null;
+  const k = S.key[r];
+  if (gname === 'yieldTens' || gname === 'yieldOnes') return Number.isInteger(k.yield) ? (gname === 'yieldTens' ? Math.floor(k.yield / 10) : k.yield % 10) : null;
+  return Number.isInteger(k[gname]) ? k[gname] : null;
+}
+function photoHtml(sh) {
+  const res = sh.res, g = res.geometry, vw = res.view;
+  let row = 0, field = 'grade';
+  if (S.edit && S.edit.row < S.n) { row = S.edit.row; field = S.edit.field; } else { const ff = firstFlag(sh); if (ff) { row = ff.row; field = ff.field; } }
+  const zone = field === 'yield' ? 'B' : field === 'purity' || field === 'character' ? 'C' : 'A';
+  const ext = (gn) => { let lo = Infinity, hi = -Infinity; for (let r = 0; r < 20; r++) for (const b of g[r][gn]) { lo = Math.min(lo, b.x - b.rx); hi = Math.max(hi, b.x + b.rx); } return [lo, hi]; };
+  let x0, x1;
+  if (zone === 'A') { x0 = vw.x0; x1 = ext('length')[1] + 34; }
+  else if (zone === 'B') { x0 = ext('yieldTens')[0] - 36; x1 = ext('yieldOnes')[1] + 36; }
+  else { x0 = ext('yieldOnes')[0] - 12; x1 = vw.x1; }
+  x0 = Math.max(vw.x0, x0); x1 = Math.min(vw.x1, x1);
+  const rowY = (r) => { let s = 0, n = 0; for (const gn of ['grade', 'length', 'purity', 'character']) for (const b of g[r][gn]) { s += b.y; n++; } return s / n; };
+  const pitch = (rowY(19) - rowY(0)) / 19;
+  const top = (r) => rowY(r) - 0.8 * pitch, bot = (r) => rowY(r) + 0.24 * pitch;
+  const N = wideMq.matches ? 7 : 5;
+  const r0 = Math.max(0, Math.min(20 - N, row - (N >> 1))), r1 = r0 + N - 1;
+  const y0 = top(r0), y1 = bot(r1), w = x1 - x0, h = y1 - y0;
+  const px = (x) => ((x - x0) / w * 100).toFixed(3), py = (y) => ((y - y0) / h * 100).toFixed(3);
+  const inX = (b) => b.x >= x0 && b.x <= x1;
+  let shapes = `<image href="${escapeHtml(photoUrl(sh))}" x="${vw.x0}" y="${vw.y0}" width="${vw.x1 - vw.x0}" height="${vw.y1 - vw.y0}" preserveAspectRatio="none"/>`;
+  let html = '', nums = '', tags = '';
+  const tagFor = (cx, ymin, text, cls, r, f) => {
+    const tw = Math.max(44, Math.round(text.length * 7.4 + 20));
+    return `<button type="button" class="ph-tag${cls}" data-act="edit" data-row="${r}" data-field="${f}" style="left:clamp(calc(${tw}px / 2 + ${zone === 'A' ? 0 : 34}px), ${px(cx)}%, calc(100% - ${tw}px / 2));top:max(calc(${py(ymin)}% - 4px), 44px)"><span>${escapeHtml(text)}</span></button>`;
+  };
+  for (let r = r0; r <= r1; r++) {
+    if (S.edit && S.edit.row === r) shapes += `<rect class="ph-band" x="${x0}" y="${top(r)}" width="${w}" height="${pitch}"/>`;
+    const fieldsSeen = {};
+    for (const [gn, f] of GROUPS) {
+      const bs = g[r][gn];
+      if (!bs.length || !bs.some(inX)) continue;
+      const rd = readOf(sh, r, gn), fi = fieldInfo(sh, r, f);
+      const si = effIdx(sh, r, gn), ki = keyIdx(r, gn);
+      if (ki != null && bs[ki]) {
+        const b = bs[ki];
+        if (ki === si) shapes += `<ellipse class="ph-ring ph-ring--ok" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx + 4).toFixed(1)}" ry="${(b.ry + 4).toFixed(1)}"/>`;
+        else shapes += `<ellipse class="ph-ring ph-ring--key" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx + 4).toFixed(1)}" ry="${(b.ry + 4).toFixed(1)}"/>`;
+      }
+      if (si != null && bs[si]) { const b = bs[si]; shapes += `<ellipse class="ph-dot" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx * 0.7).toFixed(1)}" ry="${(b.ry * 0.7).toFixed(1)}"/>`; }
+      if (rd && !fi.confirmed && rd.status !== 'ok' && fi.keyed) {
+        rd.fill.forEach((x, n) => { if (x >= 0.3 && bs[n]) shapes += `<ellipse class="ph-unsure" cx="${bs[n].x.toFixed(1)}" cy="${bs[n].y.toFixed(1)}" rx="${(bs[n].rx + 2).toFixed(1)}" ry="${(bs[n].ry + 2).toFixed(1)}"/>`; });
+      }
+      const fs = fieldsSeen[f] = fieldsSeen[f] || { fi, xs: [], ymin: Infinity, ki: [], si: [], bs: [] };
+      for (const b of bs) if (inX(b)) { fs.xs.push(b.x); fs.ymin = Math.min(fs.ymin, b.y - b.ry); }
+      if (ki != null && bs[ki]) fs.ki.push(bs[ki]);
+    }
+    for (const f of Object.keys(fieldsSeen)) {
+      const fs = fieldsSeen[f], fi = fs.fi, cx = fs.xs.reduce((a, b) => a + b, 0) / fs.xs.length;
+      if (fi.need) tags += tagFor(cx, fs.ymin, fi.status === 'blank' ? 'Blank, tap to fix' : 'Unsure, tap to fix', '', r, f);
+      else if (fi.audit) tags += tagFor(cx, fs.ymin, 'Slash differs, tap', '', r, f);
+      else if (fi.keyed && fi.student != null && fi.student !== fi.key) tags += tagFor(fs.ki.length ? fs.ki[0].x : cx, fs.ymin, 'key ' + label(f, fi.key), ' ph-tag--key', r, f);
+    }
+    html += `<button type="button" class="ph-hit${S.edit && S.edit.row === r ? ' is-on' : ''}" data-act="focus-row" data-row="${r}" style="top:${py(top(r))}%;height:${(pitch / h * 100).toFixed(3)}%" aria-label="Fleece ${r + 1}"></button>`;
+    if (zone !== 'A') nums += `<span class="ph-n" style="top:${py(rowY(r) - 0.3 * pitch)}%">${r + 1}</span>`;
+  }
+  const where = zone === 'A' ? 'grade and length' : zone === 'B' ? 'yield' : 'yield ones, purity and character';
+  const cap = `Fleeces ${r0 + 1} to ${r1 + 1}, ${where}`;
+  return { html: `<div id="ovslot" class="ph" style="--ar:${(w / h).toFixed(4)}" role="group" aria-label="Scan photo. ${escapeHtml(cap)}"><svg viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${html}${nums}${tags}</div>`, cap };
+}
+const legendHtml = (cap) => `<div class="legend" aria-hidden="true">
+  <span class="lg-cap">${escapeHtml(cap)}</span>
+  <span><svg viewBox="0 0 18 14"><ellipse class="lg-dot" cx="9" cy="7" rx="6" ry="4.5"/></svg>Scan read</span>
+  <span><svg viewBox="0 0 18 14"><ellipse class="lg-key" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Official key</span>
+  <span><svg viewBox="0 0 18 14"><ellipse class="lg-ok" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Matches key</span>
+  <span><svg viewBox="0 0 18 14"><rect class="lg-warn" x="1" y="2" width="16" height="10" rx="2"/></svg>Needs a look</span></div>`;
 function renderReview() {
-  const v = $('view-review');
-  if (!S.sheets.length) { v.innerHTML = '<div><h2>Review</h2></div><div class="card"><p>No sheets scanned yet.</p><button type="button" class="btn primary" data-act="goto-scan">Go to scan</button></div>'; return; }
+  const v = $('view-review'); v.className = 'view';
+  if (!S.sheets.length) { v.innerHTML = emptyView('Review', 'No sheets scanned yet.', 'Scan a sheet', 'goto-scan'); return; }
   let sh = sheetById(S.reviewId); if (!sh) { sh = S.sheets[S.sheets.length - 1]; S.reviewId = sh.id; }
   const opts = S.sheets.map((s) => `<option value="${s.id}"${s.id === sh.id ? ' selected' : ''}>${escapeHtml(s.name)}</option>`).join('');
+  const sel = `<label class="rv-sel"><span class="sr">Sheet</span><select id="rv-sel">${opts}</select>${ic('down')}</label>`;
   if (!sh.res) {
-    v.innerHTML = `<div><h2>Review</h2></div><div class="card"><label class="fld">Sheet<select id="rv-sel">${opts}</select></label><p>The scan for this sheet is not in memory. Scores are kept; scan it again to review.</p></div>`;
+    v.innerHTML = `<div class="stage"><header class="rv-head"><div><h2 class="h2">Review</h2><p class="mut">The photo for ${escapeHtml(sh.name)} is not in memory.</p></div>${sel}</header>
+      <p class="empty">Scores are kept. Scan the sheet again to check its marks.</p></div>
+      <div class="sheet">${ctaHtml('Scan again', '', 'goto-scan')}</div>`;
     return;
   }
-  const rs = resultOf(sh), fl = flagsOf(sh);
+  const rs = resultOf(sh), fl = flagsOf(sh), ph = photoHtml(sh);
   let rows = '';
   for (let i = 0; i < S.n; i++) {
     const infos = ORDER.map((f) => fieldInfo(sh, i, f));
     const need = infos.some((x) => x.need), audit = infos.some((x) => x.audit);
     if (S.onlyFlags && !need && !audit) continue;
-    const fr = rs.fleeces[i];
-    const keyed = fr && fr.graded;
-    const ed = S.edit && S.edit.row === i ? editorHtml(sh, i, S.edit.field) : '';
-    const yk = S.key[i].yield;
-    rows += `<div class="card fl${need ? ' flag' : audit ? ' flag-audit' : ''}" data-fl="${i}">
-      <div class="flhead"><span class="num">${i + 1}</span>
-        ${need ? '<span class="tag red">confirm</span>' : ''}${audit ? '<span class="tag amber">grading check</span>' : ''}${keyed ? '' : '<span class="tag">not graded</span>'}
-        <span class="pts">${keyed ? `${fr.score}/${fr.max}` : ''}</span></div>
-      <div class="chips">${ORDER.map((f) => chipHtml(sh, i, f, rs)).join('')}</div>
-      ${sh.res.marginCrops ? `<div class="ycrop"><span class="lab">Written yield${yk != null ? ' (key ' + escapeHtml(yk) + ')' : ''}</span><span data-crop="${i}"></span></div>` : ''}
-      ${ed}</div>`;
+    const fr = rs.fleeces[i], keyed = fr && fr.graded;
+    rows += `<li class="rw${S.edit && S.edit.row === i ? ' is-on' : ''}" data-fl="${i}" data-act="focus-row" data-row="${i}"><span class="num">${i + 1}</span><span class="rw-c">${ORDER.map((f) => chipHtml(sh, i, f, rs)).join('')}</span><span class="rw-p">${keyed ? `${fr.score}/${fr.max}` : '<small>no key</small>'}</span></li>`;
   }
+  v.className = 'view rv';
   v.innerHTML = `
-    <div><h2>Review</h2></div>
-    <div class="card">
-      <label class="fld">Sheet<select id="rv-sel">${opts}</select></label>
-      <p class="sub">${rs.score} / ${rs.total}</p>
-      <p class="muted">${fl.need} to confirm, ${fl.audit} grading checks. Tap any field to correct it.</p>
-      <div class="row"><button type="button" class="btn small ${S.onlyFlags ? 'primary' : ''}" data-act="only-flags" aria-pressed="${S.onlyFlags}">${S.onlyFlags ? 'Showing flagged only' : 'Show flagged only'}</button>
-      <button type="button" class="btn small" data-act="goto-results">Results</button></div>
-      ${(sh.warnings || []).map((w) => `<div class="notice">${escapeHtml(w)}</div>`).join('')}
+    <div class="rv-main">
+      <div class="ph-wrap">${ph.html}${legendHtml(ph.cap)}</div>
+      <div class="sheet" id="rv-sheet">${reviewSheetHtml(sh)}</div>
     </div>
-    <div class="ovwrap" id="ovslot"></div>
-    <div id="rows" style="display:flex;flex-direction:column;gap:8px">${rows || '<div class="card"><p>Nothing flagged.</p></div>'}</div>`;
-  if (!sh.ov) sh.ov = drawOverlay(sh.res);
-  $('ovslot').appendChild(sh.ov);
+    <div class="rv-side">
+      <header class="rv-head"><div><h2 class="h2">Review</h2><p class="mut">${rs.score} / ${rs.total}. ${fl.need} to confirm, ${plural(fl.audit, 'grading check')}.</p></div>${sel}</header>
+      <div class="rv-bar">
+        <button type="button" class="sw" role="switch" data-act="only-flags" aria-checked="${S.onlyFlags}"><span class="sw-t" aria-hidden="true"><i></i></span><span>Show flagged only</span></button>
+        <button type="button" class="tbtn" data-act="goto-results">Results${ic('arrow')}</button>
+      </div>
+      ${(sh.warnings || []).map((w) => `<p class="rv-note">${escapeHtml(w)}</p>`).join('')}
+      <ol id="rows" class="rows">${rows || '<li class="empty">Nothing flagged.</li>'}</ol>
+    </div>`;
   v.querySelectorAll('[data-crop]').forEach((el) => {
     const cv = sh.res.marginCrops && sh.res.marginCrops[Number(el.dataset.crop)];
     if (cv) { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.getContext('2d').drawImage(cv, 0, 0); c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Handwritten yield, fleece ' + (Number(el.dataset.crop) + 1)); el.appendChild(c); }
   });
+  const on = v.querySelector('#rv-sheet .pick [aria-pressed="true"]'), pk = on && on.parentElement;
+  if (pk && on.offsetTop + on.offsetHeight > pk.clientHeight - 24) pk.scrollTop = Math.max(0, Math.floor((on.offsetTop - pk.clientHeight / 3) / on.offsetHeight) * on.offsetHeight);
 }
 
 // ---------- results ----------
@@ -390,39 +663,51 @@ function buildCsv() {
 }
 function renderResults() {
   const v = $('view-results');
-  if (!S.sheets.length) { v.innerHTML = '<div><h2>Results</h2></div><div class="card"><p>No sheets scanned yet.</p></div>'; return; }
-  let sh = sheetById(S.resultId) || S.sheets[S.sheets.length - 1]; S.resultId = sh.id;
+  if (!S.sheets.length) { v.innerHTML = emptyView('Results', 'No sheets scanned yet.', 'Scan a sheet', 'goto-scan'); return; }
+  const sh = sheetById(S.resultId) || S.sheets[S.sheets.length - 1]; S.resultId = sh.id;
   const rs = resultOf(sh), fl = flagsOf(sh);
   const keyed = sheetKey().filter(keyHas).length;
-  const rowsTbl = S.sheets.map((s) => {
+  const offs = Array.from({ length: S.n }, (_, i) => (rs.fleeces[i] && rs.fleeces[i].graded ? rs.fleeces[i].off : null));
+  const most = Math.max(0, ...offs.map((x) => x || 0));
+  const worst = offs.map((x, i) => (x === most && most > 0 ? i + 1 : 0)).filter(Boolean);
+  const barsLabel = most ? `Points off by fleece. Fleece ${worst.join(', ')} lost ${plural(most, 'point')}${worst.length > 1 ? ' each' : ''}.` : 'Points off by fleece. No points lost.';
+  const bars = offs.map((x) => `<i class="${x === null ? 'n' : x === 0 ? 'z' : ''}" style="--off:${most ? ((x || 0) / most).toFixed(3) : 0}"></i>`).join('');
+  const sheetRows = S.sheets.map((s) => {
     const r = resultOf(s), f = flagsOf(s);
-    return `<tr data-sheet="${s.id}" class="${s.id === sh.id ? 'pick' : ''}"><td>${escapeHtml(s.name)}</td><td class="n">${r.score} / ${r.total}</td><td class="n">${r.off}</td><td class="n">${f.need ? f.need + ' confirm' : ''}${f.need && f.audit ? ', ' : ''}${f.audit ? f.audit + ' check' : ''}${!f.need && !f.audit ? 'none' : ''}</td></tr>`;
+    const flags = !f.need && !f.audit ? 'none' : [f.need ? f.need + ' confirm' : '', f.audit ? f.audit + ' check' : ''].filter(Boolean).join(', ');
+    return `<li><button type="button" class="sh${s.id === sh.id ? ' is-on' : ''}" data-sheet="${s.id}"${s.id === sh.id ? ' aria-current="true"' : ''}><span class="sh-n">${escapeHtml(s.name)}</span><span class="sh-f">Flags: ${escapeHtml(flags)}</span><span class="sh-s">${r.score} / ${r.total}<small>${r.off} off</small></span></button></li>`;
   }).join('');
-  const detail = Array.from({ length: S.n }, (_, i) => {
+  const detail = !S.detail ? '' : `<div class="dtw"><table><thead><tr><th>Fleece</th>${ORDER.map((f) => `<th>${escapeHtml(FIELD_NAMES[f])}</th>`).join('')}<th>Points</th></tr></thead><tbody>${Array.from({ length: S.n }, (_, i) => {
     const fr = rs.fleeces[i];
-    if (!fr || !fr.graded) return `<tr><td class="n">${i + 1}</td><td colspan="6" class="muted">not graded</td></tr>`;
+    if (!fr || !fr.graded) return `<tr><td>${i + 1}</td><td class="m" colspan="6">Not graded</td></tr>`;
     const cell = (f) => (fr.fields[f] && fr.fields[f].max ? (fr.fields[f].off ? '-' + fr.fields[f].off : '0') : '');
-    return `<tr><td class="n">${i + 1}</td>${ORDER.map((f) => `<td class="n">${cell(f)}</td>`).join('')}<td class="n">${fr.score}/${fr.max}</td></tr>`;
-  }).join('');
+    return `<tr><td>${i + 1}</td>${ORDER.map((f) => `<td>${cell(f)}</td>`).join('')}<td>${fr.score}/${fr.max}</td></tr>`;
+  }).join('')}</tbody></table></div>`;
   v.innerHTML = `
-    <div><h2>Results</h2><p class="muted">${escapeHtml(S.name || 'Untitled session')} · ${keyed} fleeces keyed</p></div>
-    ${keyed ? '' : '<div class="notice bad">No official key entered. Go to Session and set the key.</div>'}
-    <div class="card">
-      <p class="muted">${escapeHtml(sh.name)}</p>
-      <div class="big">${rs.score}<small> / ${rs.total}</small></div>
-      <p class="sub">${rs.off} points off</p>
-      ${fl.need ? `<div class="notice bad">${fl.need} answers still need confirming in Review. Unconfirmed reads count as blank.</div>` : ''}
-      ${fl.audit ? `<div class="notice">${fl.audit} fields where the grader slash disagrees with the key.</div>` : ''}
+    <div class="stage">
+      <div class="res-stage">
+        <p class="who">${escapeHtml(S.name || 'Untitled session')}, ${plural(keyed, 'fleece')} keyed. ${escapeHtml(sh.name)}</p>
+        <p class="big num">${rs.score}<small> / ${rs.total}</small></p>
+        <p class="offs">${plural(rs.off, 'point')} off</p>
+        <p class="bars-l"><span>Points off, fleece 1 to ${S.n}</span><span>Most off: ${most}</span></p>
+        <div class="bars" role="img" aria-label="${escapeHtml(barsLabel)}">${bars}</div>
+      </div>
+      <button type="button" class="dt" data-act="toggle-detail" aria-expanded="${S.detail}">Fleece by fleece${ic('down')}</button>
+      ${detail}
+      ${keyed ? '' : '<button type="button" class="nt" data-act="goto-session"><span class="nt-r"><span>No official key entered. Set the key in Session.</span><b>Session</b></span></button>'}
+      ${fl.need ? `<button type="button" class="nt" data-act="review" data-id="${sh.id}"><span class="nt-r"><span>${plural(fl.need, 'answer')} still need confirming in Review. Unconfirmed reads count as blank.</span><b>Review</b></span></button>` : ''}
+      ${fl.audit ? `<p class="nt">${plural(fl.audit, 'field')} where the grader slash disagrees with the key.</p>` : ''}
     </div>
-    <div class="card"><h3>Per fleece</h3><div class="tablewrap"><table>
-      <thead><tr><th class="n">#</th>${ORDER.map((f) => `<th class="n">${escapeHtml(FIELD_NAMES[f].slice(0, 5))}</th>`).join('')}<th class="n">Pts</th></tr></thead><tbody>${detail}</tbody></table></div></div>
-    <div class="card"><h3>All sheets</h3><div class="tablewrap"><table>
-      <thead><tr><th>Name</th><th class="n">Score</th><th class="n">Off</th><th class="n">Flags</th></tr></thead><tbody>${rowsTbl}</tbody></table></div>
-      <div class="row" id="csv-slot"></div></div>`;
+    <div class="sheet">
+      <p class="rs-h">All sheets</p>
+      <ol>${sheetRows}</ol>
+      <div id="csv-slot"></div>
+    </div>`;
   if (csvUrl) { try { URL.revokeObjectURL(csvUrl); } catch (e) { /* ignore */ } }
   csvUrl = URL.createObjectURL(new Blob([buildCsv()], { type: 'text/csv' }));
-  const a = document.createElement('a'); a.className = 'btn primary'; a.href = csvUrl;
-  a.download = (S.name || 'fleece-grader').replace(/[^\w-]+/g, '_') + '.csv'; a.textContent = 'Download CSV';
+  const a = document.createElement('a'); a.className = 'cta'; a.href = csvUrl;
+  a.download = (S.name || 'fleece-grader').replace(/[^\w-]+/g, '_') + '.csv';
+  a.innerHTML = `<span>Download CSV</span><span class="cta-s">${escapeHtml(plural(S.sheets.length, 'sheet'))} ${ic('arrow')}</span>`;
   $('csv-slot').appendChild(a);
 }
 
@@ -434,6 +719,8 @@ function makeInput(id, capture, multiple) {
   i.addEventListener('change', () => { const f = Array.from(i.files); i.value = ''; if (id === 'f-key') { if (f[0]) scanKey(f[0]); } else addFiles(f); });
   document.body.appendChild(i); inputs[id] = i;
 }
+function focusPhoto() { if (!wideMq.matches) scrollTo($('ovslot'), 'nearest'); }
+function setCorr(sh, row, field, val) { sh.corr[row] = sh.corr[row] || {}; sh.corr[row][field] = val; }
 
 function onClick(e) {
   const t = e.target.closest('[data-act]'); if (!t) return;
@@ -443,64 +730,112 @@ function onClick(e) {
       const val = Number(t.dataset.val), k = S.key[row];
       k[f] = k[f] === val ? null : val; refreshKeyRow(row); save(); break;
     }
+    case 'key-open': {
+      const k = S.key[row], first = ORDER.find((x) => k[x] == null);
+      setKeyActive(row, row === S.kRow ? S.kField : (first || 'grade'), true); break;
+    }
+    case 'key-tab': setKeyActive(row, f, false); break;
+    case 'key-next': {
+      const fi = ORDER.indexOf(S.kField);
+      if (fi < ORDER.length - 1) setKeyActive(S.kRow, ORDER[fi + 1], false);
+      else if (S.kRow < S.n - 1) setKeyActive(S.kRow + 1, 'grade', true);
+      else setTab('scan');
+      break;
+    }
+    case 'n-dec': setN(S.n - 1); break;
+    case 'n-inc': setN(S.n + 1); break;
     case 'scan-key': inputs['f-key'].click(); break;
-    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); save(); renderSession(); break;
+    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); S.kRow = 0; S.kField = 'grade'; save(); renderSession(); break;
     case 'goto-scan': setTab('scan'); break;
     case 'goto-results': setTab('results'); break;
+    case 'goto-session': setTab('session'); break;
     case 'pick-cam': inputs['f-cam'].click(); break;
     case 'pick-up': inputs['f-up'].click(); break;
-    case 'corners': S.cornerId = S.cornerId === Number(t.dataset.id) ? null : Number(t.dataset.id); rerender(); break;
+    case 'select-sheet': S.cornerId = Number(t.dataset.id); S.adjust = false; rerender(); break;
+    case 'corners': S.cornerId = Number(t.dataset.id); S.adjust = !S.adjust; rerender(); break;
     case 'reread': { const sh = sheetById(Number(t.dataset.id)); if (sh && sh.src) reread(sh); break; }
-    case 'review': S.reviewId = Number(t.dataset.id); S.edit = null; setTab('review'); break;
+    case 'review': openReview(Number(t.dataset.id)); break;
     case 'remove': {
       const id = Number(t.dataset.id); S.sheets = S.sheets.filter((s) => s.id !== id);
-      if (S.cornerId === id) S.cornerId = null; save(); rerender(); break;
+      if (S.cornerId === id) { S.cornerId = null; S.adjust = false; }
+      if (S.reviewId === id) S.reviewId = null;
+      save(); rerender(); break;
     }
     case 'only-flags': S.onlyFlags = !S.onlyFlags; rerender(); break;
-    case 'edit': {
-      const same = S.edit && S.edit.row === row && S.edit.field === f;
-      S.edit = same ? null : { row, field: f }; rerender(); break;
+    case 'edit': S.edit = { row, field: f }; rerender(); focusPhoto(); break;
+    case 'focus-row': {
+      const sh = sheetById(S.reviewId); if (!sh) break;
+      const hit = ORDER.find((x) => { const fi = fieldInfo(sh, row, x); return fi.need || fi.audit; });
+      const cur = S.edit && S.edit.row === row ? S.edit.field : null;
+      S.edit = { row, field: cur || hit || (S.edit ? S.edit.field : 'grade') }; rerender(); focusPhoto(); break;
     }
     case 'close-edit': S.edit = null; rerender(); break;
+    case 'next-flag': case 'confirm-next': {
+      const sh = sheetById(S.reviewId); if (!sh) break;
+      const cur = S.edit;
+      if (act === 'confirm-next' && cur) {
+        const fi = fieldInfo(sh, cur.row, cur.field);
+        if (fi.need) setCorr(sh, cur.row, cur.field, fi.student);
+        save();
+      }
+      const nx = cur ? nextFlag(sh, cur) : firstFlag(sh);
+      if (nx) S.edit = nx;
+      rerender(); focusPhoto(); break;
+    }
     case 'set': case 'unset': case 'set-yield': {
       const sh = sheetById(S.reviewId); if (!sh) break;
       const field = act === 'set-yield' ? 'yield' : f;
-      sh.corr[row] = sh.corr[row] || {};
-      if (act === 'unset') delete sh.corr[row][field];
+      if (act === 'unset') { if (sh.corr[row]) delete sh.corr[row][field]; }
       else if (act === 'set-yield') {
         const raw = $('ed-yield').value.trim(), n = Number(raw);
         if (raw === '' || !Number.isInteger(n) || n < 0 || n > 99) { toast('Enter a whole number 0-99, or tap Blank.'); break; }
-        sh.corr[row].yield = n;
-      } else sh.corr[row][field] = t.dataset.val === 'blank' ? null : Number(t.dataset.val);
-      S.edit = null; sh.ov = sh.ov; save(); rerender(); break;
+        setCorr(sh, row, 'yield', n);
+      } else setCorr(sh, row, field, t.dataset.val === 'blank' ? null : Number(t.dataset.val));
+      S.edit = { row, field }; save(); rerender(); break;
     }
+    case 'toggle-detail': S.detail = !S.detail; rerender(); break;
     default: break;
   }
+}
+function tabKeys(e) {
+  const t = e.target.closest && e.target.closest('[role="tab"]'); if (!t) return;
+  const tabs = Array.from(t.parentElement.querySelectorAll('[role="tab"]')); let i = tabs.indexOf(t);
+  if (e.key === 'ArrowRight') i = (i + 1) % tabs.length; else if (e.key === 'ArrowLeft') i = (i + tabs.length - 1) % tabs.length;
+  else if (e.key === 'Home') i = 0; else if (e.key === 'End') i = tabs.length - 1; else return;
+  e.preventDefault(); tabs[i].click();
+  const again = t.parentElement.querySelector('[role="tab"][aria-selected="true"]'); if (again) again.focus();
 }
 
 function init() {
   load();
+  S.kRow = firstIncomplete();
   makeInput('f-cam', true, false); makeInput('f-up', false, true); makeInput('f-key', false, false);
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('.tab'); if (b) setTab(b.dataset.tab); });
+  $('tabs').addEventListener('keydown', tabKeys);
   const main = $('main');
   main.addEventListener('click', (e) => {
-    const tr = e.target.closest('tr[data-sheet]');
+    const tr = e.target.closest('[data-sheet]');
     if (tr && S.tab === 'results') { S.resultId = Number(tr.dataset.sheet); rerender(); return; }
     onClick(e);
+  });
+  main.addEventListener('keydown', (e) => {
+    tabKeys(e);
+    if (e.key === 'Enter' && e.target.dataset && e.target.dataset.act === 'key-yield') { e.preventDefault(); onClick({ target: $('key-sheet').querySelector('[data-act="key-next"]') }); }
   });
   main.addEventListener('input', (e) => {
     const t = e.target;
     if (t.id === 's-name') { S.name = t.value; save(); }
     else if (t.dataset.act === 'key-yield') {
-      const raw = t.value.trim(), n = Number(raw);
-      S.key[Number(t.dataset.row)].yield = raw !== '' && Number.isInteger(n) && n >= 0 && n <= 99 ? n : null; save();
+      const raw = t.value.trim(), n = Number(raw), row = Number(t.dataset.row);
+      S.key[row].yield = raw !== '' && Number.isInteger(n) && n >= 0 && n <= 99 ? n : null; save(); refreshKeyRow(row, false);
     } else if (t.dataset.act === 'name') { const sh = sheetById(Number(t.dataset.id)); if (sh) { sh.name = t.value; save(); } }
   });
   main.addEventListener('change', (e) => {
     const t = e.target;
-    if (t.id === 's-n') { const n = Math.max(1, Math.min(20, Math.round(Number(t.value) || 20))); S.n = n; t.value = n; save(); renderKeyRows(); }
-    else if (t.id === 'rv-sel') { S.reviewId = Number(t.value); S.edit = null; rerender(); }
+    if (t.id === 's-n') setN(t.value);
+    else if (t.id === 'rv-sel') { const sh = sheetById(Number(t.value)); S.reviewId = Number(t.value); S.edit = sh && sh.res ? firstFlag(sh) : null; rerender(); }
   });
+  wideMq.addEventListener('change', () => { if (S.tab === 'review') rerender(); });
   setTab('session');
 }
 init();
