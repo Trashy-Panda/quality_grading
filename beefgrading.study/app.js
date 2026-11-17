@@ -214,10 +214,13 @@ function renderFamilyButtons() {
 
   families.forEach(fam => {
     const btn = document.createElement('button');
-    btn.className = 'grade-btn family-btn';
+    btn.type = 'button';
+    btn.className = 'dr-seg-btn family-btn';
     btn.textContent = fam;
     btn.dataset.family = fam;
-    if (state.selectedFamily === fam) btn.classList.add('active');
+    const on = state.selectedFamily === fam;
+    if (on) btn.classList.add('active');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.addEventListener('click', () => onFamilyClick(fam));
     el.familyBtns.appendChild(btn);
   });
@@ -228,22 +231,57 @@ function renderSubButtons(family) {
   const subs = getSubsForFamily(family);
 
   if (!subs.length || subs[0].sub === null) {
-    el.subRow.classList.add('hidden');
+    // No subdivisions (Standard): the one call is made, show it as a settled row
     state.selectedKey = resolveKey(family);
+    const solo = state.selectedKey ? GRADE_MAP[state.selectedKey] : null;
+    if (solo) {
+      el.subRow.classList.remove('is-idle');
+      el.subBtns.appendChild(buildChoiceRow(solo.label, 'No subdivisions', true, 'is-on'));
+    } else {
+      el.subRow.classList.add('is-idle');
+    }
     updateGradeDisplay();
     return;
   }
 
-  el.subRow.classList.remove('hidden');
+  el.subRow.classList.remove('is-idle');
   subs.forEach(g => {
     const btn = document.createElement('button');
-    btn.className = 'grade-btn sub-btn';
-    btn.textContent = g.sub;
+    btn.type = 'button';
+    btn.className = 'gr-row sub-btn';
     btn.dataset.key = g.key;
-    if (state.selectedKey === g.key) btn.classList.add('active');
+    const on = state.selectedKey === g.key;
+    if (on) btn.classList.add('active');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.innerHTML = '<span class="gr-t"></span>' + CHECK_ICON;
+    btn.firstChild.textContent = g.label;
     btn.addEventListener('click', () => onSubClick(g.key));
     el.subBtns.appendChild(btn);
   });
+}
+
+const CHECK_ICON = '<svg class="ic gr-ck" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>';
+
+// A row that is not a control: the settled call, or a result row. Same anatomy
+// as the choice rows so the pick and the answer read as one list.
+function buildChoiceRow(title, note, withCheck, extraCls) {
+  const row = document.createElement('div');
+  row.className = 'gr-row gr-row--static' + (extraCls ? ' ' + extraCls : '');
+  const txt = document.createElement('span');
+  txt.className = 'gr-tx';
+  const t = document.createElement('span');
+  t.className = 'gr-t';
+  t.textContent = title;
+  txt.appendChild(t);
+  if (note) {
+    const n = document.createElement('span');
+    n.className = 'gr-n';
+    n.textContent = note;
+    txt.appendChild(n);
+  }
+  row.appendChild(txt);
+  if (withCheck) row.insertAdjacentHTML('beforeend', CHECK_ICON);
+  return row;
 }
 
 function onFamilyClick(family) {
@@ -257,12 +295,20 @@ function onFamilyClick(family) {
 function onSubClick(key) {
   state.selectedKey = key;
   document.querySelectorAll('.sub-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.key === key);
+    const on = btn.dataset.key === key;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   updateGradeDisplay();
 }
 
+function setDockSub(text) {
+  const sub = document.getElementById('dr-dock-sub');
+  if (sub) sub.textContent = text;
+}
+
 function updateGradeDisplay() {
+  setDockSub('Your call');
   if (!state.selectedKey) {
     el.gradeDisplay.textContent = 'Select a grade';
     el.gradeDisplay.className = 'grade-display unset';
@@ -277,7 +323,7 @@ function resetGradeSelector() {
   state.selectedFamily = null;
   state.selectedKey = null;
   renderFamilyButtons();
-  el.subRow.classList.add('hidden');
+  el.subRow.classList.add('is-idle');
   el.subBtns.innerHTML = '';
   updateGradeDisplay();
 }
@@ -297,6 +343,24 @@ function resultVerdict(score) {
   if (score === 7)  return 'Two subdivisions off';
   if (score === 4)  return 'One full grade off';
   return 'More than one grade off';
+}
+
+// The run so far: one cell per carcass, scored ones take their tier, the
+// current one is marked. Real data only; shown on the desktop rail.
+function renderRunStrip() {
+  const strip = document.getElementById('dr-run-strip');
+  if (!strip) return;
+  const n = state.carcasses.length;
+  const cells = [];
+  for (let i = 0; i < n; i++) {
+    const a = state.answers[i];
+    if (a) cells.push('<i class="' + resultTier(a.score) + '"><b>' + a.score + '</b></i>');
+    else cells.push('<i' + (i === state.currentIndex ? ' class="now"' : '') + '><b></b></i>');
+  }
+  strip.style.setProperty('--n', String(Math.max(n, 1)));
+  strip.classList.toggle('sm-strip--dense', n > 18);
+  strip.setAttribute('aria-label', state.answers.length + ' of ' + n + ' carcasses scored');
+  strip.innerHTML = cells.join('');
 }
 
 function updateDrillScore() {
@@ -384,6 +448,7 @@ function renderCarcass(index) {
   el.progressBar.style.setProperty('--progress', total ? index / total : 0);
 
   updateDrillScore();
+  renderRunStrip();
 
   const imgWrap = el.carcassImage.parentElement;
   imgWrap.classList.add('img-loading');
@@ -412,6 +477,7 @@ function renderCarcass(index) {
 
   resetGradeSelector();
 
+  delete el.drillScreen.dataset.result;
   el.feedbackPanel.className = 'feedback-panel hidden';
   el.feedbackQuality.innerHTML = '';
   el.feedbackNotes.textContent = '';
@@ -449,13 +515,20 @@ function onSubmit() {
   const tierCls = { ok: 'feedback-perfect', near: 'feedback-partial', miss: 'feedback-zero' };
   el.feedbackPanel.classList.add(tierCls[resultTier(score)]);
 
+  // The answer takes the place of the choices: your row, then the right row
+  // beside it (one row when the call was exact). Tone, not an error state.
+  el.drillScreen.dataset.result = resultTier(score);
   el.feedbackQuality.innerHTML =
     `<div class="fb-line"><strong class="fb-pts">${score}/10</strong><span class="fb-verdict">${escapeHtml(resultVerdict(score))}</span></div>` +
-    `<dl class="fb-calls">` +
-    `<div><dt>Your call</dt><dd>${escapeHtml(userLabel)}</dd></div>` +
-    `<div><dt>USDA call</dt><dd>${escapeHtml(correctLabel)}</dd></div>` +
-    `</dl>` +
+    `<div class="fb-rows"></div>` +
     buildLadderHtml(state.selectedKey, c.correct.qualityGrade);
+  const fbRows = el.feedbackQuality.querySelector('.fb-rows');
+  if (score === 10) {
+    fbRows.appendChild(buildChoiceRow(correctLabel, 'Right answer, your call', true, 'is-key'));
+  } else {
+    fbRows.appendChild(buildChoiceRow(userLabel, 'Your call', false, 'is-you'));
+    fbRows.appendChild(buildChoiceRow(correctLabel, 'Right answer', true, 'is-key'));
+  }
 
   if (c.notes && score < 10) {
     el.feedbackNotes.textContent = c.notes;
@@ -463,12 +536,28 @@ function onSubmit() {
   }
 
   el.submitBtn.classList.add('hidden');
+  const last = state.currentIndex + 1 >= state.carcasses.length;
+  el.nextBtn.firstElementChild.textContent = last ? 'See results' : 'Next carcass';
   el.nextBtn.classList.remove('hidden');
 
   updateDrillScore();
+  renderRunStrip();
+
+  // The dock stops repeating the pick: it carries the run instead
+  const earnedNow = sessionTotal();
+  const maxNow = state.answers.length * 10;
+  el.gradeDisplay.className = 'grade-display';
+  if (last) {
+    el.gradeDisplay.textContent = 'Total ' + earnedNow + '/' + maxNow;
+    setDockSub(state.carcasses.length + ' of ' + state.carcasses.length + ' graded');
+  } else {
+    el.gradeDisplay.textContent = (state.currentIndex + 2) + ' of ' + state.carcasses.length + ' next';
+    setDockSub('Total ' + earnedNow + '/' + maxNow);
+  }
 }
 
 function onNext() {
+  window.scrollTo(0, 0);
   state.currentIndex++;
   if (state.currentIndex >= state.carcasses.length) {
     renderSummary();
@@ -503,6 +592,10 @@ function closeImageModal() {
 
 function initImageModal() {
   el.carcassImage.addEventListener('click', () => {
+    openImageModal(el.carcassImage.src, el.carcassImage.alt);
+  });
+  const zoomBtn = document.querySelector('.zoom-hint');
+  if (zoomBtn) zoomBtn.addEventListener('click', () => {
     openImageModal(el.carcassImage.src, el.carcassImage.alt);
   });
   el.imageModalClose.addEventListener('click', closeImageModal);
@@ -553,17 +646,17 @@ function renderSummary() {
 
   let html = `
     <thead><tr>
-      <th class="num">#</th><th>Carcass</th><th>Your call</th><th>Correct</th><th class="num">Pts</th>
+      <th class="num c-n">#</th><th class="c-name">Carcass</th><th class="c-you">Your call</th><th class="c-key">Correct</th><th class="num c-pts">Pts</th>
     </tr></thead><tbody>`;
 
   state.answers.forEach((a, i) => {
     const cls = { ok: 'row-good', near: 'row-ok', miss: 'row-bad' }[resultTier(a.score)];
     html += `<tr class="${cls}">
-      <td class="num">${i + 1}</td>
-      <td>${escapeHtml(a.carcassName)}</td>
-      <td>${escapeHtml(a.userQualityLabel)}</td>
-      <td>${escapeHtml(a.correctQualityLabel)}</td>
-      <td class="num">${a.score}</td>
+      <td class="num c-n">${i + 1}</td>
+      <td class="c-name">${escapeHtml(a.carcassName)}</td>
+      <td class="c-you" data-k="You">${escapeHtml(a.userQualityLabel)}</td>
+      <td class="c-key" data-k="USDA">${escapeHtml(a.correctQualityLabel)}</td>
+      <td class="num c-pts">${a.score}</td>
     </tr>`;
   });
 

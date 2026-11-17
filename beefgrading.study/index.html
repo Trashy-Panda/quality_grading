@@ -350,59 +350,63 @@
        DRILL SCREEN
        =================================================== -->
   <main id="drill-screen" class="hidden">
-    <div class="drill-layout">
+    <div class="dr-wrap">
 
-      <!-- LEFT: Carcass image -->
-      <div class="drill-left">
-        <div class="carcass-image-wrap">
-          <img id="carcass-image" src="" alt="Beef carcass" />
-          <span class="zoom-hint">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-            Enlarge
-          </span>
-        </div>
-      </div>
-
-      <!-- RIGHT: one Lab panel -->
-      <section class="drill-right dr-panel" aria-label="Grade this carcass">
-
+      <!-- Stage: progress, the photo -->
+      <section class="dr-stage" aria-label="Carcass photo">
         <div class="dr-head">
-          <h1 id="carcass-name" class="carcass-name">Carcass 1</h1>
-          <p id="image-source" class="image-source"></p>
-        </div>
-
-        <div class="dr-readout">
-          <div class="dr-ro-cell"><span class="dr-ro-k">Carcass</span><span id="progress-text" class="dr-ro-v">1 of 10</span></div>
-          <div class="dr-ro-cell"><span class="dr-ro-k">Score so far</span><span id="drill-score" class="dr-ro-v" aria-live="polite">0 / 0</span></div>
+          <div class="dr-name">
+            <h1 id="carcass-name" class="carcass-name">Carcass 1</h1>
+            <p id="image-source" class="image-source"></p>
+          </div>
+          <p class="dr-stats">
+            <span class="dr-stat">Carcass <span id="progress-text" class="dr-v">1 of 10</span></span>
+            <span class="dr-stat">Score <span id="drill-score" class="dr-v" aria-live="polite">0 / 0</span></span>
+          </p>
         </div>
         <div class="progress-wrap" role="presentation"><div id="progress-bar"></div></div>
+        <div class="carcass-image-wrap">
+          <img id="carcass-image" src="" alt="Beef carcass" />
+          <button type="button" class="zoom-hint" aria-label="Enlarge photo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+            Enlarge
+          </button>
+        </div>
+      </section>
 
-        <div class="dr-body">
-          <div class="dr-label" id="dr-grade-label">Quality grade</div>
-          <div id="family-btns" role="group" aria-labelledby="dr-grade-label"></div>
-          <div id="sub-row" class="hidden">
-            <div class="dr-label dr-label-sub" id="dr-sub-label">Subdivision</div>
-            <div id="sub-btns" role="group" aria-labelledby="dr-sub-label"></div>
+      <!-- Sheet: the choices, then the answer, then the one action -->
+      <section class="dr-sheet" aria-label="Grade this carcass">
+
+        <div class="dr-pick">
+          <div class="dr-q">
+            <div class="dr-label" id="dr-grade-label">Quality grade</div>
+            <div id="family-btns" role="group" aria-labelledby="dr-grade-label"></div>
           </div>
-          <div class="dr-call">
-            <span class="dr-call-k">Your call</span>
-            <span id="selected-grade-display" class="grade-display unset">Select a grade</span>
+          <div id="sub-row" class="dr-q is-idle">
+            <div class="dr-label" id="dr-sub-label">Subdivision</div>
+            <div id="sub-btns" role="group" aria-labelledby="dr-sub-label"></div>
           </div>
         </div>
 
-        <div class="dr-foot">
-          <button id="submit-btn" class="wk-btn wk-btn--primary dr-submit">Submit grade</button>
-          <button id="next-btn" class="wk-btn wk-btn--primary dr-submit hidden">Next carcass</button>
-          <div id="submit-error" class="submit-error hidden" role="alert"></div>
+        <div id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
+          <div id="feedback-quality"></div>
+          <p id="feedback-notes" class="hidden"></p>
+        </div>
 
-          <div id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
-            <div id="feedback-quality"></div>
-            <p id="feedback-notes" class="hidden"></p>
-          </div>
+        <div class="dr-run">
+          <h2 class="dr-label" id="dr-run-label">This run</h2>
+          <div id="dr-run-strip" class="sm-strip" role="img" aria-labelledby="dr-run-label"></div>
+        </div>
+
+        <div class="dr-dock">
+          <p class="dr-dk-s"><span id="selected-grade-display" class="grade-display unset">Select a grade</span><span id="dr-dock-sub" class="dr-dk-k">Your call</span></p>
+          <button id="submit-btn" class="wk-btn wk-btn--primary dr-go"><span>Submit grade</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+          <button id="next-btn" class="wk-btn wk-btn--primary dr-go hidden"><span>Next carcass</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+          <div id="submit-error" class="submit-error hidden" role="alert"></div>
         </div>
 
       </section>
-    </div><!-- end drill-layout -->
+    </div><!-- end dr-wrap -->
   </main>
 
   <!-- ===================================================
@@ -410,61 +414,55 @@
        =================================================== -->
   <main id="summary-screen" class="screen hidden">
     <div class="sm-page">
-
-      <header class="sm-head">
-        <div>
-          <h1 class="summary-hero-label sm-title">Session complete</h1>
-          <p id="summary-sub" class="sm-sub">Every call from this session, scored against the USDA grade.</p>
-        </div>
-        <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true"><span class="cert-rosette art-mask"></span>Certified Prime</span>
-      </header>
-
       <div class="sm-grid">
-        <div class="sm-col sm-col--main">
 
-        <section class="sm-panel sm-readout-panel" aria-label="Session readout">
-          <div class="sm-readout">
-            <div class="sm-ro-cell"><span class="sm-ro-k">Score</span><span id="summary-total" class="sm-ro-v">0 / 0</span></div>
-            <div class="sm-ro-cell"><span class="sm-ro-k">Percent</span><span id="summary-pct" class="sm-ro-v">0%</span></div>
-            <div class="sm-ro-cell"><span class="sm-ro-k">Exact calls</span><span id="summary-exact" class="sm-ro-v">0</span></div>
-            <div class="sm-ro-cell"><span class="sm-ro-k">Within one third</span><span id="summary-near" class="sm-ro-v">0</span></div>
-          </div>
-        </section>
+        <div class="sm-main">
+          <header class="sm-head">
+            <div>
+              <h1 class="summary-hero-label sm-title">Session complete</h1>
+              <p id="summary-sub" class="sm-sub">Every call from this session, scored against the USDA grade.</p>
+            </div>
+            <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true"><span class="cert-rosette art-mask"></span>Certified Prime</span>
+          </header>
 
-        <section class="sm-panel sm-table-panel" aria-labelledby="sm-table-h">
-          <h2 id="sm-table-h" class="sm-panel-h">Your calls</h2>
-          <div class="summary-table-wrap">
-            <table id="summary-table"></table>
-          </div>
-        </section>
+          <section class="sm-result" aria-label="Session readout">
+            <p class="sm-fig"><span id="summary-total" class="sm-fig-n">0 / 0</span><span id="summary-pct" class="sm-fig-pct">0%</span></p>
+            <p class="sm-facts"><span class="sm-fact"><span id="summary-exact" class="sm-fact-n">0</span> exact calls</span><span class="sm-fact"><span id="summary-near" class="sm-fact-n">0</span> within one third</span></p>
+          </section>
 
-        <div class="summary-actions">
-          <button id="restart-btn" class="wk-btn wk-btn--primary">New session</button>
+          <section class="sm-you" aria-labelledby="sm-you-h">
+            <h2 id="sm-you-h" class="sm-sec-h">Carcass by carcass</h2>
+            <div id="summary-strip" class="sm-strip" role="img" aria-label=""></div>
+            <p id="summary-legend" class="sm-you-legend"></p>
+          </section>
+
+          <section class="sm-table-sec" aria-labelledby="sm-table-h">
+            <h2 id="sm-table-h" class="sm-sec-h">Your calls</h2>
+            <div class="summary-table-wrap">
+              <table id="summary-table"></table>
+            </div>
+          </section>
+        </div>
+
+        <aside class="sm-side scoring-explainer" aria-labelledby="sm-score-h">
+          <h2 id="sm-score-h" class="sm-sec-h">How scoring works: 10 pts per carcass</h2>
+          <ul class="sc-chart" aria-label="Points by how far off the call is">
+            <li class="sc-row"><span class="sc-k">Exact match</span><span class="sc-bar sc-bar--ok"><i style="--v:1"></i></span><span class="sc-v">10</span></li>
+            <li class="sc-row"><span class="sc-k">&#x2153; grade off (1 subdivision)</span><span class="sc-bar sc-bar--near"><i style="--v:0.9"></i></span><span class="sc-v">9</span></li>
+            <li class="sc-row"><span class="sc-k">&#x2154; grade off (2 subdivisions)</span><span class="sc-bar sc-bar--near"><i style="--v:0.7"></i></span><span class="sc-v">7</span></li>
+            <li class="sc-row"><span class="sc-k">1 full grade off (3 subdivisions)</span><span class="sc-bar sc-bar--miss"><i style="--v:0.4"></i></span><span class="sc-v">4</span></li>
+            <li class="sc-row"><span class="sc-k">More than 1 full grade off</span><span class="sc-bar sc-bar--miss"><i style="--v:0"></i></span><span class="sc-v">0</span></li>
+          </ul>
+          <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice to Low Prime counts as 1 subdivision off (9 pts).</p>
+        </aside>
+
+      </div>
+
+      <div class="sm-dock">
+        <div class="sm-dock-in summary-actions">
+          <button id="restart-btn" class="wk-btn wk-btn--primary"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span>New session</span></button>
           <button id="export-btn" class="wk-btn wk-btn--secondary">Export results</button>
           <button id="weekly-submit-btn" class="wk-btn weekly-submit-btn hidden">Submit to leaderboard</button>
-        </div>
-
-        </div>
-        <div class="sm-col sm-col--side">
-
-        <section class="sm-you" aria-labelledby="sm-you-h">
-          <h2 id="sm-you-h" class="sm-you-k">Carcass by carcass</h2>
-          <div id="summary-strip" class="sm-strip" role="img" aria-label=""></div>
-          <p id="summary-legend" class="sm-you-legend"></p>
-        </section>
-
-        <section class="sm-panel scoring-explainer" aria-labelledby="sm-score-h">
-          <h2 id="sm-score-h" class="sm-panel-h">How scoring works: 10 pts per carcass</h2>
-          <ul class="sc-chart" aria-label="Points by how far off the call is">
-          <li class="sc-row"><span class="sc-k">Exact match</span><span class="sc-bar sc-bar--ok"><i style="--v:1"></i></span><span class="sc-v">10</span></li>
-          <li class="sc-row"><span class="sc-k">&#x2153; grade off (1 subdivision)</span><span class="sc-bar sc-bar--near"><i style="--v:0.9"></i></span><span class="sc-v">9</span></li>
-          <li class="sc-row"><span class="sc-k">&#x2154; grade off (2 subdivisions)</span><span class="sc-bar sc-bar--near"><i style="--v:0.7"></i></span><span class="sc-v">7</span></li>
-          <li class="sc-row"><span class="sc-k">1 full grade off (3 subdivisions)</span><span class="sc-bar sc-bar--miss"><i style="--v:0.4"></i></span><span class="sc-v">4</span></li>
-          <li class="sc-row"><span class="sc-k">More than 1 full grade off</span><span class="sc-bar sc-bar--miss"><i style="--v:0"></i></span><span class="sc-v">0</span></li>
-        </ul>
-          <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice to Low Prime counts as 1 subdivision off (9 pts).</p>
-        </section>
-
         </div>
       </div>
     </div>
@@ -475,7 +473,7 @@
        =================================================== -->
   <div id="image-modal" class="modal-overlay hidden">
     <button id="image-modal-close" class="modal-close" aria-label="Close">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
     </button>
     <img id="image-modal-img" src="" alt="Full-size carcass" />
   </div>
@@ -929,7 +927,7 @@
           </div>
         </div>
         <button class="contribute-modal-close" id="contribute-modal-close" aria-label="Close grading research panel">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
 
