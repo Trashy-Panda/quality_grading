@@ -389,7 +389,7 @@ function ladderIndex(key) {
   return list.length - 1;
 }
 
-// Prime-to-Standard scale with your mark above and the USDA mark below.
+// Prime-to-Standard scale with your mark above and the official-call mark below.
 function buildLadderHtml(userKey, correctKey) {
   const list = ladderGrades();
   const n = list.length;
@@ -415,12 +415,12 @@ function buildLadderHtml(userKey, correctKey) {
   ).join('');
 
   const label = 'Grade scale from ' + list[0].family + ' to ' + list[n - 1].family +
-    '. You called ' + GRADE_MAP[userKey].label + ', USDA called ' + GRADE_MAP[correctKey].label + '.';
+    '. You called ' + GRADE_MAP[userKey].label + ', official call ' + GRADE_MAP[correctKey].label + '.';
 
   return '<div class="fb-scale" role="img" aria-label="' + escapeAttr(label) + '" style="--n:' + n + '">' +
     '<div class="fb-row"><span class="fb-mk fb-mk--you' + (u / (n - 1) > 0.6 ? ' fb-mk--end' : '') + '" style="--x:' + x(u) + '"><i></i><b>You</b></span></div>' +
     '<div class="fb-track">' + cells + '</div>' +
-    '<div class="fb-row"><span class="fb-mk fb-mk--key' + (c / (n - 1) > 0.6 ? ' fb-mk--end' : '') + '" style="--x:' + x(c) + '"><i></i><b>USDA</b></span></div>' +
+    '<div class="fb-row"><span class="fb-mk fb-mk--key' + (c / (n - 1) > 0.6 ? ' fb-mk--end' : '') + '" style="--x:' + x(c) + '"><i></i><b>Official&nbsp;call</b></span></div>' +
     '<div class="fb-fams">' + famHtml + '</div>' +
     '</div>';
 }
@@ -629,7 +629,7 @@ function renderSummary() {
   el.summaryPct.textContent = `${p}%`;
   el.summaryExact.textContent = `${exact} of ${n}`;
   el.summaryNear.textContent = String(near);
-  el.summarySub.textContent = `${n} ${n === 1 ? 'carcass' : 'carcasses'} graded. Each call below is scored against the USDA grade.`;
+  el.summarySub.textContent = `${n} ${n === 1 ? 'carcass' : 'carcasses'} graded. Each call below is scored against the official call.`;
 
   // One cell per carcass, same read as the Weekly "Your result" panel
   el.summaryStrip.style.setProperty('--n', String(Math.max(n, 1)));
@@ -655,7 +655,7 @@ function renderSummary() {
       <td class="num c-n">${i + 1}</td>
       <td class="c-name">${escapeHtml(a.carcassName)}</td>
       <td class="c-you" data-k="You">${escapeHtml(a.userQualityLabel)}</td>
-      <td class="c-key" data-k="USDA">${escapeHtml(a.correctQualityLabel)}</td>
+      <td class="c-key" data-k="Official call">${escapeHtml(a.correctQualityLabel)}</td>
       <td class="num c-pts">${a.score}</td>
     </tr>`;
   });
