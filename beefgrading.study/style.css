@@ -190,6 +190,38 @@
   --fg-2:        var(--ink-soft);
   --hair:        var(--hair-on-paper);
   --accent-text: var(--red);
+
+  /* v3 body UI (docs/DESIGN.md). New names only; the landing tokens above are
+     untouched. Concentric radii: inner = outer minus the gap between them. */
+  --ui-r-outer: 16px;
+  --ui-pad:     4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  --ui-r-round: 50%;
+  --ui-tap:     44px;
+  --ui-edge:        oklch(18% 0.006 60 / 0.12);   /* every box edge and 2px rule: translucent ink */
+  --ui-edge-strong: oklch(18% 0.006 60 / 0.28);
+  --ui-sel:         oklch(18% 0.006 60 / 0.08);   /* selected, pressed and recessed fill */
+  --ui-ok:          var(--color-green);
+  --ui-ok-wash:     oklch(48% 0.11 150 / 0.14);
+  --ui-warn:        var(--lab-near);
+  --ui-warn-wash:   oklch(80% 0.1 85 / 0.3);
+  --ui-scrim:       oklch(18% 0.006 60 / 0.74);
+  --ui-detect:      oklch(72% 0.13 150 / 0.14);
+  --ui-band:        oklch(80% 0.1 85 / 0.32);
+
+  /* Ground and panel: the only tokens the ground switch changes. */
+  --ui-board:  var(--paper-deep);
+  --ui-ground: var(--paper);
+  --ui-sheet:  var(--paper-card);
+}
+
+/* Ground A/B. data-ground is set on <html> before first paint (index.html head).
+   Bone is the default above. White changes the ground and panel tokens only:
+   ink, scarlet, edges and the landing tokens do not move. */
+:root[data-ground="white"] {
+  --ui-board:  oklch(94.5% 0.004 85);
+  --ui-ground: var(--lab-panel);
+  --ui-sheet:  oklch(96% 0.005 85);
 }
 
 /* carbon mode: remaps the aliases above for dark graphite bands. Put
