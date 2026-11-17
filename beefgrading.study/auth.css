@@ -178,19 +178,6 @@
 
 /* ── Dialog: type ───────────────────────────────────────────── */
 
-/* The context tag: a quiet fill, no rotation, no border, no scarlet */
-.auth-modal-stamp {
-  display: inline-block;
-  margin: 0 0 12px;
-  padding: 4px 10px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--ink-soft);
-  background: var(--ui-sel);
-  border-radius: var(--ui-r-inner);
-}
 
 .auth-modal-title {
   margin: 0 0 8px;

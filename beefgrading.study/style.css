@@ -1734,6 +1734,8 @@ body:has(#summary-screen:not(.hidden)) #app-header { display: none; }
   padding: 8px 20px 12px;
 }
 .setup-footer-link {
+  display: inline-flex;
+  align-items: center;
   min-height: var(--ui-tap);
   padding: 0;
   background: none;
