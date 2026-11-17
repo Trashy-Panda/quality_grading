@@ -806,6 +806,44 @@ function tabKeys(e) {
   const again = t.parentElement.querySelector('[role="tab"][aria-selected="true"]'); if (again) again.focus();
 }
 
+// ---------- install hint and offline worker ----------
+const A2HS_KEY = 'fg-a2hs-v1';
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIosSafari = () => {
+  const ua = navigator.userAgent || '';
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  return ios && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA/.test(ua);
+};
+function setupInstall() {
+  const box = $('a2hs'), sub = $('a2hs-s'), go = $('a2hs-install'), no = $('a2hs-no');
+  if (!box || isStandalone() || lsGet(A2HS_KEY)) return;
+  let deferred = null;
+  const hide = (remember) => { box.hidden = true; deferred = null; if (remember) lsSet(A2HS_KEY, 'done'); };
+  no.addEventListener('click', () => hide(true));
+  go.addEventListener('click', async () => {
+    if (!deferred) return;
+    const ev = deferred; deferred = null;
+    try { ev.prompt(); await ev.userChoice; } catch (e) { /* ignore */ }
+    hide(true);
+  });
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); deferred = e;
+    sub.textContent = 'Opens like an app and works with no signal.';
+    go.hidden = false; box.hidden = false;
+  });
+  window.addEventListener('appinstalled', () => hide(true));
+  if (isIosSafari()) {
+    sub.textContent = 'Tap the Share button in Safari, then choose Add to Home Screen. It then works with no signal.';
+    go.hidden = true; box.hidden = false;
+  }
+}
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if (local && new URLSearchParams(location.search).get('sw') !== '1') return;
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => { /* offline mode is optional */ }); });
+}
+
 function init() {
   load();
   S.kRow = firstIncomplete();
@@ -837,5 +875,7 @@ function init() {
   });
   wideMq.addEventListener('change', () => { if (S.tab === 'review') rerender(); });
   setTab('session');
+  setupInstall();
+  registerSW();
 }
 init();
