@@ -1,10 +1,11 @@
-/* fieldguide.css - Lab reading page.
-   Grade Field Guide: a prose column, Display 600 heads, the ladder and the
-   marbling plates as Lab panels. Tokens from style.css (:root). */
+/* fieldguide.css - Grade field guide (v3 body UI).
+   A reading page on the ground: lists and photos, no cards. At 1000+ the grade
+   ladder is a sticky rail beside the sections; below that everything stacks.
+   Edges are translucent ink (--ui-edge). Tokens from style.css (:root). */
 
 #fieldguide-screen {
   position: relative;
-  background: var(--lab-bg);
+  background: var(--ui-ground);
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--ink);
@@ -13,7 +14,7 @@
 .fg-inner {
   width: var(--lab-measure);
   margin: 0 auto;
-  padding: 48px 0 72px;
+  padding: 32px 0 56px;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -24,7 +25,7 @@
 .fg-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 44px;
+  font-size: 36px;
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: var(--track-display);
@@ -46,9 +47,10 @@
 .fg-head {
   margin: 0 0 16px;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: var(--track-display);
   color: var(--ink);
 }
 
@@ -69,38 +71,35 @@
   font-family: var(--font-ui);
   font-size: 0.875rem;
   line-height: 1.65;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 
-/* ── Grade ladder: one panel, a row per callable grade ──────── */
+/* ── Grade ladder: a list of rows, a heavier rule at each family ── */
 
 .fg-ladder {
   max-width: 560px;
   margin: 0;
   padding: 0;
   list-style: none;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: var(--lab-radius);
-  overflow: hidden;
+  border-top: 2px solid var(--ui-edge);
 }
 
 .fg-rung {
   --fam: var(--lab-heat-1);
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 0 20px;
-  border-top: 1px solid var(--lab-rule-2);
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 4px;
+  border-top: 1px solid var(--ui-edge);
 }
 .fg-rung:first-child { border-top: 0; }
 .fg-rung::before {
   content: '';
   flex: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--ui-pad);
   background: var(--fam);
 }
 .fg-rung--prime    { --fam: var(--lab-heat-1); }
@@ -108,43 +107,40 @@
 .fg-rung--select   { --fam: var(--lab-heat-3); }
 .fg-rung--standard { --fam: var(--lab-heat-4); }
 
-/* Family boundary: the heavier hairline where contests are won */
-.fg-rung--boundary { border-top-color: var(--lab-tick); }
+/* Family boundary: the heavier rule where contests are won */
+.fg-rung--boundary { border-top: 2px solid var(--ui-edge-strong); }
 
 .fg-rung-grade {
   flex: 1 1 auto;
   min-width: 0;
   font-family: var(--font-ui);
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
 }
 .fg-rung-family {
   flex: none;
   font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
+  font-size: 14px;
+  color: var(--ink-soft);
 }
 
-/* ── Marbling plates: a figure panel per USDA reference ─────── */
+/* ── Marbling plates: the photo is the stage, the label sits under it ── */
 
 .fg-specimen-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 16px;
 }
 
 .fg-specimen-row {
   display: flex;
   flex-direction: column;
+  gap: 12px;
   min-width: 0;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: var(--lab-radius);
-  overflow: hidden;
 }
 
 /* Clickable photo: opens the shared image modal full screen */
@@ -154,15 +150,20 @@
   width: 100%;
   padding: 0;
   border: 0;
-  background: var(--lab-bg);
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-outer);
+  overflow: hidden;
   cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
+.fg-specimen-view:hover { background: var(--ui-edge); }
 .fg-specimen-view:focus-visible {
   outline: 2px solid var(--red);
-  outline-offset: -2px;
+  outline-offset: 2px;
+  transition: none;
 }
 
-/* Zoom badge: signals the photo is tappable */
+/* Zoom badge: signals the photo is tappable (the whole photo takes the tap) */
 .fg-specimen-view::before,
 .fg-specimen-view::after {
   content: '';
@@ -172,19 +173,19 @@
 .fg-specimen-view::before {
   right: 10px;
   bottom: 10px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--ink);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ui-r-round);
+  background: var(--ui-scrim);
 }
 .fg-specimen-view::after {
-  right: 16px;
-  bottom: 16px;
+  right: 18px;
+  bottom: 18px;
   width: 16px;
   height: 16px;
   background: var(--on-ink);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 /* 2:3 portraits (anchors 01-05) and the two square USDA originals (06, 07)
@@ -194,7 +195,9 @@
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: contain;
-  background: var(--lab-bg);
+  background: transparent;
+  /* white photo backgrounds sink into the plate; black ones stay black */
+  mix-blend-mode: multiply;
 }
 
 .fg-specimen-text {
@@ -202,11 +205,20 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--lab-rule-2);
+  padding: 0 4px;
 }
-.fg-specimen-row--nophoto { justify-content: center; }
-.fg-specimen-row--nophoto .fg-specimen-text { border-top: 0; }
+
+/* Footnotes sit clear of the plates */
+.fg-specimen-list + .fg-note { margin-top: 24px; }
+
+/* The one degree with no USDA photo: a plate of the same shape, text only */
+.fg-specimen-row--nophoto {
+  justify-content: center;
+  padding: 16px;
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-outer);
+}
+.fg-specimen-row--nophoto .fg-specimen-text { padding: 0; }
 
 .fg-marbling-degree {
   font-family: var(--font-ui);
@@ -218,47 +230,89 @@
   font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-display);
   color: var(--ink);
   line-height: 1.25;
 }
 
-/* ── Scoring: the shared ladder chart in a panel ────────────── */
+/* ── Scoring: the shared ladder chart as rows on the ground ─── */
 
-.fg-scoring-menu {
-  max-width: 560px;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: var(--lab-radius);
-  padding-top: 8px;
+.fg-scoring-menu { max-width: 640px; }
+.fg-scoring-menu .sc-chart {
+  padding: 0;
+  border-top: 2px solid var(--ui-edge);
+}
+.fg-scoring-menu .sc-row {
+  min-height: 52px;
+  padding: 8px 4px;
+  border-top: 1px solid var(--ui-edge);
+}
+.fg-scoring-menu .sc-row:first-child { border-top: 0; }
+.fg-scoring-menu .sc-k { font-size: 0.9375rem; color: var(--ink); }
+.fg-scoring-menu .sc-bar {
+  height: 12px;
+  background: var(--ui-sel);
+  border-radius: var(--ui-pad);
+}
+.fg-scoring-menu .sc-bar--ok   { --bar: var(--ui-ok); }
+.fg-scoring-menu .sc-bar--near { --bar: var(--ui-warn); }
+.fg-scoring-menu .sc-bar--miss { --bar: var(--ui-edge-strong); }
+.fg-scoring-menu .sc-v {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
 }
 .fg-scoring-menu .fg-note {
   max-width: none;
   margin: 0;
-  padding: 12px 24px 20px;
-  border-top: 1px solid var(--lab-rule-2);
+  padding: 16px 4px 0;
+  border-top: 1px solid var(--ui-edge);
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 
 .fg-footer { display: flex; }
+.fg-footer .wk-btn { width: 100%; }
 
-/* ── Responsive ─────────────────────────────────────────────── */
+/* ── Tablet: two-up plates become four, the footer button relaxes ── */
 
-@media (max-width: 960px) {
-  .fg-specimen-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 700px) {
+  .fg-specimen-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fg-footer .wk-btn { width: auto; min-width: 280px; }
 }
 
-@media (max-width: 860px) {
-  .fg-inner { padding: 32px 0 56px; gap: 32px; }
-  .fg-title { font-size: 36px; }
+/* ── Desktop (1000+): ladder rail on the left, sections on the right ── */
+
+@media (min-width: 1000px) {
+  .fg-inner {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    column-gap: 72px;
+    row-gap: 56px;
+    align-items: start;
+    padding: 56px 0 96px;
+  }
+  .fg-inner > * { grid-column: 2; min-width: 0; }
+  .fg-hero { grid-column: 1 / -1; }
+  .fg-inner > [aria-labelledby="fg-ladder-heading"] {
+    grid-column: 1;
+    grid-row: 2 / span 4;
+    position: sticky;
+    top: 84px;
+  }
+  .fg-title { font-size: 56px; }
+  .fg-sub { margin-top: 12px; font-size: 1.125rem; }
+  .fg-head { font-size: 28px; }
+  .fg-inner > [aria-labelledby="fg-ladder-heading"] .fg-head { font-size: 22px; }
 }
 
 @media (max-width: 560px) {
-  .fg-rung { padding: 0 16px; }
-  .fg-specimen-text { padding: 10px 12px 14px; }
+  .fg-inner { gap: 32px; }
   .fg-marbling-grade { font-size: 1rem; }
-  .fg-scoring-menu .sc-chart { padding: 0 16px 8px; }
-  .fg-scoring-menu .fg-note { padding: 12px 16px 16px; }
-  .fg-footer .wk-btn { width: 100%; }
+  .fg-scoring-menu .sc-row { gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fg-specimen-view { transition: none; }
 }

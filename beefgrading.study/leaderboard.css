@@ -1,213 +1,30 @@
-/* leaderboard.css - weekly page board, and the shared board primitives
-   (head, segmented control, ruled sheet table) that powerrank.css reuses.
-   Furrow material: ruled table on the white sheet, mono figures. */
+/* leaderboard.css - Weekly page (v3 body UI).
+   The stage is the field plot and the standings, on the ground, never in a
+   card. "Your result" is the one raised surface (--ui-sheet): a rail beside the
+   standings at 900+, stacked on top under 900. Edges are translucent ink.
+   Buttons and the division control live in weekly.css; tokens in style.css. */
 
-/* ── Board head: plain heading + dated subhead, no eyebrow ──── */
-
-.board-head {
-  max-width: var(--measure-page);
-  margin: 0 auto;
-  padding: clamp(32px, 6vh, 64px) 20px 0;
-}
-
-.board-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  font-weight: 600;
-  letter-spacing: var(--track-display);
-  line-height: 1;
-  color: var(--ink);
-  text-wrap: balance;
-}
-
-.board-sub {
-  margin-top: 12px;
-  font-family: var(--font-ui);
-  font-size: 1rem;
-  color: var(--ink-faint);
-}
-
-/* ── Segmented control: selected = ink fill, paper text ─────── */
-
-.leaderboard-tabs {
-  display: flex;
-  width: fit-content;
-  max-width: calc(100% - 40px);
-  margin: 24px 20px 0;
-  background: var(--paper-card);
-  border: 1px solid var(--line-heavy);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
-.leaderboard-tab {
-  flex: 1 1 auto;
-  min-height: 44px;
-  padding: 0 20px;
-  font-family: var(--font-ui);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--ink-soft);
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-}
-
-.leaderboard-tab:hover {
-  background: var(--paper-deep);
-  color: var(--ink);
-}
-
-.leaderboard-tab.active,
-.leaderboard-tab.active:hover {
-  color: var(--paper);
-  background: var(--ink);
-}
-
-.leaderboard-tab:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: -2px;
-  transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .leaderboard-tab { transition: none; }
-}
-
-/* ── Ruled table on the white sheet ─────────────────────────── */
-
-.leaderboard-table-wrap {
-  max-width: var(--measure-page);
-  margin: 24px auto 0;
-  padding: 0 20px 56px;
-}
-
-.leaderboard-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--color-sheet);
-  border-top: 2px solid var(--ink);
-  border-bottom: 1px solid var(--line-heavy);
-  font-family: var(--font-ui);
-  font-size: 1rem;
-}
-
-.leaderboard-table th {
-  padding: 12px 16px;
-  font-family: var(--font-ui);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--ink-faint);
-  text-align: left;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--line-heavy);
-}
-
-.leaderboard-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink-soft);
-  vertical-align: middle;
-}
-
-.leaderboard-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Rank, score, percent, date: Red Hat Mono, tabular, right-aligned */
-.leaderboard-table td.col-rank,
-.leaderboard-table td.col-score,
-.leaderboard-table td.col-pct,
-.leaderboard-table td.col-date,
-.leaderboard-table th.col-rank,
-.leaderboard-table th.col-score,
-.leaderboard-table th.col-pct,
-.leaderboard-table th.col-date,
-.leaderboard-table th.pr-col-rating,
-.leaderboard-table th.pr-col-move,
-.leaderboard-table th.pr-col-contests {
-  text-align: right;
-}
-
-.leaderboard-table .col-rank {
-  width: 72px;
-}
-
-.leaderboard-table td.col-rank,
-.leaderboard-table td.col-score,
-.leaderboard-table td.col-pct,
-.leaderboard-table td.col-date {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.9375rem;
-  white-space: nowrap;
-}
-
-.leaderboard-table td.col-rank,
-.leaderboard-table td.col-score {
-  color: var(--ink);
-}
-
-.leaderboard-table td.col-name {
-  font-weight: 500;
-  color: var(--ink);
-}
-
-/* ── Avatar ─────────────────────────────────────────────────── */
+/* ── Avatar (built by leaderboard.js) ───────────────────────── */
 
 .leaderboard-avatar {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: var(--ui-r-round);
   object-fit: cover;
   flex-shrink: 0;
 }
-
-.leaderboard-avatar-fallback circle { fill: var(--paper-deep); }
+.leaderboard-avatar-fallback circle { fill: var(--ui-sel); }
 .leaderboard-avatar-fallback text {
   fill: var(--ink-soft);
   font-family: var(--font-ui);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* ── Empty / error / sign-in states: plain sentences ────────── */
-
-.leaderboard-empty {
-  padding: 40px 0;
-  font-family: var(--font-ui);
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  text-align: left;
-}
-
-.leaderboard-empty strong {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
-  color: var(--ink);
-}
-
-/* ── Phone: drop the date column, never rank or score ───────── */
-
-@media (max-width: 560px) {
-  .leaderboard-table th,
-  .leaderboard-table td { padding: 12px 8px; }
-  .leaderboard-table .col-date { display: none; }
-  .leaderboard-table .col-rank { width: 48px; }
-  .leaderboard-tab { padding: 0 12px; }
-}
-
-/* ============================================================
-   Weekly page (Lab): header + readout, action row (weekly.css),
-   field dot plot, standings table beside the dark "Your result".
-   ============================================================ */
+/* ── Screen ─────────────────────────────────────────────────── */
 
 #leaderboard-screen {
-  background: var(--lab-bg);
+  background: var(--ui-ground);
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--ink);
@@ -232,31 +49,32 @@
   border: 0;
 }
 
-/* ── Header: title + sub left, readout right ────────────────── */
+/* ── Header: title and week left, three big figures right ───── */
 
 .wk-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px 32px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px 32px;
   align-items: end;
-  padding: 48px 0 24px;
-  border-bottom: 1px solid var(--lab-rule);
+  padding: 28px 0 20px;
+  border-bottom: 1px solid var(--ui-edge);
 }
 .wk-head-text { min-width: 0; }
 
 .wk-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 44px;
+  font-size: 36px;
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: var(--track-display);
   color: var(--ink);
+  text-wrap: balance;
   overflow-wrap: break-word;
   min-width: 0;
 }
 .wk-sub {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   font-family: var(--font-ui);
   font-size: 1rem;
   color: var(--ink-soft);
@@ -267,83 +85,95 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 .wk-navbtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 0 12px;
+  min-height: var(--ui-tap);
+  min-width: var(--ui-tap);
+  padding: 0 16px;
   font-family: var(--font-ui);
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--ink);
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: 8px;
+  background: var(--ui-sel);
+  border: 0;
+  border-radius: var(--ui-r-outer);
   cursor: pointer;
+  --ic-sw: 1.75;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.wk-navbtn:hover:not(:disabled) { background: var(--lab-rule-2); }
-.wk-navbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-.wk-navbtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.wk-navbtn svg {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+  stroke-width: var(--ic-sw);
+}
+.wk-navbtn:hover:not(:disabled) { background: var(--ui-edge); }
+.wk-navbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; transition: none; }
+.wk-navbtn:disabled { color: var(--ink-soft); opacity: 0.5; cursor: not-allowed; }
 
 .wk-back {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--ui-tap);
   margin-left: 8px;
   padding: 0;
   font-family: var(--font-ui);
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink);
   background: none;
   border: 0;
   text-decoration: underline;
-  text-decoration-color: var(--red);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+  text-decoration-color: var(--ui-edge-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
   cursor: pointer;
 }
+.wk-back:hover { text-decoration-color: var(--ink); }
 .wk-back:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
+/* The readout: each figure at display size with its label under it. No
+   boxes, no rules between them. The markup puts the label first; the column
+   is reversed so the figure leads. */
 .wk-readout {
   display: flex;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 20px;
 }
 .wk-ro-cell {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: 2px;
-  padding: 12px 20px;
-  border-left: 1px solid var(--lab-rule);
   min-width: 0;
 }
-.wk-ro-cell:first-child { border-left: 0; }
-.wk-ro-k { font-family: var(--font-ui); font-size: 13px; color: var(--ink-faint); }
-.wk-ro-v {
-  font-family: var(--font-mono);
-  font-size: 22px;
+.wk-ro-k {
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.2;
+  color: var(--ink-soft);
+}
+.wk-ro-v {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
   font-variant-numeric: tabular-nums;
   color: var(--ink);
   white-space: nowrap;
 }
 
-/* ── Field plot ─────────────────────────────────────────────── */
+/* ── Field plot: the stage, on the ground ───────────────────── */
 
 .wk-plot {
-  padding: 24px 28px 20px;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: var(--lab-radius);
+  padding: 20px 0 8px;
+  border-top: 2px solid var(--ui-edge);
 }
 .wk-plot-h {
   display: flex;
@@ -355,15 +185,22 @@
 .wk-plot-h h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--track-display);
   color: var(--ink);
 }
-.wk-note { font-family: var(--font-ui); font-size: 13px; color: var(--ink-faint); }
+.wk-note { font-family: var(--font-ui); font-size: 14px; color: var(--ink-soft); }
 
 .wk-scale { position: relative; height: 150px; margin-top: 12px; }
-.wk-axis { position: absolute; left: 0; right: 0; bottom: 28px; height: 1px; background: var(--ink); }
+.wk-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 28px;
+  height: 1px;
+  background: var(--ui-edge-strong);
+}
 .wk-ticks { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; }
 .wk-tick {
   position: absolute;
@@ -373,7 +210,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 .wk-tick::before {
   content: "";
@@ -382,7 +219,7 @@
   left: 50%;
   width: 1px;
   height: 8px;
-  background: var(--lab-tick);
+  background: var(--ui-edge-strong);
 }
 
 .wk-dot {
@@ -390,17 +227,17 @@
   bottom: 32px;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  background: var(--lab-dot);
-  box-shadow: 0 0 0 1px var(--lab-panel);
+  border-radius: var(--ui-r-round);
+  background: color-mix(in oklch, var(--ink) 42%, transparent);
   transform: translateX(-50%);
 }
 .wk-dot--top { width: 12px; height: 12px; background: var(--ink); }
+/* You: the largest dot, ringed. Scarlet stays on the one primary action. */
 .wk-dot--me {
   width: 14px;
   height: 14px;
-  background: var(--red);
-  box-shadow: 0 0 0 4px var(--lab-you-wash);
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--ui-ground), 0 0 0 5px var(--ui-edge-strong);
 }
 
 .wk-flag {
@@ -412,9 +249,9 @@
   color: var(--ink);
 }
 .wk-flag b { font-weight: 600; }
-.wk-flag--me { color: var(--red); }
-.wk-stem { position: absolute; width: 1px; background: var(--ink); }
-.wk-stem--me { background: var(--red); }
+.wk-flag--me { font-weight: 600; }
+.wk-stem { position: absolute; width: 1px; background: var(--ui-edge-strong); }
+.wk-stem--me { background: color-mix(in oklch, var(--ink) 80%, transparent); }
 
 .wk-scale-msg {
   position: absolute;
@@ -428,171 +265,238 @@
   color: var(--ink-soft);
 }
 
-/* ── Standings + your result ────────────────────────────────── */
+/* ── Standings (the list) and your result (the sheet) ───────── */
 
 .wk-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  margin-top: 24px;
+  gap: 24px 48px;
+  margin-top: 16px;
   align-items: start;
 }
-.wk-grid.has-you { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); }
+.wk-grid.has-you { grid-template-columns: minmax(0, 1fr); }
 
-.wk-tablewrap {
-  overflow-x: auto;
-  background: var(--lab-panel);
-  border: 1px solid var(--lab-rule);
-  border-radius: var(--lab-radius);
+.wk-tablewrap { overflow-x: auto; }
+.wk-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ui-edge);
 }
-.wk-table { width: 100%; border-collapse: collapse; }
 .wk-table th {
-  padding: 12px 16px;
+  padding: 14px 12px;
   text-align: left;
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 500;
-  color: var(--ink-faint);
-  border-bottom: 1px solid var(--lab-rule);
+  font-weight: 600;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--ui-edge);
 }
 .wk-table td {
-  padding: 10px 16px;
+  padding: 8px 12px;
+  height: 56px;
   font-family: var(--font-ui);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   color: var(--ink);
-  border-bottom: 1px solid var(--lab-rule-2);
+  border-bottom: 1px solid var(--ui-edge);
 }
 .wk-table tbody tr:last-child td { border-bottom: 0; }
 .wk-table th.n,
 .wk-table td.n {
   text-align: right;
-  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.wk-table td.rk {
-  width: 56px;
+.wk-table td.n {
   font-family: var(--font-mono);
-  font-size: 15px;
   font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
-.wk-table td.who { width: 100%; max-width: 0; }
-.wk-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.wk-who .leaderboard-avatar { width: 24px; height: 24px; }
-.wk-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wk-you-tag { flex-shrink: 0; font-size: 13px; color: var(--red); }
-
-.wk-table tr.wk-me td { background: var(--lab-you-wash); }
-.wk-table tr.wk-me td.rk { color: var(--red); }
-
-.wk-medal {
-  display: inline-grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;
-  font-family: var(--font-mono);
-  font-size: 13px;
+/* The percentage is the figure; points and date support it */
+.wk-table td.n:nth-child(4) {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
   color: var(--ink);
 }
-.wk-medal--1 { background: var(--ink); color: var(--on-ink); }
-.wk-me .wk-medal { border-color: var(--red); color: var(--red); }
-.wk-me .wk-medal--1 { background: var(--red); color: var(--lab-panel); }
+.wk-table td.rk {
+  width: 56px;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+.wk-table td.who { width: 100%; max-width: 0; font-weight: 500; }
+.wk-who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.wk-who .leaderboard-avatar { width: 28px; height: 28px; }
+.wk-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wk-you-tag {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* The top row is the heaviest; the numerals do the ranking, no medals */
+.wk-table tbody tr:first-child td { height: 68px; }
+.wk-table tbody tr:first-child td.who { font-weight: 600; }
+.wk-medal {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+}
+.wk-medal--1 { font-size: 1.75rem; }
+
+.wk-table tr.wk-me td { background: var(--ui-sel); font-weight: 600; }
+.wk-table tr.wk-me td.rk { color: var(--ink); }
 
 .wk-skel td span {
   display: block;
   height: 0.9rem;
   width: 70%;
-  background: var(--lab-rule-2);
-  border-radius: 4px;
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-inner);
   animation: wk-shimmer 1.6s ease-in-out infinite;
 }
 .wk-skel td:first-child span { width: 24px; }
 @keyframes wk-shimmer {
   0%   { opacity: 0.4; }
-  50%  { opacity: 0.9; }
+  50%  { opacity: 1; }
   100% { opacity: 0.4; }
 }
 
-/* Your result: the one dark panel */
+/* Your result: the one sheet on this screen. One display-size figure, then
+   the carcass-by-carcass strip, then the detail rows. */
 .wk-you {
-  padding: 24px;
-  background: var(--ink);
-  color: var(--on-ink);
-  border-radius: var(--lab-radius);
+  padding: 20px 20px 16px;
+  background: var(--ui-sheet);
+  border-top: 2px solid var(--ui-edge-strong);
+  color: var(--ink);
 }
-.wk-you:focus-visible { outline: 2px solid var(--red-lift); outline-offset: 2px; }
-.wk-you-k { font-family: var(--font-ui); font-size: 13px; color: var(--on-ink-dim); }
+.wk-you:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.wk-you-k {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.wk-you-k:first-child { font-weight: 600; color: var(--ink); }
 .wk-you-big {
-  margin: 8px 0;
-  font-family: var(--font-mono);
+  margin: 4px 0 2px;
+  font-family: var(--font-display);
   font-size: 64px;
-  font-weight: 500;
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
 }
-.wk-you-big small { font-size: 24px; color: var(--on-ink-dim); letter-spacing: 0; }
+.wk-you-big small {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink-soft);
+}
 
+/* One bar per carcass; the height carries the result as well as the tone */
 .wk-ladder {
   display: grid;
   grid-template-columns: repeat(var(--n, 10), minmax(0, 1fr));
-  gap: 3px;
-  margin-top: 16px;
+  align-items: end;
+  gap: var(--ui-pad);
+  height: 28px;
+  margin-top: 20px;
 }
 .wk-ladder i {
   display: block;
-  height: 22px;
-  border-radius: 2px;
-  background: color-mix(in oklab, var(--on-ink) 16%, transparent);
+  height: 28px;
+  border-radius: var(--ui-pad);
+  background: var(--ui-sel);
 }
-.wk-ladder i.ok { background: var(--lab-ok); }
-.wk-ladder i.near { background: var(--lab-near); }
-.wk-ladder i.miss { background: var(--red-lift); }
-.wk-you-legend { margin-top: 6px; font-family: var(--font-ui); font-size: 12px; color: var(--on-ink-dim); }
+.wk-ladder i.ok { background: var(--ui-ok); }
+.wk-ladder i.near { height: 20px; background: var(--ui-warn); }
+.wk-ladder i.miss { height: 8px; background: var(--ui-edge-strong); }
+.wk-you-legend {
+  margin-top: 8px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
 
 .wk-you-dl {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px 16px;
+  align-items: center;
+  gap: 0 16px;
   margin: 16px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid color-mix(in oklab, var(--on-ink) 14%, transparent);
+  border-top: 1px solid var(--ui-edge);
 }
-.wk-you-dl dt { font-family: var(--font-ui); font-size: 14px; color: var(--on-ink-dim); }
+.wk-you-dl dt,
+.wk-you-dl dd { min-height: 48px; display: flex; align-items: center; }
+.wk-you-dl dt { font-family: var(--font-ui); font-size: 15px; color: var(--ink-soft); }
 .wk-you-dl dd {
   margin: 0;
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
+  justify-content: flex-end;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Tablet and phone ───────────────────────────────────────── */
+/* ── Phone (under 900): the sheet leads, columns thin out ───── */
 
-@media (max-width: 860px) {
-  .wk-head { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
-  .wk-title { font-size: 36px; }
-  .wk-readout { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
-  .wk-ro-cell { padding: 10px 12px; }
-  .wk-ro-v { font-size: 16px; }
-  .wk-plot { padding: 16px; }
-  .wk-grid.has-you { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 899px) {
   .wk-you { order: -1; }
   .wk-col-date { display: none; }
   .wk-tick--odd { color: transparent; }
-  .wk-table th, .wk-table td { padding-left: 12px; padding-right: 12px; }
+  .wk-table th, .wk-table td { padding-left: 8px; padding-right: 8px; }
 }
 
 @media (max-width: 560px) {
   .wk-navbtn-text { display: none; }
-  .wk-navbtn { padding: 0; width: 44px; }
-  .wk-you { padding: 20px; }
+  .wk-navbtn { padding: 0; width: var(--ui-tap); }
+  .wk-table td.rk { width: 40px; }
+  .wk-you-big { font-size: 56px; }
+}
+
+/* ── Desktop (900+): head, then plot on the full width, then the
+   standings beside the sheet rail ─────────────────────────── */
+
+@media (min-width: 900px) {
+  .wk-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 56px 0 32px;
+  }
+  .wk-title { font-size: 52px; }
+  .wk-sub { font-size: 1.125rem; }
+  .wk-readout { justify-content: flex-start; gap: 40px; padding-bottom: 4px; }
+  .wk-ro-cell { align-items: flex-start; }
+  .wk-ro-k { font-size: 14px; }
+  .wk-ro-v { font-size: 36px; }
+
+  .wk-plot { padding: 28px 0 12px; }
+  .wk-plot-h h2 { font-size: 28px; }
+
+  .wk-grid { margin-top: 24px; }
+  .wk-grid.has-you { grid-template-columns: minmax(0, 1fr) 380px; }
+  .wk-table th, .wk-table td { padding-left: 16px; padding-right: 16px; }
+  .wk-table td { height: 60px; }
+  .wk-table tbody tr:first-child td { height: 76px; }
+
+  .wk-you {
+    position: sticky;
+    top: 84px;
+    padding: 28px 28px 20px;
+  }
+  .wk-you-big { font-size: 88px; }
+  .wk-you-big small { font-size: 28px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wk-skel td span { animation: none; opacity: 0.6; }
+  .wk-skel td span { animation: none; opacity: 0.7; }
   .wk-navbtn { transition: none; }
 }

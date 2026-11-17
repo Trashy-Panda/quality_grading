@@ -1,5 +1,8 @@
-/* auth.css - Rollmark design system
-   Sign-in modal + header/nav auth chips */
+/* auth.css - Sign-in dialog and the header / nav auth chips (v3 body UI).
+   The dialog is one sheet (--ui-sheet) on a scrim: a bottom sheet under 600px,
+   a centred panel above. Choices are full-width rows at 56px. Edges are
+   translucent ink. The header and nav chips are re-skinned for the dark slab
+   by style.css (it wins by specificity); the rules here are the base. */
 
 /* ── Utility ────────────────────────────────────────────────── */
 
@@ -15,26 +18,28 @@
   align-items: center;
 }
 
-.home-signin-btn {
-  font-family: var(--font-display);
-  font-size: 12px;
+.home-signin-btn,
+#auth-signin-btn {
+  min-height: var(--ui-tap);
+  padding: 0 16px;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
   font-weight: 600;
-  padding: 8px 18px;
-  border: 1.5px solid var(--ink);
-  background: var(--red);
-  color: var(--poster-cream);
-  cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease;
+  color: var(--ink);
+  background: var(--ui-sel);
+  border: 0;
+  border-radius: var(--ui-r-inner);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
-
-.home-signin-btn:hover {
-  background: var(--red-deep);
+.home-signin-btn:hover,
+#auth-signin-btn:hover {
+  background: var(--ui-edge);
 }
-
-.home-signin-btn:focus-visible {
+.home-signin-btn:focus-visible,
+#auth-signin-btn:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
@@ -50,42 +55,14 @@
 }
 
 .home-user-area .auth-signout-btn {
-  color: var(--ink-faint);
-  border: none;
-  background: transparent;
+  color: var(--ink-soft);
 }
 
 .home-user-area .auth-signout-btn:hover {
   color: var(--ink);
 }
 
-/* ── Header: Sign-In Button ─────────────────────────────────── */
-
-#auth-signin-btn {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border: 1.5px solid var(--ink);
-  background: var(--red);
-  color: var(--poster-cream);
-  cursor: pointer;
-  line-height: 1;
-  white-space: nowrap;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease;
-}
-
-#auth-signin-btn:hover {
-  background: var(--red-deep);
-}
-
-#auth-signin-btn:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-/* ── Header: User Area ──────────────────────────────────────── */
+/* ── Header: user area ──────────────────────────────────────── */
 
 .auth-user-area {
   display: flex;
@@ -97,8 +74,8 @@
 .auth-avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid var(--ink);
+  border-radius: var(--ui-r-round);
+  border: 1px solid var(--ui-edge-strong);
   object-fit: cover;
   flex-shrink: 0;
   display: block;
@@ -117,263 +94,229 @@
 }
 
 .auth-signout-btn {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
+  min-height: var(--ui-tap);
+  padding: 0 14px;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
   font-weight: 600;
-  padding: 7px 14px;
-  border: none;
-  background: transparent;
-  color: var(--ink-faint);
-  cursor: pointer;
   line-height: 1;
   white-space: nowrap;
-  border-radius: var(--radius-sm);
-  transition: background 120ms ease, color 120ms ease;
+  color: var(--ink-soft);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ui-r-inner);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
-
 .auth-signout-btn:hover {
-  background: var(--paper-deep);
+  background: var(--ui-sel);
   color: var(--ink);
 }
-
 .auth-signout-btn:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* ── Modal: Overlay ─────────────────────────────────────────── */
+/* ── Dialog: scrim and sheet ────────────────────────────────── */
 
 .auth-modal-overlay {
   position: fixed;
   inset: 0;
-  background: var(--scrim);
   z-index: 500;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 16px;
+  background: var(--ui-scrim);
 }
-
-/* ── Modal: Panel ───────────────────────────────────────────── */
 
 .auth-modal-panel {
   position: relative;
-  overflow: hidden;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  padding: 36px 32px 32px;
-  max-width: 420px;
-  width: calc(100% - 2rem);
+  width: 100%;
+  max-width: 480px;
   box-sizing: border-box;
-}
-
-/* Meat-judging hard hat watermark in the panel corner */
-.auth-modal-panel::after {
-  content: '';
-  position: absolute;
-  right: -14px;
-  bottom: -10px;
-  width: 160px;
-  aspect-ratio: 1109 / 789;
-  background: var(--ink);
-  -webkit-mask: url(assets/art-hardhat.png) center / contain no-repeat;
-  mask: url(assets/art-hardhat.png) center / contain no-repeat;
-  opacity: 0.16;
-  transform: rotate(-8deg);
-  pointer-events: none;
-}
-
-/* ── Modal: Close Button ────────────────────────────────────── */
-
-.auth-modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: var(--paper-deep);
-  border: none;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--ink-soft);
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-pill);
-  z-index: 1;
-  transition: background 140ms ease, color 140ms ease;
-}
-
-.auth-modal-close:hover {
-  background: var(--line);
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow-y: auto;
+  padding: 28px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--ui-sheet);
+  border-top: 1px solid var(--ui-edge);
+  border-radius: var(--ui-r-outer) var(--ui-r-outer) 0 0;
   color: var(--ink);
 }
 
+/* ── Close: icon-only, a full 44px target ───────────────────── */
+
+.auth-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ui-tap);
+  height: var(--ui-tap);
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  border-radius: var(--ui-r-inner);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.auth-modal-close:hover {
+  background: var(--ui-sel);
+  color: var(--ink);
+}
 .auth-modal-close:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
-/* ── Modal: Badge ───────────────────────────────────────────── */
+/* ── Dialog: type ───────────────────────────────────────────── */
 
+/* The context tag: a quiet fill, no rotation, no border, no scarlet */
 .auth-modal-stamp {
   display: inline-block;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--red);
-  background: transparent;
-  border: 1.5px solid var(--red);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  margin: 0 0 14px 0;
+  margin: 0 0 12px;
+  padding: 4px 10px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
   line-height: 1.4;
-  transform: rotate(-1.5deg);
+  color: var(--ink-soft);
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-inner);
 }
 
-/* ── Modal: Typography ──────────────────────────────────────── */
-
 .auth-modal-title {
+  margin: 0 0 8px;
+  padding-right: 44px;
   font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.15;
-  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
   color: var(--ink);
+  text-wrap: balance;
 }
 
 .auth-modal-sub {
+  margin: 0 0 24px;
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.5;
   color: var(--ink-soft);
-  margin: 0 0 22px 0;
-  line-height: 1.55;
 }
 
-/* Divider rule - zigzag print ornament */
-.auth-modal-divider {
-  border: none;
-  height: 8px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 6 L4 2 L8 6 L12 2 L16 6' fill='none' stroke='%231E1B16' stroke-width='1.5'/%3E%3C/svg%3E") repeat-x center / 16px 8px;
-  opacity: 0.35;
-  margin: 16px 0;
-}
+/* The old divider and method label are retired; hidden if markup returns */
+.auth-modal-divider,
+.auth-modal-method-label { display: none; }
 
-/* Section label above provider buttons */
-.auth-modal-method-label {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink-faint);
-  margin: 0 0 8px 0;
-}
-
-/* ── Modal: Provider Buttons ────────────────────────────────── */
+/* ── Dialog: provider rows, 56px, flat fill, no border ──────── */
 
 .auth-provider-btn {
   width: 100%;
-  padding: 13px 20px;
+  min-height: 56px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  font-family: var(--font-display);
-  font-size: 13px;
+  gap: 12px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
   font-weight: 600;
-  border-radius: var(--radius-sm);
+  line-height: 1.2;
+  border: 0;
+  border-radius: var(--ui-r-inner);
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   box-sizing: border-box;
-  transition: background 140ms ease, color 140ms ease, opacity 140ms ease;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
-
-.auth-provider-btn:last-of-type {
-  margin-bottom: 0;
-}
-
-/* Google - outlined ink block */
-.auth-google-btn {
-  background: var(--paper-card);
-  color: var(--ink);
-  border: var(--border-ink);
-}
-.auth-google-btn:hover {
-  background: var(--paper-deep);
-}
-
-/* GitHub - ink letterboard block */
-.auth-github-btn {
-  background: var(--board-bg);
-  color: var(--board-text);
-  border: var(--border-ink);
-}
-.auth-github-btn:hover {
-  background: var(--ink-soft);
-}
-
-.auth-provider-btn:active {
-  opacity: 0.9;
-}
-
+.auth-provider-btn:last-of-type { margin-bottom: 0; }
+.auth-provider-btn:active { transform: translateY(1px); }
 .auth-provider-btn:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
 }
 
+/* Google: the quiet fill. GitHub: the ink fill. Neither is scarlet. */
+.auth-google-btn {
+  background: var(--ui-sel);
+  color: var(--ink);
+}
+.auth-google-btn:hover { background: var(--ui-edge); }
+
+.auth-github-btn {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+.auth-github-btn:hover { background: var(--ink-soft); }
+
 .auth-provider-btn svg {
   flex-shrink: 0;
   display: block;
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
 }
 
-/* ── Modal: Disclaimer ──────────────────────────────────────── */
+/* ── Dialog: disclaimer and inline error ────────────────────── */
 
 .auth-modal-disclaimer {
-  font-family: var(--font-ui);
-  font-size: 12px;
-  color: var(--ink-faint);
-  margin: 18px 0 0 0;
-  text-align: center;
-  line-height: 1.6;
-}
-
-/* ── Modal: Inline Error ────────────────────────────────────── */
-
-.auth-modal-error {
+  margin: 16px 0 0;
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: 500;
-  color: var(--red);
-  background: var(--red-wash);
-  border: 1.5px solid var(--red-wash-border);
-  padding: 10px 14px;
-  margin-bottom: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
   text-align: left;
-  border-radius: var(--radius-sm);
 }
 
-/* ── Responsive ─────────────────────────────────────────────── */
-
-@media (max-width: 480px) {
-  .auth-modal-panel {
-    max-width: 100%;
-    width: calc(100% - 16px);
-    padding: 28px 22px 24px;
-  }
-
-  .auth-modal-title {
-    font-size: 17px;
-  }
-
-  .auth-display-name {
-    max-width: 80px;
-  }
+/* An error is a tone shift and one line, not a red box */
+.auth-modal-error {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--ui-warn-wash);
+  border-radius: var(--ui-r-inner);
+  text-align: left;
 }
 
 /* An avatar with no image yet stays out of the layout */
 .auth-avatar:not([src]) { display: none; }
+
+/* ── Wider than a phone: a centred panel, all four corners round ── */
+
+@media (min-width: 600px) {
+  .auth-modal-overlay { align-items: center; padding: 16px; }
+  .auth-modal-panel {
+    width: min(440px, 100%);
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 36px 32px 32px;
+    border-top: 0;
+    border-radius: var(--ui-r-outer);
+  }
+  .auth-modal-title { font-size: 32px; }
+  .auth-display-name { max-width: 120px; }
+}
+
+@media (max-width: 480px) {
+  .auth-display-name { max-width: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-provider-btn,
+  .auth-modal-close,
+  .auth-signout-btn,
+  .home-signin-btn,
+  #auth-signin-btn { transition: none; }
+  .auth-provider-btn:active { transform: none; }
+}
