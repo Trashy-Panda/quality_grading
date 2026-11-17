@@ -32,5 +32,19 @@
     "additionalDirectories": [
       "C:\\Users\\gunny\\code\\.claude\\skills\\design-taste\\reference"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-master.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

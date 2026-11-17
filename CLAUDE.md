@@ -33,11 +33,17 @@ Firestore + Auth. Live at beefgrading.study.
 - Design work: Hallmark skill (`/hallmark`), plus design-taste preflight as a gate:
   `node ../.claude/skills/design-taste/scripts/preflight.mjs <files>` from beefgrading.study.
 - Visuals: build in SVG/CSS on the theme tokens first; Canva generate-image only
-  when code cannot do it.
+  when code cannot do it (claude.ai connectors are off for this repo via
+  `disableClaudeAiConnectors` in .claude/settings.local.json; ask the user to flip it).
 - Local preview: dev server on http://localhost:8000 (no-cache); check with the
-  Playwright MCP at 390 and 1440 wide.
-- Delegate multi-file execution to subagents on Sonnet (Haiku for grep/audit);
-  orchestrator plans and reviews.
+  Playwright MCP at 390 and 1440 wide (fallback: webapp-testing skill). Dev server:
+  `python deployment/devserver.py` from beefgrading.study.
+- Orchestration: global `~/.claude/CLAUDE.md` + `orchestrate` skill (Opus plans,
+  Haiku/Sonnet agents execute, verifier gates, `reflect` after).
+- Standard Done-when checks for site packets (run from beefgrading.study):
+  preflight exits 0 on touched files; `node --check` on touched JS;
+  `grep -n "onerror=\|onclick=" *.html *.js` empty; Playwright 390 + 1440 render
+  with no console errors. Design packets: verifier on `model: sonnet`.
 - Path-scoped detail lives in `.claude/rules/` and loads only when relevant.
 
 ## Output
@@ -45,4 +51,5 @@ Be concise. No recaps of what was just shown.
 
 # Compact instructions
 When compacting, keep: current branch and last commit, open tasks, user decisions,
-any failing checks. Drop tool output dumps and screenshots.
+any failing checks, the active packet plan (goal, done-when, which agents are
+running or pending). Drop tool output dumps and screenshots.
