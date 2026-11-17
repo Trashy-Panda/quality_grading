@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en" data-ground="bone">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Comp A: Field Guide Stage</title>
+<script>
+/* Ground is set before first paint: ?ground= wins, then localStorage, then bone. */
+(function () {
+  var g = 'bone', q = null, s = null;
+  try { q = new URLSearchParams(location.search).get('ground'); } catch (e) {}
+  try { s = localStorage.getItem('bg-v3-ground'); } catch (e) {}
+  if (q === 'bone' || q === 'white') g = q; else if (s === 'bone' || s === 'white') g = s;
+  document.documentElement.setAttribute('data-ground', g);
+  if (q === g) { try { localStorage.setItem('bg-v3-ground', g); } catch (e) {} }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;800&family=Red+Hat+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Tokens copied from style.css :root (single source of truth). */
+:root {
+  --paper:      oklch(96% 0.011 85);
+  --paper-deep: oklch(92% 0.016 85);
+  --paper-card: oklch(99.5% 0.005 85);
+  --ink:        oklch(18% 0.006 60);
+  --ink-soft:   oklch(34% 0.01 60);
+  --ink-faint:  oklch(44% 0.012 60);
+  --red:        oklch(52% 0.2 22);
+  --red-deep:   oklch(44% 0.18 22);
+  --poster-dim: oklch(94% 0.03 22);
+  --color-green: oklch(48% 0.11 150);
+  --lab-near:   oklch(80% 0.1 85);
+  --lab-panel:  oklch(99.6% 0.003 85);
+  --on-ink:     oklch(96% 0.011 85);
+  --font-display: 'Red Hat Display', 'Red Hat Text', ui-sans-serif, system-ui, sans-serif;
+  --font-ui:      'Red Hat Text', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --track-display: -0.035em;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast: 140ms;
+  --z-sticky: 100;
+
+  /* v3 UI tokens. Concentric radii: inner = outer minus the gap between them. */
+  --ui-r-outer: 16px;
+  --ui-pad:     4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  --ui-r-round: 50%;
+  --ui-tap:     44px;
+  --ui-edge:        oklch(18% 0.006 60 / 0.12);
+  --ui-edge-strong: oklch(18% 0.006 60 / 0.28);
+  --ui-sel:         oklch(18% 0.006 60 / 0.08);
+  --ui-ok:          var(--color-green);
+  --ui-ok-wash:     oklch(48% 0.11 150 / 0.14);
+  --ui-warn:        var(--lab-near);
+  --ui-warn-wash:   oklch(80% 0.1 85 / 0.3);
+  --ui-scrim:       oklch(18% 0.006 60 / 0.74);
+  --ui-detect:      oklch(72% 0.13 150 / 0.14);
+  --ui-band:        oklch(80% 0.1 85 / 0.32);
+
+  /* Ground and panel: the only tokens the ground switch changes. */
+  --ui-board:  var(--paper-deep);
+  --ui-ground: var(--paper);
+  --ui-sheet:  var(--paper-card);
+}
+:root[data-ground="white"] {
+  --ui-board:  oklch(94.5% 0.004 85);
+  --ui-ground: var(--lab-panel);
+  --ui-sheet:  oklch(96% 0.005 85);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--ui-board); color: var(--ink); font-family: var(--font-ui); -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100dvh; font-size: 16px; line-height: 1.4; }
+h1, h2, h3, p, ol, ul, figure { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+img, svg { display: block; }
+button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; margin: 0; min-height: var(--ui-tap); text-align: left; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out); }
+button:hover { background-color: var(--ui-sel); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* Icons: 24-unit viewBox, sized in em, stroke follows the adjacent text weight
+   (400 -> 1.5, 500 -> 1.75, 600 -> 2, 700 -> 2.25). */
+.ic { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: var(--ic-sw, 1.75); stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- comp scaffold ---------- */
+.bar { position: fixed; inset: 0 0 auto 0; z-index: var(--z-sticky); display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 4px 16px; background: var(--ui-ground); border-bottom: 1px solid var(--ui-edge); }
+.bar-t { font: 600 15px/1.2 var(--font-ui); }
+.gs { display: flex; gap: var(--ui-pad); padding: var(--ui-pad); background: var(--ui-sel); border-radius: var(--ui-r-outer); }
+.gs button { min-width: 68px; min-height: var(--ui-tap); padding: 0 14px; text-align: center; border-radius: var(--ui-r-inner); font-size: 14px; font-weight: 500; }
+.gs button[aria-pressed="true"] { background: var(--ui-sheet); font-weight: 600; }
+.board { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; padding: 84px 0 64px; max-width: 1320px; margin-inline: auto; }
+.art { width: 100%; max-width: 430px; justify-self: center; }
+.lbl { padding: 0 16px 4px; font: 600 15px/1.3 var(--font-ui); }
+.lbl-s { padding: 0 16px 12px; font-size: 13px; color: var(--ink-soft); }
+.phone { position: relative; display: flex; flex-direction: column; min-height: 820px; background: var(--ui-ground); overflow: hidden; }
+.stage { position: relative; flex: 1; }
+
+/* ---------- type ---------- */
+.h1 { font: 600 28px/1.1 var(--font-display); letter-spacing: var(--track-display); }
+.h2 { font: 600 22px/1.15 var(--font-display); letter-spacing: var(--track-display); }
+.mut { font-size: 14px; color: var(--ink-soft); }
+.num { font-family: var(--font-display); font-weight: 800; letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+
+/* ---------- the sheet: one surface at thumb height ---------- */
+.sheet { background: var(--ui-sheet); border-top: 1px solid var(--ui-edge); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.opt-h { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px 20px; }
+.opt-t { font: 600 18px/1.2 var(--font-display); letter-spacing: var(--track-display); --ic-sw: 2; }
+.opt-m { margin-inline-start: auto; font-size: 14px; color: var(--ink-soft); text-align: right; }
+.opt-b { padding: 0 20px 8px; font-size: 14px; color: var(--ink-soft); }
+.opt.is-on { background: var(--ui-sel); }
+.opt.is-on .opt-h { font-weight: 600; }
+.opt.is-on .opt-h:hover { background-color: transparent; }
+.opt-d { padding: 0 20px 12px; font-size: 14px; color: var(--ink-soft); }
+.opt-d + .opt-d { padding-top: 0; }
+.sw { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 52px; padding: 0 20px; font-size: 15px; font-weight: 500; }
+.sw-t { flex: none; width: 52px; height: 32px; padding: var(--ui-pad); border-radius: var(--ui-r-outer); background: var(--ui-edge-strong); }
+.sw-t i { display: block; width: 24px; height: 24px; border-radius: var(--ui-r-inner); background: var(--ui-sheet); }
+.sw[aria-checked="true"] .sw-t { background: var(--ink); }
+.sw[aria-checked="true"] .sw-t i { margin-inline-start: 20px; background: var(--on-ink); }
+.top3 { padding: 0 0 8px; }
+.top3 h4 { margin: 0; padding: 4px 20px 4px; font: 600 14px/1.3 var(--font-ui); }
+.t3 { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 12px; min-height: 44px; padding: 0 20px; font-size: 16px; font-weight: 500; }
+.t3 .num { font-size: 20px; }
+.t3 b { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: var(--track-display); }
+.t3:first-of-type { min-height: 52px; font-weight: 600; }
+.t3:first-of-type .num { font-size: 26px; }
+.cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: calc(100% - 40px); margin: 12px 20px 8px; min-height: 56px; padding: 0 20px; border-radius: var(--ui-r-outer); background: var(--red); color: var(--paper-card); font-size: 17px; font-weight: 600; --ic-sw: 2; }
+.cta:hover { background-color: var(--red-deep); }
+.cta > span:first-child { min-width: 0; }
+.cta-s { display: flex; white-space: nowrap; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--poster-dim); }
+.cta[disabled] { background: var(--ui-edge-strong); color: var(--ink-soft); cursor: default; }
+.cta[disabled] .cta-s { color: var(--ink-soft); }
+.links { display: flex; flex-wrap: wrap; gap: 0 20px; padding: 0 20px 12px; }
+.links button { min-height: var(--ui-tap); font-size: 14px; font-weight: 500; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--ui-edge-strong); }
+.links button:hover { background: none; color: var(--ink); }
+
+/* ---------- 1 and 2: setup ---------- */
+.phone--setup { display: grid; grid-template-rows: auto minmax(300px, 1fr) auto; grid-template-areas: "head" "photo" "sheet"; }
+.set-head { grid-area: head; padding: 24px 20px 14px; }
+.set-head p { margin-top: 8px; max-width: 34ch; font-size: 15px; color: var(--ink-soft); }
+.set-photo { grid-area: photo; position: relative; }
+.set-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; mix-blend-mode: multiply; }
+.phone--setup .sheet { grid-area: sheet; }
+
+/* ---------- 3: key entry ---------- */
+.k-head { padding: 24px 20px 12px; }
+.k-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.k-top .mut { font-weight: 500; }
+.k-sub { margin-top: 6px; font-size: 14px; color: var(--ink-soft); }
+.prog { height: 4px; margin-top: 14px; background: var(--ui-sel); }
+.prog i { display: block; height: 100%; width: 12%; background: var(--ink); }
+.k-fields { display: flex; align-items: flex-end; gap: 12px; padding: 4px 20px 0; }
+.lab { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.fld { flex: 1; min-width: 0; }
+.fld input { width: 100%; min-height: 52px; padding: 0 14px; border: 0; border-radius: var(--ui-r-outer); background: var(--ui-sel); font-size: 16px; }
+.step { display: flex; gap: var(--ui-pad); padding: var(--ui-pad); border-radius: var(--ui-r-outer); background: var(--ui-sel); }
+.step button { width: var(--ui-tap); height: var(--ui-tap); display: grid; place-items: center; border-radius: var(--ui-r-inner); }
+.step output { display: grid; place-items: center; min-width: 36px; font: 800 20px/1 var(--font-display); letter-spacing: var(--track-display); }
+.k-acts { display: flex; flex-wrap: wrap; gap: 0 8px; padding: 6px 12px 0; }
+.tbtn { display: inline-flex; align-items: center; gap: 8px; padding: 0 8px; min-height: var(--ui-tap); font-size: 14px; font-weight: 600; --ic-sw: 2; }
+.tbtn--q { color: var(--ink-soft); font-weight: 500; --ic-sw: 1.75; }
+.k-note { display: flex; gap: 8px; padding: 2px 20px 12px; font-size: 13px; color: var(--ink-soft); }
+.k-note .ic { margin-top: 1px; color: var(--ui-ok); }
+.fl { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 8px 20px; }
+.fl .num { font-size: 28px; }
+.fl-v { font-size: 16px; font-weight: 500; }
+.fl-v span + span::before { content: "\00b7"; margin: 0 7px; color: var(--ink-faint); }
+.fl.is-on { min-height: 92px; background: var(--ui-sel); }
+.fl.is-on:hover { background-color: var(--ui-sel); }
+.fl .e { color: var(--ink-faint); }
+.fl .cur { font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.fl-h { display: block; margin-top: 2px; font-size: 13px; color: var(--ink-soft); }
+.k-more { padding: 10px 20px; font-size: 14px; color: var(--ink-faint); }
+.tabs { display: flex; padding: 0 12px; }
+.tabs button { flex: 1; min-width: 0; min-height: 48px; padding: 0 2px; text-align: center; font-size: 14px; font-weight: 500; color: var(--ink-soft); border-bottom: 2px solid transparent; }
+.tabs button[aria-selected="true"] { color: var(--ink); font-weight: 600; border-bottom-color: var(--ink); }
+.pick { padding-top: 4px; }
+.pk { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 8px; width: 100%; min-height: 48px; padding: 4px 20px; --ic-sw: 2; }
+.pk-v { font: 600 19px/1 var(--font-display); letter-spacing: var(--track-display); }
+.pk-d { font-size: 14px; color: var(--ink-soft); }
+.pk-m { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-soft); }
+.pk.is-on { background: var(--ui-sel); }
+.pk.is-on .pk-v { font-weight: 800; }
+.pk.is-key { background: var(--ui-ok-wash); }
+.pk.is-key .pk-m { color: var(--ui-ok); font-weight: 600; }
+.pick-fade { max-height: 244px; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, var(--ink) 82%, transparent); mask-image: linear-gradient(to bottom, var(--ink) 82%, transparent); }
+
+/* ---------- 4: scan ---------- */
+.vf { position: relative; background: var(--ink); }
+.vf-img { width: 100%; height: auto; aspect-ratio: 1447 / 2000; object-fit: cover; }
+.vf-ov { position: absolute; inset: 0; width: 100%; height: 100%; }
+.vf-poly { fill: var(--ui-detect); stroke: var(--ui-ok); stroke-width: 1.5px; vector-effect: non-scaling-stroke; stroke-dasharray: 6 5; }
+.br, .br-halo { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.br-halo { stroke: var(--on-ink); stroke-width: 8px; animation: find 1600ms var(--ease-out) infinite alternate; }
+.br { stroke: var(--ink); stroke-width: 3.5px; }
+@keyframes find { from { opacity: 1; } to { opacity: 0.45; } }
+.vf-top { position: absolute; inset: 12px 12px auto 12px; display: flex; justify-content: space-between; gap: 8px; }
+.vf-tag { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: var(--ui-r-outer); background: var(--ui-scrim); color: var(--on-ink); font-size: 14px; font-weight: 500; --ic-sw: 1.75; }
+.vf-hint { position: absolute; inset: auto 0 0 0; padding: 10px 20px; background: var(--ui-scrim); color: var(--on-ink); font-size: 14px; }
+.stack { display: flex; gap: 8px; padding: 12px 20px 8px; overflow-x: auto; }
+.stk { position: relative; flex: none; width: 64px; height: 80px; padding: 6px; }
+.stk img { width: 100%; height: 100%; object-fit: cover; }
+.stk b { position: absolute; inset: auto 6px 6px auto; min-width: 22px; padding: 1px 5px; background: var(--ui-scrim); color: var(--on-ink); font: 600 12px/18px var(--font-ui); text-align: center; }
+.stk.is-on { background: var(--ui-sel); }
+.s-info { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 0 20px 4px; }
+.s-info .fld input { min-height: 48px; font-weight: 600; }
+.s-st { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-soft); }
+.s-st .ic { color: var(--ui-ok); }
+.s-acts { display: flex; align-items: center; gap: 0 4px; padding: 0 12px; }
+.s-acts .go { margin-inline-start: auto; }
+.cap { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 16px; }
+.cap .tbtn { flex: 1; padding: 0; }
+.cap .sp { flex: 1; }
+.shutter { flex: none; width: 76px; height: 76px; display: grid; place-items: center; border-radius: var(--ui-r-round); border: 3px solid var(--ink); }
+.shutter span { width: 58px; height: 58px; border-radius: var(--ui-r-round); background: var(--red); }
+.shutter:hover { background: none; }
+
+/* ---------- 5: review ---------- */
+.rv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 20px 4px; }
+.rv-head p { margin-top: 4px; }
+.rv-sel { display: inline-flex; flex: none; white-space: nowrap; align-items: center; gap: 8px; padding: 0 12px; border-radius: var(--ui-r-outer); background: var(--ui-sel); font-size: 15px; font-weight: 600; --ic-sw: 2; }
+.rv-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 0; }
+.rv-bar .sw { width: auto; }
+.rv-bar .sw-t { order: -1; }
+.ph { width: 100%; height: auto; }
+.ph-band { fill: var(--ui-band); }
+.ph-dot { fill: var(--ink); }
+.ph-ring { fill: none; }
+.ph-ring--ok { stroke: var(--ui-ok); stroke-width: 2.5px; }
+.ph-ring--len { stroke: var(--ui-ok); stroke-width: 2px; }
+.ph-ring--key { stroke: var(--ink); stroke-width: 3px; }
+.ph-unsure { fill: none; stroke: var(--ink); stroke-width: 2.5px; stroke-dasharray: 5 4; }
+.ph-tag rect { fill: var(--ui-warn); }
+.ph-tag text { fill: var(--ink); font: 600 13px var(--font-ui); text-anchor: middle; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 10px 20px; font-size: 13px; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { width: 18px; height: 14px; }
+.lg-dot { fill: var(--ink); }
+.lg-key { fill: none; stroke: var(--ink); stroke-width: 2.5px; }
+.lg-warn { fill: var(--ui-warn); }
+.ed-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 20px 6px; }
+.ed-h b { font: 600 18px/1.2 var(--font-display); letter-spacing: var(--track-display); }
+.ed-h span { font-size: 14px; color: var(--ink-soft); }
+.pk--b { grid-template-columns: 1fr auto; }
+.pk-m--w { color: var(--ink); font-weight: 600; }
+
+/* ---------- 6: results ---------- */
+.res-stage { padding: 24px 20px 16px; }
+.who { font-size: 14px; color: var(--ink-soft); }
+.big { margin-top: 6px; font: 800 120px/0.95 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.big small { font-size: 32px; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); }
+.offs { margin-top: 6px; font: 600 20px/1.2 var(--font-display); letter-spacing: var(--track-display); }
+.bars-l { display: flex; justify-content: space-between; margin-top: 26px; font-size: 13px; color: var(--ink-soft); }
+.bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; margin-top: 8px; border-bottom: 2px solid var(--ink); }
+.bars i { flex: 1; height: calc(var(--off) * 6px); min-height: 2px; background: var(--ink); }
+.bars i[style*="--off: 0"] { background: var(--ui-ok); }
+.nt { display: block; width: 100%; min-height: 52px; padding: 10px 20px; background: var(--ui-warn-wash); font-size: 14px; }
+.nt + .nt { margin-top: 2px; }
+.nt-r { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.nt-r b { font-weight: 600; white-space: nowrap; }
+.rs-h { padding: 14px 20px 4px; font: 600 14px/1.3 var(--font-ui); }
+.sh { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 12px; width: 100%; min-height: 60px; padding: 8px 20px; }
+.sh-n { font-size: 16px; font-weight: 600; }
+.sh-f { font-size: 13px; color: var(--ink-soft); }
+.sh-s { grid-row: 1 / 3; grid-column: 2; text-align: right; font: 800 20px/1.1 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.sh-s small { display: block; font: 500 13px/1.3 var(--font-ui); letter-spacing: 0; color: var(--ink-soft); }
+.sh.is-on { background: var(--ui-sel); }
+.sh.is-on:hover { background-color: var(--ui-sel); }
+
+/* ---------- 1440: setup becomes a rail beside the stage ---------- */
+@media (min-width: 900px) {
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; }
+  .art--wide { grid-column: 1 / -1; max-width: none; padding-inline: 32px; }
+  .art--wide .lbl, .art--wide .lbl-s { padding-inline: 0; }
+  .phone--setup { grid-template-columns: minmax(0, 1fr) 540px; grid-template-rows: auto 1fr; grid-template-areas: "photo head" "photo sheet"; min-height: 740px; }
+  .phone--setup .set-head { background: var(--ui-sheet); padding: 56px 40px 20px; }
+  .phone--setup .set-head .h1 { font-size: 44px; }
+  .phone--setup .set-head p { font-size: 17px; max-width: 36ch; }
+  .phone--setup .sheet { border-top: 0; padding-top: 4px; padding-bottom: 24px; }
+  .set-photo img { object-fit: contain; object-position: 50% 50%; }
+  .phone--setup .opt-h, .phone--setup .sw { padding-inline: 40px; }
+  .phone--setup .opt-d, .phone--setup .opt-b, .phone--setup .t3, .phone--setup .top3 h4, .phone--setup .links { padding-inline: 40px; }
+  .phone--setup .cta { width: calc(100% - 80px); margin-inline: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .br-halo { animation: none; }
+  button { transition: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></symbol>
+  <symbol id="i-corners" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+</svg>
+
+<header class="bar">
+  <h1 class="bar-t">Comp A: Field Guide Stage</h1>
+  <div class="gs" role="group" aria-label="Ground">
+    <button type="button" data-ground-set="bone" aria-pressed="true">Bone</button>
+    <button type="button" data-ground-set="white" aria-pressed="false">White</button>
+  </div>
+</header>
+
+<main class="board">
+
+<!-- 1 ============================================================ -->
+<section class="art art--wide" id="scr-setup-unposted" aria-label="Setup, weekly not posted">
+  <h2 class="lbl">1 Setup, weekly not posted</h2>
+  <p class="lbl-s">Stage: the anchor photo. The sheet holds the two ways in; the picked one opens in place.</p>
+  <div class="phone phone--setup">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week’s challenge and see where you land.</p>
+    </header>
+    <figure class="set-photo">
+      <img src="../../assets/anchors/04_moderate.jpg" width="520" height="791" alt="Ribeye cross section with moderate marbling">
+    </figure>
+    <div class="sheet">
+      <div class="opt is-on" role="radiogroup" aria-label="Session type">
+        <button type="button" class="opt-h" role="radio" aria-checked="true">
+          <span class="opt-t">Practice</span>
+          <span class="opt-m">10 pts each</span>
+          <svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>
+        </button>
+        <p class="opt-d">Community set, 10 carcasses</p>
+        <button type="button" class="sw" role="switch" aria-checked="false">
+          <span>Use my personal images instead</span>
+          <span class="sw-t" aria-hidden="true"><i></i></span>
+        </button>
+      </div>
+      <div class="opt" role="radiogroup" aria-label="Session type">
+        <button type="button" class="opt-h" role="radio" aria-checked="false">
+          <span class="opt-t">This week</span>
+          <span class="opt-m">Nov 16 to Nov 22</span>
+        </button>
+        <p class="opt-d">This week’s carcasses aren’t posted yet. Closes in 5d 7h, 0 graders.</p>
+      </div>
+      <button type="button" class="cta"><span>Start drill</span><span class="cta-s">10 carcasses <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></button>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ============================================================ -->
+<section class="art art--wide" id="scr-setup-posted" aria-label="Setup, weekly posted">
+  <h2 class="lbl">2 Setup, weekly posted</h2>
+  <p class="lbl-s">The weekly row opens in place and shows the top 3. Same stage, same sheet.</p>
+  <div class="phone phone--setup">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week’s challenge and see where you land.</p>
+    </header>
+    <figure class="set-photo">
+      <img src="../../assets/anchors/04_moderate.jpg" width="520" height="791" alt="Ribeye cross section with moderate marbling">
+    </figure>
+    <div class="sheet">
+      <div class="opt" role="radiogroup" aria-label="Session type">
+        <button type="button" class="opt-h" role="radio" aria-checked="false">
+          <span class="opt-t">Practice</span>
+          <span class="opt-m">Community set, 10 pts each</span>
+        </button>
+      </div>
+      <div class="opt is-on" role="radiogroup" aria-label="Session type">
+        <button type="button" class="opt-h" role="radio" aria-checked="true">
+          <span class="opt-t">This week</span>
+          <span class="opt-m">Nov 16 to Nov 22</span>
+          <svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>
+        </button>
+        <p class="opt-d">You haven’t taken this week’s challenge yet. Closes in 5d 7h, 41 graders.</p>
+        <div class="top3">
+          <h4>Top 3 so far, high school</h4>
+          <ol>
+            <li class="t3"><span class="num">1</span><span>Brooke T.</span><b>94%</b></li>
+            <li class="t3"><span class="num">2</span><span>Cole M.</span><b>91%</b></li>
+            <li class="t3"><span class="num">3</span><span>Ana R.</span><b>89%</b></li>
+          </ol>
+        </div>
+      </div>
+      <button type="button" class="cta"><span>Open the weekly challenge</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ============================================================ -->
+<section class="art" id="scr-key" aria-label="Fleece key entry">
+  <h2 class="lbl">3 Fleece key entry</h2>
+  <p class="lbl-s">Stage: the key list. The sheet edits the active field, then moves on.</p>
+  <div class="phone">
+    <div class="stage">
+      <header class="k-head">
+        <div class="k-top"><h3 class="h2">Session</h3><p class="mut">2 of 20 keyed</p></div>
+        <p class="k-sub">Set the official key. Only fleeces with a key are graded.</p>
+        <div class="prog" role="img" aria-label="2 of 20 fleeces keyed"><i></i></div>
+      </header>
+      <div class="k-fields">
+        <label class="fld"><span class="lab">Practice name</span><input type="text" value="Spring practice" autocomplete="off"></label>
+        <div>
+          <span class="lab">Number of fleeces</span>
+          <div class="step">
+            <button type="button" aria-label="Fewer fleeces"><svg class="ic" aria-hidden="true"><use href="#i-minus"/></svg></button>
+            <output>20</output>
+            <button type="button" aria-label="More fleeces"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div class="k-acts">
+        <button type="button" class="tbtn"><svg class="ic" aria-hidden="true"><use href="#i-corners"/></svg>Scan official key sheet</button>
+        <button type="button" class="tbtn tbtn--q">Clear key</button>
+      </div>
+      <p class="k-note"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Key loaded from the scan for 14 fleeces. Check every row, then fix anything the scan missed.</span></p>
+      <ol>
+        <li><button type="button" class="fl"><span class="num">1</span><span class="fl-v"><span>64s</span><span>Staple</span><span>71</span><span>Good</span><span>Average</span></span></button></li>
+        <li><button type="button" class="fl"><span class="num">2</span><span class="fl-v"><span>62s</span><span>Staple</span><span>68</span><span>Good</span><span>Good</span></span></button></li>
+        <li><button type="button" class="fl is-on" aria-current="true"><span class="num">3</span><span class="fl-v"><span class="cur">62s</span><span class="e">Length</span><span class="e">Yield</span><span class="e">Purity</span><span class="e">Character</span></span></button></li>
+      </ol>
+      <p class="k-more">17 more fleeces below</p>
+    </div>
+    <div class="sheet">
+      <div class="tabs" role="tablist" aria-label="Fleece 3 fields">
+        <button type="button" role="tab" aria-selected="true">Grade</button>
+        <button type="button" role="tab" aria-selected="false">Length</button>
+        <button type="button" role="tab" aria-selected="false">Yield</button>
+        <button type="button" role="tab" aria-selected="false">Purity</button>
+        <button type="button" role="tab" aria-selected="false">Character</button>
+      </div>
+      <div class="pick pick-fade" role="radiogroup" aria-label="Grade for fleece 3">
+        <button type="button" class="pk" role="radio" aria-checked="false"><span class="pk-v">70s</span><span class="pk-d">20.59 µ or finer</span></button>
+        <button type="button" class="pk" role="radio" aria-checked="false"><span class="pk-v">64s</span><span class="pk-d">20.60 to 22.04 µ</span><span class="pk-m">Fleece 1</span></button>
+        <button type="button" class="pk is-on" role="radio" aria-checked="true"><span class="pk-v">62s</span><span class="pk-d">22.05 to 23.49 µ</span><span class="pk-m">Fleece 2<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+        <button type="button" class="pk" role="radio" aria-checked="false"><span class="pk-v">60s</span><span class="pk-d">23.50 to 24.94 µ</span></button>
+        <button type="button" class="pk" role="radio" aria-checked="false"><span class="pk-v">58s</span><span class="pk-d">24.95 to 26.39 µ</span></button>
+        <button type="button" class="pk" role="radio" aria-checked="false"><span class="pk-v">56s</span><span class="pk-d">26.40 to 27.84 µ</span></button>
+      </div>
+      <button type="button" class="cta"><span>Next, Length</span><span class="cta-s">Fleece 3 of 20 <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ============================================================ -->
+<section class="art" id="scr-scan" aria-label="Scan">
+  <h2 class="lbl">4 Scan</h2>
+  <p class="lbl-s">Stage: the viewfinder. The stack and the shutter sit on the sheet.</p>
+  <div class="phone">
+    <div class="vf">
+      <img class="vf-img" src="../../../fleece-grader/assets/blank-sheet.jpg" width="1864" height="2576" alt="Camera view of a wool grading sheet lying on a table">
+      <svg class="vf-ov" viewBox="0 0 1447 2000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <polygon class="vf-poly" points="228,462 1138,456 1150,1705 210,1703"/>
+        <path class="br-halo" d="M228 540V462H306M1060 456H1138V534M1150 1627V1705H1072M288 1703H210V1625"/>
+        <path class="br" d="M228 540V462H306M1060 456H1138V534M1150 1627V1705H1072M288 1703H210V1625"/>
+      </svg>
+      <div class="vf-top">
+        <p class="vf-tag"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Table found, hold steady</p>
+        <p class="vf-tag">3 in stack</p>
+      </div>
+      <p class="vf-hint">One photo per sheet, flat, with the whole table in frame.</p>
+    </div>
+    <div class="sheet">
+      <div class="stack" role="list" aria-label="Scan stack">
+        <button type="button" class="stk" role="listitem" aria-label="Student 1"><img src="../../../fleece-grader/assets/blank-sheet.jpg" alt=""><b>1</b></button>
+        <button type="button" class="stk" role="listitem" aria-label="Student 2"><img src="../../../fleece-grader/assets/blank-sheet.jpg" alt=""><b>2</b></button>
+        <button type="button" class="stk is-on" role="listitem" aria-label="Student 3, selected"><img src="../../../fleece-grader/assets/blank-sheet.jpg" alt=""><b>3</b></button>
+      </div>
+      <div class="s-info">
+        <label class="fld"><span class="lab">Student name</span><input type="text" value="Student 3" autocomplete="off"></label>
+        <p class="s-st"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Read. 2 to confirm, 1 grading check.</p>
+      </div>
+      <div class="s-acts">
+        <button type="button" class="tbtn tbtn--q">Adjust corners</button>
+        <button type="button" class="tbtn tbtn--q">Remove</button>
+        <button type="button" class="tbtn go">Review<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </div>
+      <div class="cap">
+        <button type="button" class="tbtn tbtn--q"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg>Upload photos</button>
+        <button type="button" class="shutter" aria-label="Take photo"><span></span></button>
+        <span class="sp" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 ============================================================ -->
+<section class="art" id="scr-review" aria-label="Review">
+  <h2 class="lbl">5 Review, official key on the photo</h2>
+  <p class="lbl-s">Dot: scan read. Ring: official key. Amber: needs a look, tap it to fix.</p>
+  <div class="phone">
+    <div class="stage">
+      <header class="rv-head">
+        <div><h3 class="h2">Review</h3><p class="mut">364 / 400. 2 to confirm, 1 grading check.</p></div>
+        <button type="button" class="rv-sel" aria-label="Sheet: Student 3">Student 3<svg class="ic" aria-hidden="true"><use href="#i-down"/></svg></button>
+      </header>
+      <div class="rv-bar">
+        <button type="button" class="sw" role="switch" aria-checked="false"><span class="sw-t" aria-hidden="true"><i></i></span><span>Show flagged only</span></button>
+        <button type="button" class="tbtn">Results<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </div>
+      <svg class="ph" viewBox="232 692 393 413" role="img" aria-label="Fleeces 1 to 8 on the sheet. Fleece 3 and 6 grade marks differ from the official key. Fleece 4 grade is unsure.">
+        <image href="../../../fleece-grader/assets/blank-sheet.jpg" x="0" y="0" width="1447" height="2000" preserveAspectRatio="none"/>
+        <rect class="ph-band" x="232" y="847.3" width="393" height="49.7"/>
+        <g class="ph-row" data-row="1"><ellipse class="ph-ring ph-ring--ok" cx="315.7" cy="723.0" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="315.7" cy="723.0" rx="8.5" ry="6.6"/><ellipse class="ph-ring ph-ring--len" cx="552.0" cy="723.0" rx="12" ry="10"/><ellipse class="ph-dot" cx="552.0" cy="723.0" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="2"><ellipse class="ph-ring ph-ring--ok" cx="338.5" cy="772.7" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="338.5" cy="772.7" rx="8.5" ry="6.6"/><ellipse class="ph-ring ph-ring--len" cx="551.1" cy="772.7" rx="12" ry="10"/><ellipse class="ph-dot" cx="551.1" cy="772.7" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="3"><ellipse class="ph-ring ph-ring--key" cx="385.0" cy="822.4" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="361.3" cy="822.4" rx="8.5" ry="6.6"/><g class="ph-tag ph-tag--warn"><rect x="358.0" y="787.4" width="54" height="18"/><text x="385.0" y="800.4">key 58s</text></g><ellipse class="ph-ring ph-ring--len" cx="574.2" cy="822.4" rx="12" ry="10"/><ellipse class="ph-dot" cx="574.2" cy="822.4" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="4"><ellipse class="ph-ring ph-ring--key" cx="384.1" cy="872.1" rx="13" ry="10.5"/><ellipse class="ph-unsure" cx="360.4" cy="872.1" rx="9.5" ry="7.6"/><ellipse class="ph-unsure" cx="384.1" cy="872.1" rx="9.5" ry="7.6"/><g class="ph-tag ph-tag--warn"><rect x="306.7" y="837.1" width="112" height="18"/><text x="362.7" y="850.1">Unsure, tap to fix</text></g><ellipse class="ph-ring ph-ring--len" cx="549.3" cy="872.1" rx="12" ry="10"/><ellipse class="ph-dot" cx="549.3" cy="872.1" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="5"><ellipse class="ph-ring ph-ring--ok" cx="288.4" cy="921.8" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="288.4" cy="921.8" rx="8.5" ry="6.6"/><ellipse class="ph-ring ph-ring--len" cx="548.4" cy="921.8" rx="12" ry="10"/><ellipse class="ph-dot" cx="548.4" cy="921.8" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="6"><ellipse class="ph-ring ph-ring--key" cx="429.7" cy="971.5" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="406.0" cy="971.5" rx="8.5" ry="6.6"/><g class="ph-tag ph-tag--warn"><rect x="402.7" y="936.5" width="54" height="18"/><text x="429.7" y="949.5">key 54s</text></g><ellipse class="ph-ring ph-ring--len" cx="547.5" cy="971.5" rx="12" ry="10"/><ellipse class="ph-dot" cx="547.5" cy="971.5" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="7"><ellipse class="ph-ring ph-ring--ok" cx="334.0" cy="1021.2" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="334.0" cy="1021.2" rx="8.5" ry="6.6"/><ellipse class="ph-ring ph-ring--len" cx="546.6" cy="1021.2" rx="12" ry="10"/><ellipse class="ph-dot" cx="546.6" cy="1021.2" rx="8" ry="6.2"/></g>
+        <g class="ph-row" data-row="8"><ellipse class="ph-ring ph-ring--ok" cx="356.8" cy="1070.9" rx="13" ry="10.5"/><ellipse class="ph-dot" cx="356.8" cy="1070.9" rx="8.5" ry="6.6"/><ellipse class="ph-ring ph-ring--len" cx="593.7" cy="1070.9" rx="12" ry="10"/><ellipse class="ph-dot" cx="593.7" cy="1070.9" rx="8" ry="6.2"/></g>
+      </svg>
+      <div class="legend" aria-hidden="true">
+        <span><svg viewBox="0 0 18 14"><ellipse class="lg-dot" cx="9" cy="7" rx="7" ry="5"/></svg>Scan read</span>
+        <span><svg viewBox="0 0 18 14"><ellipse class="lg-key" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Official key</span>
+        <span><svg viewBox="0 0 18 14"><rect class="lg-warn" x="1" y="2" width="16" height="10"/></svg>Needs a look</span>
+      </div>
+    </div>
+    <div class="sheet">
+      <div class="ed-h"><b>Fleece 4, Grade</b><span>Two marks read</span></div>
+      <div role="radiogroup" aria-label="Correct Grade for fleece 4">
+        <button type="button" class="pk pk--b is-on" role="radio" aria-checked="true"><span class="pk-v">60s</span><span class="pk-m pk-m--w">-2 points<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+        <button type="button" class="pk pk--b is-key" role="radio" aria-checked="false"><span class="pk-v">58s</span><span class="pk-m">Official key, 0 points<svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></span></button>
+        <button type="button" class="pk pk--b" role="radio" aria-checked="false"><span class="pk-v">Blank</span></button>
+      </div>
+      <button type="button" class="cta"><span>Confirm, next flag</span><span class="cta-s">2 of 3 <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ============================================================ -->
+<section class="art" id="scr-results" aria-label="Results">
+  <h2 class="lbl">6 Results</h2>
+  <p class="lbl-s">Stage: the ground. One number, then the sheets.</p>
+  <div class="phone">
+    <div class="stage">
+      <div class="res-stage">
+        <p class="who">Spring practice, 20 fleeces keyed. Student 3</p>
+        <p class="big num">364<small> / 400</small></p>
+        <p class="offs">36 points off</p>
+        <p class="bars-l"><span>Points off, fleece 1 to 20</span><span>Most off: 6</span></p>
+        <div class="bars" role="img" aria-label="Points off by fleece. Fleeces 6, 16 and 20 lost 6 points each.">
+          <i style="--off: 0"></i><i style="--off: 2"></i><i style="--off: 0"></i><i style="--off: 4"></i><i style="--off: 0"></i><i style="--off: 6"></i><i style="--off: 0"></i><i style="--off: 0"></i><i style="--off: 2"></i><i style="--off: 0"></i><i style="--off: 4"></i><i style="--off: 0"></i><i style="--off: 2"></i><i style="--off: 0"></i><i style="--off: 0"></i><i style="--off: 6"></i><i style="--off: 2"></i><i style="--off: 0"></i><i style="--off: 2"></i><i style="--off: 6"></i>
+        </div>
+      </div>
+      <button type="button" class="nt"><span class="nt-r"><span>2 answers still need confirming in Review. Unconfirmed reads count as blank.</span><b>Review</b></span></button>
+      <p class="nt">1 field where the grader slash disagrees with the key.</p>
+    </div>
+    <div class="sheet">
+      <p class="rs-h">All sheets</p>
+      <ol>
+        <li><button type="button" class="sh"><span class="sh-n">Student 1</span><span class="sh-f">Flags: none</span><span class="sh-s">372 / 400<small>28 off</small></span></button></li>
+        <li><button type="button" class="sh"><span class="sh-n">Student 2</span><span class="sh-f">Flags: 1 check</span><span class="sh-s">348 / 400<small>52 off</small></span></button></li>
+        <li><button type="button" class="sh is-on" aria-current="true"><span class="sh-n">Student 3</span><span class="sh-f">Flags: 2 confirm, 1 check</span><span class="sh-s">364 / 400<small>36 off</small></span></button></li>
+      </ol>
+      <button type="button" class="cta"><span>Download CSV</span><span class="cta-s">3 sheets <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('[data-ground-set]');
+  function sync() {
+    var g = root.getAttribute('data-ground');
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-ground-set') === g)); });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var g = b.getAttribute('data-ground-set');
+      root.setAttribute('data-ground', g);
+      try { localStorage.setItem('bg-v3-ground', g); } catch (e) {}
+      sync();
+    });
+  });
+  sync();
+})();
+</script>
+</body>
+</html>
