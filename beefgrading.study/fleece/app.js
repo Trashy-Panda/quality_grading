@@ -26,6 +26,7 @@ const S = {
   sheets: [], cornerId: null, reviewId: null, resultId: null,
   edit: null, onlyFlags: false, nextId: 1,
   kRow: 0, kField: 'grade', adjust: false, detail: false,
+  all: { purity: 0, character: 1 }, svZoom: null,
 };
 
 // ---------- helpers ----------
@@ -210,6 +211,7 @@ function keySheetHtml() {
 function updateKeyMeta() {
   const c = keyedCount(), n = S.n;
   const cnt = $('key-count'); if (cnt) cnt.textContent = `${c} of ${n} keyed`;
+  updateSetAll();
   const p = $('key-prog'); if (p) { p.setAttribute('aria-label', `${c} of ${n} fleeces keyed`); p.firstElementChild.style.transform = `scaleX(${n ? c / n : 0})`; }
 }
 function renderKeySheet() {
@@ -242,6 +244,32 @@ function setKeyActive(row, field, scroll) {
   refreshKeyRow(row, true);
   if (scroll) { const li = document.querySelector(`[data-keyrow="${row}"]`); scrollTo(li && li.firstElementChild, 'nearest'); }
 }
+// "Set all": one purity and one character for every blank cell, then edit the exceptions.
+function setAllHtml() {
+  const seg = (f) => `<div class="seg" role="group" aria-label="${FIELD_NAMES[f]} for all fleeces">${LONG[f].map((l, v) => `<button type="button" data-act="all-pick" data-field="${f}" data-val="${v}" aria-pressed="${S.all[f] === v}">${escapeHtml(l)}</button>`).join('')}</div>`;
+  return `<section class="k-all" aria-labelledby="k-all-t">
+    <h3 class="lab" id="k-all-t">Set all fleeces</h3>
+    <div class="k-all-r"><span class="k-all-l">Purity</span>${seg('purity')}</div>
+    <div class="k-all-r"><span class="k-all-l">Character</span>${seg('character')}</div>
+    <div class="k-all-a"><button type="button" class="k-all-go" id="k-all-go" data-act="all-apply"></button><p id="k-all-note">Fills blanks only. Values you already set stay.</p></div></section>`;
+}
+function blankAllCount() { let c = 0; for (let i = 0; i < S.n; i++) if (S.key[i].purity == null || S.key[i].character == null) c++; return c; }
+function updateSetAll() {
+  const b = $('k-all-go'); if (!b) return;
+  const c = blankAllCount();
+  b.disabled = c === 0;
+  b.textContent = c === 0 ? 'Nothing blank to fill' : c === S.n ? `Apply to all ${S.n}` : `Apply to ${c} with blanks`;
+}
+function applySetAll() {
+  let n = 0;
+  for (let i = 0; i < S.n; i++) {
+    const k = S.key[i]; let hit = false;
+    for (const f of ['purity', 'character']) if (k[f] == null) { k[f] = S.all[f]; hit = true; }
+    if (hit) { n++; refreshKeyRow(i, false); }
+  }
+  save(); renderKeySheet(); updateSetAll();
+  toast(n ? `Set Purity ${LONG.purity[S.all.purity]} and Character ${LONG.character[S.all.character]} on ${plural(n, 'fleece')}.` : 'Nothing was blank, so nothing changed.');
+}
 function renderSession() {
   const v = $('view-session');
   v.innerHTML = `
@@ -265,6 +293,7 @@ function renderSession() {
         <button type="button" class="tbtn tbtn--q" data-act="clear-key">Clear key</button>
       </div>
       <div id="key-notice"></div>
+      ${setAllHtml()}
       <ol id="keyrows" class="k-list"></ol>
     </div>
     <div class="sheet" id="key-sheet"></div>`;
@@ -442,7 +471,7 @@ async function reread(sh) {
   try {
     const res = await readSheetWithCorners(sh.src, sh.corners, { marginCrops: true });
     if (res.ok) {
-      sh.res = res; sh.photoUrl = null; sh.err = null; sh.warnings = res.warnings || [];
+      sh.res = res; sh.photoUrl = null; sh.sheetUrl = null; sh.err = null; sh.warnings = res.warnings || [];
       S.adjust = false;
       toast('Re-read done.');
     }
@@ -537,6 +566,15 @@ function keyIdx(r, gname) {
   if (gname === 'yieldTens' || gname === 'yieldOnes') return Number.isInteger(k.yield) ? (gname === 'yieldTens' ? Math.floor(k.yield / 10) : k.yield % 10) : null;
   return Number.isInteger(k[gname]) ? k[gname] : null;
 }
+function markShapes(sh, r, gn, f, bs) {
+  const rd = readOf(sh, r, gn), fi = fieldInfo(sh, r, f), si = effIdx(sh, r, gn), ki = keyIdx(r, gn);
+  const el = (cls, b, pad, k = 1) => `<ellipse class="${cls}" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx * k + pad).toFixed(1)}" ry="${(b.ry * k + pad).toFixed(1)}"/>`;
+  let out = '';
+  if (ki != null && bs[ki]) out += el(ki === si ? 'ph-ring ph-ring--ok' : 'ph-ring ph-ring--key', bs[ki], 4);
+  if (si != null && bs[si]) out += el('ph-dot', bs[si], 0, 0.7);
+  if (rd && !fi.confirmed && rd.status !== 'ok' && fi.keyed) rd.fill.forEach((x, n) => { if (x >= 0.3 && bs[n]) out += el('ph-unsure', bs[n], 2); });
+  return out;
+}
 function photoHtml(sh) {
   const res = sh.res, g = res.geometry, vw = res.view;
   let row = 0, field = 'grade';
@@ -568,17 +606,8 @@ function photoHtml(sh) {
     for (const [gn, f] of GROUPS) {
       const bs = g[r][gn];
       if (!bs.length || !bs.some(inX)) continue;
-      const rd = readOf(sh, r, gn), fi = fieldInfo(sh, r, f);
-      const si = effIdx(sh, r, gn), ki = keyIdx(r, gn);
-      if (ki != null && bs[ki]) {
-        const b = bs[ki];
-        if (ki === si) shapes += `<ellipse class="ph-ring ph-ring--ok" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx + 4).toFixed(1)}" ry="${(b.ry + 4).toFixed(1)}"/>`;
-        else shapes += `<ellipse class="ph-ring ph-ring--key" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx + 4).toFixed(1)}" ry="${(b.ry + 4).toFixed(1)}"/>`;
-      }
-      if (si != null && bs[si]) { const b = bs[si]; shapes += `<ellipse class="ph-dot" cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="${(b.rx * 0.7).toFixed(1)}" ry="${(b.ry * 0.7).toFixed(1)}"/>`; }
-      if (rd && !fi.confirmed && rd.status !== 'ok' && fi.keyed) {
-        rd.fill.forEach((x, n) => { if (x >= 0.3 && bs[n]) shapes += `<ellipse class="ph-unsure" cx="${bs[n].x.toFixed(1)}" cy="${bs[n].y.toFixed(1)}" rx="${(bs[n].rx + 2).toFixed(1)}" ry="${(bs[n].ry + 2).toFixed(1)}"/>`; });
-      }
+      const fi = fieldInfo(sh, r, f), ki = keyIdx(r, gn);
+      shapes += markShapes(sh, r, gn, f, bs);
       const fs = fieldsSeen[f] = fieldsSeen[f] || { fi, xs: [], ymin: Infinity, ki: [], si: [], bs: [] };
       for (const b of bs) if (inX(b)) { fs.xs.push(b.x); fs.ymin = Math.min(fs.ymin, b.y - b.ry); }
       if (ki != null && bs[ki]) fs.ki.push(bs[ki]);
@@ -594,7 +623,7 @@ function photoHtml(sh) {
   }
   const where = zone === 'A' ? 'grade and length' : zone === 'B' ? 'yield' : 'yield ones, purity and character';
   const cap = `Fleeces ${r0 + 1} to ${r1 + 1}, ${where}`;
-  return { html: `<div id="ovslot" class="ph" style="--ar:${(w / h).toFixed(4)}" role="group" aria-label="Scan photo. ${escapeHtml(cap)}"><svg viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${html}${nums}${tags}</div>`, cap };
+  return { html: `<div id="ovslot" class="ph" style="--ar:${(w / h).toFixed(4)}" role="group" aria-label="Scan photo. ${escapeHtml(cap)}"><svg viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${html}${nums}${tags}<button type="button" class="ph-full" data-act="sheet-view">${ic('corners')}Whole sheet</button></div>`, cap };
 }
 const legendHtml = (cap) => `<div class="legend" aria-hidden="true">
   <span class="lg-cap">${escapeHtml(cap)}</span>
@@ -602,6 +631,66 @@ const legendHtml = (cap) => `<div class="legend" aria-hidden="true">
   <span><svg viewBox="0 0 18 14"><ellipse class="lg-key" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Official key</span>
   <span><svg viewBox="0 0 18 14"><ellipse class="lg-ok" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Matches key</span>
   <span><svg viewBox="0 0 18 14"><rect class="lg-warn" x="1" y="2" width="16" height="10" rx="2"/></svg>Needs a look</span></div>`;
+// The whole scanned page with every read mark on it, in a full-screen view you can zoom and pan.
+const ZOOMS = [1, 1.6, 2.5, 4];
+function sheetUrl(sh) {
+  if (!sh.sheetUrl) sh.sheetUrl = sh.res.warpedCanvas.toDataURL('image/jpeg', 0.8);
+  return sh.sheetUrl;
+}
+function sheetViewHtml(sh) {
+  const g = sh.res.geometry, W = sh.res.warpedCanvas.width, H = sh.res.warpedCanvas.height;
+  const rowY = (r) => { let s = 0, n = 0; for (const gn of ['grade', 'length', 'purity', 'character']) for (const b of g[r][gn]) { s += b.y; n++; } return s / n; };
+  const pitch = (rowY(19) - rowY(0)) / 19;
+  let shapes = `<image href="${escapeHtml(sheetUrl(sh))}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/>`, flags = '', nflag = 0;
+  for (let r = 0; r < 20; r++) {
+    if (S.edit && S.edit.row === r) shapes += `<rect class="ph-band" x="0" y="${(rowY(r) - 0.5 * pitch).toFixed(1)}" width="${W}" height="${pitch.toFixed(1)}"/>`;
+    const box = {};
+    for (const [gn, f] of GROUPS) {
+      const bs = g[r][gn]; if (!bs.length) continue;
+      shapes += markShapes(sh, r, gn, f, bs);
+      const q = box[f] = box[f] || [Infinity, Infinity, -Infinity, -Infinity];
+      for (const b of bs) { q[0] = Math.min(q[0], b.x - b.rx); q[1] = Math.min(q[1], b.y - b.ry); q[2] = Math.max(q[2], b.x + b.rx); q[3] = Math.max(q[3], b.y + b.ry); }
+    }
+    for (const f of Object.keys(box)) {
+      const fi = fieldInfo(sh, r, f); if (!fi.need && !fi.audit) continue;
+      const q = box[f], pad = 5; nflag++;
+      const why = fi.need ? (fi.status === 'blank' ? 'blank' : 'unsure') : 'slash differs';
+      flags += `<button type="button" class="sv-flag" data-act="sv-edit" data-row="${r}" data-field="${f}" aria-label="Fleece ${r + 1} ${escapeHtml(FIELD_NAMES[f])}, ${why}. Fix it" style="left:${((q[0] - pad) / W * 100).toFixed(3)}%;top:${((q[1] - pad) / H * 100).toFixed(3)}%;width:${((q[2] - q[0] + 2 * pad) / W * 100).toFixed(3)}%;height:${((q[3] - q[1] + 2 * pad) / H * 100).toFixed(3)}%"></button>`;
+    }
+  }
+  const z = ZOOMS[S.svZoom];
+  const hint = nflag ? `${plural(nflag, 'mark')} to check. Tap an amber box to fix it.` : 'Every mark read cleanly.';
+  return `<div class="sv-bar"><div class="sv-h"><h2 class="sv-t" id="sv-t">Whole sheet</h2><p class="mut">${escapeHtml(sh.name)}. ${hint}</p></div>
+    <div class="sv-z" role="group" aria-label="Zoom"><button type="button" data-act="sv-zoom" data-d="-1" aria-label="Zoom out"${S.svZoom === 0 ? ' disabled' : ''}>${ic('minus')}</button><button type="button" data-act="sv-zoom" data-d="1" aria-label="Zoom in"${S.svZoom === ZOOMS.length - 1 ? ' disabled' : ''}>${ic('plus')}</button></div>
+    <button type="button" class="sv-x" data-act="sv-close" aria-label="Close whole sheet">${ic('x')}</button></div>
+    <div class="sv-scroll" id="sv-scroll" tabindex="0" role="group" aria-label="Scanned sheet with read marks. Scroll to pan."><div class="sv-pan" id="sv-pan" style="--ar:${(W / H).toFixed(4)};--z:${z}"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${flags}</div></div>
+    ${legendHtml('Dot is what the scan read')}`;
+}
+function openSheetView() {
+  const sh = sheetById(S.reviewId), dlg = $('sv'); if (!sh || !sh.res || !dlg) return;
+  if (!Number.isInteger(S.svZoom)) S.svZoom = wideMq.matches ? 0 : 1;
+  dlg.innerHTML = sheetViewHtml(sh);
+  if (!dlg.open) dlg.showModal();
+  const sc = $('sv-scroll'), pan = $('sv-pan');
+  if (S.edit && S.edit.row < S.n && sc && pan) {
+    const y = (S.edit.row + 0.5) / 20 * pan.offsetHeight;
+    sc.scrollTop = Math.max(0, y - sc.clientHeight / 2);
+  }
+}
+function svZoom(d) {
+  const sc = $('sv-scroll'), pan = $('sv-pan'); if (!sc || !pan) return;
+  const next = Math.max(0, Math.min(ZOOMS.length - 1, S.svZoom + d)); if (next === S.svZoom) return;
+  const fx = (sc.scrollLeft + sc.clientWidth / 2) / sc.scrollWidth, fy = (sc.scrollTop + sc.clientHeight / 2) / sc.scrollHeight;
+  S.svZoom = next; pan.style.setProperty('--z', ZOOMS[next]);
+  sc.scrollLeft = fx * sc.scrollWidth - sc.clientWidth / 2; sc.scrollTop = fy * sc.scrollHeight - sc.clientHeight / 2;
+  document.querySelectorAll('#sv [data-act="sv-zoom"]').forEach((b) => { b.disabled = (Number(b.dataset.d) < 0 && next === 0) || (Number(b.dataset.d) > 0 && next === ZOOMS.length - 1); });
+}
+function onSheetViewClick(e) {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  if (t.dataset.act === 'sv-close') $('sv').close();
+  else if (t.dataset.act === 'sv-zoom') svZoom(Number(t.dataset.d));
+  else if (t.dataset.act === 'sv-edit') { S.edit = { row: Number(t.dataset.row), field: t.dataset.field }; $('sv').close(); rerender(); focusPhoto(); }
+}
 function renderReview() {
   const v = $('view-review'); v.className = 'view';
   if (!S.sheets.length) { v.innerHTML = emptyView('Review', 'No sheets scanned yet.', 'Scan a sheet', 'goto-scan'); return; }
@@ -734,6 +823,8 @@ function onClick(e) {
       const k = S.key[row], first = ORDER.find((x) => k[x] == null);
       setKeyActive(row, row === S.kRow ? S.kField : (first || 'grade'), true); break;
     }
+    case 'all-pick': S.all[f] = Number(t.dataset.val); t.parentElement.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === t))); break;
+    case 'all-apply': applySetAll(); break;
     case 'key-tab': setKeyActive(row, f, false); break;
     case 'key-next': {
       const fi = ORDER.indexOf(S.kField);
@@ -793,6 +884,7 @@ function onClick(e) {
       } else setCorr(sh, row, field, t.dataset.val === 'blank' ? null : Number(t.dataset.val));
       S.edit = { row, field }; save(); rerender(); break;
     }
+    case 'sheet-view': openSheetView(); break;
     case 'toggle-detail': S.detail = !S.detail; rerender(); break;
     default: break;
   }
@@ -873,6 +965,7 @@ function init() {
     if (t.id === 's-n') setN(t.value);
     else if (t.id === 'rv-sel') { const sh = sheetById(Number(t.value)); S.reviewId = Number(t.value); S.edit = sh && sh.res ? firstFlag(sh) : null; rerender(); }
   });
+  $('sv').addEventListener('click', onSheetViewClick);
   wideMq.addEventListener('change', () => { if (S.tab === 'review') rerender(); });
   setTab('session');
   setupInstall();

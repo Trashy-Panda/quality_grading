@@ -3,7 +3,7 @@
 // EVERY FLEECE RELEASE MUST BUMP `VERSION`. Files are served cache-first, so a changed
 // file under the same version is never picked up by phones that already installed the app.
 // Bumping the version installs a fresh cache and deletes the old one on activate.
-const VERSION = 'fleece-v1';
+const VERSION = 'fleece-v2';
 
 const PRECACHE = [
   './',
