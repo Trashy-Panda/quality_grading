@@ -755,6 +755,43 @@ function _setupHomeVisible() {
   return !!(home && !home.classList.contains('hidden'));
 }
 
+// Which panel the bottom sheet starts. The week is picked for the user once,
+// when it is posted, unless they already chose.
+let _setupPickedByUser = false;
+let _setupAutoPicked = false;
+
+function syncSetupDock() {
+  const home = document.getElementById('home-screen');
+  const t = document.getElementById('su-dock-title');
+  const sub = document.getElementById('su-dock-sub');
+  if (!home || !t || !sub) return;
+  if (home.dataset.pick === 'weekly') {
+    const g = (document.getElementById('setup-weekly-graders') || {}).textContent || '';
+    const cd = (document.getElementById('setup-weekly-countdown') || {}).textContent || '';
+    t.textContent = 'This week';
+    sub.textContent = (/^[1-9]/.test(g))
+      ? g + (g === '1' ? ' grader' : ' graders')
+      : (cd.trim() ? 'Closes in ' + cd.trim() : '');
+  } else {
+    t.textContent = 'Practice';
+    sub.textContent = ((document.getElementById('community-set-sub') || {}).textContent || '').trim();
+  }
+}
+
+function setSetupPick(pick, auto) {
+  const home = document.getElementById('home-screen');
+  if (!home) return;
+  if (auto) { if (_setupPickedByUser) return; } else { _setupPickedByUser = true; }
+  home.dataset.pick = pick;
+  document.querySelectorAll('#home-screen .su-pick').forEach((b) => {
+    const on = b.dataset.pick === pick;
+    b.setAttribute('aria-pressed', String(on));
+    const panel = b.closest('.su-panel');
+    if (panel) panel.classList.toggle('is-on', on);
+  });
+  syncSetupDock();
+}
+
 async function renderSetupWeekly() {
   const weekEl = document.getElementById('setup-weekly-week');
   const cdEl = document.getElementById('setup-weekly-countdown');
@@ -797,6 +834,7 @@ async function renderSetupWeekly() {
 
   const entries = wkBuildEntries(docs);
   if (gradersEl) gradersEl.textContent = String(entries.length) + (entries.length >= 100 ? '+' : '');
+  syncSetupDock();
 
   if (entries.length === 0) {
     setList('No scores yet this week.');
@@ -832,6 +870,11 @@ async function renderSetupWeekly() {
   if (statusEl) statusEl.textContent = state.status;
   const panel = document.getElementById('setup-weekly');
   if (panel) panel.dataset.state = state.key;
+  if (!_setupAutoPicked && (state.key === 'signedout' || state.key === 'nottaken' || state.key === 'submitted')) {
+    _setupAutoPicked = true;
+    setSetupPick('weekly', true);
+  }
+  syncSetupDock();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -848,7 +891,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!_setupHomeVisible()) return;
     const cdEl = document.getElementById('setup-weekly-countdown');
     if (cdEl) cdEl.textContent = formatCountdown(getWeekBounds().end.getTime() - Date.now());
+    syncSetupDock();
   }, 1000);
+
+  document.querySelectorAll('#home-screen .su-pick').forEach((b) => {
+    b.addEventListener('click', () => setSetupPick(b.dataset.pick, false));
+  });
+  const setSubEl = document.getElementById('community-set-sub');
+  if (setSubEl) new MutationObserver(syncSetupDock).observe(setSubEl, { childList: true, characterData: true, subtree: true });
 
   // Re-run whenever the screen becomes visible (hidden -> shown)
   const home = document.getElementById('home-screen');

@@ -283,10 +283,15 @@
     </div>
   </nav>
 
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
+
   <!-- ===================================================
        HOME SCREEN
        =================================================== -->
-  <main id="home-screen" class="screen hidden">
+  <main id="home-screen" class="screen hidden" data-pick="practice">
 
 
     <div class="su-page">
@@ -297,38 +302,28 @@
 
       <div class="su-grid">
         <!-- Practice -->
-        <section class="su-panel su-practice" id="practice-carcasses-card" aria-labelledby="setup-practice-title">
-          <div class="su-panel-h"><h2 id="setup-practice-title">Practice</h2></div>
-          <div class="su-readout">
-            <div class="su-ro-cell"><span class="su-ro-k">Session</span><span class="su-ro-v su-ro-v--text" id="community-set-sub">Loading&hellip;</span></div>
-            <div class="su-ro-cell"><span class="su-ro-k">Scoring</span><span class="su-ro-v num">10 pts each</span></div>
-          </div>
+        <section class="su-panel su-practice is-on" id="practice-carcasses-card" aria-labelledby="setup-practice-title">
+          <h2 class="su-panel-h" id="setup-practice-title"><button type="button" class="su-pick" data-pick="practice" aria-pressed="true"><span class="su-pick-t">Practice</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></h2>
+          <dl class="su-kvs">
+            <div class="su-kv"><dt>Session</dt><dd id="community-set-sub">Loading&hellip;</dd></div>
+            <div class="su-kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
           <label class="custom-set-toggle su-toggle">
-            <input type="checkbox" id="use-custom-set-toggle" />
             <span>Use my personal images instead</span>
+            <input type="checkbox" id="use-custom-set-toggle" role="switch" />
           </label>
-          <div class="su-foot">
-            <button id="start-btn" class="wk-btn wk-btn--primary">Start drill</button>
-            <p id="start-error" class="submit-error hidden" role="alert"></p>
-          </div>
         </section>
 
         <!-- This week -->
         <section class="su-panel su-weekly" id="setup-weekly" aria-labelledby="setup-weekly-title">
-          <div class="su-panel-h">
-            <h2 id="setup-weekly-title">This week</h2>
-            <span class="su-note" id="setup-weekly-week">&nbsp;</span>
-          </div>
-          <div class="su-readout">
-            <div class="su-ro-cell"><span class="su-ro-k">Closes in</span><span class="su-ro-v num" id="setup-weekly-countdown">&nbsp;</span></div>
-            <div class="su-ro-cell"><span class="su-ro-k">Graders</span><span class="su-ro-v num" id="setup-weekly-graders">-</span></div>
-          </div>
+          <h2 class="su-panel-h" id="setup-weekly-title"><button type="button" class="su-pick" data-pick="weekly" aria-pressed="false"><span class="su-pick-t">This week</span><span class="su-pick-m" id="setup-weekly-week">&nbsp;</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></h2>
+          <dl class="su-kvs">
+            <div class="su-kv"><dt>Closes in</dt><dd class="num" id="setup-weekly-countdown">&nbsp;</dd></div>
+            <div class="su-kv"><dt>Graders</dt><dd class="num" id="setup-weekly-graders">-</dd></div>
+          </dl>
           <p class="su-status" id="setup-weekly-status" aria-live="polite"></p>
           <h3 class="su-top3-h" id="setup-weekly-sub">Top 3 so far</h3>
           <ol class="su-top3" id="setup-weekly-top3"><li class="su-top3-empty">Loading&hellip;</li></ol>
-          <div class="su-foot">
-            <button type="button" id="setup-weekly-open-btn" class="wk-btn wk-btn--secondary">Open the weekly challenge</button>
-          </div>
         </section>
       </div>
 
@@ -339,6 +334,15 @@
       </div>
     </div>
 
+    <!-- Sheet: starts whichever panel is picked -->
+    <div class="su-dock">
+      <div class="su-dock-in">
+        <p id="start-error" class="submit-error hidden" role="alert"></p>
+        <p class="su-dk-s"><span class="su-dk-t" id="su-dock-title">Practice</span><span id="su-dock-sub">&nbsp;</span></p>
+        <button id="start-btn" class="wk-btn wk-btn--primary su-go"><span>Start drill</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+        <button type="button" id="setup-weekly-open-btn" class="wk-btn wk-btn--primary su-go"><span>Open the weekly challenge</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+      </div>
+    </div>
 
   </main>
 
