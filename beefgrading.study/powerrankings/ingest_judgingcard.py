@@ -318,6 +318,8 @@ def main():
     ap.add_argument("--date", help="override date, yyyy-mm-dd")
     ap.add_argument("--season", type=int, help="override season year (default: from date)")
     ap.add_argument("--out", help="write JSON to this file instead of stdout")
+    ap.add_argument("--no-scorecards", dest="scorecards", action="store_false",
+                    help="skip individual results and placings/reasons splits (faster)")
     args = ap.parse_args()
 
     url = base_overall_url(args.url)
@@ -382,12 +384,38 @@ def main():
         print(f"  ALT-ONLY (unverified) schools carried into output: {sorted(alt_only_schools)}",
               file=sys.stderr)
 
+    if args.scorecards:
+        # Individual results + per-species placings/reasons splits, read from
+        # every contestant's scorecard (one request each, so this takes a few
+        # minutes). Imported here because ingest_scorecards imports this module.
+        from ingest_scorecards import enrich
+        print("Fetching individual scorecards (use --no-scorecards to skip)", file=sys.stderr)
+        try:
+            for msg in enrich(doc):
+                print(f"  WARNING: {msg}", file=sys.stderr)
+        except Exception as e:
+            print(f"  WARNING: scorecards skipped, {e}. Re-run later with "
+                  f"ingest_scorecards.py on the output file.", file=sys.stderr)
+
     slug = f"{date_iso}_{kebab(short)}_{args.division}"
-    out = json.dumps(doc, indent=2)
+    out = json.dumps(doc, indent=2, ensure_ascii=False)
     if args.out:
         with open(args.out, "w", encoding="utf-8") as f:
             f.write(out + "\n")
         print(f"Wrote {args.out}", file=sys.stderr)
+        if doc.get("individuals"):
+            # Merge bubble-error name variants against the season's other
+            # contest files next to the output (see merge_names.py).
+            import subprocess
+            from pathlib import Path
+            out_path = Path(args.out).resolve()
+            season_files = sorted(str(p) for p in out_path.parent.glob(f"*{season}*.json"))
+            if str(out_path) not in season_files:
+                season_files.append(str(out_path))
+            print(f"Merging name variants across {len(season_files)} {season} contest files:", file=sys.stderr)
+            subprocess.run([sys.executable, str(Path(__file__).with_name("merge_names.py"))] + season_files,
+                           check=False)
+            print("Re-push any rewritten files so their fixed names reach Firestore.", file=sys.stderr)
     else:
         print(out)
     print(f"\nSuggested docId: {slug}", file=sys.stderr)

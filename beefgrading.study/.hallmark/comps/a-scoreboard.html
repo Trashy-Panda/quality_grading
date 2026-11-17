@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp A Scoreboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;800;900&family=Red+Hat+Text:wght@400;500;600&family=Red+Hat+Mono:wght@500;600&family=Yellowtail&display=swap" rel="stylesheet">
+<style>
+/* hallmark comp A: scoreboard / broadcast. shape: app screen. Idea: game-day graphics, the ink stage is live, paper is the record. */
+:root {
+  --paper: oklch(96% 0.011 85);
+  --paper-card: oklch(99.5% 0.005 85);
+  --line: oklch(88% 0.013 85);
+  --ink: oklch(18% 0.006 60);
+  --ink-2: oklch(23% 0.008 60);
+  --ink-3: oklch(30% 0.01 60);
+  --ink-soft: oklch(34% 0.01 60);
+  --ink-faint: oklch(44% 0.012 60);
+  --on-ink: oklch(96% 0.011 85);
+  --on-ink-dim: oklch(72% 0.012 85);
+  --hair-ink: oklch(96% 0.011 85 / 0.14);
+  --red: oklch(52% 0.2 22);
+  --red-lift: oklch(68% 0.2 22);
+  --up: oklch(72% 0.16 150);
+  --down: oklch(68% 0.2 22);
+  --up-ink: oklch(45% 0.12 150);
+  --down-ink: oklch(50% 0.2 22);
+  --f-display: 'Red Hat Display', system-ui, sans-serif;
+  --f-ui: 'Red Hat Text', system-ui, sans-serif;
+  --f-num: 'Red Hat Mono', ui-monospace, monospace;
+  --f-mark: 'Yellowtail', cursive;
+  --measure: min(1240px, calc(100% - 32px));
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; margin: 0; }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.5 var(--f-ui); }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--red-lift); outline-offset: 2px; }
+.wrap { width: var(--measure); margin: 0 auto; }
+.note { font-size: 13px; color: var(--ink-faint); padding: 10px 0; }
+
+/* nav: the landing's nav, kept */
+.nav { background: var(--ink); color: var(--on-ink); }
+.nav .wrap { display: flex; align-items: center; gap: 32px; height: 64px; }
+.mark { font: 600 18px var(--f-display); letter-spacing: -0.02em; }
+.mark i { font: 400 24px var(--f-mark); color: var(--red-lift); font-style: normal; }
+.nav-links { display: flex; gap: 4px; margin-left: auto; margin-right: auto; }
+.nav-links button { background: none; border: 0; color: var(--on-ink-dim); padding: 10px 14px; font-weight: 500; }
+.nav-links button[aria-current] { color: var(--on-ink); box-shadow: inset 0 -2px 0 var(--red); }
+.nav-auth { border: 1px solid var(--hair-ink); border-radius: 6px; padding: 8px 14px; background: none; color: var(--on-ink); }
+
+/* the stage: everything live sits on ink */
+.stage { background: var(--ink); color: var(--on-ink); padding: 40px 0 0; }
+.stage-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+.kicker-row { display: flex; gap: 12px; align-items: center; color: var(--on-ink-dim); font-weight: 500; }
+.live { display: inline-flex; align-items: center; gap: 8px; background: var(--red); color: var(--paper-card); font: 600 13px var(--f-ui); padding: 4px 10px; border-radius: 3px; }
+h1 { font: 900 clamp(48px, 7vw, 104px)/0.9 var(--f-display); letter-spacing: -0.045em; margin: 14px 0 0; overflow-wrap: break-word; min-width: 0; }
+.clock { display: flex; gap: 6px; }
+.clock div { background: var(--ink-2); border: 1px solid var(--hair-ink); border-radius: 6px; padding: 10px 14px 8px; text-align: center; min-width: 76px; }
+.clock b { display: block; font: 600 40px/1 var(--f-num); font-variant-numeric: tabular-nums; }
+.clock span { font-size: 13px; color: var(--on-ink-dim); }
+.clock-cap { font-size: 13px; color: var(--on-ink-dim); margin-bottom: 8px; text-align: right; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-top: 32px; padding: 16px 0; border-top: 1px solid var(--hair-ink); }
+.seg { display: inline-flex; background: var(--ink-2); border-radius: 8px; padding: 4px; }
+.seg button { border: 0; background: none; color: var(--on-ink-dim); padding: 10px 16px; border-radius: 5px; font-weight: 500; min-height: 44px; }
+.seg button[aria-pressed="true"] { background: var(--on-ink); color: var(--ink); }
+.go { background: var(--red); color: var(--paper-card); border: 0; border-radius: 8px; padding: 0 28px; height: 56px; font: 600 17px var(--f-ui); }
+.go:hover { background: oklch(47% 0.2 22); }
+.go:active { transform: translateY(1px); }
+.meta { color: var(--on-ink-dim); font-size: 15px; }
+.meta b { color: var(--on-ink); font-weight: 600; }
+
+/* leader slab + podium on the stage */
+.podium { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: 2px; margin-top: 8px; }
+.pod { background: var(--ink-2); padding: 24px; position: relative; overflow: hidden; min-height: 196px; display: flex; flex-direction: column; justify-content: space-between; }
+.pod.first { background: var(--red); }
+.pod .n { position: absolute; right: -6px; bottom: -34px; font: 900 200px/1 var(--f-display); letter-spacing: -0.06em; color: oklch(96% 0.011 85 / 0.08); }
+.pod.first .n { color: oklch(96% 0.011 85 / 0.16); }
+.pod .place { font: 600 14px var(--f-ui); color: var(--on-ink-dim); }
+.pod.first .place { color: oklch(94% 0.03 22); }
+.pod .who { font: 800 26px/1.1 var(--f-display); letter-spacing: -0.02em; }
+.pod .pct { font: 600 56px/1 var(--f-num); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.pod .pct small { font-size: 22px; }
+.pod .pts { font-size: 14px; color: var(--on-ink-dim); }
+.pod.first .pts { color: oklch(94% 0.03 22); }
+.stage-foot { height: 40px; }
+
+/* the record: paper, rows like lower thirds */
+.record { padding: 32px 0 64px; }
+.you { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto auto; gap: 16px; align-items: center; background: var(--paper-card); border: 2px solid var(--ink); border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; }
+.you .r { font: 900 36px/1 var(--f-display); letter-spacing: -0.04em; }
+.you .lab { font-size: 13px; color: var(--ink-faint); }
+.rows { list-style: none; margin: 0; padding: 0; }
+.row { display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 220px) 80px 64px; gap: 16px; align-items: center; min-height: 56px; border-bottom: 1px solid var(--line); }
+.row .r { font: 800 28px/1 var(--f-display); letter-spacing: -0.04em; color: var(--ink-faint); }
+.row .name { font-weight: 600; }
+.bar { height: 8px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--ink); transform-origin: left; }
+.row .p { font: 600 20px var(--f-num); text-align: right; font-variant-numeric: tabular-nums; }
+.row .d { font: 500 13px var(--f-num); color: var(--ink-faint); text-align: right; }
+.row.me { background: var(--paper-card); box-shadow: inset 0 0 0 2px var(--red); border-radius: 6px; }
+.row.me .r { color: var(--red); }
+.thead { display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 220px) 80px 64px; gap: 16px; font-size: 13px; color: var(--ink-faint); padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
+.thead span:nth-child(n+4) { text-align: right; }
+
+/* rankings: the poll */
+.poll { background: var(--ink); color: var(--on-ink); padding: 48px 0 64px; }
+.poll h2 { font: 900 56px/0.95 var(--f-display); letter-spacing: -0.04em; margin: 0; }
+.ticker { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px; align-items: center; background: var(--ink-2); border-radius: 8px; padding: 14px 20px; margin: 24px 0 8px; }
+.ticker .tag { background: var(--on-ink); color: var(--ink); font: 600 13px var(--f-ui); padding: 4px 10px; border-radius: 3px; }
+.ticker b { font-weight: 600; }
+.ticker .d { font: 500 14px var(--f-num); color: var(--on-ink-dim); }
+.prow { display: grid; grid-template-columns: 88px minmax(0, 1fr) 64px minmax(0, 200px) 80px; gap: 16px; align-items: center; min-height: 64px; border-bottom: 1px solid var(--hair-ink); }
+.prow .r { font: 900 44px/1 var(--f-display); letter-spacing: -0.05em; }
+.prow:nth-child(n+4) .r { font-size: 32px; color: var(--on-ink-dim); }
+.prow .s { font: 600 19px var(--f-display); letter-spacing: -0.01em; }
+.prow .mv { font: 600 14px var(--f-num); text-align: center; }
+.mv.up { color: var(--up); } .mv.dn { color: var(--down); }
+.prow .bar { background: var(--ink-3); }
+.prow .bar i { background: var(--on-ink); }
+.prow:first-child .bar i { background: var(--red-lift); }
+.prow .rt { font: 600 20px var(--f-num); text-align: right; }
+
+@media (max-width: 760px) {
+  .nav-links { display: none; }
+  .stage-top { grid-template-columns: minmax(0, 1fr); }
+  .clock-cap { text-align: left; }
+  .clock div { min-width: 0; flex: 1; }
+  .clock b { font-size: 30px; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .go { width: 100%; }
+  .podium { grid-template-columns: minmax(0, 1fr); }
+  .pod { min-height: 0; flex-direction: row; align-items: center; gap: 16px; padding: 16px 20px; }
+  .pod .n { display: none; }
+  .pod .pct { font-size: 32px; }
+  .pod .who { font-size: 20px; }
+  .thead { display: none; }
+  .row, .prow { grid-template-columns: 44px minmax(0, 1fr) 56px; }
+  .row .bar, .row .d, .prow .bar, .prow .mv { display: none; }
+  .row .r { font-size: 22px; }
+  .prow .r, .prow:nth-child(n+4) .r { font-size: 26px; }
+  .you { grid-template-columns: 56px minmax(0, 1fr) auto; }
+  .you .go { display: none; }
+  .ticker { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Site"><div class="wrap">
+  <span class="mark">BEEF <i>Grading</i></span>
+  <div class="nav-links"><button>Practice</button><button aria-current="page">Weekly</button><button>Power rankings</button><button>Field guide</button></div>
+  <button class="nav-auth">Gunny M.</button>
+</div></nav>
+
+<section class="stage">
+  <div class="wrap">
+    <div class="stage-top">
+      <div>
+        <div class="kicker-row"><span class="live">Open now</span><span>Nov 2 to Nov 8, 2026</span></div>
+        <h1>Weekly challenge</h1>
+      </div>
+      <div>
+        <div class="clock-cap">Closes in</div>
+        <div class="clock" role="timer" aria-label="Closes in 5 days 7 hours 52 minutes">
+          <div><b>05</b><span>days</span></div><div><b>07</b><span>hours</span></div><div><b>52</b><span>min</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Division"><button aria-pressed="true">High school</button><button aria-pressed="false">College</button></div>
+      <span class="meta"><b>10 carcasses.</b> One attempt. 31 graders in so far.</span>
+      <button class="go">Start the challenge</button>
+    </div>
+    <div class="podium" aria-label="Top three">
+      <div class="pod first"><span class="n" aria-hidden="true">1</span><span class="place">Leader</span><span class="who">Ana Whitfield</span><div><div class="pct">96<small>%</small></div><div class="pts">96 of 100 pts</div></div></div>
+      <div class="pod"><span class="n" aria-hidden="true">2</span><span class="place">Second</span><span class="who">Ben Ortega</span><div><div class="pct">93<small>%</small></div><div class="pts">93 of 100 pts</div></div></div>
+      <div class="pod"><span class="n" aria-hidden="true">3</span><span class="place">Third</span><span class="who">Cy Larsen</span><div><div class="pct">90<small>%</small></div><div class="pts">90 of 100 pts</div></div></div>
+    </div>
+  </div>
+  <div class="stage-foot"></div>
+</section>
+
+<section class="record"><div class="wrap">
+  <p class="note">Sample entries, for layout only.</p>
+  <div class="thead"><span>Rank</span><span>Grader</span><span>Score</span><span>Pct</span><span>Date</span></div>
+  <ol class="rows">
+    <li class="row"><span class="r">4</span><span class="name">Dee Harmon</span><span class="bar"><i style="transform:scaleX(.88)"></i></span><span class="p">88%</span><span class="d">Nov 3</span></li>
+    <li class="row"><span class="r">5</span><span class="name">Eli Brandt</span><span class="bar"><i style="transform:scaleX(.85)"></i></span><span class="p">85%</span><span class="d">Nov 2</span></li>
+    <li class="row me"><span class="r">6</span><span class="name">Gunny M. (you)</span><span class="bar"><i style="transform:scaleX(.84)"></i></span><span class="p">84%</span><span class="d">Nov 3</span></li>
+    <li class="row"><span class="r">7</span><span class="name">Faith Okafor</span><span class="bar"><i style="transform:scaleX(.81)"></i></span><span class="p">81%</span><span class="d">Nov 2</span></li>
+    <li class="row"><span class="r">8</span><span class="name">Grady Pruitt</span><span class="bar"><i style="transform:scaleX(.79)"></i></span><span class="p">79%</span><span class="d">Nov 3</span></li>
+    <li class="row"><span class="r">9</span><span class="name">Hollis Vance</span><span class="bar"><i style="transform:scaleX(.74)"></i></span><span class="p">74%</span><span class="d">Nov 2</span></li>
+  </ol>
+</div></section>
+
+<section class="poll" aria-labelledby="poll-h"><div class="wrap">
+  <div class="kicker-row">Senior colleges, 2026 season</div>
+  <h2 id="poll-h">Power rankings</h2>
+  <div class="ticker"><span class="tag">Latest</span><span><b>High Plains</b>, won by <b>Texas Tech</b>, 10 teams</span><span class="d">Nov 1</span></div>
+  <ol class="rows">
+    <li class="prow"><span class="r">1</span><span class="s">Texas Tech University</span><span class="mv"></span><span class="bar"><i style="transform:scaleX(1)"></i></span><span class="rt">1.274</span></li>
+    <li class="prow"><span class="r">2</span><span class="s">Oklahoma State University</span><span class="mv"></span><span class="bar"><i style="transform:scaleX(.96)"></i></span><span class="rt">1.222</span></li>
+    <li class="prow"><span class="r">3</span><span class="s">Kansas State University</span><span class="mv"></span><span class="bar"><i style="transform:scaleX(.95)"></i></span><span class="rt">1.214</span></li>
+    <li class="prow"><span class="r">4</span><span class="s">West Texas A&amp;M University</span><span class="mv"></span><span class="bar"><i style="transform:scaleX(.9)"></i></span><span class="rt">1.148</span></li>
+    <li class="prow"><span class="r">8</span><span class="s">University of Florida</span><span class="mv up" aria-label="Up 1">▲1</span><span class="bar"><i style="transform:scaleX(.73)"></i></span><span class="rt">0.929</span></li>
+    <li class="prow"><span class="r">9</span><span class="s">South Dakota State University</span><span class="mv dn" aria-label="Down 1">▼1</span><span class="bar"><i style="transform:scaleX(.71)"></i></span><span class="rt">0.905</span></li>
+  </ol>
+</div></section>
+</body>
+</html>

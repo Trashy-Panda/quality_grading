@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><title>survey preview</title>
+<style>
+body{margin:0;background:#f4efe6;display:flex;gap:24px;padding:24px;font:500 13px system-ui}
+.p{position:relative;width:420px;aspect-ratio:863/1313}
+.p img,.p object,.p svg{position:absolute;inset:0;width:100%;height:100%}
+.p img{mix-blend-mode:multiply}
+.a img{opacity:1}.b img{opacity:.22;filter:grayscale(1)}
+.sv-cut{stroke:#1d1a16;stroke-width:3}.sv-eye{stroke:#1d1a16;stroke-width:2;stroke-dasharray:6 6}
+.sv-c{stroke:#b5122b;stroke-width:2}.sv-c{opacity:.6;stroke-width:1.3}.sv-c4{opacity:1;stroke-width:2}
+.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:#1d1a16;border:3px solid #fff;translate:-50% -50%}
+.pin span{position:absolute;left:18px;top:-6px;background:#1d1a16;color:#fff;padding:3px 7px;border-radius:4px;white-space:nowrap}
+.sv-fleck{stroke:#b5122b;stroke-width:.8;opacity:.45}</style>
+<div class="p a"><img src="../../assets/anchors-full/04_moderate.jpg"><div class="svgslot"></div></div>
+<div class="p b"><img src="../../assets/anchors-full/04_moderate.jpg"><div class="svgslot"></div></div>
+<script>
+fetch('survey.svg').then(r=>r.text()).then(t=>{document.querySelectorAll('.svgslot').forEach(s=>s.outerHTML=t);
+fetch('pins.json').then(r=>r.json()).then(j=>{const P=j.pins_pct;document.querySelectorAll('.p').forEach(p=>{for(const[k,l] of [['marbling','Marbling, graded'],['seam','Seam fat, not graded'],['cap','Fat cap, not graded']]){if(!P[k])continue;const d=document.createElement('i');d.className='pin';d.style.left=P[k][0]+'%';d.style.top=P[k][1]+'%';d.innerHTML='<span>'+l+'</span>';p.append(d)}})})});
+</script>

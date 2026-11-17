@@ -1,0 +1,5569 @@
+{
+  "name": "Cargill High Plains Meat Judging",
+  "shortName": "High Plains",
+  "date": "2026-11-01",
+  "season": 2026,
+  "division": "senior",
+  "weight": 1,
+  "sourceUrl": "https://www.judgingcard.com/Results/Team.aspx?ID=29586&EID=184823",
+  "teamCount": 10,
+  "results": [
+    {
+      "school": "Texas Tech University",
+      "place": 1,
+      "score": 4183,
+      "categories": {
+        "beefGrading": {
+          "place": 2,
+          "score": 1028
+        },
+        "beefJudging": {
+          "place": 1,
+          "score": 1099
+        },
+        "lambJudging": {
+          "place": 3,
+          "score": 564
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 2127
+        },
+        "porkJudging": {
+          "place": 5,
+          "score": 1122
+        },
+        "reasons": {
+          "place": 1,
+          "score": 871
+        },
+        "specifications": {
+          "place": 7,
+          "score": 370
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 1914
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 776,
+          "reasons": 323
+        },
+        "pork": {
+          "placing": 754,
+          "reasons": 368
+        },
+        "lamb": {
+          "placing": 384,
+          "reasons": 180
+        }
+      }
+    },
+    {
+      "school": "Kansas State University",
+      "place": 2,
+      "score": 4178,
+      "categories": {
+        "beefGrading": {
+          "place": 4,
+          "score": 1000
+        },
+        "beefJudging": {
+          "place": 2,
+          "score": 1098
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 566
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 2098
+        },
+        "porkJudging": {
+          "place": 8,
+          "score": 1114
+        },
+        "reasons": {
+          "place": 2,
+          "score": 863
+        },
+        "specifications": {
+          "place": 1,
+          "score": 400
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 1915
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 761,
+          "reasons": 337
+        },
+        "pork": {
+          "placing": 768,
+          "reasons": 346
+        },
+        "lamb": {
+          "placing": 386,
+          "reasons": 180
+        }
+      }
+    },
+    {
+      "school": "Texas A&M University",
+      "place": 3,
+      "score": 4175,
+      "categories": {
+        "beefGrading": {
+          "place": 1,
+          "score": 1033
+        },
+        "beefJudging": {
+          "place": 3,
+          "score": 1086
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 561
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 2119
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 1144
+        },
+        "reasons": {
+          "place": 3,
+          "score": 860
+        },
+        "specifications": {
+          "place": 8,
+          "score": 351
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 1931
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 770,
+          "reasons": 316
+        },
+        "pork": {
+          "placing": 775,
+          "reasons": 369
+        },
+        "lamb": {
+          "placing": 386,
+          "reasons": 175
+        }
+      }
+    },
+    {
+      "school": "Oklahoma State University",
+      "place": 4,
+      "score": 4161,
+      "categories": {
+        "beefGrading": {
+          "place": 3,
+          "score": 1021
+        },
+        "beefJudging": {
+          "place": 5,
+          "score": 1068
+        },
+        "lambJudging": {
+          "place": 5,
+          "score": 558
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 2089
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 1124
+        },
+        "reasons": {
+          "place": 4,
+          "score": 850
+        },
+        "specifications": {
+          "place": 2,
+          "score": 390
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 1900
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 751,
+          "reasons": 317
+        },
+        "pork": {
+          "placing": 761,
+          "reasons": 363
+        },
+        "lamb": {
+          "placing": 388,
+          "reasons": 170
+        }
+      }
+    },
+    {
+      "school": "West Texas A&M University",
+      "place": 5,
+      "score": 4113,
+      "categories": {
+        "beefGrading": {
+          "place": 5,
+          "score": 999
+        },
+        "beefJudging": {
+          "place": 6,
+          "score": 1060
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 553
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 2059
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 1124
+        },
+        "reasons": {
+          "place": 5,
+          "score": 844
+        },
+        "specifications": {
+          "place": 5,
+          "score": 377
+        },
+        "totalPlacings": {
+          "place": 7,
+          "score": 1893
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 732,
+          "reasons": 328
+        },
+        "pork": {
+          "placing": 769,
+          "reasons": 355
+        },
+        "lamb": {
+          "placing": 392,
+          "reasons": 161
+        }
+      }
+    },
+    {
+      "school": "University of Florida",
+      "place": 6,
+      "score": 4091,
+      "categories": {
+        "beefGrading": {
+          "place": 8,
+          "score": 945
+        },
+        "beefJudging": {
+          "place": 4,
+          "score": 1086
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 550
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 2031
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 1120
+        },
+        "reasons": {
+          "place": 6,
+          "score": 829
+        },
+        "specifications": {
+          "place": 3,
+          "score": 390
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 1927
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 775,
+          "reasons": 311
+        },
+        "pork": {
+          "placing": 772,
+          "reasons": 348
+        },
+        "lamb": {
+          "placing": 380,
+          "reasons": 170
+        }
+      }
+    },
+    {
+      "school": "Tarleton State University",
+      "place": 7,
+      "score": 4089,
+      "categories": {
+        "beefGrading": {
+          "place": 6,
+          "score": 996
+        },
+        "beefJudging": {
+          "place": 7,
+          "score": 1036
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 566
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 2032
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 1116
+        },
+        "reasons": {
+          "place": 8,
+          "score": 809
+        },
+        "specifications": {
+          "place": 6,
+          "score": 375
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 1909
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 747,
+          "reasons": 289
+        },
+        "pork": {
+          "placing": 762,
+          "reasons": 354
+        },
+        "lamb": {
+          "placing": 400,
+          "reasons": 166
+        }
+      }
+    },
+    {
+      "school": "University of Wyoming",
+      "place": 8,
+      "score": 4047,
+      "categories": {
+        "beefGrading": {
+          "place": 7,
+          "score": 972
+        },
+        "beefJudging": {
+          "place": 8,
+          "score": 1019
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 541
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 1991
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 1128
+        },
+        "reasons": {
+          "place": 7,
+          "score": 820
+        },
+        "specifications": {
+          "place": 4,
+          "score": 387
+        },
+        "totalPlacings": {
+          "place": 8,
+          "score": 1868
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 725,
+          "reasons": 294
+        },
+        "pork": {
+          "placing": 767,
+          "reasons": 361
+        },
+        "lamb": {
+          "placing": 376,
+          "reasons": 165
+        }
+      }
+    },
+    {
+      "school": "Purdue University",
+      "place": 9,
+      "score": 3686,
+      "categories": {
+        "beefGrading": {
+          "place": 9,
+          "score": 870
+        },
+        "beefJudging": {
+          "place": 9,
+          "score": 922
+        },
+        "lambJudging": {
+          "place": 9,
+          "score": 503
+        },
+        "overallBeef": {
+          "place": 9,
+          "score": 1792
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 1077
+        },
+        "reasons": {
+          "place": 9,
+          "score": 708
+        },
+        "specifications": {
+          "place": 9,
+          "score": 314
+        },
+        "totalPlacings": {
+          "place": 9,
+          "score": 1794
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 688,
+          "reasons": 234
+        },
+        "pork": {
+          "placing": 750,
+          "reasons": 327
+        },
+        "lamb": {
+          "placing": 356,
+          "reasons": 147
+        }
+      }
+    },
+    {
+      "school": "North Dakota State University",
+      "place": 10,
+      "score": 2768,
+      "categories": {
+        "beefGrading": {
+          "place": 10,
+          "score": 613
+        },
+        "beefJudging": {
+          "place": 10,
+          "score": 744
+        },
+        "lambJudging": {
+          "place": 10,
+          "score": 414
+        },
+        "overallBeef": {
+          "place": 10,
+          "score": 1357
+        },
+        "porkJudging": {
+          "place": 10,
+          "score": 802
+        },
+        "reasons": {
+          "place": 10,
+          "score": 569
+        },
+        "specifications": {
+          "place": 10,
+          "score": 195
+        },
+        "totalPlacings": {
+          "place": 10,
+          "score": 1391
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 539,
+          "reasons": 205
+        },
+        "pork": {
+          "placing": 558,
+          "reasons": 244
+        },
+        "lamb": {
+          "placing": 294,
+          "reasons": 120
+        }
+      }
+    }
+  ],
+  "individuals": [
+    {
+      "name": "Zoe Vanrijn",
+      "school": "Oklahoma State University",
+      "alt": true,
+      "officialPlace": 1,
+      "score": 1079,
+      "categories": {
+        "beefJudging": {
+          "place": 4,
+          "score": 284
+        },
+        "beefGrading": {
+          "place": 2,
+          "score": 267
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 551
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 19,
+          "score": 286
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 493
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 10,
+          "score": 219
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 86
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 42
+        }
+      },
+      "place": 1
+    },
+    {
+      "name": "Cale Cornelius",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 2,
+      "score": 1069,
+      "categories": {
+        "beefJudging": {
+          "place": 16,
+          "score": 276
+        },
+        "beefGrading": {
+          "place": 3,
+          "score": 266
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 542
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 487
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 22,
+          "score": 216
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 191,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 2
+    },
+    {
+      "name": "Grayson Downs",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 3,
+      "score": 1061,
+      "categories": {
+        "beefJudging": {
+          "place": 7,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 9,
+          "score": 261
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 541
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 10,
+          "score": 288
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 486
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 2,
+          "score": 224
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 44
+        }
+      },
+      "place": 3
+    },
+    {
+      "name": "Emma Hartel",
+      "school": "Kansas State University",
+      "alt": false,
+      "officialPlace": 2,
+      "score": 1056,
+      "categories": {
+        "beefJudging": {
+          "place": 39,
+          "score": 268
+        },
+        "beefGrading": {
+          "place": 11,
+          "score": 260
+        },
+        "overallBeef": {
+          "place": 17,
+          "score": 528
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 22,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 480
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 22,
+          "score": 216
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 4,
+      "counted": true
+    },
+    {
+      "name": "Hannah Slate",
+      "school": "Texas Tech University",
+      "alt": false,
+      "officialPlace": 1,
+      "score": 1056,
+      "categories": {
+        "beefJudging": {
+          "place": 20,
+          "score": 275
+        },
+        "beefGrading": {
+          "place": 9,
+          "score": 261
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 536
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 54,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 13,
+          "score": 218
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 192,
+          "reasons": 83
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 44
+        }
+      },
+      "place": 4,
+      "counted": true
+    },
+    {
+      "name": "Brecken Shipman",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 4,
+      "score": 1055,
+      "categories": {
+        "beefJudging": {
+          "place": 7,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 537
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 10,
+          "score": 288
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 496
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 88
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 42
+        }
+      },
+      "place": 6
+    },
+    {
+      "name": "Tyler Racca",
+      "school": "Texas Tech University",
+      "alt": false,
+      "officialPlace": 3,
+      "score": 1053,
+      "categories": {
+        "beefJudging": {
+          "place": 5,
+          "score": 282
+        },
+        "beefGrading": {
+          "place": 17,
+          "score": 258
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 540
+        },
+        "lambJudging": {
+          "place": 55,
+          "score": 139
+        },
+        "porkJudging": {
+          "place": 26,
+          "score": 284
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 488
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 17,
+          "score": 217
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 43
+        }
+      },
+      "place": 7,
+      "counted": true
+    },
+    {
+      "name": "Laney Stansell",
+      "school": "Oklahoma State University",
+      "alt": false,
+      "officialPlace": 4,
+      "score": 1052,
+      "categories": {
+        "beefJudging": {
+          "place": 22,
+          "score": 274
+        },
+        "beefGrading": {
+          "place": 6,
+          "score": 263
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 537
+        },
+        "lambJudging": {
+          "place": 59,
+          "score": 138
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 67,
+          "score": 471
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 13,
+          "score": 218
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 86
+        },
+        "pork": {
+          "placing": 185,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 40
+        }
+      },
+      "place": 8,
+      "counted": true
+    },
+    {
+      "name": "Brady Prukop",
+      "school": "Texas A&M University",
+      "alt": false,
+      "officialPlace": 5,
+      "score": 1050,
+      "categories": {
+        "beefJudging": {
+          "place": 12,
+          "score": 278
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 10,
+          "score": 535
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 19,
+          "score": 286
+        },
+        "totalPlacings": {
+          "place": 25,
+          "score": 482
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 2,
+          "score": 224
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 193,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 46
+        }
+      },
+      "place": 9,
+      "counted": true
+    },
+    {
+      "name": "Paige Harder",
+      "school": "Oklahoma State University",
+      "alt": false,
+      "officialPlace": 7,
+      "score": 1050,
+      "categories": {
+        "beefJudging": {
+          "place": 22,
+          "score": 274
+        },
+        "beefGrading": {
+          "place": 36,
+          "score": 252
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 145
+        },
+        "porkJudging": {
+          "place": 49,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 480
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 13,
+          "score": 218
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 191,
+          "reasons": 83
+        },
+        "pork": {
+          "placing": 189,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 45
+        }
+      },
+      "place": 9,
+      "counted": true
+    },
+    {
+      "name": "Taylor Jones",
+      "school": "Texas A&M University",
+      "alt": false,
+      "officialPlace": 6,
+      "score": 1050,
+      "categories": {
+        "beefJudging": {
+          "place": 9,
+          "score": 279
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 536
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 20,
+          "score": 484
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 10,
+          "score": 219
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 81
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 45
+        }
+      },
+      "place": 9,
+      "counted": true
+    },
+    {
+      "name": "Lainey Moffett",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 5,
+      "score": 1049,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 18,
+          "score": 527
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 39,
+          "score": 281
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 480
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 192,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 43
+        }
+      },
+      "place": 12
+    },
+    {
+      "name": "Garrett Ballard",
+      "school": "Tarleton State University",
+      "alt": false,
+      "officialPlace": 9,
+      "score": 1048,
+      "categories": {
+        "beefJudging": {
+          "place": 64,
+          "score": 258
+        },
+        "beefGrading": {
+          "place": 11,
+          "score": 260
+        },
+        "overallBeef": {
+          "place": 37,
+          "score": 518
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 289
+        },
+        "totalPlacings": {
+          "place": 30,
+          "score": 481
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 52,
+          "score": 207
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 183,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 41
+        }
+      },
+      "place": 13,
+      "counted": true
+    },
+    {
+      "name": "Lyle Perrier",
+      "school": "Kansas State University",
+      "alt": false,
+      "officialPlace": 8,
+      "score": 1048,
+      "categories": {
+        "beefJudging": {
+          "place": 16,
+          "score": 276
+        },
+        "beefGrading": {
+          "place": 33,
+          "score": 254
+        },
+        "overallBeef": {
+          "place": 13,
+          "score": 530
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 54,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 20,
+          "score": 484
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 45,
+          "score": 210
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 191,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 13,
+      "counted": true
+    },
+    {
+      "name": "Ivan Rivas",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 6,
+      "score": 1047,
+      "categories": {
+        "beefJudging": {
+          "place": 69,
+          "score": 256
+        },
+        "beefGrading": {
+          "place": 5,
+          "score": 264
+        },
+        "overallBeef": {
+          "place": 34,
+          "score": 520
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 293
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 22,
+          "score": 216
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 179,
+          "reasons": 77
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 46
+        }
+      },
+      "place": 15
+    },
+    {
+      "name": "Aaron Morales",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 9,
+      "score": 1046,
+      "categories": {
+        "beefJudging": {
+          "place": 73,
+          "score": 254
+        },
+        "beefGrading": {
+          "place": 11,
+          "score": 260
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 292
+        },
+        "totalPlacings": {
+          "place": 58,
+          "score": 474
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 176,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 94
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 16
+    },
+    {
+      "name": "Harlie Groom",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 7,
+      "score": 1046,
+      "categories": {
+        "beefJudging": {
+          "place": 9,
+          "score": 279
+        },
+        "beefGrading": {
+          "place": 43,
+          "score": 248
+        },
+        "overallBeef": {
+          "place": 18,
+          "score": 527
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 289
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 487
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 2,
+          "score": 224
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 196,
+          "reasons": 83
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 96
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 16
+    },
+    {
+      "name": "Kiersten Wilcox",
+      "school": "Oklahoma State University",
+      "alt": true,
+      "officialPlace": 8,
+      "score": 1046,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 27,
+          "score": 256
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 66,
+          "score": 276
+        },
+        "totalPlacings": {
+          "place": 58,
+          "score": 474
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 22,
+          "score": 216
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 48
+        }
+      },
+      "place": 16
+    },
+    {
+      "name": "Mila Thompson",
+      "school": "West Texas A&M University",
+      "alt": false,
+      "officialPlace": 10,
+      "score": 1046,
+      "categories": {
+        "beefJudging": {
+          "place": 1,
+          "score": 287
+        },
+        "beefGrading": {
+          "place": 46,
+          "score": 247
+        },
+        "overallBeef": {
+          "place": 11,
+          "score": 534
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 22,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 486
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 1,
+          "score": 226
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 87
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 44
+        }
+      },
+      "place": 16,
+      "counted": true
+    },
+    {
+      "name": "Sadie Allen",
+      "school": "Oklahoma State University",
+      "alt": true,
+      "officialPlace": 10,
+      "score": 1046,
+      "categories": {
+        "beefJudging": {
+          "place": 39,
+          "score": 268
+        },
+        "beefGrading": {
+          "place": 6,
+          "score": 263
+        },
+        "overallBeef": {
+          "place": 12,
+          "score": 531
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 76,
+          "score": 274
+        },
+        "totalPlacings": {
+          "place": 57,
+          "score": 475
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 51,
+          "score": 208
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 45
+        }
+      },
+      "place": 16
+    },
+    {
+      "name": "Kaylan Kiser",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 11,
+      "score": 1045,
+      "categories": {
+        "beefJudging": {
+          "place": 26,
+          "score": 271
+        },
+        "beefGrading": {
+          "place": 41,
+          "score": 250
+        },
+        "overallBeef": {
+          "place": 33,
+          "score": 521
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 290
+        },
+        "totalPlacings": {
+          "place": 30,
+          "score": 481
+        },
+        "specifications": {
+          "place": 33,
+          "score": 94
+        },
+        "reasons": {
+          "place": 8,
+          "score": 220
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 42
+        }
+      },
+      "place": 21
+    },
+    {
+      "name": "Audrey Sethaler",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 12,
+      "score": 1042,
+      "categories": {
+        "beefJudging": {
+          "place": 26,
+          "score": 271
+        },
+        "beefGrading": {
+          "place": 17,
+          "score": 258
+        },
+        "overallBeef": {
+          "place": 15,
+          "score": 529
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 479
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 26,
+          "score": 215
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 83
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 22
+    },
+    {
+      "name": "Bella Hewitt",
+      "school": "Kansas State University",
+      "alt": false,
+      "officialPlace": 12,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 43,
+          "score": 267
+        },
+        "beefGrading": {
+          "place": 14,
+          "score": 259
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 54,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 69,
+          "score": 468
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 31,
+          "score": 213
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 81
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 90,
+          "reasons": 46
+        }
+      },
+      "place": 23,
+      "counted": true
+    },
+    {
+      "name": "Garrit Burton",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 13,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 36,
+          "score": 269
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 147
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 58,
+          "score": 474
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 10,
+          "score": 219
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 83
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 49
+        }
+      },
+      "place": 23
+    },
+    {
+      "name": "Lainie Reiter",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 15,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 26,
+          "score": 271
+        },
+        "beefGrading": {
+          "place": 56,
+          "score": 243
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 488
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 47,
+          "score": 209
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 43
+        }
+      },
+      "place": 23
+    },
+    {
+      "name": "Leydializ Aviles",
+      "school": "University of Florida",
+      "alt": false,
+      "officialPlace": 13,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 3,
+          "score": 285
+        },
+        "beefGrading": {
+          "place": 64,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 34,
+          "score": 520
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 66,
+          "score": 276
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 493
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 87
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 81
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 44
+        }
+      },
+      "place": 23,
+      "counted": true,
+      "rawName": "Leydiali Aviles"
+    },
+    {
+      "name": "Peyton Byrne",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 16,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 55,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 4,
+          "score": 265
+        },
+        "overallBeef": {
+          "place": 18,
+          "score": 527
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 35,
+          "score": 282
+        },
+        "totalPlacings": {
+          "place": 53,
+          "score": 476
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 47,
+          "score": 209
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 76
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 43
+        }
+      },
+      "place": 23
+    },
+    {
+      "name": "Sarah Keesecker",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 14,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 14,
+          "score": 259
+        },
+        "overallBeef": {
+          "place": 15,
+          "score": 529
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 479
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 43
+        }
+      },
+      "place": 23
+    },
+    {
+      "name": "Shayla Mader",
+      "school": "Texas Tech University",
+      "alt": false,
+      "officialPlace": 11,
+      "score": 1040,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 27,
+          "score": 256
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 62,
+          "score": 473
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 7,
+          "score": 221
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 81
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 47
+        }
+      },
+      "place": 23,
+      "counted": true
+    },
+    {
+      "name": "Pearson Harris",
+      "school": "Texas A&M University",
+      "alt": false,
+      "officialPlace": 14,
+      "score": 1038,
+      "categories": {
+        "beefJudging": {
+          "place": 50,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 8,
+          "score": 262
+        },
+        "overallBeef": {
+          "place": 27,
+          "score": 525
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 43,
+          "score": 478
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 42,
+          "score": 211
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 77
+        },
+        "pork": {
+          "placing": 194,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 30,
+      "counted": true
+    },
+    {
+      "name": "Ava Harborth",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 17,
+      "score": 1037,
+      "categories": {
+        "beefJudging": {
+          "place": 16,
+          "score": 276
+        },
+        "beefGrading": {
+          "place": 46,
+          "score": 247
+        },
+        "overallBeef": {
+          "place": 30,
+          "score": 523
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 26,
+          "score": 284
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 491
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 76
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 31
+    },
+    {
+      "name": "Carter Bostic",
+      "school": "Texas A&M University",
+      "alt": false,
+      "officialPlace": 15,
+      "score": 1037,
+      "categories": {
+        "beefJudging": {
+          "place": 44,
+          "score": 266
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 30,
+          "score": 523
+        },
+        "lambJudging": {
+          "place": 72,
+          "score": 135
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 292
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 487
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 193,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 94
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 39
+        }
+      },
+      "place": 31,
+      "counted": true
+    },
+    {
+      "name": "Lydia Sharp",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 18,
+      "score": 1036,
+      "categories": {
+        "beefJudging": {
+          "place": 20,
+          "score": 275
+        },
+        "beefGrading": {
+          "place": 42,
+          "score": 249
+        },
+        "overallBeef": {
+          "place": 29,
+          "score": 524
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 145
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 486
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 29,
+          "score": 214
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 193,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 45
+        }
+      },
+      "place": 33
+    },
+    {
+      "name": "Kahla Simpton",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 19,
+      "score": 1035,
+      "categories": {
+        "beefJudging": {
+          "place": 64,
+          "score": 258
+        },
+        "beefGrading": {
+          "place": 1,
+          "score": 272
+        },
+        "overallBeef": {
+          "place": 13,
+          "score": 530
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 82,
+          "score": 453
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 6,
+          "score": 223
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 172,
+          "reasons": 86
+        },
+        "pork": {
+          "placing": 183,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 34
+    },
+    {
+      "name": "Kylar Hutchison",
+      "school": "Oklahoma State University",
+      "alt": false,
+      "officialPlace": 16,
+      "score": 1035,
+      "categories": {
+        "beefJudging": {
+          "place": 69,
+          "score": 256
+        },
+        "beefGrading": {
+          "place": 46,
+          "score": 247
+        },
+        "overallBeef": {
+          "place": 58,
+          "score": 503
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 145
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 486
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 70,
+          "score": 202
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 45
+        }
+      },
+      "place": 34,
+      "counted": true
+    },
+    {
+      "name": "Luke Anderson",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 20,
+      "score": 1035,
+      "categories": {
+        "beefJudging": {
+          "place": 5,
+          "score": 282
+        },
+        "beefGrading": {
+          "place": 30,
+          "score": 255
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 537
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 80,
+          "score": 272
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 479
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 42,
+          "score": 211
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 188,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 42
+        }
+      },
+      "place": 34
+    },
+    {
+      "name": "Brooklyn Wiley",
+      "school": "Texas Tech University",
+      "alt": false,
+      "officialPlace": 18,
+      "score": 1034,
+      "categories": {
+        "beefJudging": {
+          "place": 25,
+          "score": 272
+        },
+        "beefGrading": {
+          "place": 35,
+          "score": 253
+        },
+        "overallBeef": {
+          "place": 27,
+          "score": 525
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 53,
+          "score": 476
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 26,
+          "score": 215
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 77
+        },
+        "pork": {
+          "placing": 185,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 46
+        }
+      },
+      "place": 37,
+      "counted": true
+    },
+    {
+      "name": "Drew Mickey",
+      "school": "Kansas State University",
+      "alt": false,
+      "officialPlace": 17,
+      "score": 1034,
+      "categories": {
+        "beefJudging": {
+          "place": 1,
+          "score": 287
+        },
+        "beefGrading": {
+          "place": 74,
+          "score": 227
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 147
+        },
+        "porkJudging": {
+          "place": 78,
+          "score": 273
+        },
+        "totalPlacings": {
+          "place": 23,
+          "score": 483
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 2,
+          "score": 224
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 89
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 49
+        }
+      },
+      "place": 37,
+      "counted": true
+    },
+    {
+      "name": "Kade Lawrence",
+      "school": "West Texas A&M University",
+      "alt": false,
+      "officialPlace": 19,
+      "score": 1033,
+      "categories": {
+        "beefJudging": {
+          "place": 26,
+          "score": 271
+        },
+        "beefGrading": {
+          "place": 30,
+          "score": 255
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 60,
+          "score": 137
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 53,
+          "score": 476
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 88
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 39
+        }
+      },
+      "place": 39,
+      "counted": true
+    },
+    {
+      "name": "Spencer Baylor",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 21,
+      "score": 1033,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 61,
+          "score": 239
+        },
+        "overallBeef": {
+          "place": 53,
+          "score": 509
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 35,
+          "score": 282
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 17,
+          "score": 217
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 84
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 42
+        }
+      },
+      "place": 39
+    },
+    {
+      "name": "Annabell Williams",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 23,
+      "score": 1031,
+      "categories": {
+        "beefJudging": {
+          "place": 39,
+          "score": 268
+        },
+        "beefGrading": {
+          "place": 49,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 54,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 30,
+          "score": 481
+        },
+        "specifications": {
+          "place": 30,
+          "score": 97
+        },
+        "reasons": {
+          "place": 52,
+          "score": 207
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 186,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 42
+        }
+      },
+      "place": 41
+    },
+    {
+      "name": "Jace Hall",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 22,
+      "score": 1031,
+      "categories": {
+        "beefJudging": {
+          "place": 36,
+          "score": 269
+        },
+        "beefGrading": {
+          "place": 43,
+          "score": 248
+        },
+        "overallBeef": {
+          "place": 38,
+          "score": 517
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 43,
+          "score": 478
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 26,
+          "score": 215
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 187,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 44
+        }
+      },
+      "place": 41
+    },
+    {
+      "name": "Abigail Slack",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 24,
+      "score": 1028,
+      "categories": {
+        "beefJudging": {
+          "place": 76,
+          "score": 253
+        },
+        "beefGrading": {
+          "place": 30,
+          "score": 255
+        },
+        "overallBeef": {
+          "place": 54,
+          "score": 508
+        },
+        "lambJudging": {
+          "place": 26,
+          "score": 142
+        },
+        "porkJudging": {
+          "place": 10,
+          "score": 288
+        },
+        "totalPlacings": {
+          "place": 65,
+          "score": 472
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 42,
+          "score": 211
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 178,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 44
+        }
+      },
+      "place": 43
+    },
+    {
+      "name": "Hanna Bailey",
+      "school": "Kansas State University",
+      "alt": true,
+      "officialPlace": 25,
+      "score": 1027,
+      "categories": {
+        "beefJudging": {
+          "place": 9,
+          "score": 279
+        },
+        "beefGrading": {
+          "place": 66,
+          "score": 234
+        },
+        "overallBeef": {
+          "place": 47,
+          "score": 513
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 39,
+          "score": 281
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 486
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 17,
+          "score": 217
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 43
+        }
+      },
+      "place": 44
+    },
+    {
+      "name": "Presli Busby",
+      "school": "University of Florida",
+      "alt": false,
+      "officialPlace": 20,
+      "score": 1027,
+      "categories": {
+        "beefJudging": {
+          "place": 59,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 55,
+          "score": 244
+        },
+        "overallBeef": {
+          "place": 57,
+          "score": 504
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 480
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 68,
+          "score": 203
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 71
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 40
+        }
+      },
+      "place": 44,
+      "counted": true
+    },
+    {
+      "name": "Addysen Folmar",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 26,
+      "score": 1025,
+      "categories": {
+        "beefJudging": {
+          "place": 55,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 36,
+          "score": 252
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 54,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 479
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 65,
+          "score": 204
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 187,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 43
+        }
+      },
+      "place": 46
+    },
+    {
+      "name": "Hannah Morphis",
+      "school": "Oklahoma State University",
+      "alt": false,
+      "officialPlace": 21,
+      "score": 1024,
+      "categories": {
+        "beefJudging": {
+          "place": 47,
+          "score": 264
+        },
+        "beefGrading": {
+          "place": 14,
+          "score": 259
+        },
+        "overallBeef": {
+          "place": 30,
+          "score": 523
+        },
+        "lambJudging": {
+          "place": 84,
+          "score": 130
+        },
+        "porkJudging": {
+          "place": 39,
+          "score": 281
+        },
+        "totalPlacings": {
+          "place": 75,
+          "score": 463
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 34,
+          "score": 212
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 94
+        },
+        "lamb": {
+          "placing": 90,
+          "reasons": 40
+        }
+      },
+      "place": 47,
+      "counted": true
+    },
+    {
+      "name": "Joshua Slay",
+      "school": "Tarleton State University",
+      "alt": false,
+      "officialPlace": 22,
+      "score": 1023,
+      "categories": {
+        "beefJudging": {
+          "place": 55,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 56,
+          "score": 243
+        },
+        "overallBeef": {
+          "place": 56,
+          "score": 505
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 480
+        },
+        "specifications": {
+          "place": 33,
+          "score": 94
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 41
+        }
+      },
+      "place": 48,
+      "counted": true
+    },
+    {
+      "name": "Shaun Billingsley",
+      "school": "Oklahoma State University",
+      "alt": true,
+      "officialPlace": 27,
+      "score": 1023,
+      "categories": {
+        "beefJudging": {
+          "place": 45,
+          "score": 265
+        },
+        "beefGrading": {
+          "place": 49,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 51,
+          "score": 511
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 35,
+          "score": 282
+        },
+        "totalPlacings": {
+          "place": 25,
+          "score": 482
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 62,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 76
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 48
+    },
+    {
+      "name": "Corinne Covill",
+      "school": "University of Wyoming",
+      "alt": false,
+      "officialPlace": 23,
+      "score": 1022,
+      "categories": {
+        "beefJudging": {
+          "place": 73,
+          "score": 254
+        },
+        "beefGrading": {
+          "place": 33,
+          "score": 254
+        },
+        "overallBeef": {
+          "place": 54,
+          "score": 508
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 76,
+          "score": 274
+        },
+        "totalPlacings": {
+          "place": 78,
+          "score": 462
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 175,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 50,
+      "counted": true
+    },
+    {
+      "name": "Dustina Garcia",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 28,
+      "score": 1021,
+      "categories": {
+        "beefJudging": {
+          "place": 50,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 75,
+          "score": 226
+        },
+        "overallBeef": {
+          "place": 75,
+          "score": 489
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 147
+        },
+        "porkJudging": {
+          "place": 22,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 43,
+          "score": 478
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 17,
+          "score": 217
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 184,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 49
+        }
+      },
+      "place": 51
+    },
+    {
+      "name": "Wyatt Braithwaite",
+      "school": "West Texas A&M University",
+      "alt": false,
+      "officialPlace": 24,
+      "score": 1019,
+      "categories": {
+        "beefJudging": {
+          "place": 50,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 27,
+          "score": 256
+        },
+        "overallBeef": {
+          "place": 36,
+          "score": 519
+        },
+        "lambJudging": {
+          "place": 79,
+          "score": 132
+        },
+        "porkJudging": {
+          "place": 84,
+          "score": 268
+        },
+        "totalPlacings": {
+          "place": 58,
+          "score": 474
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 78,
+          "score": 189
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 74
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 81
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 34
+        }
+      },
+      "place": 52,
+      "counted": true
+    },
+    {
+      "name": "Avel Zermeno",
+      "school": "West Texas A&M University",
+      "alt": false,
+      "officialPlace": 25,
+      "score": 1015,
+      "categories": {
+        "beefJudging": {
+          "place": 83,
+          "score": 239
+        },
+        "beefGrading": {
+          "place": 58,
+          "score": 241
+        },
+        "overallBeef": {
+          "place": 79,
+          "score": 480
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 291
+        },
+        "totalPlacings": {
+          "place": 80,
+          "score": 457
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 17,
+          "score": 217
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 157,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 44
+        }
+      },
+      "place": 53,
+      "counted": true
+    },
+    {
+      "name": "Irene Lewis",
+      "school": "University of Florida",
+      "alt": false,
+      "officialPlace": 26,
+      "score": 1015,
+      "categories": {
+        "beefJudging": {
+          "place": 14,
+          "score": 277
+        },
+        "beefGrading": {
+          "place": 63,
+          "score": 238
+        },
+        "overallBeef": {
+          "place": 40,
+          "score": 515
+        },
+        "lambJudging": {
+          "place": 77,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 25,
+          "score": 482
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 62,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 77
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 92,
+          "reasons": 41
+        }
+      },
+      "place": 53,
+      "counted": true
+    },
+    {
+      "name": "Trinity Collins",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 29,
+      "score": 1015,
+      "categories": {
+        "beefJudging": {
+          "place": 22,
+          "score": 274
+        },
+        "beefGrading": {
+          "place": 61,
+          "score": 239
+        },
+        "overallBeef": {
+          "place": 47,
+          "score": 513
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 49,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 23,
+          "score": 483
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 38
+        }
+      },
+      "place": 53
+    },
+    {
+      "name": "Cole Hinds",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 31,
+      "score": 1013,
+      "categories": {
+        "beefJudging": {
+          "place": 36,
+          "score": 269
+        },
+        "beefGrading": {
+          "place": 72,
+          "score": 228
+        },
+        "overallBeef": {
+          "place": 65,
+          "score": 497
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 488
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 52,
+          "score": 207
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 193,
+          "reasons": 76
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 56
+    },
+    {
+      "name": "Madison King",
+      "school": "University of Florida",
+      "alt": true,
+      "officialPlace": 30,
+      "score": 1013,
+      "categories": {
+        "beefJudging": {
+          "place": 14,
+          "score": 277
+        },
+        "beefGrading": {
+          "place": 77,
+          "score": 225
+        },
+        "overallBeef": {
+          "place": 61,
+          "score": 502
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 145
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 487
+        },
+        "specifications": {
+          "place": 35,
+          "score": 91
+        },
+        "reasons": {
+          "place": 45,
+          "score": 210
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 45
+        }
+      },
+      "place": 56
+    },
+    {
+      "name": "Celise Pacheco",
+      "school": "University of Wyoming",
+      "alt": false,
+      "officialPlace": 27,
+      "score": 1012,
+      "categories": {
+        "beefJudging": {
+          "place": 72,
+          "score": 255
+        },
+        "beefGrading": {
+          "place": 49,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 63,
+          "score": 501
+        },
+        "lambJudging": {
+          "place": 79,
+          "score": 132
+        },
+        "porkJudging": {
+          "place": 49,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 75,
+          "score": 463
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 68,
+          "score": 203
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 183,
+          "reasons": 72
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 90,
+          "reasons": 42
+        }
+      },
+      "place": 58,
+      "counted": true
+    },
+    {
+      "name": "Jackson Larriviere",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 33,
+      "score": 1012,
+      "categories": {
+        "beefJudging": {
+          "place": 59,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 39,
+          "score": 251
+        },
+        "overallBeef": {
+          "place": 51,
+          "score": 511
+        },
+        "lambJudging": {
+          "place": 88,
+          "score": 123
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 291
+        },
+        "totalPlacings": {
+          "place": 69,
+          "score": 468
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 72
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 80,
+          "reasons": 43
+        }
+      },
+      "place": 58
+    },
+    {
+      "name": "Lila Elizondo",
+      "school": "Kansas State University",
+      "alt": true,
+      "officialPlace": 32,
+      "score": 1012,
+      "categories": {
+        "beefJudging": {
+          "place": 66,
+          "score": 257
+        },
+        "beefGrading": {
+          "place": 49,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 58,
+          "score": 503
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 84,
+          "score": 268
+        },
+        "totalPlacings": {
+          "place": 84,
+          "score": 452
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 29,
+          "score": 214
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 179,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 177,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 45
+        }
+      },
+      "place": 58
+    },
+    {
+      "name": "Jonathan Snyder",
+      "school": "University of Wyoming",
+      "alt": false,
+      "officialPlace": 28,
+      "score": 1011,
+      "categories": {
+        "beefJudging": {
+          "place": 69,
+          "score": 256
+        },
+        "beefGrading": {
+          "place": 59,
+          "score": 240
+        },
+        "overallBeef": {
+          "place": 67,
+          "score": 496
+        },
+        "lambJudging": {
+          "place": 55,
+          "score": 139
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 289
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 52,
+          "score": 207
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 184,
+          "reasons": 72
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 94
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 41
+        }
+      },
+      "place": 61,
+      "counted": true
+    },
+    {
+      "name": "Edwin Rios",
+      "school": "Tarleton State University",
+      "alt": false,
+      "officialPlace": 29,
+      "score": 1010,
+      "categories": {
+        "beefJudging": {
+          "place": 66,
+          "score": 257
+        },
+        "beefGrading": {
+          "place": 17,
+          "score": 258
+        },
+        "overallBeef": {
+          "place": 40,
+          "score": 515
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 88,
+          "score": 264
+        },
+        "totalPlacings": {
+          "place": 74,
+          "score": 464
+        },
+        "specifications": {
+          "place": 35,
+          "score": 91
+        },
+        "reasons": {
+          "place": 76,
+          "score": 197
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 184,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 180,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 62,
+      "counted": true
+    },
+    {
+      "name": "Marti Ducote",
+      "school": "Texas A&M University",
+      "alt": true,
+      "officialPlace": 34,
+      "score": 1010,
+      "categories": {
+        "beefJudging": {
+          "place": 39,
+          "score": 268
+        },
+        "beefGrading": {
+          "place": 54,
+          "score": 245
+        },
+        "overallBeef": {
+          "place": 47,
+          "score": 513
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 68,
+          "score": 470
+        },
+        "specifications": {
+          "place": 82,
+          "score": 77
+        },
+        "reasons": {
+          "place": 13,
+          "score": 218
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 82
+        },
+        "pork": {
+          "placing": 186,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 62
+    },
+    {
+      "name": "Cayden Hodnett",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 35,
+      "score": 1009,
+      "categories": {
+        "beefJudging": {
+          "place": 26,
+          "score": 271
+        },
+        "beefGrading": {
+          "place": 49,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 38,
+          "score": 517
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 80,
+          "score": 272
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 80,
+          "score": 80
+        },
+        "reasons": {
+          "place": 56,
+          "score": 206
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 192,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 187,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 42
+        }
+      },
+      "place": 64
+    },
+    {
+      "name": "Chelsea Davis",
+      "school": "University of Florida",
+      "alt": false,
+      "officialPlace": 30,
+      "score": 1009,
+      "categories": {
+        "beefJudging": {
+          "place": 47,
+          "score": 264
+        },
+        "beefGrading": {
+          "place": 72,
+          "score": 228
+        },
+        "overallBeef": {
+          "place": 71,
+          "score": 492
+        },
+        "lambJudging": {
+          "place": 60,
+          "score": 137
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 65,
+          "score": 472
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 47,
+          "score": 209
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 76
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 88
+        },
+        "lamb": {
+          "placing": 92,
+          "reasons": 45
+        }
+      },
+      "place": 64,
+      "counted": true
+    },
+    {
+      "name": "Ashley Mckinney",
+      "school": "University of Wyoming",
+      "alt": true,
+      "officialPlace": 37,
+      "score": 1008,
+      "categories": {
+        "beefJudging": {
+          "place": 66,
+          "score": 257
+        },
+        "beefGrading": {
+          "place": 59,
+          "score": 240
+        },
+        "overallBeef": {
+          "place": 65,
+          "score": 497
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 479
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 78,
+          "score": 189
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 68
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 38
+        }
+      },
+      "place": 66,
+      "rawName": "Ashlev Mckinney"
+    },
+    {
+      "name": "Grayce Pfeifer",
+      "school": "Tarleton State University",
+      "alt": false,
+      "officialPlace": 31,
+      "score": 1008,
+      "categories": {
+        "beefJudging": {
+          "place": 63,
+          "score": 259
+        },
+        "beefGrading": {
+          "place": 64,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 68,
+          "score": 494
+        },
+        "lambJudging": {
+          "place": 8,
+          "score": 144
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 20,
+          "score": 484
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 73,
+          "score": 199
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 191,
+          "reasons": 68
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 87
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 44
+        }
+      },
+      "place": 66,
+      "counted": true
+    },
+    {
+      "name": "Wil Emory",
+      "school": "Kansas State University",
+      "alt": true,
+      "officialPlace": 36,
+      "score": 1008,
+      "categories": {
+        "beefJudging": {
+          "place": 50,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 69,
+          "score": 231
+        },
+        "overallBeef": {
+          "place": 68,
+          "score": 494
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 31,
+          "score": 213
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 183,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 194,
+          "reasons": 93
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 66
+    },
+    {
+      "name": "Bree Byrd",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 38,
+      "score": 1006,
+      "categories": {
+        "beefJudging": {
+          "place": 59,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 36,
+          "score": 252
+        },
+        "overallBeef": {
+          "place": 50,
+          "score": 512
+        },
+        "lambJudging": {
+          "place": 82,
+          "score": 131
+        },
+        "porkJudging": {
+          "place": 49,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 25,
+          "score": 482
+        },
+        "specifications": {
+          "place": 77,
+          "score": 84
+        },
+        "reasons": {
+          "place": 82,
+          "score": 188
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 193,
+          "reasons": 67
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 35
+        }
+      },
+      "place": 69
+    },
+    {
+      "name": "Kendell Follis",
+      "school": "Texas Tech University",
+      "alt": true,
+      "officialPlace": 39,
+      "score": 1005,
+      "categories": {
+        "beefJudging": {
+          "place": 55,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 79,
+          "score": 222
+        },
+        "overallBeef": {
+          "place": 77,
+          "score": 484
+        },
+        "lambJudging": {
+          "place": 60,
+          "score": 137
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 46,
+          "score": 477
+        },
+        "specifications": {
+          "place": 30,
+          "score": 97
+        },
+        "reasons": {
+          "place": 47,
+          "score": 209
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 74
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 92
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 43
+        }
+      },
+      "place": 70
+    },
+    {
+      "name": "Cayden Beatty",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 40,
+      "score": 1004,
+      "categories": {
+        "beefJudging": {
+          "place": 16,
+          "score": 276
+        },
+        "beefGrading": {
+          "place": 81,
+          "score": 218
+        },
+        "overallBeef": {
+          "place": 68,
+          "score": 494
+        },
+        "lambJudging": {
+          "place": 72,
+          "score": 135
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 488
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 75,
+          "score": 198
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 37
+        }
+      },
+      "place": 71
+    },
+    {
+      "name": "Aspen Sewell",
+      "school": "University of Wyoming",
+      "alt": false,
+      "officialPlace": 32,
+      "score": 1002,
+      "categories": {
+        "beefJudging": {
+          "place": 73,
+          "score": 254
+        },
+        "beefGrading": {
+          "place": 68,
+          "score": 232
+        },
+        "overallBeef": {
+          "place": 76,
+          "score": 486
+        },
+        "lambJudging": {
+          "place": 84,
+          "score": 130
+        },
+        "porkJudging": {
+          "place": 19,
+          "score": 286
+        },
+        "totalPlacings": {
+          "place": 72,
+          "score": 466
+        },
+        "specifications": {
+          "place": 1,
+          "score": 100
+        },
+        "reasons": {
+          "place": 65,
+          "score": 204
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 183,
+          "reasons": 71
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 88,
+          "reasons": 42
+        }
+      },
+      "place": 72,
+      "counted": true
+    },
+    {
+      "name": "Dianna Arnold",
+      "school": "University of Wyoming",
+      "alt": true,
+      "officialPlace": 42,
+      "score": 1002,
+      "categories": {
+        "beefJudging": {
+          "place": 79,
+          "score": 252
+        },
+        "beefGrading": {
+          "place": 39,
+          "score": 251
+        },
+        "overallBeef": {
+          "place": 58,
+          "score": 503
+        },
+        "lambJudging": {
+          "place": 60,
+          "score": 137
+        },
+        "porkJudging": {
+          "place": 35,
+          "score": 282
+        },
+        "totalPlacings": {
+          "place": 25,
+          "score": 482
+        },
+        "specifications": {
+          "place": 80,
+          "score": 80
+        },
+        "reasons": {
+          "place": 78,
+          "score": 189
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 66
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 37
+        }
+      },
+      "place": 72
+    },
+    {
+      "name": "Jean Cumming",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 41,
+      "score": 1002,
+      "categories": {
+        "beefJudging": {
+          "place": 59,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 69,
+          "score": 231
+        },
+        "overallBeef": {
+          "place": 72,
+          "score": 491
+        },
+        "lambJudging": {
+          "place": 14,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 26,
+          "score": 284
+        },
+        "totalPlacings": {
+          "place": 71,
+          "score": 467
+        },
+        "specifications": {
+          "place": 77,
+          "score": 84
+        },
+        "reasons": {
+          "place": 8,
+          "score": 220
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 181,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 188,
+          "reasons": 96
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 72
+    },
+    {
+      "name": "Madi Rich",
+      "school": "Oklahoma State University",
+      "alt": true,
+      "officialPlace": 43,
+      "score": 998,
+      "categories": {
+        "beefJudging": {
+          "place": 81,
+          "score": 245
+        },
+        "beefGrading": {
+          "place": 20,
+          "score": 257
+        },
+        "overallBeef": {
+          "place": 61,
+          "score": 502
+        },
+        "lambJudging": {
+          "place": 87,
+          "score": 129
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 84,
+          "score": 452
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 73,
+          "score": 199
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 177,
+          "reasons": 68
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 86
+        },
+        "lamb": {
+          "placing": 84,
+          "reasons": 45
+        }
+      },
+      "place": 75
+    },
+    {
+      "name": "Luke Fankhauser",
+      "school": "Kansas State University",
+      "alt": true,
+      "officialPlace": 44,
+      "score": 993,
+      "categories": {
+        "beefJudging": {
+          "place": 12,
+          "score": 278
+        },
+        "beefGrading": {
+          "place": 83,
+          "score": 213
+        },
+        "overallBeef": {
+          "place": 72,
+          "score": 491
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 49,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 488
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 62,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 84
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 38
+        }
+      },
+      "place": 76
+    },
+    {
+      "name": "Elijah Fletcher",
+      "school": "University of Wyoming",
+      "alt": true,
+      "officialPlace": 46,
+      "score": 991,
+      "categories": {
+        "beefJudging": {
+          "place": 82,
+          "score": 241
+        },
+        "beefGrading": {
+          "place": 66,
+          "score": 234
+        },
+        "overallBeef": {
+          "place": 80,
+          "score": 475
+        },
+        "lambJudging": {
+          "place": 55,
+          "score": 139
+        },
+        "porkJudging": {
+          "place": 13,
+          "score": 287
+        },
+        "totalPlacings": {
+          "place": 62,
+          "score": 473
+        },
+        "specifications": {
+          "place": 37,
+          "score": 90
+        },
+        "reasons": {
+          "place": 77,
+          "score": 194
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 175,
+          "reasons": 66
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 39
+        }
+      },
+      "place": 77
+    },
+    {
+      "name": "Molly Sackmann",
+      "school": "University of Wyoming",
+      "alt": true,
+      "officialPlace": 45,
+      "score": 991,
+      "categories": {
+        "beefJudging": {
+          "place": 45,
+          "score": 265
+        },
+        "beefGrading": {
+          "place": 81,
+          "score": 218
+        },
+        "overallBeef": {
+          "place": 78,
+          "score": 483
+        },
+        "lambJudging": {
+          "place": 72,
+          "score": 135
+        },
+        "porkJudging": {
+          "place": 66,
+          "score": 276
+        },
+        "totalPlacings": {
+          "place": 75,
+          "score": 463
+        },
+        "specifications": {
+          "place": 30,
+          "score": 97
+        },
+        "reasons": {
+          "place": 31,
+          "score": 213
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 79
+        },
+        "pork": {
+          "placing": 185,
+          "reasons": 91
+        },
+        "lamb": {
+          "placing": 92,
+          "reasons": 43
+        }
+      },
+      "place": 77
+    },
+    {
+      "name": "Garrett Ladeau",
+      "school": "West Texas A&M University",
+      "alt": true,
+      "officialPlace": 47,
+      "score": 989,
+      "categories": {
+        "beefJudging": {
+          "place": 76,
+          "score": 253
+        },
+        "beefGrading": {
+          "place": 43,
+          "score": 248
+        },
+        "overallBeef": {
+          "place": 63,
+          "score": 501
+        },
+        "lambJudging": {
+          "place": 55,
+          "score": 139
+        },
+        "porkJudging": {
+          "place": 22,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 53,
+          "score": 476
+        },
+        "specifications": {
+          "place": 86,
+          "score": 64
+        },
+        "reasons": {
+          "place": 71,
+          "score": 201
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 180,
+          "reasons": 73
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 89
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 39
+        }
+      },
+      "place": 79
+    },
+    {
+      "name": "David Trianarodrig",
+      "school": "University of Florida",
+      "alt": true,
+      "officialPlace": 48,
+      "score": 983,
+      "categories": {
+        "beefJudging": {
+          "place": 47,
+          "score": 264
+        },
+        "beefGrading": {
+          "place": 75,
+          "score": 226
+        },
+        "overallBeef": {
+          "place": 74,
+          "score": 490
+        },
+        "lambJudging": {
+          "place": 82,
+          "score": 131
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 72,
+          "score": 466
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 65,
+          "score": 204
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 180,
+          "reasons": 84
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 35
+        }
+      },
+      "place": 80
+    },
+    {
+      "name": "Kendall Bechtold",
+      "school": "University of Florida",
+      "alt": true,
+      "officialPlace": 49,
+      "score": 949,
+      "categories": {
+        "beefJudging": {
+          "place": 80,
+          "score": 251
+        },
+        "beefGrading": {
+          "place": 86,
+          "score": 204
+        },
+        "overallBeef": {
+          "place": 84,
+          "score": 455
+        },
+        "lambJudging": {
+          "place": 77,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 59,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 62,
+          "score": 473
+        },
+        "specifications": {
+          "place": 77,
+          "score": 84
+        },
+        "reasons": {
+          "place": 82,
+          "score": 188
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 186,
+          "reasons": 65
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 39
+        }
+      },
+      "place": 81
+    },
+    {
+      "name": "Alexis Faller",
+      "school": "North Dakota State University",
+      "alt": false,
+      "officialPlace": 33,
+      "score": 943,
+      "categories": {
+        "beefJudging": {
+          "place": 50,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 87,
+          "score": 193
+        },
+        "overallBeef": {
+          "place": 83,
+          "score": 456
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 141
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 490
+        },
+        "specifications": {
+          "place": 84,
+          "score": 71
+        },
+        "reasons": {
+          "place": 78,
+          "score": 189
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 68
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 41
+        }
+      },
+      "place": 82,
+      "counted": true
+    },
+    {
+      "name": "Allie Simon",
+      "school": "Purdue University",
+      "alt": false,
+      "officialPlace": 34,
+      "score": 942,
+      "categories": {
+        "beefJudging": {
+          "place": 86,
+          "score": 229
+        },
+        "beefGrading": {
+          "place": 78,
+          "score": 224
+        },
+        "overallBeef": {
+          "place": 85,
+          "score": 453
+        },
+        "lambJudging": {
+          "place": 76,
+          "score": 134
+        },
+        "porkJudging": {
+          "place": 84,
+          "score": 268
+        },
+        "totalPlacings": {
+          "place": 81,
+          "score": 456
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 88,
+          "score": 175
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 168,
+          "reasons": 61
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 78
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 36
+        }
+      },
+      "place": 83,
+      "counted": true
+    },
+    {
+      "name": "Kaleb Kline",
+      "school": "Purdue University",
+      "alt": false,
+      "officialPlace": 35,
+      "score": 934,
+      "categories": {
+        "beefJudging": {
+          "place": 85,
+          "score": 235
+        },
+        "beefGrading": {
+          "place": 69,
+          "score": 231
+        },
+        "overallBeef": {
+          "place": 81,
+          "score": 466
+        },
+        "lambJudging": {
+          "place": 79,
+          "score": 132
+        },
+        "porkJudging": {
+          "place": 83,
+          "score": 269
+        },
+        "totalPlacings": {
+          "place": 82,
+          "score": 453
+        },
+        "specifications": {
+          "place": 85,
+          "score": 67
+        },
+        "reasons": {
+          "place": 84,
+          "score": 183
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 179,
+          "reasons": 56
+        },
+        "pork": {
+          "placing": 186,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 88,
+          "reasons": 44
+        }
+      },
+      "place": 84,
+      "counted": true
+    },
+    {
+      "name": "Brooklyn Fortier",
+      "school": "North Dakota State University",
+      "alt": false,
+      "officialPlace": 36,
+      "score": 933,
+      "categories": {
+        "beefJudging": {
+          "place": 76,
+          "score": 253
+        },
+        "beefGrading": {
+          "place": 84,
+          "score": 210
+        },
+        "overallBeef": {
+          "place": 82,
+          "score": 463
+        },
+        "lambJudging": {
+          "place": 65,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 78,
+          "score": 273
+        },
+        "totalPlacings": {
+          "place": 79,
+          "score": 461
+        },
+        "specifications": {
+          "place": 88,
+          "score": 61
+        },
+        "reasons": {
+          "place": 71,
+          "score": 201
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 175,
+          "reasons": 78
+        },
+        "pork": {
+          "placing": 190,
+          "reasons": 83
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 40
+        }
+      },
+      "place": 85,
+      "counted": true
+    },
+    {
+      "name": "Graci Oneal",
+      "school": "Purdue University",
+      "alt": false,
+      "officialPlace": 37,
+      "score": 918,
+      "categories": {
+        "beefJudging": {
+          "place": 88,
+          "score": 220
+        },
+        "beefGrading": {
+          "place": 79,
+          "score": 222
+        },
+        "overallBeef": {
+          "place": 86,
+          "score": 442
+        },
+        "lambJudging": {
+          "place": 72,
+          "score": 135
+        },
+        "porkJudging": {
+          "place": 84,
+          "score": 268
+        },
+        "totalPlacings": {
+          "place": 86,
+          "score": 446
+        },
+        "specifications": {
+          "place": 83,
+          "score": 73
+        },
+        "reasons": {
+          "place": 87,
+          "score": 177
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 162,
+          "reasons": 58
+        },
+        "pork": {
+          "placing": 186,
+          "reasons": 82
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 37
+        }
+      },
+      "place": 86,
+      "counted": true
+    },
+    {
+      "name": "Addison Gilbert",
+      "school": "Purdue University",
+      "alt": false,
+      "officialPlace": 39,
+      "score": 892,
+      "categories": {
+        "beefJudging": {
+          "place": 84,
+          "score": 238
+        },
+        "beefGrading": {
+          "place": 87,
+          "score": 193
+        },
+        "overallBeef": {
+          "place": 88,
+          "score": 431
+        },
+        "lambJudging": {
+          "place": 89,
+          "score": 102
+        },
+        "porkJudging": {
+          "place": 80,
+          "score": 272
+        },
+        "totalPlacings": {
+          "place": 89,
+          "score": 439
+        },
+        "specifications": {
+          "place": 61,
+          "score": 87
+        },
+        "reasons": {
+          "place": 89,
+          "score": 173
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 179,
+          "reasons": 59
+        },
+        "pork": {
+          "placing": 188,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 72,
+          "reasons": 30
+        }
+      },
+      "place": 87,
+      "counted": true
+    },
+    {
+      "name": "Rudi Wendel",
+      "school": "North Dakota State University",
+      "alt": false,
+      "officialPlace": 38,
+      "score": 892,
+      "categories": {
+        "beefJudging": {
+          "place": 87,
+          "score": 228
+        },
+        "beefGrading": {
+          "place": 84,
+          "score": 210
+        },
+        "overallBeef": {
+          "place": 87,
+          "score": 438
+        },
+        "lambJudging": {
+          "place": 60,
+          "score": 137
+        },
+        "porkJudging": {
+          "place": 89,
+          "score": 254
+        },
+        "totalPlacings": {
+          "place": 88,
+          "score": 440
+        },
+        "specifications": {
+          "place": 87,
+          "score": 63
+        },
+        "reasons": {
+          "place": 86,
+          "score": 179
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 169,
+          "reasons": 59
+        },
+        "pork": {
+          "placing": 173,
+          "reasons": 81
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 39
+        }
+      },
+      "place": 87,
+      "counted": true
+    },
+    {
+      "name": "Alissa Benge",
+      "school": "Purdue University",
+      "alt": true,
+      "officialPlace": 50,
+      "score": 835,
+      "categories": {
+        "beefJudging": {
+          "place": 89,
+          "score": 219
+        },
+        "beefGrading": {
+          "place": 89,
+          "score": 167
+        },
+        "overallBeef": {
+          "place": 89,
+          "score": 386
+        },
+        "lambJudging": {
+          "place": 84,
+          "score": 130
+        },
+        "porkJudging": {
+          "place": 69,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 87,
+          "score": 441
+        },
+        "specifications": {
+          "place": 89,
+          "score": 44
+        },
+        "reasons": {
+          "place": 84,
+          "score": 183
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 156,
+          "reasons": 63
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 84
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 36
+        }
+      },
+      "place": 89
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp B Grading lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;600&family=Red+Hat+Text:wght@400;500;600&family=Red+Hat+Mono:wght@400;500&family=Yellowtail&display=swap" rel="stylesheet">
+<style>
+/* hallmark comp B: grading lab / instrument. shape: app screen. Idea: every score is a reading on a calibrated scale; the field plot is the signature. */
+:root {
+  --bg: oklch(97.5% 0.006 85);
+  --panel: oklch(99.6% 0.003 85);
+  --rule: oklch(90% 0.01 85);
+  --rule-2: oklch(94% 0.008 85);
+  --tick: oklch(70% 0.012 85);
+  --ink: oklch(18% 0.006 60);
+  --ink-soft: oklch(36% 0.01 60);
+  --ink-faint: oklch(48% 0.012 60);
+  --on-ink: oklch(96% 0.011 85);
+  --on-ink-dim: oklch(72% 0.012 85);
+  --red: oklch(52% 0.2 22);
+  --red-lift: oklch(68% 0.2 22);
+  --red-wash: oklch(95% 0.025 22);
+  --dot: oklch(60% 0.015 60);
+  --prime: oklch(52% 0.2 22);
+  --choice: oklch(62% 0.12 40);
+  --select: oklch(76% 0.06 70);
+  --up: oklch(48% 0.11 150);
+  --f-display: 'Red Hat Display', system-ui, sans-serif;
+  --f-ui: 'Red Hat Text', system-ui, sans-serif;
+  --f-num: 'Red Hat Mono', ui-monospace, monospace;
+  --f-mark: 'Yellowtail', cursive;
+  --measure: min(1200px, calc(100% - 32px));
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.5 var(--f-ui); }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.wrap { width: var(--measure); margin: 0 auto; }
+.note { font-size: 13px; color: var(--ink-faint); }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+
+.nav { background: var(--ink); color: var(--on-ink); }
+.nav .wrap { display: flex; align-items: center; gap: 32px; height: 64px; }
+.mark { font: 600 18px var(--f-display); letter-spacing: -0.02em; }
+.mark i { font: 400 24px var(--f-mark); color: var(--red-lift); font-style: normal; }
+.nav-links { display: flex; gap: 4px; margin: 0 auto; }
+.nav-links button { background: none; border: 0; color: var(--on-ink-dim); padding: 10px 14px; font-weight: 500; }
+.nav-links button[aria-current] { color: var(--on-ink); box-shadow: inset 0 -2px 0 var(--red); }
+.nav-auth { border: 1px solid oklch(96% 0.011 85 / 0.2); border-radius: 6px; padding: 8px 14px; background: none; color: var(--on-ink); }
+
+/* header: title left, status readout right, all on one baseline grid */
+.head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; padding: 48px 0 24px; border-bottom: 1px solid var(--rule); }
+h1 { font: 600 44px/1.05 var(--f-display); letter-spacing: -0.035em; margin: 0; overflow-wrap: break-word; min-width: 0; }
+.sub { color: var(--ink-soft); margin-top: 6px; }
+.readout { display: grid; grid-template-columns: repeat(3, auto); gap: 0; border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); }
+.readout > div { padding: 12px 20px; border-left: 1px solid var(--rule); }
+.readout > div:first-child { border-left: 0; }
+.readout .k { font-size: 13px; color: var(--ink-faint); }
+.readout .v { font: 500 22px/1.2 var(--f-num); font-variant-numeric: tabular-nums; }
+
+/* action row */
+.act { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 20px 0; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; padding: 3px; background: var(--panel); }
+.seg button { border: 0; background: none; padding: 8px 14px; border-radius: 6px; font-weight: 500; color: var(--ink-soft); min-height: 40px; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); }
+.status { color: var(--ink-soft); font-size: 15px; }
+.go { margin-left: auto; background: var(--red); color: var(--panel); border: 0; border-radius: 8px; height: 48px; padding: 0 22px; font-weight: 600; }
+.go:hover { background: oklch(47% 0.2 22); }
+
+/* the field plot */
+.plot { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 24px 28px 20px; }
+.plot-h { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.plot-h h2 { font: 600 18px var(--f-display); margin: 0; letter-spacing: -0.01em; }
+.scale { position: relative; height: 150px; margin: 12px 0 0; }
+.axis { position: absolute; left: 0; right: 0; bottom: 28px; height: 1px; background: var(--ink); }
+.ticks { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; display: grid; grid-template-columns: repeat(10, minmax(0,1fr)); }
+.ticks span { border-left: 1px solid var(--tick); height: 8px; font: 400 12px var(--f-num); color: var(--ink-faint); padding: 8px 0 0 0; position: relative; }
+.ticks span::after { content: attr(data-v); position: absolute; top: 10px; left: -8px; }
+.ticks span:last-child { border-right: 1px solid var(--tick); }
+.ticks span:last-child::before { content: "100"; position: absolute; top: 10px; right: -12px; font: 400 12px var(--f-num); }
+.dot { position: absolute; bottom: 32px; width: 10px; height: 10px; border-radius: 50%; background: var(--dot); transform: translateX(-50%); }
+.dot.top { background: var(--ink); width: 12px; height: 12px; }
+.dot.me { background: var(--red); width: 14px; height: 14px; box-shadow: 0 0 0 4px var(--red-wash); }
+.flag { position: absolute; transform: translateX(-50%); font-size: 13px; white-space: nowrap; text-align: center; }
+.flag::after { content: ""; display: block; width: 1px; margin: 4px auto 0; background: var(--ink); height: var(--h, 24px); }
+.flag b { font-weight: 600; }
+.flag.me { color: var(--red); }
+.flag.me::after { background: var(--red); }
+.band { position: absolute; bottom: 29px; height: 3px; }
+
+/* standings table beside the plot */
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: 24px; margin-top: 24px; align-items: start; }
+table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+th { text-align: left; font: 500 13px var(--f-ui); color: var(--ink-faint); padding: 12px 16px; border-bottom: 1px solid var(--rule); }
+td { padding: 11px 16px; border-bottom: 1px solid var(--rule-2); }
+tr:last-child td { border-bottom: 0; }
+td.n, th.n { text-align: right; font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+td.rk { font: 500 15px var(--f-num); color: var(--ink-faint); width: 56px; }
+tr.me td { background: var(--red-wash); }
+tr.me td.rk { color: var(--red); }
+.medal { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--ink); font: 500 13px var(--f-num); color: var(--ink); }
+tr:first-child .medal { background: var(--ink); color: var(--on-ink); }
+
+.you { background: var(--ink); color: var(--on-ink); border-radius: 12px; padding: 24px; }
+.you .k { font-size: 13px; color: var(--on-ink-dim); }
+.you .big { font: 500 64px/1 var(--f-num); letter-spacing: -0.04em; margin: 8px 0; }
+.you .big small { font-size: 24px; color: var(--on-ink-dim); }
+.you dl { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px 16px; margin: 16px 0 0; padding-top: 16px; border-top: 1px solid oklch(96% 0.011 85 / 0.14); }
+.you dt { color: var(--on-ink-dim); font-size: 14px; }
+.you dd { margin: 0; text-align: right; font: 500 14px var(--f-num); }
+.ladder { display: grid; grid-template-columns: repeat(10, minmax(0,1fr)); gap: 3px; margin-top: 16px; }
+.ladder i { height: 22px; border-radius: 2px; background: oklch(30% 0.01 60); }
+.ladder i.ok { background: oklch(72% 0.13 150); }
+.ladder i.near { background: oklch(80% 0.1 85); }
+.ladder i.miss { background: var(--red-lift); }
+.lg { font-size: 12px; color: var(--on-ink-dim); margin-top: 6px; }
+
+/* rankings slice: rating axis */
+.pr { padding: 56px 0 72px; }
+.pr .head { padding-top: 0; }
+.ratings { position: relative; height: 120px; margin-top: 16px; }
+.rlabel { position: absolute; bottom: 36px; transform: translateX(-50%) rotate(-40deg); transform-origin: bottom left; font-size: 12px; white-space: nowrap; color: var(--ink-soft); }
+.rdot { position: absolute; bottom: 26px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); transform: translateX(-50%); }
+.rdot.lead { background: var(--red); width: 13px; height: 13px; bottom: 24px; }
+
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .head { grid-template-columns: minmax(0, 1fr); }
+  .readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .readout > div { padding: 10px 12px; }
+  .readout .v { font-size: 17px; }
+  .go { margin-left: 0; width: 100%; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .you { order: -1; }
+  .plot { padding: 16px; }
+  .flag { display: none; }
+  .flag.me { display: block; }
+  .ticks span:nth-child(even)::after { content: none; }
+  .hide-sm { display: none; }
+  .rlabel { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Site"><div class="wrap">
+  <span class="mark">BEEF <i>Grading</i></span>
+  <div class="nav-links"><button>Practice</button><button aria-current="page">Weekly</button><button>Power rankings</button><button>Field guide</button></div>
+  <button class="nav-auth">Gunny M.</button>
+</div></nav>
+
+<main class="wrap">
+  <header class="head">
+    <div>
+      <h1>Weekly challenge</h1>
+      <div class="sub">Nov 2 to Nov 8, 2026. Ten carcasses, one attempt.</div>
+    </div>
+    <div class="readout">
+      <div><div class="k">Closes in</div><div class="v">5d 07h 52m</div></div>
+      <div><div class="k">Graders</div><div class="v">31</div></div>
+      <div><div class="k">Field median</div><div class="v">78%</div></div>
+    </div>
+  </header>
+
+  <div class="act">
+    <div class="seg" role="group" aria-label="Division"><button aria-pressed="true">High school</button><button aria-pressed="false">College</button></div>
+    <span class="status">You placed 6th with 84%. Results are final for this week.</span>
+    <button class="go">Review my card</button>
+  </div>
+
+  <section class="plot" aria-labelledby="plot-h">
+    <div class="plot-h"><h2 id="plot-h">Where the field landed</h2><span class="note">Sample entries, for layout only. Each dot is one grader.</span></div>
+    <div class="scale" role="img" aria-label="Scores from 52 to 96 percent; you scored 84, 6th of 31.">
+      <span class="flag" style="left:96%;--h:58px;top:0"><b>Ana W.</b> 96</span>
+      <span class="flag" style="left:93%;--h:30px;top:28px">Ben O. 93</span>
+      <span class="flag me" style="left:84%;--h:40px;top:18px"><b>You</b> 84</span>
+      <span class="dot" style="left:52%"></span><span class="dot" style="left:58%"></span><span class="dot" style="left:61%"></span><span class="dot" style="left:64%"></span><span class="dot" style="left:66%"></span><span class="dot" style="left:68%"></span><span class="dot" style="left:70%"></span><span class="dot" style="left:71%"></span><span class="dot" style="left:73%"></span><span class="dot" style="left:74%"></span><span class="dot" style="left:76%"></span><span class="dot" style="left:77%"></span><span class="dot" style="left:78%"></span><span class="dot" style="left:79%"></span><span class="dot" style="left:81%"></span><span class="dot" style="left:85%"></span><span class="dot" style="left:88%"></span>
+      <span class="dot top" style="left:90%"></span><span class="dot top" style="left:93%"></span><span class="dot top" style="left:96%"></span>
+      <span class="dot me" style="left:84%"></span>
+      <span class="axis"></span>
+      <div class="ticks" aria-hidden="true"><span data-v="0"></span><span data-v="10"></span><span data-v="20"></span><span data-v="30"></span><span data-v="40"></span><span data-v="50"></span><span data-v="60"></span><span data-v="70"></span><span data-v="80"></span><span data-v="90"></span></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <table aria-label="Standings">
+      <thead><tr><th>Rank</th><th>Grader</th><th class="n">Points</th><th class="n">Pct</th><th class="n hide-sm">Submitted</th></tr></thead>
+      <tbody>
+        <tr><td class="rk"><span class="medal">1</span></td><td>Ana Whitfield</td><td class="n">96</td><td class="n">96%</td><td class="n hide-sm">Nov 2</td></tr>
+        <tr><td class="rk"><span class="medal">2</span></td><td>Ben Ortega</td><td class="n">93</td><td class="n">93%</td><td class="n hide-sm">Nov 3</td></tr>
+        <tr><td class="rk"><span class="medal">3</span></td><td>Cy Larsen</td><td class="n">90</td><td class="n">90%</td><td class="n hide-sm">Nov 2</td></tr>
+        <tr><td class="rk">4</td><td>Dee Harmon</td><td class="n">88</td><td class="n">88%</td><td class="n hide-sm">Nov 3</td></tr>
+        <tr><td class="rk">5</td><td>Eli Brandt</td><td class="n">85</td><td class="n">85%</td><td class="n hide-sm">Nov 2</td></tr>
+        <tr class="me"><td class="rk">6</td><td>Gunny M. (you)</td><td class="n">84</td><td class="n">84%</td><td class="n hide-sm">Nov 3</td></tr>
+        <tr><td class="rk">7</td><td>Faith Okafor</td><td class="n">81</td><td class="n">81%</td><td class="n hide-sm">Nov 2</td></tr>
+      </tbody>
+    </table>
+    <aside class="you" aria-label="Your card">
+      <div class="k">Your result</div>
+      <div class="big">84<small>/100</small></div>
+      <div class="k">6th of 31 in high school</div>
+      <div class="ladder" aria-label="Carcass by carcass: 6 exact, 3 near, 1 miss"><i class="ok"></i><i class="ok"></i><i class="near"></i><i class="ok"></i><i class="miss"></i><i class="ok"></i><i class="near"></i><i class="ok"></i><i class="near"></i><i class="ok"></i></div>
+      <div class="lg">Carcass 1 to 10: exact, within a third, miss</div>
+      <dl><dt>Exact calls</dt><dd>6 of 10</dd><dt>Within one third</dt><dd>3</dd><dt>Above field median</dt><dd>+6 pts</dd></dl>
+    </aside>
+  </div>
+</main>
+
+<section class="pr"><div class="wrap">
+  <header class="head">
+    <div><h1>Power rankings</h1><div class="sub">Senior colleges, 2026 season. Latest: High Plains, Nov 1, won by Texas Tech.</div></div>
+    <div class="readout">
+      <div><div class="k">Contests</div><div class="v">7</div></div>
+      <div><div class="k">Ranked</div><div class="v">15</div></div>
+      <div><div class="k">No. 1 rating</div><div class="v">1.274</div></div>
+    </div>
+  </header>
+  <section class="plot" style="margin-top:24px" aria-labelledby="rt-h">
+    <div class="plot-h"><h2 id="rt-h">Rating spread, top 15</h2><span class="note">0.80 to 1.30</span></div>
+    <div class="ratings" role="img" aria-label="Ratings from 0.817 to 1.274">
+      <span class="rlabel" style="left:94.8%">Texas Tech</span><span class="rdot lead" style="left:94.8%"></span>
+      <span class="rlabel" style="left:84.4%">Oklahoma St</span><span class="rdot" style="left:84.4%"></span>
+      <span class="rlabel" style="left:80.8%;bottom:30px">Kansas St</span><span class="rdot" style="left:82.8%"></span>
+      <span class="rlabel" style="left:69.6%">West Texas A&amp;M</span><span class="rdot" style="left:69.6%"></span>
+      <span class="rlabel" style="left:60.8%">Texas A&amp;M</span><span class="rdot" style="left:60.8%"></span>
+      <span class="rlabel" style="left:40.6%">Wyoming</span><span class="rdot" style="left:40.6%"></span>
+      <span class="rlabel" style="left:31.2%">Tarleton St</span><span class="rdot" style="left:31.2%"></span>
+      <span class="rlabel" style="left:25.8%">Florida</span><span class="rdot" style="left:25.8%"></span>
+      <span class="rdot" style="left:21%"></span><span class="rdot" style="left:14.6%"></span><span class="rdot" style="left:9%"></span><span class="rdot" style="left:7.8%"></span><span class="rdot" style="left:6.8%"></span><span class="rdot" style="left:5.8%"></span><span class="rdot" style="left:3.4%"></span>
+      <span class="axis"></span>
+    </div>
+  </section>
+</div></section>
+</body>
+</html>

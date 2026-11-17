@@ -328,6 +328,11 @@ service cloud.firestore {
             && request.resource.data.results is list
             && request.resource.data.results.size() >= 1
             && request.resource.data.results.size() <= 80
+            // individuals: optional contestant list from ingest_scorecards.py;
+            // same list caveat as results (type + size only, admin-trusted)
+            && (!('individuals' in request.resource.data)
+                || (request.resource.data.individuals is list
+                    && request.resource.data.individuals.size() <= 400))
             && (!('sourceUrl' in request.resource.data)
                 || (request.resource.data.sourceUrl is string
                     && request.resource.data.sourceUrl.matches('https://.*')));

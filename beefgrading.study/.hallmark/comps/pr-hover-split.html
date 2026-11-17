@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contest hover and split</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;900&family=Red+Hat+Text:wght@400;500;600&family=Red+Hat+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* hallmark comp: power rankings add-ons (contest hover card, placings vs reasons split). shape: app screen, scoreboard material. Real 2026 senior data. */
+:root {
+  --ink: oklch(18% 0.006 60);
+  --panel: oklch(23% 0.008 60);
+  --panel-2: oklch(30% 0.01 60);
+  --hair: oklch(96% 0.011 85 / 0.14);
+  --grid: oklch(96% 0.011 85 / 0.08);
+  --on-ink: oklch(96% 0.011 85);
+  --dim: oklch(72% 0.012 85);
+  --red: oklch(52% 0.2 22);
+  --red-lift: oklch(68% 0.2 22);
+  --heat-1: oklch(92% 0.012 85);
+  --heat-2: oklch(74% 0.012 85);
+  --heat-3: oklch(46% 0.01 60);
+  --heat-4: oklch(33% 0.01 60);
+  --heat-5: oklch(26% 0.008 60);
+  --f-display: 'Red Hat Display', system-ui, sans-serif;
+  --f-ui: 'Red Hat Text', system-ui, sans-serif;
+  --f-num: 'Red Hat Mono', ui-monospace, monospace;
+  --measure: min(1200px, 100% - 32px);
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; margin: 0; }
+body { background: var(--ink); color: var(--on-ink); font: 400 16px/1.5 var(--f-ui); padding: 48px 0 96px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--red-lift); outline-offset: 2px; }
+.wrap { width: var(--measure); margin: 0 auto; }
+h1 { font: 900 56px/0.95 var(--f-display); letter-spacing: -0.045em; margin: 0 0 8px; }
+h2 { font: 900 40px/1 var(--f-display); letter-spacing: -0.04em; margin: 0; }
+.cap { color: var(--dim); font-size: 15px; margin: 8px 0 20px; max-width: 72ch; }
+.note { color: var(--dim); font-size: 13px; }
+section { margin-top: 56px; }
+
+/* category switcher */
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; background: var(--panel); border-radius: 8px; padding: 4px; width: fit-content; max-width: 100%; margin-bottom: 16px; }
+.tabs button { border: 0; background: none; color: var(--dim); padding: 8px 14px; border-radius: 5px; font-weight: 500; min-height: 40px; }
+.tabs button:hover { color: var(--on-ink); }
+.tabs button[aria-selected="true"] { background: var(--on-ink); color: var(--ink); }
+
+/* results grid */
+.gridwrap { overflow-x: auto; background: var(--panel); border-radius: 12px; padding: 8px 0; }
+table { border-collapse: separate; border-spacing: 3px; width: 100%; min-width: 760px; }
+th { font: 500 13px var(--f-ui); color: var(--dim); text-align: center; padding: 6px 4px; vertical-align: bottom; }
+th small { display: block; font: 500 12px var(--f-num); }
+th.school, td.school { text-align: left; position: sticky; left: 0; background: var(--panel); z-index: 1; padding-left: 16px; white-space: nowrap; }
+td.school { font-weight: 600; font-size: 15px; }
+td.school .rk { font: 900 18px var(--f-display); color: var(--dim); display: inline-block; width: 28px; }
+.cell { width: 100%; min-width: 64px; height: 44px; border: 0; border-radius: 4px; font: 600 16px var(--f-num); position: relative; }
+.cell[data-h="1"] { background: var(--heat-1); color: var(--ink); }
+.cell[data-h="2"] { background: var(--heat-2); color: var(--ink); }
+.cell[data-h="3"] { background: var(--heat-3); color: var(--on-ink); }
+.cell[data-h="4"] { background: var(--heat-4); color: var(--on-ink); }
+.cell[data-h="5"] { background: var(--heat-5); color: var(--on-ink); }
+.cell.won::after { content: ""; position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+.cell:hover, .cell[aria-expanded="true"] { box-shadow: 0 0 0 2px var(--on-ink); }
+.empty { height: 44px; border-radius: 4px; background: var(--grid); }
+
+/* hover card */
+.card { position: fixed; z-index: 10; width: 320px; background: var(--on-ink); color: var(--ink); border-radius: 10px; padding: 16px; box-shadow: 0 24px 48px oklch(0% 0 0 / 0.45); pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity 140ms ease-out, transform 140ms ease-out; }
+.card.on { opacity: 1; transform: none; }
+.card .t { font: 900 22px/1.1 var(--f-display); letter-spacing: -0.02em; }
+.card .m { font-size: 13px; color: oklch(40% 0.01 60); margin: 2px 0 10px; }
+.card .big { display: flex; align-items: baseline; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid oklch(18% 0.006 60 / 0.14); }
+.card .big b { font: 900 40px/1 var(--f-display); letter-spacing: -0.04em; }
+.card .big span { font: 500 14px var(--f-num); color: oklch(40% 0.01 60); }
+.card dl { display: grid; grid-template-columns: minmax(0,1fr) 44px 56px; gap: 4px 10px; margin: 10px 0 0; align-items: center; font-size: 14px; }
+.card dt { color: oklch(32% 0.01 60); }
+.card dt.sub { padding-left: 12px; }
+.card dd { margin: 0; font: 500 14px var(--f-num); text-align: right; }
+.card dd.pl { text-align: center; border-radius: 3px; padding: 1px 0; }
+.card dd.pl.top { background: var(--ink); color: var(--on-ink); }
+.card .split { margin-top: 12px; }
+.card .split .bar { display: flex; height: 10px; border-radius: 2px; overflow: hidden; }
+.card .split .bar i { display: block; height: 100%; }
+.card .split .lg { display: flex; justify-content: space-between; font-size: 12px; color: oklch(40% 0.01 60); margin-top: 4px; }
+.sw-pl { background: var(--ink); } .sw-rs { background: var(--red); }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+
+/* split section */
+.picker { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.picker button { border: 1px solid var(--hair); background: var(--panel); color: var(--dim); border-radius: 6px; padding: 8px 12px; min-height: 40px; font-weight: 500; }
+.picker button[aria-pressed="true"] { background: var(--on-ink); color: var(--ink); border-color: var(--on-ink); }
+.readout { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); background: var(--panel); border-radius: 12px; margin-bottom: 16px; }
+.readout > div { padding: 14px 20px; border-left: 1px solid var(--hair); }
+.readout > div:first-child { border-left: 0; }
+.readout .k { font-size: 13px; color: var(--dim); }
+.readout .v { font: 600 26px/1.2 var(--f-num); }
+.panel { background: var(--panel); border-radius: 12px; padding: 20px 24px; }
+.legend { display: flex; gap: 20px; font-size: 13px; color: var(--dim); margin-bottom: 8px; flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.legend i.pl { border: 2.5px solid var(--on-ink); }
+.legend i.rs { background: var(--red-lift); }
+.legend i.sq { border-radius: 2px; }
+svg text { font-family: var(--f-num); font-size: 12px; fill: var(--dim); }
+svg .cn { font-family: var(--f-ui); font-size: 13px; fill: var(--on-ink); }
+.sum { margin-top: 14px; font-size: 15px; color: var(--dim); }
+.sum b { color: var(--on-ink); font-weight: 600; }
+
+@media (max-width: 760px) {
+  h1 { font-size: 40px; } h2 { font-size: 30px; }
+  .readout { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .readout > div:nth-child(3) { border-left: 0; }
+  .readout > div:nth-child(n+3) { border-top: 1px solid var(--hair); }
+  .panel { padding: 16px 12px; }
+  .card { width: min(320px, calc(100% - 32px)); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Power rankings add-ons</h1>
+  <p class="note">Mockup with real 2026 senior college results. Not wired into the site yet.</p>
+
+  <section aria-labelledby="g-h">
+    <h2 id="g-h">Season results</h2>
+    <p class="cap">Each cell is the team's place at that contest. Hover, tap or tab to a cell for the full contest card. Switch the category to see any board. Lighter is better; a red dot marks a win.</p>
+    <div class="tabs" role="tablist" aria-label="Category shown in the grid" id="tabs"></div>
+    <div class="gridwrap"><table id="grid"></table></div>
+  </section>
+
+  <section aria-labelledby="s-h">
+    <h2 id="s-h">Placings vs reasons</h2>
+    <p class="cap">Beef, pork and lamb judging are each that species' placing classes plus its reasons. This splits them back apart so you can see which half carries a team.</p>
+    <div class="picker" id="picker" role="group" aria-label="School"></div>
+    <div class="readout" id="readout"></div>
+    <div class="panel">
+      <div class="legend"><span><i class="pl"></i>Placings rank</span><span><i class="rs"></i>Reasons rank</span><span><i class="sq" style="background:var(--on-ink)"></i>Placings points</span><span><i class="sq sw-rs" style="background:var(--red-lift)"></i>Reasons points</span></div>
+      <svg id="split" width="100%" role="img"></svg>
+      <p class="sum" id="sum"></p>
+    </div>
+  </section>
+</div>
+<div class="card" id="card" role="tooltip" aria-hidden="true"></div>
+
+<script>
+const CATS = [
+  ['overall', 'Overall'], ['totalPlacings', 'Placings'], ['reasons', 'Reasons'],
+  ['beefJudging', 'Beef judging'], ['porkJudging', 'Pork judging'], ['lambJudging', 'Lamb judging'],
+  ['beefGrading', 'Rail'], ['specifications', 'Specs'], ['overallBeef', 'Overall beef']
+];
+// Board order from the live power rankings (senior 2026)
+const BOARD = ['Texas Tech University','Oklahoma State University','Kansas State University','West Texas A&M University','Texas A&M University','University of Wyoming','Tarleton State University','University of Florida','South Dakota State University','University of Illinois','Iowa State University','Purdue University','The Ohio State University','North Dakota State University','University of Nebraska'];
+const SHORT = s => s.replace('University of ','').replace(' University','').replace('The ','').replace('State','St');
+const ord = n => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th','st','nd','rd'][n % 10] || 'th');
+const fmt = n => (typeof n === 'number') ? n.toLocaleString('en-US') : '';
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const heat = (p, n) => { const f = p / n; return p === 1 ? 1 : f <= 0.25 ? 2 : f <= 0.5 ? 3 : f <= 0.75 ? 4 : 5; };
+const fdate = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+let DATA = [], cat = 'overall';
+const res = (c, s) => c.r.find(r => r.s === s);
+const placeOf = (r, k) => k === 'overall' ? r.p : (r.c[k] ? r.c[k][0] : null);
+
+function renderTabs() {
+  const el = document.getElementById('tabs');
+  el.innerHTML = CATS.map(([k, t]) => `<button role="tab" aria-selected="${k === cat}" data-k="${k}">${t}</button>`).join('');
+  el.querySelectorAll('button').forEach((b, i, all) => {
+    b.addEventListener('click', () => { cat = b.dataset.k; renderTabs(); renderGrid(); el.querySelector('[aria-selected="true"]').focus(); });
+    b.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { e.preventDefault(); all[(i + d + all.length) % all.length].click(); }
+    });
+  });
+}
+
+function renderGrid() {
+  const head = '<tr><th class="school">Team</th>' + DATA.map(c => `<th>${esc(c.n)}<small>${fdate(c.d)}, ${c.t} teams</small></th>`).join('') + '</tr>';
+  const body = BOARD.map((s, i) => '<tr><td class="school"><span class="rk">' + (i + 1) + '</span>' + esc(SHORT(s)) + '</td>' + DATA.map((c, j) => {
+    const r = res(c, s); const p = r && placeOf(r, cat);
+    if (!p) return '<td><div class="empty" aria-label="Did not compete"></div></td>';
+    return `<td><button class="cell${p === 1 ? ' won' : ''}" data-h="${heat(p, c.t)}" data-s="${i}" data-c="${j}" aria-label="${esc(SHORT(s))}, ${esc(c.n)}: ${ord(p)} of ${c.t}" aria-expanded="false">${p}</button></td>`;
+  }).join('') + '</tr>').join('');
+  const t = document.getElementById('grid'); t.innerHTML = '<thead>' + head + '</thead><tbody>' + body + '</tbody>';
+  t.querySelectorAll('.cell').forEach(b => {
+    const show = () => openCard(b); const hide = () => closeCard(b);
+    b.addEventListener('mouseenter', show); b.addEventListener('mouseleave', hide);
+    b.addEventListener('focus', show); b.addEventListener('blur', hide);
+    b.addEventListener('click', () => (b.getAttribute('aria-expanded') === 'true' ? hide() : show()));
+  });
+}
+
+function row(label, v, n, sub) {
+  if (!v) return '';
+  return `<dt${sub ? ' class="sub"' : ''}>${label}</dt><dd class="pl${v[0] <= 3 ? ' top' : ''}">${ord(v[0])}</dd><dd>${fmt(v[1])}</dd>`;
+}
+function openCard(b) {
+  const s = BOARD[+b.dataset.s], c = DATA[+b.dataset.c], r = res(c, s), k = r.c;
+  const pl = k.totalPlacings, rs = k.reasons;
+  const tot = pl && rs ? pl[1] + rs[1] : 0;
+  const card = document.getElementById('card');
+  card.innerHTML = `<div class="t">${esc(SHORT(s))}</div><div class="m">${esc(c.n)}, ${fdate(c.d)}, ${c.t} teams</div>
+    <div class="big"><b>${ord(r.p)}</b><span>${fmt(r.sc)} pts overall</span></div>
+    <dl>${row('Placings', pl)}${row('Reasons', rs)}${row('Beef judging', k.beefJudging)}${row('Pork judging', k.porkJudging)}${row('Lamb judging', k.lambJudging)}${row('Rail', k.beefGrading)}${row('Specs', k.specifications)}${row('Overall beef', k.overallBeef)}</dl>
+    ${tot ? `<div class="split"><div class="bar"><i class="sw-pl" style="width:${(pl[1] / tot * 100).toFixed(1)}%"></i><i class="sw-rs" style="width:${(rs[1] / tot * 100).toFixed(1)}%"></i></div><div class="lg"><span>Placings ${Math.round(pl[1] / tot * 100)}%</span><span>Reasons ${Math.round(rs[1] / tot * 100)}% of judging points</span></div></div>` : ''}`;
+  const rc = b.getBoundingClientRect(), w = card.offsetWidth, h = card.offsetHeight;
+  let x = rc.left + rc.width / 2 - w / 2, y = rc.bottom + 10;
+  x = Math.max(16, Math.min(x, innerWidth - w - 16));
+  if (y + h > innerHeight - 16) y = rc.top - h - 10;
+  card.style.left = x + 'px'; card.style.top = Math.max(16, y) + 'px';
+  card.classList.add('on'); b.setAttribute('aria-expanded', 'true');
+}
+function closeCard(b) { document.getElementById('card').classList.remove('on'); b.setAttribute('aria-expanded', 'false'); }
+
+let pick = BOARD[0];
+function renderPicker() {
+  const el = document.getElementById('picker');
+  el.innerHTML = BOARD.slice(0, 10).map(s => `<button aria-pressed="${s === pick}" data-s="${esc(s)}">${esc(SHORT(s))}</button>`).join('');
+  el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { pick = b.dataset.s; renderPicker(); renderSplit(); }));
+}
+function renderSplit() {
+  const rows = DATA.map(c => ({ c, r: res(c, pick) })).filter(x => x.r && x.r.c.totalPlacings && x.r.c.reasons);
+  const avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const plA = avg(rows.map(x => x.r.c.totalPlacings[0])), rsA = avg(rows.map(x => x.r.c.reasons[0]));
+  const ovA = avg(rows.map(x => x.r.p));
+  const share = avg(rows.map(x => x.r.c.reasons[1] / (x.r.c.reasons[1] + x.r.c.totalPlacings[1])));
+  document.getElementById('readout').innerHTML =
+    `<div><div class="k">Avg overall place</div><div class="v">${ovA.toFixed(1)}</div></div>
+     <div><div class="k">Avg placings rank</div><div class="v">${plA.toFixed(1)}</div></div>
+     <div><div class="k">Avg reasons rank</div><div class="v">${rsA.toFixed(1)}</div></div>
+     <div><div class="k">Reasons share of judging</div><div class="v">${Math.round(share * 100)}%</div></div>`;
+
+  const svg = document.getElementById('split');
+  const W = svg.clientWidth || 1100, n = rows.length, maxR = Math.max(8, ...rows.map(x => Math.max(x.r.c.totalPlacings[0], x.r.c.reasons[0])));
+  const L = 36, R = 12, top = 16, rankH = 200, gap = 44, barH = 18;
+  const H = top + rankH + gap + barH + 44;
+  const colW = (W - L - R) / n, X = i => L + colW * (i + 0.5), Y = p => top + (p - 1) / (maxR - 1) * rankH;
+  let g = '';
+  for (let p = 1; p <= maxR; p++) g += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="var(--grid)"/><text x="${L - 10}" y="${Y(p) + 4}" text-anchor="end">${p}</text>`;
+  rows.forEach((x, i) => {
+    const pl = x.r.c.totalPlacings, rs = x.r.c.reasons, cx = X(i);
+    g += `<line x1="${cx}" x2="${cx}" y1="${Y(pl[0])}" y2="${Y(rs[0])}" stroke="var(--on-ink)" stroke-opacity=".35" stroke-width="3"/>`;
+    g += `<circle cx="${cx}" cy="${Y(pl[0])}" r="8" fill="var(--panel)" stroke="var(--on-ink)" stroke-width="2.5"><title>Placings ${ord(pl[0])}</title></circle>`;
+    g += `<circle cx="${cx}" cy="${Y(rs[0])}" r="7" fill="var(--red-lift)"><title>Reasons ${ord(rs[0])}</title></circle>`;
+    const tot = pl[1] + rs[1], bw = Math.min(colW - 16, 140), bx = cx - bw / 2, by = top + rankH + gap;
+    const pw = bw * pl[1] / tot;
+    g += `<rect x="${bx}" y="${by}" width="${pw}" height="${barH}" fill="var(--on-ink)"/><rect x="${bx + pw}" y="${by}" width="${bw - pw}" height="${barH}" fill="var(--red-lift)"/>`;
+    g += `<text x="${cx}" y="${by + barH + 16}" text-anchor="middle">${fmt(pl[1])} + ${fmt(rs[1])}</text>`;
+    g += `<text class="cn" x="${cx}" y="${by + barH + 34}" text-anchor="middle">${esc(x.c.n)}</text>`;
+  });
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+  svg.setAttribute('aria-label', `${SHORT(pick)}: average placings rank ${plA.toFixed(1)}, average reasons rank ${rsA.toFixed(1)} across ${n} contests.`);
+  svg.innerHTML = g;
+  const gapTxt = plA - rsA;
+  document.getElementById('sum').innerHTML = Math.abs(gapTxt) < 0.75
+    ? `<b>${esc(SHORT(pick))}</b> ranks about the same in placings and reasons.`
+    : `<b>${esc(SHORT(pick))}</b> ranks ${Math.abs(gapTxt).toFixed(1)} places better in ${gapTxt > 0 ? 'reasons' : 'placings'} than in ${gapTxt > 0 ? 'placings' : 'reasons'} on average, so its judging totals lean on ${gapTxt > 0 ? 'reasons' : 'placings'}.`;
+}
+
+fetch('pr-data.json').then(r => r.json()).then(d => {
+  DATA = d; renderTabs(); renderGrid(); renderPicker(); renderSplit();
+  addEventListener('resize', () => renderSplit());
+});
+</script>
+</body>
+</html>

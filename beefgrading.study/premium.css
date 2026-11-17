@@ -59,32 +59,6 @@
    above are the entire experience and still look deliberate. No JS, no
    scroll listener, no rAF. */
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    /* The hero plate drifts slower than the page: real parallax depth on
-       the one surface big enough to show it. */
-    .landing-brand::before {
-      animation: p-heroDrift linear both;
-      animation-timeline: view();
-      animation-range: entry 0% exit 100%;
-    }
-    /* The lockup settles back and fades as the next band overtakes it. */
-    .landing-brand-inner {
-      animation: p-heroSettle linear both;
-      animation-timeline: view();
-      animation-range: exit 0% exit 100%;
-    }
-  }
-}
-
-@keyframes p-heroDrift {
-  from { transform: scale(1.06) translateY(-1.5%); }
-  to   { transform: scale(1.06) translateY(4%); }
-}
-@keyframes p-heroSettle {
-  from { opacity: 1; transform: scale(1); }
-  to   { opacity: 0.25; transform: scale(0.97); }
-}
 
 /* ─────────────────────────────────────────────────────────────
    KEYFRAME ANIMATIONS
@@ -151,98 +125,6 @@
      and because premium.css loads last it silently won, so the animation
      settled on a different value than the stylesheet declared. One owner,
      no cross-file drift. */
-  /* The small brand mark still stamps in; the oversized background shield
-     does not, because slamming an 820px mass is theatre, not feedback. */
-  .landing-mark .shield-mark {
-    --stamp-rot: 0deg;
-    animation: p-stampIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
-  }
-  /* p-inkSoak, not p-fadeIn: p-fadeIn ends at opacity:1 and `both` fill makes
-     that final keyframe win over the stylesheet, so the 7% resting opacity in
-     style.css was silently defeated and the mass rendered nearly solid.
-     p-inkSoak resolves to var(--rest-opacity) instead. Same bug class as the
-     overprint --rest-opacity conflict fixed earlier in this file. */
-  .landing-mass {
-    animation: p-inkSoak 1.4s ease 0.15s both;
-  }
-  .landing-script {
-    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
-  }
-  .landing-headline {
-    animation: p-fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
-  }
-  .landing-subtext {
-    animation: p-fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
-  }
-  .landing-cta {
-    animation: p-fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
-  }
-
-  /* ── Setup views - elements enter when screen becomes visible ── */
-  #home-screen:not(.hidden) .setup-switcher-wrap {
-    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
-  }
-  #home-screen:not(.hidden) .setup-title-block {
-    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
-  }
-  #home-screen:not(.hidden) #start-btn {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-  }
-  #home-screen:not(.hidden) .home-card {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
-  }
-  #home-screen:not(.hidden) #weekly-challenge-card {
-    animation: p-cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-  }
-  #home-screen:not(.hidden) .home-setup-footer-links {
-    animation: p-fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
-  }
-
-  /* ── Summary screen ── */
-  #summary-screen:not(.hidden) .summary-hero {
-    animation: p-scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
-  }
-  #summary-screen:not(.hidden) .summary-stamp {
-    --stamp-rot: -5deg;
-    animation: p-stampIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
-  }
-  /* Certified Prime - slams in late, harder overshoot */
-  #summary-screen:not(.hidden) .summary-cert-stamp:not(.hidden) {
-    --stamp-rot: 8deg;
-    animation: p-stampIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-  }
-  #summary-screen:not(.hidden) .summary-score {
-    animation: p-scorePop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-  }
-  #summary-screen:not(.hidden) .summary-actions {
-    animation: p-fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-  }
-  #summary-screen:not(.hidden) .summary-table-wrap {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
-  }
-  #summary-screen:not(.hidden) .scoring-explainer {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.36s both;
-  }
-
-  /* ── Leaderboard screen ── */
-  #leaderboard-screen:not(.hidden) .leaderboard-hero {
-    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
-  }
-  #leaderboard-screen:not(.hidden) .leaderboard-table-wrap {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-  }
-
-  /* ── Field guide screen ── */
-  #fieldguide-screen:not(.hidden) .fg-hero {
-    animation: p-fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.02s both;
-  }
-  #fieldguide-screen:not(.hidden) .fg-section {
-    animation: p-cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
-  }
-  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(2) { animation-delay: 0.18s; }
-  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(3) { animation-delay: 0.26s; }
-  #fieldguide-screen:not(.hidden) .fg-section:nth-of-type(4) { animation-delay: 0.34s; }
-
   /* ── Drill feedback panel ── */
   .feedback-panel:not(.hidden) {
     animation: p-feedbackSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -286,9 +168,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-
-  /* Continuous loops are the one thing that must stop outright. */
-  .landing-ticker span { animation: none !important; }
 
   /* Scroll reveals resolve instantly (scroll.js also stamps .is-in
      immediately and never builds an observer under reduce; this is the

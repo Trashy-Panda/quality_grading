@@ -147,8 +147,29 @@ moving the *data*.
 | `sourceUrl` | string | optional; must start with `https://` if present |
 | `teamCount` | int | 1–80 |
 | `results` | list | size 1–80; elements `{school, place, score?, categories?}` |
+| `individuals` | list | optional; every contestant, see below |
 | `createdAt` | timestamp | server time on create; immutable on update |
 | `updatedAt` | timestamp | server time on every write |
+
+**`results[i].splits` (optional, 2026 scorecard scrapes):** `{beef, pork, lamb}`,
+each `{placing:int, reasons:int}` = the team's points from that species' placing
+classes vs its reasons classes. `beef.placing + beef.reasons` equals
+`categories.beefJudging.score` (same for pork and lamb). Historic contests lack
+it; the UI falls back to the species judging totals. The client derives six
+per-contest categories from it (`beefPlacing`, `beefReasons`, `porkPlacing`,
+`porkReasons`, `lambPlacing`, `lambReasons`) by ranking teams within the contest
+(competition ranking, ties share a place) and runs them through the normal
+category engine.
+
+**`individuals` (optional, top-level):** array of `{name, school, alt:bool,
+place:int, score:int, categories:{beefGrading|beefJudging|lambJudging|porkJudging|
+specifications|overallBeef|totalPlacings|reasons: {place:int|null, score:int}},
+splits:{same shape as above}, counted?:true}`. `place` is the official individual
+place; `alt` marks the alternate squad; `counted` marks the four scores that made
+the team score. Full names are displayed. The Individuals toggle on the rankings
+screen runs the same ranking engine over contestants (key = name + school) and
+only counts contests that carry `individuals` (weight-2 contests are skipped). In that mode a contestant's rating is the plain average of their raw scores (no placement factor or recency), alternates included; 2+ contests are needed for a numbered rank. Both `splits` and `individuals` are
+produced by `powerrankings/ingest_scorecards.py`.
 
 **Access rules:**
 - read: public (rankings render without auth)

@@ -1,148 +1,58 @@
-/* leaderboard.css - Rollmark design system
-   Weekly Grading Rankings - the letterboard menu */
+/* leaderboard.css - weekly page board, and the shared board primitives
+   (head, segmented control, ruled sheet table) that powerrank.css reuses.
+   Furrow material: ruled table on the white sheet, mono figures. */
 
-/* ── Leaderboard Screen ─────────────────────────────────────── */
+/* ── Board head: plain heading + dated subhead, no eyebrow ──── */
 
-#leaderboard-screen {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--paper);
-  min-height: 100vh;
-  min-height: 100dvh;
-  color: var(--ink);
+.board-head {
+  max-width: var(--measure-page);
+  margin: 0 auto;
+  padding: clamp(32px, 6vh, 64px) 20px 0;
 }
 
-/* Faint corner overprint - same technique as setup/field guide.
-   Negative z-index (contained by #leaderboard-screen's own stacking
-   context) keeps it strictly behind every normal-flow child. */
-.leaderboard-overprint {
-  --art: url(assets/art-ribeye.png);
-  position: absolute;
-  top: 60px;
-  left: -70px;
-  width: 300px;
-  aspect-ratio: 899 / 685;
-  color: var(--ink);
-  opacity: 0.055;
-  transform: rotate(-10deg);
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-}
-
-@media (max-width: 767px) {
-  .leaderboard-overprint {
-    display: none;
-  }
-}
-
-/* Page nav inherits from global .page-nav styles in style.css */
-
-/* ── Leaderboard Hero Header ────────────────────────────────── */
-
-/* Full-bleed graphite competition band. The week is the news here, so it
-   gets the large slot; "Leaderboard" is the small label telling you what
-   kind of page this is. That ordering used to be inverted. */
-.leaderboard-hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--band-bg);
-  color: var(--band-text);
-  max-width: none;
-  margin: 0;
-  padding: clamp(44px, 7vh, 88px) 20px clamp(40px, 6vh, 72px);
-  text-align: center;
-}
-
-/* Oversized ribbon rosette behind the band: the award language stated once,
-   at scale, instead of a 52px trinket perched above a badge. */
-.leaderboard-hero::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: min(300px, 46vw);
-  aspect-ratio: 565 / 939;
-  background-color: var(--ribbon);
-  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
-  mask: url(assets/art-rosette.png) center / contain no-repeat;
-  opacity: 0.1;
-  pointer-events: none;
-}
-
-.leaderboard-hero-stamp {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--on-photo);
-  margin-bottom: 14px;
-}
-
-/* Demoted: the page label, not the headline. */
-.leaderboard-title {
+.board-title {
   font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--on-photo-red);
-  margin-bottom: 10px;
-  line-height: 1.2;
-}
-
-/* Promoted: the week IS the news. */
-.leaderboard-week-label {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4.6vw, 3.25rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.06;
-  color: var(--band-text);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  line-height: 1;
+  color: var(--ink);
   text-wrap: balance;
 }
 
-/* ── Tabs - segmented ink-bordered control ──────────────────── */
+.board-sub {
+  margin-top: 12px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink-faint);
+}
+
+/* ── Segmented control: selected = ink fill, paper text ─────── */
 
 .leaderboard-tabs {
-  display: inline-flex;
-  gap: 0;
+  display: flex;
+  width: fit-content;
+  max-width: calc(100% - 40px);
+  margin: 24px 20px 0;
   background: var(--paper-card);
-  border: var(--border-ink);
+  border: 1px solid var(--line-heavy);
   border-radius: var(--radius-sm);
-  padding: 0;
-  margin: 20px auto 0;
   overflow: hidden;
 }
 
-/* center the inline-flex tabs */
-#leaderboard-screen .leaderboard-tabs {
-  display: flex;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .leaderboard-tab {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 0 20px;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 500;
   color: var(--ink-soft);
   background: transparent;
   border: none;
-  padding: 9px 22px;
-  cursor: pointer;
   border-radius: 0;
-  transition: background 140ms ease, color 140ms ease;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 
 .leaderboard-tab:hover {
@@ -150,146 +60,99 @@
   color: var(--ink);
 }
 
-.leaderboard-tab.active {
-  color: var(--board-text);
+.leaderboard-tab.active,
+.leaderboard-tab.active:hover {
+  color: var(--paper);
   background: var(--ink);
 }
 
 .leaderboard-tab:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: -2px;
+  transition: none;
 }
 
-/* ── Table Wrapper ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .leaderboard-tab { transition: none; }
+}
+
+/* ── Ruled table on the white sheet ─────────────────────────── */
 
 .leaderboard-table-wrap {
   max-width: var(--measure-page);
-  margin: 20px auto 0;
+  margin: 24px auto 0;
   padding: 0 20px 56px;
-  overflow-x: auto;
 }
-
-/* ── Data Table - letterboard header, paper rows ────────────── */
 
 .leaderboard-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.875rem;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
+  border-collapse: collapse;
+  background: var(--color-sheet);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line-heavy);
+  font-family: var(--font-ui);
+  font-size: 1rem;
 }
 
 .leaderboard-table th {
-  background: var(--paper-deep);
-  color: var(--ink-soft);
-  border-bottom: 2px solid var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  padding: 12px 16px;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.85rem 1rem;
+  color: var(--ink-faint);
   text-align: left;
   white-space: nowrap;
+  border-bottom: 1px solid var(--line-heavy);
 }
 
 .leaderboard-table td {
-  padding: 0.85rem 1rem;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--line);
   color: var(--ink-soft);
   vertical-align: middle;
-  font-family: var(--font-ui);
-  font-size: 0.875rem;
 }
 
-.leaderboard-table tr:last-child td {
+.leaderboard-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* ── Rank Column ────────────────────────────────────────────── */
-
-.col-rank {
-  width: 64px;
-  text-align: center;
+/* Rank, score, percent, date: Red Hat Mono, tabular, right-aligned */
+.leaderboard-table td.col-rank,
+.leaderboard-table td.col-score,
+.leaderboard-table td.col-pct,
+.leaderboard-table td.col-date,
+.leaderboard-table th.col-rank,
+.leaderboard-table th.col-score,
+.leaderboard-table th.col-pct,
+.leaderboard-table th.col-date,
+.leaderboard-table th.pr-col-rating,
+.leaderboard-table th.pr-col-move,
+.leaderboard-table th.pr-col-contests {
+  text-align: right;
 }
 
-.leaderboard-table td.col-rank {
+.leaderboard-table .col-rank {
+  width: 72px;
+}
+
+.leaderboard-table td.col-rank,
+.leaderboard-table td.col-score,
+.leaderboard-table td.col-pct,
+.leaderboard-table td.col-date {
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--ink);
-  text-align: center;
+  font-size: 0.9375rem;
+  white-space: nowrap;
 }
 
-/* ── Name Column ────────────────────────────────────────────── */
-
-.leaderboard-name-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.leaderboard-table td.col-rank,
+.leaderboard-table td.col-score {
+  color: var(--ink);
 }
 
 .leaderboard-table td.col-name {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
-}
-
-/* ── Score Column ───────────────────────────────────────────── */
-
-.col-score {
-  text-align: right;
-}
-
-.leaderboard-table td.col-score {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--ink);
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* ── Pct Column ─────────────────────────────────────────────── */
-
-.col-pct {
-  text-align: right;
-}
-
-.leaderboard-table td.col-pct {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--ink-soft);
-  text-align: right;
-}
-
-.leaderboard-table td.col-pct.high-score {
-  color: var(--red);
-}
-
-/* ── Date Column ────────────────────────────────────────────── */
-
-.col-date {
-  white-space: nowrap;
-}
-
-.leaderboard-table td.col-date {
-  font-size: 0.75rem;
-  color: var(--ink-faint);
-}
-
-/* ── My Row Highlight ───────────────────────────────────────── */
-
-.leaderboard-row-me td {
-  background: var(--red-wash) !important;
-}
-
-.leaderboard-row-me td.col-rank,
-.leaderboard-row-me td.col-score,
-.leaderboard-row-me td.col-pct {
-  color: var(--red);
 }
 
 /* ── Avatar ─────────────────────────────────────────────────── */
@@ -299,121 +162,437 @@
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
-  vertical-align: middle;
   flex-shrink: 0;
 }
 
-/* ── Rank Badges - stamped plates ───────────────────────────── */
-
-.rank-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  min-width: 36px;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--ink);
+.leaderboard-avatar-fallback circle { fill: var(--paper-deep); }
+.leaderboard-avatar-fallback text {
+  fill: var(--ink-soft);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
 }
 
-/* Podium plates. Ribbon blue is reserved for first place across the whole
-   product (it is the stock-show blue ribbon), so it finally does award work
-   here instead of only appearing in power rankings. */
-.rank-1st {
-  color: var(--paper-card);
-  background: var(--ribbon);
-  border-color: var(--ink);
-}
-
-.rank-2nd {
-  color: var(--band-text);
-  background: var(--band-bg);
-}
-
-.rank-3rd {
-  color: var(--ink);
-  background: transparent;
-}
-
-/* The champion row: rosette in the name cell at legible size, plus a
-   ribbon tint. This is the one row allowed to shout. */
-.leaderboard-table tr:has(.rank-1st) td {
-  background: color-mix(in srgb, var(--ribbon) 7%, var(--paper-card));
-}
-.leaderboard-table tr:has(.rank-1st) .leaderboard-name-cell::before {
-  content: '';
-  flex-shrink: 0;
-  width: 26px;
-  aspect-ratio: 565 / 939;
-  background-color: var(--ribbon);
-  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
-  mask: url(assets/art-rosette.png) center / contain no-repeat;
-}
-
-/* ── Skeleton Loading Rows ──────────────────────────────────── */
-
-@keyframes leaderboard-shimmer {
-  0%   { opacity: 0.4; }
-  50%  { opacity: 0.8; }
-  100% { opacity: 0.4; }
-}
-
-.leaderboard-skeleton td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--line);
-}
-
-.leaderboard-skeleton td > span {
-  display: block;
-  height: 0.9rem;
-  background: var(--paper-deep);
-  animation: leaderboard-shimmer 1.6s ease-in-out infinite;
-  border-radius: var(--radius-sm);
-}
-
-/* ── Loading / Empty States ─────────────────────────────────── */
+/* ── Empty / error / sign-in states: plain sentences ────────── */
 
 .leaderboard-empty {
-  text-align: center;
-  padding: 56px 16px;
+  padding: 40px 0;
   font-family: var(--font-ui);
-  font-size: 0.875rem;
+  font-size: 1rem;
+  line-height: 1.5;
   color: var(--ink-soft);
+  text-align: left;
 }
 
 .leaderboard-empty strong {
   display: block;
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  font-weight: 500;
   color: var(--ink);
 }
 
-/* ── Sign-in Prompt ─────────────────────────────────────────── */
+/* ── Phone: drop the date column, never rank or score ───────── */
 
-.leaderboard-signin {
-  text-align: center;
-  padding: 56px 16px;
+@media (max-width: 560px) {
+  .leaderboard-table th,
+  .leaderboard-table td { padding: 12px 8px; }
+  .leaderboard-table .col-date { display: none; }
+  .leaderboard-table .col-rank { width: 48px; }
+  .leaderboard-tab { padding: 0 12px; }
+}
+
+/* ============================================================
+   Weekly page (Lab): header + readout, action row (weekly.css),
+   field dot plot, standings table beside the dark "Your result".
+   ============================================================ */
+
+#leaderboard-screen {
+  background: var(--lab-bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--ink);
+}
+
+.wk-page {
+  width: var(--lab-measure);
+  margin: 0 auto;
+  padding: 0 0 72px;
+}
+.wk-page [hidden] { display: none !important; }
+
+.wk-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Header: title + sub left, readout right ────────────────── */
+
+.wk-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px 32px;
+  align-items: end;
+  padding: 48px 0 24px;
+  border-bottom: 1px solid var(--lab-rule);
+}
+.wk-head-text { min-width: 0; }
+
+.wk-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.wk-sub {
+  margin: 6px 0 0;
   font-family: var(--font-ui);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--ink-soft);
 }
 
-.leaderboard-signin strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
+.wk-weeknav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.wk-navbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 500;
   color: var(--ink);
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.wk-navbtn:hover:not(:disabled) { background: var(--lab-rule-2); }
+.wk-navbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.wk-navbtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.wk-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-left: 8px;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.wk-back:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+.wk-readout {
+  display: flex;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: 10px;
+}
+.wk-ro-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 20px;
+  border-left: 1px solid var(--lab-rule);
+  min-width: 0;
+}
+.wk-ro-cell:first-child { border-left: 0; }
+.wk-ro-k { font-family: var(--font-ui); font-size: 13px; color: var(--ink-faint); }
+.wk-ro-v {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ── Field plot ─────────────────────────────────────────────── */
+
+.wk-plot {
+  padding: 24px 28px 20px;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: var(--lab-radius);
+}
+.wk-plot-h {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 16px;
+}
+.wk-plot-h h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.wk-note { font-family: var(--font-ui); font-size: 13px; color: var(--ink-faint); }
+
+.wk-scale { position: relative; height: 150px; margin-top: 12px; }
+.wk-axis { position: absolute; left: 0; right: 0; bottom: 28px; height: 1px; background: var(--ink); }
+.wk-ticks { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; }
+.wk-tick {
+  position: absolute;
+  top: 0;
+  padding-top: 10px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink-faint);
+}
+.wk-tick::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 8px;
+  background: var(--lab-tick);
+}
+
+.wk-dot {
+  position: absolute;
+  bottom: 32px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lab-dot);
+  box-shadow: 0 0 0 1px var(--lab-panel);
+  transform: translateX(-50%);
+}
+.wk-dot--top { width: 12px; height: 12px; background: var(--ink); }
+.wk-dot--me {
+  width: 14px;
+  height: 14px;
+  background: var(--red);
+  box-shadow: 0 0 0 4px var(--lab-you-wash);
+}
+
+.wk-flag {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.wk-flag b { font-weight: 600; }
+.wk-flag--me { color: var(--red); }
+.wk-stem { position: absolute; width: 1px; background: var(--ink); }
+.wk-stem--me { background: var(--red); }
+
+.wk-scale-msg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+/* ── Standings + your result ────────────────────────────────── */
+
+.wk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+.wk-grid.has-you { grid-template-columns: minmax(0, 1fr) minmax(0, 380px); }
+
+.wk-tablewrap {
+  overflow-x: auto;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: var(--lab-radius);
+}
+.wk-table { width: 100%; border-collapse: collapse; }
+.wk-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--lab-rule);
+}
+.wk-table td {
+  padding: 10px 16px;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--lab-rule-2);
+}
+.wk-table tbody tr:last-child td { border-bottom: 0; }
+.wk-table th.n,
+.wk-table td.n {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.wk-table td.rk {
+  width: 56px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+}
+.wk-table td.who { width: 100%; max-width: 0; }
+.wk-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.wk-who .leaderboard-avatar { width: 24px; height: 24px; }
+.wk-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wk-you-tag { flex-shrink: 0; font-size: 13px; color: var(--red); }
+
+.wk-table tr.wk-me td { background: var(--lab-you-wash); }
+.wk-table tr.wk-me td.rk { color: var(--red); }
+
+.wk-medal {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+}
+.wk-medal--1 { background: var(--ink); color: var(--on-ink); }
+.wk-me .wk-medal { border-color: var(--red); color: var(--red); }
+.wk-me .wk-medal--1 { background: var(--red); color: var(--lab-panel); }
+
+.wk-skel td span {
+  display: block;
+  height: 0.9rem;
+  width: 70%;
+  background: var(--lab-rule-2);
+  border-radius: 4px;
+  animation: wk-shimmer 1.6s ease-in-out infinite;
+}
+.wk-skel td:first-child span { width: 24px; }
+@keyframes wk-shimmer {
+  0%   { opacity: 0.4; }
+  50%  { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
+/* Your result: the one dark panel */
+.wk-you {
+  padding: 24px;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: var(--lab-radius);
+}
+.wk-you:focus-visible { outline: 2px solid var(--red-lift); outline-offset: 2px; }
+.wk-you-k { font-family: var(--font-ui); font-size: 13px; color: var(--on-ink-dim); }
+.wk-you-big {
+  margin: 8px 0;
+  font-family: var(--font-mono);
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.wk-you-big small { font-size: 24px; color: var(--on-ink-dim); letter-spacing: 0; }
+
+.wk-ladder {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 10), minmax(0, 1fr));
+  gap: 3px;
+  margin-top: 16px;
+}
+.wk-ladder i {
+  display: block;
+  height: 22px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--on-ink) 16%, transparent);
+}
+.wk-ladder i.ok { background: var(--lab-ok); }
+.wk-ladder i.near { background: var(--lab-near); }
+.wk-ladder i.miss { background: var(--red-lift); }
+.wk-you-legend { margin-top: 6px; font-family: var(--font-ui); font-size: 12px; color: var(--on-ink-dim); }
+
+.wk-you-dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 16px;
+  margin: 16px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in oklab, var(--on-ink) 14%, transparent);
+}
+.wk-you-dl dt { font-family: var(--font-ui); font-size: 14px; color: var(--on-ink-dim); }
+.wk-you-dl dd {
+  margin: 0;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ── Tablet and phone ───────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .wk-head { grid-template-columns: minmax(0, 1fr); padding-top: 32px; }
+  .wk-title { font-size: 36px; }
+  .wk-readout { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .wk-ro-cell { padding: 10px 12px; }
+  .wk-ro-v { font-size: 16px; }
+  .wk-plot { padding: 16px; }
+  .wk-grid.has-you { grid-template-columns: minmax(0, 1fr); }
+  .wk-you { order: -1; }
+  .wk-col-date { display: none; }
+  .wk-tick--odd { color: transparent; }
+  .wk-table th, .wk-table td { padding-left: 12px; padding-right: 12px; }
+}
+
+@media (max-width: 560px) {
+  .wk-navbtn-text { display: none; }
+  .wk-navbtn { padding: 0; width: 44px; }
+  .wk-you { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-skel td span { animation: none; opacity: 0.6; }
+  .wk-navbtn { transition: none; }
 }

@@ -1,391 +1,264 @@
-/* fieldguide.css - Rollmark design system
-   Grade Field Guide - the letterboard study card.
-   Uses global tokens from style.css (:root). */
+/* fieldguide.css - Lab reading page.
+   Grade Field Guide: a prose column, Display 600 heads, the ladder and the
+   marbling plates as Lab panels. Tokens from style.css (:root). */
 
 #fieldguide-screen {
   position: relative;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--paper);
+  background: var(--lab-bg);
   min-height: 100vh;
   min-height: 100dvh;
   color: var(--ink);
 }
 
-/* Was a hard 760px. This is the one screen students genuinely read, so it
-   gets a prose measure that grows with the root scale instead of staying
-   pinned narrow on a large display. */
 .fg-inner {
-  max-width: var(--measure-page);
+  width: var(--lab-measure);
   margin: 0 auto;
-  padding: clamp(36px, 5vh, 64px) 20px clamp(64px, 8vh, 96px);
+  padding: 48px 0 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
-/* ── Hero ───────────────────────────────────────────────────── */
-
-.fg-hero {
-  position: relative;
-  text-align: left;
-  padding: 8px 0 4px;
-}
-
-.fg-postmark {
-  position: absolute;
-  top: -6px;
-  right: 0;
-  opacity: 0.5;
-}
-
-.fg-eyebrow {
-  display: block;
-  font-family: var(--font-script);
-  font-size: 1.625rem;
-  color: var(--red);
-  line-height: 1.2;
-  margin-bottom: 2px;
-}
+/* ── Header ─────────────────────────────────────────────────── */
 
 .fg-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 5vw, 4rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.06;
-  margin: 0 0 10px;
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  text-wrap: balance;
 }
 
 .fg-sub {
+  max-width: var(--measure-prose);
+  margin: 8px 0 0;
   font-family: var(--font-ui);
   font-size: 1rem;
+  line-height: 1.6;
   color: var(--ink-soft);
-  line-height: 1.65;
-  max-width: var(--measure-prose);
-  margin: 0;
 }
 
 /* ── Sections ───────────────────────────────────────────────── */
 
-.fg-section {
-  margin-top: 40px;
-}
-
-/* Letterboard band section header - torn strip (sawtooth edges,
-   same mask technique as the .ticket receipt system) */
-.fg-board-header {
+.fg-head {
+  margin: 0 0 16px;
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 22px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--board-text);
-  background: var(--board-bg);
-  padding: 16px 18px 13px;
-  margin: 0 0 18px;
-  text-align: center;
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
-    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
-    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'%3E%3C/path%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
-}
-
-.fg-lead {
-  font-family: var(--font-ui);
-  font-size: 1rem;
-  color: var(--ink-soft);
-  line-height: 1.65;
-  max-width: var(--measure-prose);
-  margin: 0 0 18px;
-  text-align: left;
-}
-
-/* Prose sections - no box, just measured text between ornaments */
-.fg-section--prose {
-  text-align: left;
-}
-
-/* Plain section header: mono number + Jost caps title + hairline rule */
-.fg-head,
-.fg-prose-heading {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
+  letter-spacing: -0.02em;
   color: var(--ink);
-  margin: 0 0 18px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--hair);
-}
-.fg-head-num { color: var(--ink-faint); }
-.fg-board-header .fg-head-num {
-  color: var(--board-text);
-  opacity: 0.7;
-  margin-right: 10px;
 }
 
+.fg-lead,
 .fg-body {
+  max-width: var(--measure-prose);
+  margin: 0 0 20px;
   font-family: var(--font-ui);
   font-size: 1rem;
-  color: var(--ink-soft);
   line-height: 1.65;
-  margin: 0;
-  max-width: var(--measure-prose);
-  text-align: left;
+  color: var(--ink-soft);
 }
+.fg-body { margin-bottom: 0; }
 
 .fg-note {
+  max-width: var(--measure-prose);
+  margin: 16px 0 0;
   font-family: var(--font-ui);
   font-size: 0.875rem;
-  color: var(--ink-faint);
   line-height: 1.65;
-  max-width: var(--measure-prose);
-  margin: 14px 0 0;
+  color: var(--ink-faint);
 }
 
-/* ── Grade ladder ───────────────────────────────────────────── */
+/* ── Grade ladder: one panel, a row per callable grade ──────── */
 
 .fg-ladder {
-  max-width: 720px;
-  margin-right: auto;
-  list-style: none;
+  max-width: 560px;
   margin: 0;
   padding: 0;
-  border: 1.5px solid var(--ink);
-  border-radius: var(--radius-sm);
+  list-style: none;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: var(--lab-radius);
   overflow: hidden;
 }
 
 .fg-rung {
+  --fam: var(--lab-heat-1);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-  background: var(--paper-card);
+  min-height: 48px;
+  padding: 0 20px;
+  border-top: 1px solid var(--lab-rule-2);
 }
-.fg-rung:last-child { border-bottom: none; }
+.fg-rung:first-child { border-top: 0; }
+.fg-rung::before {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--fam);
+}
+.fg-rung--prime    { --fam: var(--lab-heat-1); }
+.fg-rung--choice   { --fam: var(--lab-heat-2); }
+.fg-rung--select   { --fam: var(--lab-heat-3); }
+.fg-rung--standard { --fam: var(--lab-heat-4); }
 
-/* Family boundary - the heavy rule where contests are won */
-.fg-rung--boundary {
-  border-top: 2px solid var(--ink);
-}
+/* Family boundary: the heavier hairline where contests are won */
+.fg-rung--boundary { border-top-color: var(--lab-tick); }
 
 .fg-rung-grade {
-  font-family: var(--font-display);
-  font-size: 0.8438rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--ink);
 }
-
 .fg-rung-family {
-  font-family: var(--font-display);
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--ink);
-  color: var(--ink);
-  background: transparent;
-}
-
-.fg-rung--prime .fg-rung-grade { color: var(--red); }
-.fg-rung--prime .fg-rung-family {
-  background: var(--red);
-  border-color: var(--ink);
-  color: var(--poster-cream);
-}
-.fg-rung--choice .fg-rung-family {
-  background: var(--board-bg);
-  color: var(--board-text);
-}
-.fg-rung--select .fg-rung-family {
-  background: var(--paper-deep);
-}
-.fg-rung--standard .fg-rung-family {
-  background: transparent;
+  flex: none;
+  font-family: var(--font-ui);
+  font-size: 13px;
   color: var(--ink-faint);
-  border-color: var(--ink-faint);
 }
 
-/* ── Marbling specimens - butcher-chart rows w/ USDA photos ── */
+/* ── Marbling plates: a figure panel per USDA reference ─────── */
 
 .fg-specimen-list {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-/* Specimen plates. These were 68x86 thumbnails rendered from 863x1313
-   source: roughly one seventh of the available resolution, on the single
-   screen whose entire purpose is close visual comparison of marbling.
-   Now a real two-column plate layout off assets/anchors-full. */
-.fg-specimen-list {
   display: grid;
-  gap: clamp(20px, 3vw, 36px);
-}
-
-@media (min-width: 720px) {
-  .fg-specimen-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .fg-specimen-row {
   display: flex;
-  align-items: center;
-  gap: clamp(16px, 2vw, 26px);
-  padding: 0;
-  border-bottom: none;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: var(--lab-radius);
+  overflow: hidden;
 }
 
-/* Clickable thumbnail - opens the shared image modal full screen */
+/* Clickable photo: opens the shared image modal full screen */
 .fg-specimen-view {
   position: relative;
   display: block;
-  flex-shrink: 0;
-  border: none;
-  background: none;
+  width: 100%;
   padding: 0;
+  border: 0;
+  background: var(--lab-bg);
   cursor: pointer;
-  border-radius: 3px;
 }
 .fg-specimen-view:focus-visible {
   outline: 2px solid var(--red);
-  outline-offset: 2px;
+  outline-offset: -2px;
 }
 
-/* Zoom badge - signals the photo is tappable */
+/* Zoom badge: signals the photo is tappable */
+.fg-specimen-view::before,
 .fg-specimen-view::after {
   content: '';
   position: absolute;
-  right: 1px;
-  bottom: 1px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--ink);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FAFAF7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px 12px;
-  opacity: 0.85;
   pointer-events: none;
 }
-
-/* 2:3 portrait matches anchors 01-05 natively. 06/07 are square USDA
-   originals; rather than pretend they match, they get their own ratio
-   below so neither set is distorted or hard-cropped. */
-.fg-specimen-img {
-  display: block;
-  width: clamp(132px, 17vw, 232px);
-  aspect-ratio: 2 / 3;
-  height: auto;
-  object-fit: cover;
-  background: var(--paper-card);
-  border: 1.5px solid var(--ink);
-  border-radius: var(--radius-sm);
-  padding: 5px;
-  box-shadow: var(--shadow-sm);
+.fg-specimen-view::before {
+  right: 10px;
+  bottom: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.fg-specimen-view::after {
+  right: 16px;
+  bottom: 16px;
+  width: 16px;
+  height: 16px;
+  background: var(--on-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
-/* The two Prime-tier anchors were cropped square from their source. Honest
-   about it instead of forcing a match that would visibly distort them. */
-.fg-specimen-row--square .fg-specimen-img {
-  aspect-ratio: 1 / 1;
+/* 2:3 portraits (anchors 01-05) and the two square USDA originals (06, 07)
+   both sit uncropped in the same 4:5 plate. */
+.fg-specimen-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  background: var(--lab-bg);
 }
 
 .fg-specimen-text {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--lab-rule-2);
 }
-
-.fg-specimen-row--nophoto {
-  padding-left: clamp(132px, 17vw, 232px);
-}
+.fg-specimen-row--nophoto { justify-content: center; }
+.fg-specimen-row--nophoto .fg-specimen-text { border-top: 0; }
 
 .fg-marbling-degree {
-  font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
   line-height: 1.3;
 }
-
 .fg-marbling-grade {
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--red);
-  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.25;
 }
 
-/* ── Scoring menu - dotted-leader price list, no box ────────── */
+/* ── Scoring: the shared ladder chart in a panel ────────────── */
 
 .fg-scoring-menu {
-  max-width: 480px;
-  margin: 0 auto;
+  max-width: 560px;
+  background: var(--lab-panel);
+  border: 1px solid var(--lab-rule);
+  border-radius: var(--lab-radius);
+  padding-top: 8px;
 }
-
-.fg-scoring-menu .scoring-explainer-list {
+.fg-scoring-menu .fg-note {
+  max-width: none;
   margin: 0;
-  padding: 0;
-  gap: 10px;
-  font-size: 0.875rem;
+  padding: 12px 24px 20px;
+  border-top: 1px solid var(--lab-rule-2);
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 
-.fg-footer {
-  margin-top: 44px;
-  text-align: center;
-}
-
-.fg-footer .btn-primary {
-  margin-top: 8px;
-}
+.fg-footer { display: flex; }
 
 /* ── Responsive ─────────────────────────────────────────────── */
 
-@media (max-width: 640px) {
-  .fg-postmark { display: none; }
-  .fg-rung {
-    padding: 9px 12px;
-  }
-  .fg-rung-grade { font-size: 0.75rem; }
-  .fg-specimen-row {
-    gap: 14px;
-  }
-  .fg-specimen-img {
-    width: 96px;
-    height: auto;
-  }
-  .fg-specimen-row--nophoto {
-    padding-left: 0;
-  }
+@media (max-width: 960px) {
+  .fg-specimen-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Left-aligned reading column: ornament rules sit on the left edge too */
-.fg-hero .zigzag-rule,
-.fg-section--prose .zigzag-rule {
-  margin-left: 0;
-  margin-right: auto;
+@media (max-width: 860px) {
+  .fg-inner { padding: 32px 0 56px; gap: 32px; }
+  .fg-title { font-size: 36px; }
+}
+
+@media (max-width: 560px) {
+  .fg-rung { padding: 0 16px; }
+  .fg-specimen-text { padding: 10px 12px 14px; }
+  .fg-marbling-grade { font-size: 1rem; }
+  .fg-scoring-menu .sc-chart { padding: 0 16px 8px; }
+  .fg-scoring-menu .fg-note { padding: 12px 16px 16px; }
+  .fg-footer .wk-btn { width: 100%; }
 }

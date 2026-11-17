@@ -1,0 +1,2753 @@
+{
+  "name": "American Royal Meat Judging",
+  "shortName": "American Royal",
+  "date": "2026-10-18",
+  "season": 2026,
+  "division": "junior",
+  "weight": 1,
+  "sourceUrl": "https://www.judgingcard.com/Results/Team.aspx?ID=29583&EID=184639",
+  "teamCount": 7,
+  "results": [
+    {
+      "school": "Clarendon College",
+      "place": 1,
+      "score": 3746,
+      "categories": {
+        "beefGrading": {
+          "place": 1,
+          "score": 990
+        },
+        "beefJudging": {
+          "place": 1,
+          "score": 1120
+        },
+        "lambJudging": {
+          "place": 4,
+          "score": 521
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 2110
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 1115
+        },
+        "reasons": {
+          "place": 4,
+          "score": 780
+        },
+        "specifications": {
+          "place": 1,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 1976
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 795,
+          "reasons": 325
+        },
+        "pork": {
+          "placing": 785,
+          "reasons": 330
+        },
+        "lamb": {
+          "placing": 396,
+          "reasons": 125
+        }
+      }
+    },
+    {
+      "school": "Eastern Oklahoma State College",
+      "place": 2,
+      "score": 3685,
+      "categories": {
+        "beefGrading": {
+          "place": 4,
+          "score": 943
+        },
+        "beefJudging": {
+          "place": 5,
+          "score": 1070
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 540
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 2013
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 1132
+        },
+        "reasons": {
+          "place": 1,
+          "score": 790
+        },
+        "specifications": {
+          "place": 4,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 1952
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 780,
+          "reasons": 290
+        },
+        "pork": {
+          "placing": 782,
+          "reasons": 350
+        },
+        "lamb": {
+          "placing": 390,
+          "reasons": 150
+        }
+      }
+    },
+    {
+      "school": "Garden City Community College",
+      "place": 3,
+      "score": 3682,
+      "categories": {
+        "beefGrading": {
+          "place": 3,
+          "score": 944
+        },
+        "beefJudging": {
+          "place": 2,
+          "score": 1085
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 550
+        },
+        "overallBeef": {
+          "place": 3,
+          "score": 2029
+        },
+        "porkJudging": {
+          "place": 5,
+          "score": 1103
+        },
+        "reasons": {
+          "place": 3,
+          "score": 785
+        },
+        "specifications": {
+          "place": 3,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 4,
+          "score": 1953
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 775,
+          "reasons": 310
+        },
+        "pork": {
+          "placing": 788,
+          "reasons": 315
+        },
+        "lamb": {
+          "placing": 390,
+          "reasons": 160
+        }
+      }
+    },
+    {
+      "school": "University of Georgia",
+      "place": 4,
+      "score": 3648,
+      "categories": {
+        "beefGrading": {
+          "place": 2,
+          "score": 967
+        },
+        "beefJudging": {
+          "place": 4,
+          "score": 1072
+        },
+        "lambJudging": {
+          "place": 5,
+          "score": 515
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 2039
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 1094
+        },
+        "reasons": {
+          "place": 6,
+          "score": 720
+        },
+        "specifications": {
+          "place": 2,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 1961
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 782,
+          "reasons": 290
+        },
+        "pork": {
+          "placing": 789,
+          "reasons": 305
+        },
+        "lamb": {
+          "placing": 390,
+          "reasons": 125
+        }
+      }
+    },
+    {
+      "school": "University of Arizona",
+      "place": 5,
+      "score": 3646,
+      "categories": {
+        "beefGrading": {
+          "place": 5,
+          "score": 928
+        },
+        "beefJudging": {
+          "place": 3,
+          "score": 1082
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 505
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 2010
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 1131
+        },
+        "reasons": {
+          "place": 5,
+          "score": 760
+        },
+        "specifications": {
+          "place": 5,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 1958
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 777,
+          "reasons": 305
+        },
+        "pork": {
+          "placing": 791,
+          "reasons": 340
+        },
+        "lamb": {
+          "placing": 390,
+          "reasons": 115
+        }
+      }
+    },
+    {
+      "school": "Connors State College",
+      "place": 6,
+      "score": 3626,
+      "categories": {
+        "beefGrading": {
+          "place": 6,
+          "score": 892
+        },
+        "beefJudging": {
+          "place": 6,
+          "score": 1053
+        },
+        "lambJudging": {
+          "place": 3,
+          "score": 524
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 1945
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 1157
+        },
+        "reasons": {
+          "place": 2,
+          "score": 785
+        },
+        "specifications": {
+          "place": 6,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 6,
+          "score": 1949
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 773,
+          "reasons": 280
+        },
+        "pork": {
+          "placing": 782,
+          "reasons": 375
+        },
+        "lamb": {
+          "placing": 394,
+          "reasons": 130
+        }
+      }
+    },
+    {
+      "school": "Texas A&M Kingsville",
+      "place": 7,
+      "score": 3068,
+      "categories": {
+        "beefGrading": {
+          "place": 7,
+          "score": 725
+        },
+        "beefJudging": {
+          "place": 7,
+          "score": 878
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 482
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 1603
+        },
+        "porkJudging": {
+          "place": 7,
+          "score": 983
+        },
+        "reasons": {
+          "place": 7,
+          "score": 520
+        },
+        "specifications": {
+          "place": 7,
+          "score": 0
+        },
+        "totalPlacings": {
+          "place": 7,
+          "score": 1823
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 713,
+          "reasons": 165
+        },
+        "pork": {
+          "placing": 728,
+          "reasons": 255
+        },
+        "lamb": {
+          "placing": 382,
+          "reasons": 100
+        }
+      }
+    }
+  ],
+  "individuals": [
+    {
+      "name": "Larissa Garnica",
+      "school": "Clarendon College",
+      "alt": false,
+      "officialPlace": 1,
+      "score": 975,
+      "categories": {
+        "beefJudging": {
+          "place": 2,
+          "score": 290
+        },
+        "beefGrading": {
+          "place": 1,
+          "score": 260
+        },
+        "overallBeef": {
+          "place": 1,
+          "score": 550
+        },
+        "lambJudging": {
+          "place": 12,
+          "score": 135
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 290
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 495
+        },
+        "reasons": {
+          "place": 1,
+          "score": 220
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 90
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 35
+        }
+      },
+      "place": 1,
+      "counted": true
+    },
+    {
+      "name": "Grady Gleason",
+      "school": "Garden City Community College",
+      "alt": false,
+      "officialPlace": 2,
+      "score": 956,
+      "categories": {
+        "beefJudging": {
+          "place": 4,
+          "score": 284
+        },
+        "beefGrading": {
+          "place": 4,
+          "score": 251
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 535
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 19,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 490
+        },
+        "reasons": {
+          "place": 2,
+          "score": 215
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 90
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 2,
+      "counted": true
+    },
+    {
+      "name": "Kadie Tidwell",
+      "school": "Eastern Oklahoma State College",
+      "alt": false,
+      "officialPlace": 3,
+      "score": 951,
+      "categories": {
+        "beefJudging": {
+          "place": 6,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 2,
+          "score": 255
+        },
+        "overallBeef": {
+          "place": 2,
+          "score": 535
+        },
+        "lambJudging": {
+          "place": 21,
+          "score": 131
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 26,
+          "score": 486
+        },
+        "reasons": {
+          "place": 3,
+          "score": 210
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 35
+        }
+      },
+      "place": 3,
+      "counted": true
+    },
+    {
+      "name": "Alex Ambler",
+      "school": "University of Arizona",
+      "alt": false,
+      "officialPlace": 4,
+      "score": 942,
+      "categories": {
+        "beefJudging": {
+          "place": 5,
+          "score": 282
+        },
+        "beefGrading": {
+          "place": 9,
+          "score": 242
+        },
+        "overallBeef": {
+          "place": 6,
+          "score": 524
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 4,
+          "score": 290
+        },
+        "totalPlacings": {
+          "place": 15,
+          "score": 490
+        },
+        "reasons": {
+          "place": 3,
+          "score": 210
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 192,
+          "reasons": 90
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 4,
+      "counted": true
+    },
+    {
+      "name": "Jack George",
+      "school": "Clarendon College",
+      "alt": false,
+      "officialPlace": 6,
+      "score": 936,
+      "categories": {
+        "beefJudging": {
+          "place": 1,
+          "score": 297
+        },
+        "beefGrading": {
+          "place": 17,
+          "score": 236
+        },
+        "overallBeef": {
+          "place": 4,
+          "score": 533
+        },
+        "lambJudging": {
+          "place": 22,
+          "score": 130
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 273
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 495
+        },
+        "reasons": {
+          "place": 6,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 100
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 75
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 30
+        }
+      },
+      "place": 5,
+      "counted": true
+    },
+    {
+      "name": "Remi Laib",
+      "school": "Garden City Community College",
+      "alt": false,
+      "officialPlace": 5,
+      "score": 936,
+      "categories": {
+        "beefJudging": {
+          "place": 3,
+          "score": 285
+        },
+        "beefGrading": {
+          "place": 19,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 9,
+          "score": 520
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 14,
+          "score": 283
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 496
+        },
+        "reasons": {
+          "place": 6,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 85
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 5,
+      "counted": true
+    },
+    {
+      "name": "Jacob Ginger",
+      "school": "Eastern Oklahoma State College",
+      "alt": true,
+      "officialPlace": 1,
+      "score": 935,
+      "categories": {
+        "beefJudging": {
+          "place": 17,
+          "score": 267
+        },
+        "beefGrading": {
+          "place": 9,
+          "score": 242
+        },
+        "overallBeef": {
+          "place": 13,
+          "score": 509
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 138
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 288
+        },
+        "totalPlacings": {
+          "place": 17,
+          "score": 488
+        },
+        "reasons": {
+          "place": 6,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 40
+        }
+      },
+      "place": 7
+    },
+    {
+      "name": "Marcel Avila",
+      "school": "Clarendon College",
+      "alt": false,
+      "officialPlace": 7,
+      "score": 932,
+      "categories": {
+        "beefJudging": {
+          "place": 24,
+          "score": 263
+        },
+        "beefGrading": {
+          "place": 4,
+          "score": 251
+        },
+        "overallBeef": {
+          "place": 11,
+          "score": 514
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 138
+        },
+        "porkJudging": {
+          "place": 16,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 13,
+          "score": 491
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 198,
+          "reasons": 65
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 40
+        }
+      },
+      "place": 8,
+      "counted": true
+    },
+    {
+      "name": "Addison Fuchs",
+      "school": "University of Georgia",
+      "alt": false,
+      "officialPlace": 8,
+      "score": 930,
+      "categories": {
+        "beefJudging": {
+          "place": 6,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 7,
+          "score": 243
+        },
+        "overallBeef": {
+          "place": 7,
+          "score": 523
+        },
+        "lambJudging": {
+          "place": 6,
+          "score": 140
+        },
+        "porkJudging": {
+          "place": 36,
+          "score": 267
+        },
+        "totalPlacings": {
+          "place": 2,
+          "score": 497
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 70
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 40
+        }
+      },
+      "place": 9,
+      "counted": true
+    },
+    {
+      "name": "Addison Sarratt",
+      "school": "Connors State College",
+      "alt": false,
+      "officialPlace": 9,
+      "score": 928,
+      "categories": {
+        "beefJudging": {
+          "place": 11,
+          "score": 272
+        },
+        "beefGrading": {
+          "place": 30,
+          "score": 223
+        },
+        "overallBeef": {
+          "place": 24,
+          "score": 495
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 138
+        },
+        "porkJudging": {
+          "place": 1,
+          "score": 295
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 495
+        },
+        "reasons": {
+          "place": 3,
+          "score": 210
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 40
+        }
+      },
+      "place": 10,
+      "counted": true
+    },
+    {
+      "name": "Anika Gates",
+      "school": "University of Arizona",
+      "alt": false,
+      "officialPlace": 10,
+      "score": 927,
+      "categories": {
+        "beefJudging": {
+          "place": 11,
+          "score": 272
+        },
+        "beefGrading": {
+          "place": 19,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 14,
+          "score": 507
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 2,
+          "score": 292
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 6,
+          "score": 205
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 192,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 11,
+      "counted": true
+    },
+    {
+      "name": "Denise Yaws",
+      "school": "Eastern Oklahoma State College",
+      "alt": true,
+      "officialPlace": 2,
+      "score": 927,
+      "categories": {
+        "beefJudging": {
+          "place": 6,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 6,
+          "score": 246
+        },
+        "overallBeef": {
+          "place": 5,
+          "score": 526
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 39,
+          "score": 258
+        },
+        "totalPlacings": {
+          "place": 3,
+          "score": 496
+        },
+        "reasons": {
+          "place": 23,
+          "score": 185
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 60
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 11
+    },
+    {
+      "name": "Kylie Oliver",
+      "school": "Eastern Oklahoma State College",
+      "alt": false,
+      "officialPlace": 11,
+      "score": 927,
+      "categories": {
+        "beefJudging": {
+          "place": 17,
+          "score": 267
+        },
+        "beefGrading": {
+          "place": 14,
+          "score": 239
+        },
+        "overallBeef": {
+          "place": 16,
+          "score": 506
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 6,
+          "score": 288
+        },
+        "totalPlacings": {
+          "place": 11,
+          "score": 493
+        },
+        "reasons": {
+          "place": 14,
+          "score": 195
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 11,
+      "counted": true
+    },
+    {
+      "name": "Christie Deariso",
+      "school": "University of Georgia",
+      "alt": false,
+      "officialPlace": 12,
+      "score": 924,
+      "categories": {
+        "beefJudging": {
+          "place": 25,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 3,
+          "score": 254
+        },
+        "overallBeef": {
+          "place": 10,
+          "score": 516
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 24,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 34,
+          "score": 480
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 187,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 14,
+      "counted": true
+    },
+    {
+      "name": "Sebastia Castillo",
+      "school": "Garden City Community College",
+      "alt": true,
+      "officialPlace": 3,
+      "score": 923,
+      "categories": {
+        "beefJudging": {
+          "place": 13,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 17,
+          "score": 236
+        },
+        "overallBeef": {
+          "place": 16,
+          "score": 506
+        },
+        "lambJudging": {
+          "place": 7,
+          "score": 138
+        },
+        "porkJudging": {
+          "place": 18,
+          "score": 279
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 10,
+          "score": 200
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 194,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 40
+        }
+      },
+      "place": 15
+    },
+    {
+      "name": "Karlee Glover",
+      "school": "Connors State College",
+      "alt": false,
+      "officialPlace": 13,
+      "score": 920,
+      "categories": {
+        "beefJudging": {
+          "place": 22,
+          "score": 264
+        },
+        "beefGrading": {
+          "place": 15,
+          "score": 238
+        },
+        "overallBeef": {
+          "place": 18,
+          "score": 502
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 14,
+          "score": 195
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 90
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 16,
+      "counted": true
+    },
+    {
+      "name": "Maeson Crow",
+      "school": "Eastern Oklahoma State College",
+      "alt": true,
+      "officialPlace": 4,
+      "score": 918,
+      "categories": {
+        "beefJudging": {
+          "place": 6,
+          "score": 280
+        },
+        "beefGrading": {
+          "place": 12,
+          "score": 241
+        },
+        "overallBeef": {
+          "place": 8,
+          "score": 521
+        },
+        "lambJudging": {
+          "place": 31,
+          "score": 126
+        },
+        "porkJudging": {
+          "place": 32,
+          "score": 271
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 30
+        }
+      },
+      "place": 17
+    },
+    {
+      "name": "Colton Obregon",
+      "school": "Garden City Community College",
+      "alt": true,
+      "officialPlace": 5,
+      "score": 911,
+      "categories": {
+        "beefJudging": {
+          "place": 13,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 16,
+          "score": 237
+        },
+        "overallBeef": {
+          "place": 14,
+          "score": 507
+        },
+        "lambJudging": {
+          "place": 11,
+          "score": 136
+        },
+        "porkJudging": {
+          "place": 35,
+          "score": 268
+        },
+        "totalPlacings": {
+          "place": 30,
+          "score": 484
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 190,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 70
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 40
+        }
+      },
+      "place": 18
+    },
+    {
+      "name": "Caden Russell",
+      "school": "Eastern Oklahoma State College",
+      "alt": false,
+      "officialPlace": 14,
+      "score": 908,
+      "categories": {
+        "beefJudging": {
+          "place": 33,
+          "score": 256
+        },
+        "beefGrading": {
+          "place": 12,
+          "score": 241
+        },
+        "overallBeef": {
+          "place": 23,
+          "score": 497
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 19,
+          "score": 278
+        },
+        "totalPlacings": {
+          "place": 32,
+          "score": 482
+        },
+        "reasons": {
+          "place": 23,
+          "score": 185
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 191,
+          "reasons": 65
+        },
+        "pork": {
+          "placing": 193,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 19,
+      "counted": true
+    },
+    {
+      "name": "Hailey Harmon",
+      "school": "University of Arizona",
+      "alt": false,
+      "officialPlace": 15,
+      "score": 908,
+      "categories": {
+        "beefJudging": {
+          "place": 21,
+          "score": 266
+        },
+        "beefGrading": {
+          "place": 23,
+          "score": 234
+        },
+        "overallBeef": {
+          "place": 20,
+          "score": 500
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 16,
+          "score": 280
+        },
+        "totalPlacings": {
+          "place": 9,
+          "score": 494
+        },
+        "reasons": {
+          "place": 27,
+          "score": 180
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 196,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 19,
+      "counted": true
+    },
+    {
+      "name": "Tarini Tippa",
+      "school": "University of Georgia",
+      "alt": true,
+      "officialPlace": 6,
+      "score": 907,
+      "categories": {
+        "beefJudging": {
+          "place": 10,
+          "score": 277
+        },
+        "beefGrading": {
+          "place": 33,
+          "score": 221
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 498
+        },
+        "lambJudging": {
+          "place": 34,
+          "score": 124
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 26,
+          "score": 486
+        },
+        "reasons": {
+          "place": 10,
+          "score": 200
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 80
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 89,
+          "reasons": 35
+        }
+      },
+      "place": 21
+    },
+    {
+      "name": "Tucker Cox",
+      "school": "Connors State College",
+      "alt": false,
+      "officialPlace": 16,
+      "score": 906,
+      "categories": {
+        "beefJudging": {
+          "place": 27,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 27,
+          "score": 227
+        },
+        "overallBeef": {
+          "place": 28,
+          "score": 487
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 3,
+          "score": 291
+        },
+        "totalPlacings": {
+          "place": 37,
+          "score": 479
+        },
+        "reasons": {
+          "place": 10,
+          "score": 200
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 185,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 22,
+      "counted": true
+    },
+    {
+      "name": "Braden Hoskinson",
+      "school": "Garden City Community College",
+      "alt": false,
+      "officialPlace": 17,
+      "score": 905,
+      "categories": {
+        "beefJudging": {
+          "place": 29,
+          "score": 259
+        },
+        "beefGrading": {
+          "place": 30,
+          "score": 223
+        },
+        "overallBeef": {
+          "place": 30,
+          "score": 482
+        },
+        "lambJudging": {
+          "place": 1,
+          "score": 146
+        },
+        "porkJudging": {
+          "place": 21,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 14,
+          "score": 195
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 65
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 50
+        }
+      },
+      "place": 23,
+      "counted": true
+    },
+    {
+      "name": "Austen Cordell",
+      "school": "Clarendon College",
+      "alt": false,
+      "officialPlace": 18,
+      "score": 903,
+      "categories": {
+        "beefJudging": {
+          "place": 13,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 7,
+          "score": 243
+        },
+        "overallBeef": {
+          "place": 12,
+          "score": 513
+        },
+        "lambJudging": {
+          "place": 40,
+          "score": 118
+        },
+        "porkJudging": {
+          "place": 31,
+          "score": 272
+        },
+        "totalPlacings": {
+          "place": 5,
+          "score": 495
+        },
+        "reasons": {
+          "place": 33,
+          "score": 165
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 75
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 20
+        }
+      },
+      "place": 24,
+      "counted": true
+    },
+    {
+      "name": "Riley Metzger",
+      "school": "University of Georgia",
+      "alt": false,
+      "officialPlace": 19,
+      "score": 900,
+      "categories": {
+        "beefJudging": {
+          "place": 27,
+          "score": 260
+        },
+        "beefGrading": {
+          "place": 9,
+          "score": 242
+        },
+        "overallBeef": {
+          "place": 18,
+          "score": 502
+        },
+        "lambJudging": {
+          "place": 35,
+          "score": 123
+        },
+        "porkJudging": {
+          "place": 24,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 1,
+          "score": 498
+        },
+        "reasons": {
+          "place": 36,
+          "score": 160
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 200,
+          "reasons": 60
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 75
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 25
+        }
+      },
+      "place": 25,
+      "counted": true
+    },
+    {
+      "name": "Addie Bryles",
+      "school": "Eastern Oklahoma State College",
+      "alt": false,
+      "officialPlace": 20,
+      "score": 899,
+      "categories": {
+        "beefJudging": {
+          "place": 17,
+          "score": 267
+        },
+        "beefGrading": {
+          "place": 36,
+          "score": 208
+        },
+        "overallBeef": {
+          "place": 33,
+          "score": 475
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 15,
+          "score": 281
+        },
+        "totalPlacings": {
+          "place": 13,
+          "score": 491
+        },
+        "reasons": {
+          "place": 10,
+          "score": 200
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 196,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 26,
+      "counted": true
+    },
+    {
+      "name": "Samantha Black",
+      "school": "Clarendon College",
+      "alt": true,
+      "officialPlace": 7,
+      "score": 896,
+      "categories": {
+        "beefJudging": {
+          "place": 33,
+          "score": 256
+        },
+        "beefGrading": {
+          "place": 23,
+          "score": 234
+        },
+        "overallBeef": {
+          "place": 26,
+          "score": 490
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 29,
+          "score": 273
+        },
+        "totalPlacings": {
+          "place": 38,
+          "score": 477
+        },
+        "reasons": {
+          "place": 23,
+          "score": 185
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 181,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 198,
+          "reasons": 75
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 27
+    },
+    {
+      "name": "Olivia Vanderwalt",
+      "school": "University of Georgia",
+      "alt": false,
+      "officialPlace": 21,
+      "score": 894,
+      "categories": {
+        "beefJudging": {
+          "place": 13,
+          "score": 270
+        },
+        "beefGrading": {
+          "place": 26,
+          "score": 228
+        },
+        "overallBeef": {
+          "place": 21,
+          "score": 498
+        },
+        "lambJudging": {
+          "place": 37,
+          "score": 119
+        },
+        "porkJudging": {
+          "place": 21,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 26,
+          "score": 486
+        },
+        "reasons": {
+          "place": 27,
+          "score": 180
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 195,
+          "reasons": 75
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 25
+        }
+      },
+      "place": 28,
+      "counted": true
+    },
+    {
+      "name": "Grant Mendenhall",
+      "school": "Garden City Community College",
+      "alt": true,
+      "officialPlace": 8,
+      "score": 893,
+      "categories": {
+        "beefJudging": {
+          "place": 37,
+          "score": 239
+        },
+        "beefGrading": {
+          "place": 28,
+          "score": 226
+        },
+        "overallBeef": {
+          "place": 36,
+          "score": 465
+        },
+        "lambJudging": {
+          "place": 2,
+          "score": 143
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 27,
+          "score": 180
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 189,
+          "reasons": 50
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 45
+        }
+      },
+      "place": 29
+    },
+    {
+      "name": "Thomas Peters",
+      "school": "Garden City Community College",
+      "alt": true,
+      "officialPlace": 9,
+      "score": 892,
+      "categories": {
+        "beefJudging": {
+          "place": 30,
+          "score": 258
+        },
+        "beefGrading": {
+          "place": 28,
+          "score": 226
+        },
+        "overallBeef": {
+          "place": 29,
+          "score": 484
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 24,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 33,
+          "score": 481
+        },
+        "reasons": {
+          "place": 23,
+          "score": 185
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 188,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 30
+    },
+    {
+      "name": "Rhyder Matthies",
+      "school": "Clarendon College",
+      "alt": true,
+      "officialPlace": 10,
+      "score": 887,
+      "categories": {
+        "beefJudging": {
+          "place": 22,
+          "score": 264
+        },
+        "beefGrading": {
+          "place": 39,
+          "score": 205
+        },
+        "overallBeef": {
+          "place": 35,
+          "score": 469
+        },
+        "lambJudging": {
+          "place": 13,
+          "score": 133
+        },
+        "porkJudging": {
+          "place": 9,
+          "score": 285
+        },
+        "totalPlacings": {
+          "place": 12,
+          "score": 492
+        },
+        "reasons": {
+          "place": 17,
+          "score": 190
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 200,
+          "reasons": 85
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 35
+        }
+      },
+      "place": 31
+    },
+    {
+      "name": "Konar Brungardt",
+      "school": "Garden City Community College",
+      "alt": false,
+      "officialPlace": 22,
+      "score": 885,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 257
+        },
+        "beefGrading": {
+          "place": 19,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 25,
+          "score": 492
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 37,
+          "score": 265
+        },
+        "totalPlacings": {
+          "place": 34,
+          "score": 480
+        },
+        "reasons": {
+          "place": 32,
+          "score": 170
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 187,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 70
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 32,
+      "counted": true
+    },
+    {
+      "name": "Marcela Rodriguez",
+      "school": "University of Georgia",
+      "alt": true,
+      "officialPlace": 11,
+      "score": 879,
+      "categories": {
+        "beefJudging": {
+          "place": 17,
+          "score": 267
+        },
+        "beefGrading": {
+          "place": 35,
+          "score": 210
+        },
+        "overallBeef": {
+          "place": 32,
+          "score": 477
+        },
+        "lambJudging": {
+          "place": 32,
+          "score": 125
+        },
+        "porkJudging": {
+          "place": 21,
+          "score": 277
+        },
+        "totalPlacings": {
+          "place": 9,
+          "score": 494
+        },
+        "reasons": {
+          "place": 31,
+          "score": 175
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 70
+        },
+        "pork": {
+          "placing": 197,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 25
+        }
+      },
+      "place": 33
+    },
+    {
+      "name": "Sydni Richardson",
+      "school": "Connors State College",
+      "alt": false,
+      "officialPlace": 23,
+      "score": 872,
+      "categories": {
+        "beefJudging": {
+          "place": 31,
+          "score": 257
+        },
+        "beefGrading": {
+          "place": 40,
+          "score": 204
+        },
+        "overallBeef": {
+          "place": 37,
+          "score": 461
+        },
+        "lambJudging": {
+          "place": 32,
+          "score": 125
+        },
+        "porkJudging": {
+          "place": 8,
+          "score": 286
+        },
+        "totalPlacings": {
+          "place": 17,
+          "score": 488
+        },
+        "reasons": {
+          "place": 27,
+          "score": 180
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 60
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 95
+        },
+        "lamb": {
+          "placing": 100,
+          "reasons": 25
+        }
+      },
+      "place": 34,
+      "counted": true
+    },
+    {
+      "name": "Melina Leonard",
+      "school": "University of Arizona",
+      "alt": false,
+      "officialPlace": 24,
+      "score": 869,
+      "categories": {
+        "beefJudging": {
+          "place": 25,
+          "score": 262
+        },
+        "beefGrading": {
+          "place": 34,
+          "score": 217
+        },
+        "overallBeef": {
+          "place": 31,
+          "score": 479
+        },
+        "lambJudging": {
+          "place": 36,
+          "score": 121
+        },
+        "porkJudging": {
+          "place": 34,
+          "score": 269
+        },
+        "totalPlacings": {
+          "place": 19,
+          "score": 487
+        },
+        "reasons": {
+          "place": 33,
+          "score": 165
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 65
+        },
+        "pork": {
+          "placing": 194,
+          "reasons": 75
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 25
+        }
+      },
+      "place": 35,
+      "counted": true
+    },
+    {
+      "name": "Sam Baldino",
+      "school": "Eastern Oklahoma State College",
+      "alt": true,
+      "officialPlace": 12,
+      "score": 869,
+      "categories": {
+        "beefJudging": {
+          "place": 35,
+          "score": 254
+        },
+        "beefGrading": {
+          "place": 19,
+          "score": 235
+        },
+        "overallBeef": {
+          "place": 27,
+          "score": 489
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 40,
+          "score": 252
+        },
+        "totalPlacings": {
+          "place": 30,
+          "score": 484
+        },
+        "reasons": {
+          "place": 39,
+          "score": 150
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 194,
+          "reasons": 60
+        },
+        "pork": {
+          "placing": 192,
+          "reasons": 60
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 35
+    },
+    {
+      "name": "Lizzy Macwhinnie",
+      "school": "Garden City Community College",
+      "alt": true,
+      "officialPlace": 13,
+      "score": 863,
+      "categories": {
+        "beefJudging": {
+          "place": 36,
+          "score": 252
+        },
+        "beefGrading": {
+          "place": 32,
+          "score": 222
+        },
+        "overallBeef": {
+          "place": 34,
+          "score": 474
+        },
+        "lambJudging": {
+          "place": 40,
+          "score": 118
+        },
+        "porkJudging": {
+          "place": 32,
+          "score": 271
+        },
+        "totalPlacings": {
+          "place": 26,
+          "score": 486
+        },
+        "reasons": {
+          "place": 38,
+          "score": 155
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 197,
+          "reasons": 55
+        },
+        "pork": {
+          "placing": 191,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 20
+        }
+      },
+      "place": 37
+    },
+    {
+      "name": "Abigail Foretic",
+      "school": "University of Georgia",
+      "alt": true,
+      "officialPlace": 14,
+      "score": 846,
+      "categories": {
+        "beefJudging": {
+          "place": 40,
+          "score": 226
+        },
+        "beefGrading": {
+          "place": 25,
+          "score": 232
+        },
+        "overallBeef": {
+          "place": 38,
+          "score": 458
+        },
+        "lambJudging": {
+          "place": 44,
+          "score": 113
+        },
+        "porkJudging": {
+          "place": 24,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 42,
+          "score": 454
+        },
+        "reasons": {
+          "place": 36,
+          "score": 160
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 166,
+          "reasons": 60
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 93,
+          "reasons": 20
+        }
+      },
+      "place": 38
+    },
+    {
+      "name": "Alexandr Trejo",
+      "school": "Texas A&M Kingsville",
+      "alt": false,
+      "officialPlace": 25,
+      "score": 798,
+      "categories": {
+        "beefJudging": {
+          "place": 39,
+          "score": 229
+        },
+        "beefGrading": {
+          "place": 43,
+          "score": 176
+        },
+        "overallBeef": {
+          "place": 43,
+          "score": 405
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 37,
+          "score": 265
+        },
+        "totalPlacings": {
+          "place": 41,
+          "score": 457
+        },
+        "reasons": {
+          "place": 33,
+          "score": 165
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 174,
+          "reasons": 55
+        },
+        "pork": {
+          "placing": 185,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 39,
+      "counted": true
+    },
+    {
+      "name": "Abbey Miller",
+      "school": "Connors State College",
+      "alt": true,
+      "officialPlace": 15,
+      "score": 797,
+      "categories": {
+        "beefJudging": {
+          "place": 41,
+          "score": 222
+        },
+        "beefGrading": {
+          "place": 44,
+          "score": 172
+        },
+        "overallBeef": {
+          "place": 44,
+          "score": 394
+        },
+        "lambJudging": {
+          "place": 23,
+          "score": 128
+        },
+        "porkJudging": {
+          "place": 24,
+          "score": 275
+        },
+        "totalPlacings": {
+          "place": 34,
+          "score": 480
+        },
+        "reasons": {
+          "place": 40,
+          "score": 145
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 187,
+          "reasons": 35
+        },
+        "pork": {
+          "placing": 195,
+          "reasons": 80
+        },
+        "lamb": {
+          "placing": 98,
+          "reasons": 30
+        }
+      },
+      "place": 40
+    },
+    {
+      "name": "Jason Stithem",
+      "school": "Texas A&M Kingsville",
+      "alt": false,
+      "officialPlace": 26,
+      "score": 774,
+      "categories": {
+        "beefJudging": {
+          "place": 44,
+          "score": 208
+        },
+        "beefGrading": {
+          "place": 41,
+          "score": 203
+        },
+        "overallBeef": {
+          "place": 42,
+          "score": 411
+        },
+        "lambJudging": {
+          "place": 37,
+          "score": 119
+        },
+        "porkJudging": {
+          "place": 41,
+          "score": 244
+        },
+        "totalPlacings": {
+          "place": 43,
+          "score": 441
+        },
+        "reasons": {
+          "place": 41,
+          "score": 130
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 168,
+          "reasons": 40
+        },
+        "pork": {
+          "placing": 179,
+          "reasons": 65
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 25
+        }
+      },
+      "place": 41,
+      "counted": true
+    },
+    {
+      "name": "Luis V Nava U",
+      "school": "Texas A&M Kingsville",
+      "alt": true,
+      "officialPlace": 16,
+      "score": 773,
+      "categories": {
+        "beefJudging": {
+          "place": 42,
+          "score": 216
+        },
+        "beefGrading": {
+          "place": 37,
+          "score": 207
+        },
+        "overallBeef": {
+          "place": 39,
+          "score": 423
+        },
+        "lambJudging": {
+          "place": 43,
+          "score": 114
+        },
+        "porkJudging": {
+          "place": 44,
+          "score": 236
+        },
+        "totalPlacings": {
+          "place": 43,
+          "score": 441
+        },
+        "reasons": {
+          "place": 42,
+          "score": 125
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 176,
+          "reasons": 40
+        },
+        "pork": {
+          "placing": 171,
+          "reasons": 65
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 20
+        }
+      },
+      "place": 42
+    },
+    {
+      "name": "Robert Garcia",
+      "school": "Texas A&M Kingsville",
+      "alt": false,
+      "officialPlace": 27,
+      "score": 770,
+      "categories": {
+        "beefJudging": {
+          "place": 38,
+          "score": 230
+        },
+        "beefGrading": {
+          "place": 42,
+          "score": 184
+        },
+        "overallBeef": {
+          "place": 40,
+          "score": 414
+        },
+        "lambJudging": {
+          "place": 37,
+          "score": 119
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 237
+        },
+        "totalPlacings": {
+          "place": 39,
+          "score": 466
+        },
+        "reasons": {
+          "place": 43,
+          "score": 120
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 190,
+          "reasons": 40
+        },
+        "pork": {
+          "placing": 182,
+          "reasons": 55
+        },
+        "lamb": {
+          "placing": 94,
+          "reasons": 25
+        }
+      },
+      "place": 43,
+      "counted": true
+    },
+    {
+      "name": "Helena Duarte",
+      "school": "Texas A&M Kingsville",
+      "alt": true,
+      "officialPlace": 17,
+      "score": 739,
+      "categories": {
+        "beefJudging": {
+          "place": 45,
+          "score": 207
+        },
+        "beefGrading": {
+          "place": 37,
+          "score": 207
+        },
+        "overallBeef": {
+          "place": 40,
+          "score": 414
+        },
+        "lambJudging": {
+          "place": 45,
+          "score": 94
+        },
+        "porkJudging": {
+          "place": 45,
+          "score": 231
+        },
+        "totalPlacings": {
+          "place": 45,
+          "score": 412
+        },
+        "reasons": {
+          "place": 43,
+          "score": 120
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 162,
+          "reasons": 45
+        },
+        "pork": {
+          "placing": 176,
+          "reasons": 55
+        },
+        "lamb": {
+          "placing": 74,
+          "reasons": 20
+        }
+      },
+      "place": 44
+    },
+    {
+      "name": "Joseph Sena",
+      "school": "Texas A&M Kingsville",
+      "alt": false,
+      "officialPlace": 28,
+      "score": 726,
+      "categories": {
+        "beefJudging": {
+          "place": 43,
+          "score": 211
+        },
+        "beefGrading": {
+          "place": 45,
+          "score": 162
+        },
+        "overallBeef": {
+          "place": 45,
+          "score": 373
+        },
+        "lambJudging": {
+          "place": 42,
+          "score": 116
+        },
+        "porkJudging": {
+          "place": 42,
+          "score": 237
+        },
+        "totalPlacings": {
+          "place": 40,
+          "score": 459
+        },
+        "reasons": {
+          "place": 45,
+          "score": 105
+        }
+      },
+      "splits": {
+        "beef": {
+          "placing": 181,
+          "reasons": 30
+        },
+        "pork": {
+          "placing": 182,
+          "reasons": 55
+        },
+        "lamb": {
+          "placing": 96,
+          "reasons": 20
+        }
+      },
+      "place": 45,
+      "counted": true
+    }
+  ]
+}
