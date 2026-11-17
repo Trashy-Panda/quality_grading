@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { RULES, scoreField, scoreFleece, scoreSheet, yieldFromDigits, fieldFromRead } from '../scoring.js';
+import { RULES, scoreField, scoreFleece, scoreSheet, yieldFromDigits, fieldFromRead } from '../../beefgrading.study/fleece/scoring.js';
 
 const off = (f, s, k) => scoreField(f, s, k).off;
 

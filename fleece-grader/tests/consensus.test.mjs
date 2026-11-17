@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildKeyFromSlashes, mergeKey } from '../consensus.js';
+import { buildKeyFromSlashes, mergeKey } from '../../beefgrading.study/fleece/consensus.js';
 
 const r = (slash) => ({ slash, slashStatus: slash == null ? 'none' : 'ok' });
 const fleece = (o = {}) => ({
