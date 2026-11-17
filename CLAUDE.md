@@ -9,8 +9,9 @@ Firestore + Auth. Live at beefgrading.study.
   `docs/`, `deployment/`, `powerrankings/`, README). `.claude/` and `.agents/`
   at repo root are shared tooling, not part of the site.
 - Live site files: index.html, 404.html, admin.html, *.css, app.js, auth.js,
-  data.js, weekly.js, leaderboard.js, powerrank.js, admin.js, scroll.js, assets/,
+  data.js, weekly.js, leaderboard.js, powerrank.js, admin.js, scroll.js, assets/, fleece/,
   CNAME, firestore.rules. auth/weekly/leaderboard .html are reference docs in docs/.
+- Fleece grader (offline PWA) ships from `fleece/`; its dev pages, tests and private scanned sheets stay in repo-root `fleece-grader/`, never under the published folder. Dev server `python ../fleece-grader/dev/devserver.py 8012`; tests `node --test fleece-grader/tests/*.test.mjs` from repo root. Bump the cache version in `fleece/sw.js` on every fleece release.
 - Design tokens: `style.css` `:root` is the single source of truth.
 
 ## Branches and deploy
@@ -35,14 +36,13 @@ Firestore + Auth. Live at beefgrading.study.
 - Visuals: build in SVG/CSS on the theme tokens first; Canva generate-image only
   when code cannot do it (claude.ai connectors are off for this repo via
   `disableClaudeAiConnectors` in .claude/settings.local.json; ask the user to flip it).
-- Local preview: dev server on http://localhost:8000 (no-cache); check with the
-  Playwright MCP at 390 and 1440 wide (fallback: webapp-testing skill). Dev server:
+- Local preview: dev server on http://localhost:8000 (no-cache); check with `node ../.claude/tools/cdp-shot.mjs` (headless Chrome over CDP; the Playwright MCP is often locked) at 390, 1440, 1920 and 3840 wide. Dev server:
   `python deployment/devserver.py` from beefgrading.study.
 - Orchestration: global `~/.claude/CLAUDE.md` + `orchestrate` skill (Opus plans,
   Haiku/Sonnet agents execute, verifier gates, `reflect` after).
 - Standard Done-when checks for site packets (run from beefgrading.study):
   preflight exits 0 on touched files; `node --check` on touched JS;
-  `grep -n "onerror=\|onclick=" *.html *.js` empty; Playwright 390 + 1440 render
+  `grep -n "onerror=\|onclick=" *.html *.js` empty; 390, 1440, 1920 and 3840 render
   with no console errors. Design packets: verifier on `model: sonnet`.
 - Path-scoped detail lives in `.claude/rules/` and loads only when relevant.
 

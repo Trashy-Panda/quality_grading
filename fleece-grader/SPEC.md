@@ -60,4 +60,4 @@ Report both: score out of total (primary, e.g. 382/400 for 20 fleeces) and point
 - template.js — sheet geometry (normalized coords inside the table border)
 - omr.js — OpenCV.js image pipeline → OMR reads
 - index.html / app.js / style.css — UI (later packet)
-- tests/*.test.mjs — `node --test fleece-grader/tests`
+- tests/*.test.mjs — `node --test fleece-grader/tests/*.test.mjs` (the directory form fails on Node 25)
