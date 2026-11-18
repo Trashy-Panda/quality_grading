@@ -125,8 +125,11 @@ const probsOf = t => softmax(NET(t), DIGITS.temp);
 
 async function loadGrey(src, o) {
   if (src && (src.g || src.data) && !src.getContext) { const g = greyOf(src); return { ...g, k: 1 }; }
-  if (typeof src === 'string') src = await new Promise((res, rej) => { const i = new Image(); i.addEventListener('load', () => res(i)); i.addEventListener('error', () => rej(new Error('image load failed'))); i.src = src; });
-  else if (typeof Blob !== 'undefined' && src instanceof Blob) src = await createImageBitmap(src, { imageOrientation: 'from-image' });
+  // A Blob goes through an <img> like a url does: an ImageBitmap decode resamples a little differently and lost the last line of the key photo.
+  const isBlob = typeof Blob !== 'undefined' && src instanceof Blob, blobUrl = isBlob ? URL.createObjectURL(src) : null;
+  if (typeof src === 'string' || isBlob) {
+    try { src = await new Promise((res, rej) => { const i = new Image(); i.addEventListener('load', () => res(i)); i.addEventListener('error', () => rej(new Error('image load failed'))); i.src = blobUrl || src; }); } finally { if (blobUrl) URL.revokeObjectURL(blobUrl); }
+  }
   const W = src.naturalWidth || src.videoWidth || src.width, H = src.naturalHeight || src.videoHeight || src.height, k = Math.min(1, o.maxEdge / Math.max(W, H));
   const c = document.createElement('canvas'); c.width = Math.round(W * k); c.height = Math.round(H * k);
   const g = c.getContext('2d', { willReadFrequently: true }); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, c.width, c.height);

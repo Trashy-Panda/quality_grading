@@ -2,6 +2,9 @@
 // Markup follows docs/DESIGN.md v3 (comp A fleece screens): a stage plus one sheet per screen.
 import { loadCV, readSheet, readSheetWithCorners } from './omr.js';
 import { scoreSheet, scoreField, fieldFromRead, yieldFromDigits, FIELDS as SCORE_FIELDS } from './scoring.js';
+import { initDigits, readDigit, readMarginYield, DIGITS } from './digits.js';
+import { readListKey, LIST } from './listkey.js';
+import { keyFromScan, detectKeyMode } from './consensus.js';
 
 const LABELS = {
   grade: ['70s', '64s', '62s', '60s', '58s', '56s', '54s', '50s', '48s', '46s'],
@@ -24,6 +27,8 @@ const STORE = 'fleece-grader-v1';
 
 const emptyFleece = () => ({ grade: null, length: null, yield: null, purity: null, character: null });
 const emptyAuto = () => ({ purity: false, character: false });
+// Where each key value came from (set by Scan official key): keySrc[row][field] = { s: source, low?: true }.
+const SRC_WORDS = { slash: "the grader's slash", inferred: "the student's fill, with no grader slash", fill: 'a filled bubble', margin: 'the yield written in the margin', written: 'the Written digits', list: 'the handwritten list' };
 const S = {
   tab: 'session', name: '', n: 20,
   key: Array.from({ length: 20 }, emptyFleece),
@@ -32,6 +37,7 @@ const S = {
   kRow: 0, kField: 'grade', adjust: false, detail: false,
   all: { purity: 0, character: 1 }, svZoom: null,
   auto: Array.from({ length: 20 }, emptyAuto), // per key row: purity/character values filled by default, not picked
+  keySrc: Array.from({ length: 20 }, () => ({})), ks: null, // ks: the key photo being read (not saved)
 };
 
 // ---------- helpers ----------
@@ -72,7 +78,7 @@ function save() {
     id: s.id, name: s.name, file: s.file, corr: s.corr,
     saved: { answers: answersOf(s), flags: flagsOf(s) },
   }));
-  lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, auto: S.auto, sheets, nextId: S.nextId }));
+  lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, auto: S.auto, keySrc: S.keySrc, sheets, nextId: S.nextId }));
 }
 function load() {
   const raw = lsGet(STORE); if (!raw) return;
@@ -84,6 +90,11 @@ function load() {
     S.auto = Array.from({ length: 20 }, (_, i) => {
       const a = Array.isArray(d.auto) && d.auto[i] || {}, k = S.key[i];
       return { purity: a.purity === true && k.purity != null, character: a.character === true && k.character != null };
+    });
+    S.keySrc = Array.from({ length: 20 }, (_, i) => {
+      const src = Array.isArray(d.keySrc) && d.keySrc[i] || {}, out = {};
+      for (const f of ORDER) { const v = src[f]; if (v && typeof v.s === 'string' && SRC_WORDS[v.s] && S.key[i][f] != null) out[f] = v.low === true ? { s: v.s, low: true } : { s: v.s }; }
+      return out;
     });
     if (Array.isArray(d.sheets)) S.sheets = d.sheets.map((s) => ({ id: s.id, name: String(s.name || ''), file: s.file || '', corr: s.corr || {}, saved: s.saved || null, res: null, src: null }));
     S.nextId = d.nextId || S.sheets.length + 1;
@@ -204,33 +215,67 @@ function segHtml(f, i, k) {
   }).join('');
   return `<div class="pick pick-fade" role="tabpanel" aria-label="${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}">${rows}</div>`;
 }
-function keyYieldHtml(i, k) {
-  return `<div class="k-yield" role="tabpanel" aria-label="Yield for fleece ${i + 1}"><label class="fld"><span class="lab">Yield for fleece ${i + 1}</span><input type="number" inputmode="numeric" enterkeyhint="next" min="0" max="99" step="1" data-act="key-yield" data-row="${i}" value="${k.yield == null ? '' : k.yield}" aria-label="Yield for fleece ${i + 1}" placeholder="0 to 99"></label><p>A whole number from 0 to 99.</p></div>`;
+// The margin of a scanned graded sheet, kept in memory only, so a doubtful yield can be checked by eye.
+function cropOf(i) { const h = S.ks && S.ks.res && S.ks.res.hand && S.ks.res.hand[i]; return h && h.margin ? h.margin.canvas : null; }
+function drawCrops(root) {
+  root.querySelectorAll('[data-kcrop]').forEach((el) => {
+    const n = Number(el.dataset.kcrop), cv = cropOf(n); if (!cv) return;
+    const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.getContext('2d').drawImage(cv, 0, 0);
+    c.setAttribute('role', 'img'); c.setAttribute('aria-label', `Margin beside fleece ${n + 1}`); el.replaceChildren(c);
+  });
 }
+function lowYieldRows() {
+  if (!S.ks || !S.ks.res || S.ks.mode === 'list') return [];
+  const out = []; for (let i = 0; i < S.n; i++) if (lowOf(i, 'yield')) out.push(i);
+  return out;
+}
+function renderKsChecks() {
+  const slot = $('ks-chk'); if (!slot) return;
+  const rows = lowYieldRows(); if (!rows.length) { slot.innerHTML = ''; return; }
+  const fk = focusKey();
+  slot.innerHTML = `<p class="lab" id="ks-chk-t">Check these yields against the margin</p><ul class="ks-chk" aria-labelledby="ks-chk-t">${rows.map((i) => {
+    const v = S.key[i].yield, how = S.keySrc[i].yield.s === 'margin' ? 'Read as' : 'Student bubbles say';
+    return `<li><button type="button" class="ks-c" data-act="ks-fix" data-row="${i}" aria-label="Fleece ${i + 1} yield. ${how} ${v}. Open it to fix"><span class="ks-n">${i + 1}</span><span class="ks-cv" data-kcrop="${i}"></span><span class="ks-r">${how} ${v}</span></button></li>`;
+  }).join('')}</ul>`;
+  drawCrops(slot); refocus(fk);
+}
+function keyYieldHtml(i, k) {
+  const crop = cropOf(i) && lowOf(i, 'yield') ? `<div class="ed-crop"><span class="lab">Written in the margin</span><span data-kcrop="${i}"></span></div>` : '';
+  return `<div class="k-yield" role="tabpanel" aria-label="Yield for fleece ${i + 1}"><label class="fld"><span class="lab">Yield for fleece ${i + 1}</span><input type="number" inputmode="numeric" enterkeyhint="next" min="0" max="99" step="1" data-act="key-yield" data-row="${i}" value="${k.yield == null ? '' : k.yield}" aria-label="Yield for fleece ${i + 1}" placeholder="0 to 99"></label><p>A whole number from 0 to 99.</p>${crop}</div>`;
+}
+function lowOf(i, f) { const v = S.keySrc[i] && S.keySrc[i][f]; return !!(v && v.low && S.key[i][f] != null); }
+// A value the user has looked at (or changed) is no longer a guess.
+function ackKeySrc(i, f) { const v = S.keySrc[i] && S.keySrc[i][f]; if (v && v.low) { delete v.low; save(); } }
 function keyValsHtml(i) {
   const k = S.key[i], on = i === S.kRow;
   return ORDER.map((f) => {
     const empty = k[f] == null;
-    const cls = [empty ? 'e' : '', !empty && S.auto[i][f] ? 'auto' : '', on && f === S.kField ? 'cur' : ''].filter(Boolean).join(' ');
+    const cls = [empty ? 'e' : '', !empty && S.auto[i][f] ? 'auto' : '', lowOf(i, f) ? 'low' : '', on && f === S.kField ? 'cur' : ''].filter(Boolean).join(' ');
     const txt = empty ? FIELD_NAMES[f] : longLabel(f, k[f]);
-    return `<span${cls ? ` class="${cls}"` : ''}>${escapeHtml(txt)}</span>`;
+    return `<span data-kf="${f}"${cls ? ` class="${cls}"` : ''}>${escapeHtml(txt)}</span>`;
   }).join('');
 }
 function keyRowInner(i) {
   const k = S.key[i], on = i === S.kRow;
-  const spoken = ORDER.map((f) => `${FIELD_NAMES[f]} ${k[f] == null ? 'not set' : longLabel(f, k[f]) + (S.auto[i][f] ? ', automatic' : '')}`).join(', ');
+  const spoken = ORDER.map((f) => `${FIELD_NAMES[f]} ${k[f] == null ? 'not set' : longLabel(f, k[f]) + (S.auto[i][f] ? ', automatic' : '') + (lowOf(i, f) ? ', check this' : '')}`).join(', ');
   return `<button type="button" class="fl${on ? ' is-on' : ''}" data-act="key-open" data-row="${i}"${on ? ' aria-current="true"' : ''} aria-label="Fleece ${i + 1}. ${escapeHtml(spoken)}"><span class="num">${i + 1}</span><span class="fl-v">${keyValsHtml(i)}</span></button>`;
 }
 function keyRowHtml(i) { return `<li data-keyrow="${i}">${keyRowInner(i)}</li>`; }
+function keySrcHtml(i, f) {
+  const v = S.keySrc[i] && S.keySrc[i][f]; if (!v || S.key[i][f] == null) return '';
+  if (v.s === 'inferred' && !v.low) return `<p class="k-src">Inferred. No grader slash on this graded row, so the student's fill stands.</p>`;
+  return `<p class="k-src${v.low ? ' is-low' : ''}">From ${escapeHtml(SRC_WORDS[v.s] || 'the scan')}.${v.low ? ' Not sure of this one, check it.' : ''}</p>`;
+}
 function keySheetHtml() {
   const i = S.kRow, f = S.kField, k = S.key[i];
   const tabs = ORDER.map((x) => `<button type="button" role="tab" data-act="key-tab" data-row="${i}" data-field="${x}" aria-selected="${x === f}"${x === f ? '' : ' tabindex="-1"'}>${escapeHtml(FIELD_NAMES[x])}</button>`).join('');
   const panel = f === 'yield' ? keyYieldHtml(i, k) : segHtml(f, i, k);
   const ns = nextStep();
   const text = !ns ? 'Done, scan sheets' : ns.row === i ? 'Next, ' + FIELD_NAMES[ns.field] : 'Next, fleece ' + (ns.row + 1);
-  return `<div class="ftabs" role="tablist" aria-label="Fleece ${i + 1} fields">${tabs}</div>${panel}${ctaHtml(text, `Fleece ${i + 1} of ${S.n}`, 'key-next')}`;
+  return `<div class="ftabs" role="tablist" aria-label="Fleece ${i + 1} fields">${tabs}</div>${keySrcHtml(i, f)}${panel}${ctaHtml(text, `Fleece ${i + 1} of ${S.n}`, 'key-next')}`;
 }
 function updateKeyMeta() {
+  renderKsChecks();
   const c = keyedCount(), n = S.n;
   const cnt = $('key-count'); if (cnt) cnt.textContent = `${c} of ${n} keyed`;
   updateSetAll();
@@ -239,7 +284,7 @@ function updateKeyMeta() {
 function renderKeySheet() {
   const sh = $('key-sheet'); if (!sh) return;
   const old = sh.querySelector('.pick'), top = old ? old.scrollTop : 0, fk = focusKey();
-  sh.innerHTML = keySheetHtml();
+  sh.innerHTML = keySheetHtml(); drawCrops(sh);
   const nu = sh.querySelector('.pick');
   if (nu) {
     nu.scrollTop = top;
@@ -311,40 +356,120 @@ function renderSession() {
           </div></div>
       </div>
       <div class="k-acts">
-        <button type="button" class="tbtn" data-act="scan-key">${ic('corners')}Scan official key sheet</button>
+        <button type="button" class="tbtn" data-act="scan-key">${ic('corners')}Scan official key</button>
         <button type="button" class="tbtn tbtn--q" data-act="clear-key">Clear key</button>
       </div>
       <div id="key-notice"></div>
+      <div id="key-scan"></div>
       ${setAllHtml()}
       <ol id="keyrows" class="k-list"></ol>
     </div>
     <div class="sheet" id="key-sheet"></div>`;
   if (S.kRow >= S.n) S.kRow = 0;
-  renderKeyRows();
+  renderKeyRows(); renderKeyScan();
 }
 function setN(n) {
   S.n = Math.max(1, Math.min(20, Math.round(Number(n) || 20)));
   const el = $('s-n'); if (el) el.value = S.n;
   save(); renderKeyRows();
 }
+// ---------- scan the official key ----------
+// One photo, three possible readings: a graded sheet (slashes plus margin yields), a bubbled key, or a handwritten list.
+const MODE_NAMES = { graded: 'Graded sheet', bubbled: 'Bubbled key', list: 'Handwritten list' };
+const MODE_NOTES = {
+  graded: "The grader's slashes are the key and the yields come from the margin. A fill with no slash is the student's, so it is marked to check.",
+  bubbled: 'The filled bubbles are the key. Written digits fill a yield that is not bubbled clearly.',
+  list: 'One fleece per line: grade, length, yield. Values the reader was unsure of are marked to check.',
+};
+const KEY_MODES = ['graded', 'bubbled', 'list'];
+const MAX_KEY_EDGE = 3200; // same cap omr.js uses, so corners stay in one coordinate space
+async function fileCanvas(file) {
+  const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  const k = Math.min(1, MAX_KEY_EDGE / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(bmp, 0, 0, c.width, c.height);
+  if (bmp.close) bmp.close();
+  return c;
+}
+// Read the printed table (and the handwriting beside it). Returns true when a table was found.
+async function readKeyTable(ks, corners) {
+  const res = corners ? await readSheetWithCorners(ks.src, corners, { hand: true }) : await readSheet(ks.src, { hand: true });
+  if (res.sourceCanvas) ks.src = res.sourceCanvas; // the reader may have turned the photo
+  ks.corners = res.corners || ks.corners || defaultCorners(ks.src);
+  ks.res = res.ok ? res : null;
+  ks.err = res.ok ? null : (res.warnings && res.warnings[0]) || 'Could not find the grading table.';
+  ks.reads = res.ok ? res.hand.map((h) => ({ margin: readMarginYield(h.margin), tens: readDigit(h.tens), ones: readDigit(h.ones) })) : null;
+  if (res.ok) ks.detect = detectKeyMode(res.rows, ks.reads.map((r) => r.margin), DIGITS.confidentMargin);
+  return res.ok;
+}
+async function readKeyList(ks) {
+  if (ks.list === undefined) ks.list = await readListKey(ks.blob);
+  return !!(ks.list && ks.list.ok);
+}
+function applyKeyScan() {
+  const ks = S.ks, table = ks.mode !== 'list';
+  const data = table ? { rows: ks.res.rows, margin: ks.reads.map((r) => r.margin), tens: ks.reads.map((r) => r.tens), ones: ks.reads.map((r) => r.ones) } : { list: ks.list };
+  const out = keyFromScan(ks.mode, data, { all: S.all, confMargin: DIGITS.confidentMargin, confDigit: DIGITS.confidentDigit, confList: LIST.confident });
+  S.key = out.key; S.auto = out.auto; S.keySrc = out.src; ks.stats = out.stats;
+  S.kRow = 0; S.kField = 'grade';
+  const lowRow = S.keySrc.findIndex((r, i) => ORDER.some((f) => lowOf(i, f)));
+  if (lowRow >= 0 && lowRow < S.n) { S.kRow = lowRow; S.kField = ORDER.find((f) => lowOf(lowRow, f)); } else S.kRow = firstIncomplete();
+  save();
+  if (S.tab === 'session') {
+    renderKeyRows(); renderKeyScan();
+    const nt = $('key-notice'), st = out.stats, extra = table || !ks.list.warnings.length ? '' : ' ' + ks.list.warnings.join('. ') + '.';
+    if (nt) nt.innerHTML = `<p class="k-note">${ic('check')}<span>Key read from the photo for ${plural(st.filled, 'fleece')}. ${st.low ? `${plural(st.low, 'value')} highlighted to check. Tap one to open it and clear the mark.` : 'Nothing looked doubtful, but check every row.'}${escapeHtml(extra)}</span></p>`;
+  }
+}
 async function scanKey(file) {
   busy('Loading OpenCV'); await tick();
   try {
-    await loadCV(); busy('Reading key sheet'); await tick();
-    const res = await readSheet(file, { marginCrops: false });
-    if (!res.ok) { toast('Could not read the key sheet: ' + (res.error || 'unknown')); return; }
-    let filled = 0;
-    for (let i = 0; i < 20; i++) {
-      const r = res.rows[i], k = emptyFleece();
-      for (const f of SIMPLE) k[f] = fieldFromRead(r[f]);
-      k.yield = yieldFromDigits(fieldFromRead(r.yieldTens), fieldFromRead(r.yieldOnes));
-      if (keyHas(k)) filled++;
-      S.key[i] = k; S.auto[i] = emptyAuto();
+    await loadCV(); await initDigits(); busy('Reading key photo'); await tick();
+    const ks = { name: 'official key', file: file.name, blob: file, src: await fileCanvas(file), corners: null, res: null, reads: null, err: null, list: undefined, mode: null, manual: false, adjust: false, detect: null, stats: null };
+    S.ks = ks;
+    if (await readKeyTable(ks, null)) { ks.mode = ks.detect.mode; applyKeyScan(); }
+    else {
+      busy('Looking for a handwritten list'); await tick();
+      if (await readKeyList(ks)) { ks.mode = 'list'; applyKeyScan(); }
+      else { renderKeyScan(); toast('Could not read a key from that photo. No grading table or handwritten list was found. Adjust the corners and re-read, or tap the key in below.'); }
     }
-    save(); if (S.tab === 'session') { S.kRow = firstIncomplete(); S.kField = 'grade'; renderKeyRows(); }
-    const nt = $('key-notice');
-    if (nt) nt.innerHTML = `<p class="k-note">${ic('check')}<span>Key loaded from the scan for ${plural(filled, 'fleece')}. Check every row, then fix anything the scan missed.</span></p>`;
   } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+}
+async function ksMode(m) {
+  const ks = S.ks; if (!ks || !KEY_MODES.includes(m) || ks.mode === m) return;
+  busy('Reading the key again'); await tick();
+  try {
+    if (m === 'list') { if (!(await readKeyList(ks))) { toast('No handwritten list found in that photo.'); return; } }
+    else if (!ks.res) { toast('No grading table found in that photo. Adjust the corners and re-read.'); return; }
+    ks.mode = m; ks.manual = true; applyKeyScan();
+  } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+}
+async function ksReread() {
+  const ks = S.ks; if (!ks) return;
+  busy('Re-reading key photo'); await tick();
+  try {
+    if (await readKeyTable(ks, ks.corners)) {
+      if (!(ks.manual && ks.mode !== 'list')) { ks.mode = ks.detect.mode; ks.manual = false; }
+      ks.adjust = false; applyKeyScan(); toast('Re-read done.');
+    } else { renderKeyScan(); toast(ks.err); }
+  } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+}
+function renderKeyScan() {
+  const slot = $('key-scan'); if (!slot) return;
+  const ks = S.ks; if (!ks) { slot.innerHTML = ''; return; }
+  const fk = focusKey();
+  const seg = KEY_MODES.map((m) => `<button type="button" data-act="ks-mode" data-val="${m}" aria-pressed="${ks.mode === m}">${MODE_NAMES[m]}</button>`).join('');
+  const det = ks.mode ? `${ks.manual ? 'Reading it as a' : 'Looks like a'} ${MODE_NAMES[ks.mode].toLowerCase()}. ${MODE_NOTES[ks.mode]}` : 'No key found in this photo yet. Adjust the corners onto the table and re-read, or tap the key in below.';
+  slot.innerHTML = `<section class="ks" aria-labelledby="ks-t">
+    <div class="ks-h"><h3 class="lab" id="ks-t">Key photo</h3><button type="button" class="tbtn tbtn--q" data-act="ks-close">Close photo</button></div>
+    <div id="ks-slot"></div>
+    <div id="ks-chk"></div>
+    <p class="ks-det" role="status">${escapeHtml(det)}</p>
+    <div class="seg" role="group" aria-label="Read this photo as">${seg}</div>
+    <div class="ks-acts"><button type="button" class="tbtn tbtn--q" data-act="ks-corners">${ks.adjust ? 'Hide corners' : 'Adjust corners'}</button>${ks.adjust ? '<button type="button" class="ibtn go" data-act="ks-reread">Re-read</button>' : ''}</div></section>`;
+  const list = ks.mode === 'list';
+  mountCorners($('ks-slot'), ks, { adjust: ks.adjust, plain: list, right: ks.mode ? MODE_NAMES[ks.mode] : '', hint: '', tag: list ? `<p class="vf-tag">${ic('check')}Handwritten list read</p>` : '' });
+  renderKsChecks(); refocus(fk);
 }
 
 // ---------- scan ----------
@@ -429,19 +554,25 @@ function renderScan() {
     </div>`;
   if (sel && sel.src) mountCorners($('corner-slot'), sel); else $('corner-slot').innerHTML = emptyFinder(sel);
 }
-function mountCorners(slot, sh) {
+// The corner finder. Used by the Scan tab (a student sheet) and by the key photo on the Session tab.
+// o: { adjust, tag (html), right (text), hint (text), plain (no frame, for a photo with no table) }.
+function mountCorners(slot, sh, o = {}) {
   const src = sh.src, scale = Math.min(1, 1400 / src.width), W = src.width, H = src.height;
+  const adjust = o.adjust === undefined ? S.adjust : o.adjust;
   const found = !sh.err;
-  const tag = S.adjust ? `<p class="vf-tag">${ic('corners')}Drag each corner onto the table</p>` : found ? `<p class="vf-tag">${ic('check')}Table found, hold steady</p>` : `<p class="vf-tag vf-tag--warn">${ic('corners')}Table not found, adjust the corners</p>`;
-  slot.innerHTML = `<div class="vf"><div class="vf-box" id="cbox" style="--ar:${(W / H).toFixed(4)}"></div>
-    <div class="vf-top">${tag}<p class="vf-tag">${S.sheets.length} in stack</p></div>
-    <p class="vf-hint">${S.adjust ? 'Then tap Re-read.' : 'One photo per sheet, flat, with the whole table in frame.'}</p></div>`;
-  const box = $('cbox');
+  const tag = o.tag && !adjust ? o.tag : adjust ? `<p class="vf-tag">${ic('corners')}Drag each corner onto the table</p>` : found ? `<p class="vf-tag">${ic('check')}Table found, hold steady</p>` : `<p class="vf-tag vf-tag--warn">${ic('corners')}Table not found, adjust the corners</p>`;
+  const right = o.right === undefined ? `${S.sheets.length} in stack` : o.right;
+  const hint = o.hint === undefined ? (adjust ? 'Then tap Re-read.' : 'One photo per sheet, flat, with the whole table in frame.') : (adjust ? 'Then tap Re-read.' : o.hint);
+  slot.innerHTML = `<div class="vf"><div class="vf-box" style="--ar:${(W / H).toFixed(4)}"></div>
+    <div class="vf-top">${tag}${right ? `<p class="vf-tag">${escapeHtml(right)}</p>` : ''}</div>
+    ${hint ? `<p class="vf-hint">${escapeHtml(hint)}</p>` : ''}</div>`;
+  const box = slot.querySelector('.vf-box');
   const c = document.createElement('canvas');
   c.width = Math.round(W * scale); c.height = Math.round(H * scale);
   c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
   c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Photo of ' + sh.name);
   box.appendChild(c);
+  if (o.plain && !adjust) return;
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
   const mk = (cls) => { const e = document.createElementNS(ns, cls === 'vf-poly' ? 'polygon' : 'path'); e.setAttribute('class', cls); svg.appendChild(e); return e; };
@@ -460,7 +591,7 @@ function mountCorners(slot, sh) {
     if (hs) hs.forEach((h, idx) => { h.style.left = (P[idx].x / W * 100) + '%'; h.style.top = (P[idx].y / H * 100) + '%'; });
   };
   let hs = null;
-  if (S.adjust) {
+  if (adjust) {
     const names = ['top left', 'top right', 'bottom right', 'bottom left'];
     hs = sh.corners.map((p, idx) => {
       const h = document.createElement('div'); h.className = 'h'; h.tabIndex = 0; h.setAttribute('role', 'slider'); h.setAttribute('aria-label', 'Corner ' + names[idx]);
@@ -841,17 +972,25 @@ function onClick(e) {
       const val = Number(t.dataset.val), k = S.key[row];
       // Tapping an auto value confirms it instead of clearing it.
       const confirmAuto = AUTOF.includes(f) && S.auto[row][f] && k[f] === val;
+      if (lowOf(row, f) && k[f] === val) { ackKeySrc(row, f); refreshKeyRow(row); break; } // same for a scanned guess
       k[f] = k[f] === val && !confirmAuto ? null : val;
+      delete S.keySrc[row][f];
       if (AUTOF.includes(f)) S.auto[row][f] = false; else if (k[f] != null) autofillPC(row);
       refreshKeyRow(row); save(); break;
     }
     case 'key-open': {
-      const k = S.key[row], first = CORE.find((x) => k[x] == null);
-      setKeyActive(row, row === S.kRow ? S.kField : (first || 'grade'), true); break;
+      const k = S.key[row], first = CORE.find((x) => k[x] == null), kf = e.target.closest('[data-kf]'), tf = kf ? kf.dataset.kf : null;
+      if (tf) ackKeySrc(row, tf); // tapping a value itself opens that field and clears its check mark
+      setKeyActive(row, tf || (row === S.kRow ? S.kField : (first || 'grade')), true); break;
     }
     case 'all-pick': S.all[f] = Number(t.dataset.val); t.parentElement.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === t))); break;
     case 'all-apply': applySetAll(); break;
-    case 'key-tab': setKeyActive(row, f, false); break;
+    case 'key-tab': ackKeySrc(row, f); setKeyActive(row, f, false); break;
+    case 'ks-mode': ksMode(t.dataset.val); break;
+    case 'ks-corners': if (S.ks) { S.ks.adjust = !S.ks.adjust; renderKeyScan(); } break;
+    case 'ks-reread': ksReread(); break;
+    case 'ks-fix': setKeyActive(row, 'yield', true); break;
+    case 'ks-close': S.ks = null; renderKeyScan(); break;
     case 'key-next': {
       const ns = nextStep();
       if (ns) setKeyActive(ns.row, ns.field, ns.row !== S.kRow); else setTab('scan');
@@ -860,7 +999,7 @@ function onClick(e) {
     case 'n-dec': setN(S.n - 1); break;
     case 'n-inc': setN(S.n + 1); break;
     case 'scan-key': inputs['f-key'].click(); break;
-    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); S.auto = Array.from({ length: 20 }, emptyAuto); S.kRow = 0; S.kField = 'grade'; save(); renderSession(); break;
+    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); S.auto = Array.from({ length: 20 }, emptyAuto); S.keySrc = Array.from({ length: 20 }, () => ({})); S.ks = null; S.kRow = 0; S.kField = 'grade'; save(); renderSession(); break;
     case 'goto-scan': setTab('scan'); break;
     case 'goto-results': setTab('results'); break;
     case 'goto-session': setTab('session'); break;
@@ -982,6 +1121,7 @@ function init() {
     else if (t.dataset.act === 'key-yield') {
       const raw = t.value.trim(), n = Number(raw), row = Number(t.dataset.row);
       S.key[row].yield = raw !== '' && Number.isInteger(n) && n >= 0 && n <= 99 ? n : null;
+      delete S.keySrc[row].yield;
       if (S.key[row].yield != null) autofillPC(row);
       save(); refreshKeyRow(row, false);
     } else if (t.dataset.act === 'name') { const sh = sheetById(Number(t.dataset.id)); if (sh) { sh.name = t.value; save(); } }
