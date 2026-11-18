@@ -363,5 +363,63 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ----------------------------------------------------------
+    //  fleece_keys/{keyId}
+    //  Official wool-grading answer keys posted from the offline
+    //  fleece grader and shared publicly (addDoc, auto-ID).
+    //
+    //  read:   public (anyone can browse/use a key, no sign-in)
+    //  create: signed-in, non-anonymous user; exact field set;
+    //          ownerUid must be the caller; createdAt server time
+    //  update: never (keys are immutable; delete + repost instead)
+    //  delete: owner OR admin
+    //
+    //  `key` ENCODING: 120 chars = 20 fleeces x 6 chars each:
+    //    grade 0-9 | length 0-2 | yield 2 digits | purity 0-1 |
+    //    character 0-2.  '-' = blank. Rows beyond `n` are '------'.
+    //  matches() is full-string RE2, so the pattern is anchored.
+    //  Anonymous Auth tokens are rejected via
+    //  request.auth.token.firebase.sign_in_provider.
+    //
+    //  Documentation used for this block:
+    //  - https://firebase.google.com/docs/firestore/security/rules-conditions
+    //  - https://firebase.google.com/docs/rules/data-validation
+    //  - https://firebase.google.com/docs/firestore/security/insecure-rules
+    //    (no open writes; bare `auth != null` narrowed by ownership,
+    //    shape, and bounds checks)
+    // ----------------------------------------------------------
+    match /fleece_keys/{keyId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        // exact field set
+        && request.resource.data.keys().hasOnly(
+             ['v', 'title', 'n', 'key', 'ownerUid', 'ownerName', 'createdAt'])
+        && request.resource.data.keys().hasAll(
+             ['v', 'title', 'n', 'key', 'ownerUid', 'ownerName', 'createdAt'])
+        && request.resource.data.v == 1
+        && request.resource.data.title is string
+        && request.resource.data.title.size() >= 1
+        && request.resource.data.title.size() <= 80
+        && request.resource.data.n is int
+        && request.resource.data.n >= 1
+        && request.resource.data.n <= 20
+        && request.resource.data.key is string
+        && request.resource.data.key.size() == 120
+        && request.resource.data.key.matches('^([0-9-][0-2-]([0-9]{2}|--)[01-][0-2-]){20}$')
+        // ownership: poster identity cannot be spoofed
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerName is string
+        && request.resource.data.ownerName.size() <= 60
+        // server time only — never trust client time
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if false;
+
+      allow delete: if request.auth != null
+        && (resource.data.ownerUid == request.auth.uid || isAdmin());
+    }
+
   }
 }

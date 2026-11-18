@@ -241,6 +241,36 @@ drops much below ~0.90 even for a bad placement. The historic archive data
 just isn't used to blend current-season ratings anymore; it's earmarked for a
 future "program history / most championships" feature.
 
+## fleece_keys
+Official wool-grading answer keys posted from the fleece grader (`fleece/`) and
+shared publicly. Auto-ID docs written with `addDoc`. Browse with
+`orderBy('createdAt','desc'), limit(30)`; open one with `getDoc`.
+
+| Field | Type | Constraints |
+|---|---|---|
+| `v` | int | must be `1` (key format version) |
+| `title` | string | 1–80 chars |
+| `n` | int | 1–20 (fleeces in the key) |
+| `key` | string | exactly 120 chars, regex-validated (see below) |
+| `ownerUid` | string | must equal `request.auth.uid` |
+| `ownerName` | string | 0–60 chars (display name) |
+| `createdAt` | timestamp | server time (`serverTimestamp()` == `request.time`) |
+
+No other fields allowed (`hasOnly` + `hasAll` on the 7 above).
+
+**`key` encoding:** 20 fleeces x 6 chars = 120. Per fleece: grade `0-9`, length
+`0-2`, yield 2 digits (or `--`), purity `0-1`, character `0-2`. `-` = blank.
+Rows beyond `n` are `------`. Rule regex:
+`^([0-9-][0-2-]([0-9]{2}|--)[01-][0-2-]){20}$`.
+
+**Access rules:**
+- read: public (no sign-in to browse or use a key)
+- create: signed-in, non-anonymous user, all fields validated
+- update: never (delete and repost instead)
+- delete: poster (`ownerUid`) or admin (`KLoBqbA2P9UkQ83urzmgpxT4Oit1`)
+
+**Note:** Rules publish manually (Firebase Console → Firestore → Rules → Publish).
+
 ---
 
 # Dev Workflow Cheat Sheet
