@@ -143,8 +143,6 @@
      tokens above stay untouched. */
   --lab-bg:      oklch(97.5% 0.006 85);
   --lab-panel:   oklch(99.6% 0.003 85);
-  --lab-rule:    oklch(90% 0.01 85);
-  --lab-rule-2:  oklch(94% 0.008 85);
   --lab-tick:    oklch(70% 0.012 85);
   --lab-dot:     oklch(60% 0.015 60);
   --lab-ok:      oklch(72% 0.13 150);
