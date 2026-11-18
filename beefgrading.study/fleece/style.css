@@ -49,20 +49,15 @@
   --ui-detect:      oklch(72% 0.13 150 / 0.14);
   --ui-band:        oklch(80% 0.1 85 / 0.32);
 
-  /* Ground and panel: the only tokens the ground switch changes. */
-  --ui-board:  var(--paper-deep);
-  --ui-ground: var(--paper);
-  --ui-sheet:  var(--paper-card);
+  /* Ground and panel. */
+  --ui-board:  oklch(94.5% 0.004 85);
+  --ui-ground: var(--lab-panel);
+  --ui-sheet:  oklch(96% 0.005 85);
 
   /* Local layout values. */
   --rail: 460px;
   --top-h: calc(env(safe-area-inset-top, 0px) + 90px);
   --ink-rule: color-mix(in oklch, var(--ink) 80%, transparent);
-}
-:root[data-ground="white"] {
-  --ui-board:  oklch(94.5% 0.004 85);
-  --ui-ground: var(--lab-panel);
-  --ui-sheet:  oklch(96% 0.005 85);
 }
 
 *, *::before, *::after { box-sizing: border-box; }

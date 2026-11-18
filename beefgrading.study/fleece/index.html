@@ -1,25 +1,14 @@
 <!doctype html>
-<html lang="en" data-ground="bone">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fleece Grader</title>
 <meta name="description" content="Scan and score wool-judging grading sheets from a phone photo.">
-<meta name="theme-color" content="#f5f1ea">
+<meta name="theme-color" content="#eeedea">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fleece Grader">
-<script>
-/* Ground is set before first paint: ?ground= wins, then localStorage, then bone. */
-(function () {
-  var g = 'bone', q = null, s = null;
-  try { q = new URLSearchParams(location.search).get('ground'); } catch (e) {}
-  try { s = localStorage.getItem('bg-v3-ground'); } catch (e) {}
-  if (q === 'bone' || q === 'white') g = q; else if (s === 'bone' || s === 'white') g = s;
-  document.documentElement.setAttribute('data-ground', g);
-  if (q === g) { try { localStorage.setItem('bg-v3-ground', g); } catch (e) {} }
-})();
-</script>
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">

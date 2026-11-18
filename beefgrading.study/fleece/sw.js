@@ -3,7 +3,7 @@
 // EVERY FLEECE RELEASE MUST BUMP `VERSION`. Files are served cache-first, so a changed
 // file under the same version is never picked up by phones that already installed the app.
 // Bumping the version installs a fresh cache and deletes the old one on activate.
-const VERSION = 'fleece-v2';
+const VERSION = 'fleece-v3';
 
 const PRECACHE = [
   './',
@@ -48,7 +48,7 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.open(VERSION).then(async (cache) => {
-      // ignoreSearch: /?ground=white and /?sw=1 are the same page as /.
+      // ignoreSearch: /?sw=1 is the same page as /.
       const hit = await cache.match(req, { ignoreSearch: true });
       if (hit) return hit;
       try { return await fetch(req); } catch (e) {

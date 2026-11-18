@@ -22,7 +22,7 @@ repoint the landing tokens (`--paper`, `--band-*`, `--poster-*`, ...) or the
 ## Materials
 - **Ground** `--ui-ground`: the screen. **Board** `--ui-board`: the page behind a
   phone-width column on wide screens. **Sheet** `--ui-sheet`: the one raised
-  surface (bottom sheet, rail). Only these three change with the ground variant.
+  surface (bottom sheet, rail). White is the only app ground; these three are its tokens.
 - **Ink** `--ink` for type, marks and the active control fill; `--on-ink` on it.
   Secondary text `--ink-soft`; tertiary `--ink-faint`.
 - **Scarlet** `--red`: the primary action, once per screen. Never decoration, never
@@ -132,15 +132,11 @@ repoint the landing tokens (`--paper`, `--band-*`, `--poster-*`, ...) or the
   close, plus, minus, corner brackets, camera. No icon-in-circle headers, no emoji
   in headings.
 
-## Ground variants
-- `data-ground="bone"` (default) or `"white"` on `<html>`.
-- It is set by an inline script in the page head, before the stylesheets, so there
-  is no flash. The script reads `?ground=` first, then `localStorage` key
-  `bg-v3-ground` (always inside try/catch), then falls back to bone. A valid
-  `?ground=` visit saves the choice.
-- `:root[data-ground="white"]` changes **only** `--ui-board`, `--ui-ground` and
-  `--ui-sheet`. Ink, scarlet, edges, state colours and every landing token do not
-  move. Edges are translucent ink, which is why they hold on both grounds.
+## Ground
+- One ground: white. `--ui-board`, `--ui-ground` and `--ui-sheet` are set in `:root`
+  in both `style.css` and `fleece/style.css`. There is no ground switch and no
+  `data-ground` attribute.
+- Edges are translucent ink, so they hold on the ground.
 - White ground never uses `#fff`; it uses `--lab-panel` (near-white, warm).
 - Text on the white ground must still reach 4.5:1 (body) and 3:1 (large).
 

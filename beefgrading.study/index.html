@@ -15,18 +15,6 @@
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://beefgrading.study/og-card.png" />
-  <script>
-    /* v3 ground, set before first paint so there is no flash: ?ground= wins,
-       then localStorage, then bone. Only a ?ground= visit writes storage. */
-    (function () {
-      var g = 'bone', q = null, s = null;
-      try { q = new URLSearchParams(location.search).get('ground'); } catch (e) {}
-      try { s = localStorage.getItem('bg-v3-ground'); } catch (e) {}
-      if (q === 'bone' || q === 'white') g = q; else if (s === 'bone' || s === 'white') g = s;
-      document.documentElement.setAttribute('data-ground', g);
-      if (q === g) { try { localStorage.setItem('bg-v3-ground', g); } catch (e) {} }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800;900&family=Red+Hat+Text:wght@400;500;600&family=Red+Hat+Mono:wght@400;500&family=Yellowtail&display=swap" rel="stylesheet" />

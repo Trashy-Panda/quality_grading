@@ -211,16 +211,7 @@
   --ui-detect:      oklch(72% 0.13 150 / 0.14);
   --ui-band:        oklch(80% 0.1 85 / 0.32);
 
-  /* Ground and panel: the only tokens the ground switch changes. */
-  --ui-board:  var(--paper-deep);
-  --ui-ground: var(--paper);
-  --ui-sheet:  var(--paper-card);
-}
-
-/* Ground A/B. data-ground is set on <html> before first paint (index.html head).
-   Bone is the default above. White changes the ground and panel tokens only:
-   ink, scarlet, edges and the landing tokens do not move. */
-:root[data-ground="white"] {
+  /* Ground and panel. */
   --ui-board:  oklch(94.5% 0.004 85);
   --ui-ground: var(--lab-panel);
   --ui-sheet:  oklch(96% 0.005 85);
