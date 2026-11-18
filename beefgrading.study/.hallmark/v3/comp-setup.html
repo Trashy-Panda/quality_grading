@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en" data-ground="bone">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Setup options S1 and S2</title>
+<script>
+/* Ground is set before first paint: ?ground= wins, then localStorage, then bone. */
+(function () {
+  var g = 'bone', q = null, s = null;
+  try { q = new URLSearchParams(location.search).get('ground'); } catch (e) {}
+  try { s = localStorage.getItem('bg-v3-ground'); } catch (e) {}
+  if (q === 'bone' || q === 'white') g = q; else if (s === 'bone' || s === 'white') g = s;
+  document.documentElement.setAttribute('data-ground', g);
+  if (q === g) { try { localStorage.setItem('bg-v3-ground', g); } catch (e) {} }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;800&family=Red+Hat+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Tokens copied from comp-a.html, which copies style.css :root. Weights used: Display 600 800, Text 400 500 600. */
+:root {
+  --paper:      oklch(96% 0.011 85);
+  --paper-deep: oklch(92% 0.016 85);
+  --paper-card: oklch(99.5% 0.005 85);
+  --ink:        oklch(18% 0.006 60);
+  --ink-soft:   oklch(34% 0.01 60);
+  --ink-faint:  oklch(44% 0.012 60);
+  --red:        oklch(52% 0.2 22);
+  --red-deep:   oklch(44% 0.18 22);
+  --lab-panel:  oklch(99.6% 0.003 85);
+  --on-ink:     oklch(96% 0.011 85);
+  --font-display: 'Red Hat Display', 'Red Hat Text', ui-sans-serif, system-ui, sans-serif;
+  --font-ui:      'Red Hat Text', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --track-display: -0.035em;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast: 140ms;
+  --z-sticky: 100;
+
+  /* v3 UI tokens. Concentric radii: inner = outer minus the gap between them. */
+  --ui-r-outer: 16px;
+  --ui-pad:     4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  --ui-tap:     44px;
+  --ui-edge:        oklch(18% 0.006 60 / 0.12);
+  --ui-edge-strong: oklch(18% 0.006 60 / 0.28);
+  --ui-sel:         oklch(18% 0.006 60 / 0.08);
+
+  /* Ground and panel: the only tokens the ground switch changes. */
+  --ui-board:  var(--paper-deep);
+  --ui-ground: var(--paper);
+  --ui-sheet:  var(--paper-card);
+}
+:root[data-ground="white"] {
+  --ui-board:  oklch(94.5% 0.004 85);
+  --ui-ground: var(--lab-panel);
+  --ui-sheet:  oklch(96% 0.005 85);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--ui-board); color: var(--ink); font-family: var(--font-ui); -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100dvh; font-size: 16px; line-height: 1.4; }
+h1, h2, h3, h4, p, ol, ul, dl, dd, figure { margin: 0; padding: 0; font-weight: inherit; }
+ol, ul { list-style: none; }
+b { font-weight: inherit; }
+img, svg { display: block; }
+button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; margin: 0; min-height: var(--ui-tap); text-align: left; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out); }
+button:hover { background-color: var(--ui-sel); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* Icons: 24-unit viewBox, sized in em. Stroke follows the weight of the icon's parent
+   (400 -> 1.5, 500 -> 1.75, 600 -> 2). Every icon parent sets weight and --ic-sw together. */
+.ic { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: var(--ic-sw, 1.75); stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- comp scaffold ---------- */
+.bar { position: fixed; inset: 0 0 auto 0; z-index: var(--z-sticky); display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 4px 16px; background: var(--ui-ground); border-bottom: 1px solid var(--ui-edge); }
+.bar-t { font: 600 15px/1.2 var(--font-ui); }
+.gs { display: flex; gap: var(--ui-pad); padding: var(--ui-pad); background: var(--ui-sel); border-radius: var(--ui-r-outer); }
+.gs button { min-width: 68px; min-height: var(--ui-tap); padding: 0 14px; text-align: center; border-radius: var(--ui-r-inner); font-size: 14px; font-weight: 500; }
+.gs button[aria-pressed="true"] { background: var(--ui-sheet); font-weight: 600; }
+.board { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; padding: 84px 0 64px; max-width: 1320px; margin-inline: auto; }
+.art { width: 100%; max-width: 430px; justify-self: center; }
+.lbl { padding: 0 16px 4px; font: 600 15px/1.3 var(--font-ui); }
+.lbl-s { padding: 0 16px 12px; font-size: 13px; color: var(--ink-soft); }
+.phone { --pad: 20px; position: relative; display: flex; flex-direction: column; min-height: 780px; background: var(--ui-ground); overflow: hidden; }
+.body { flex: 1; }
+
+/* ---------- type ---------- */
+.h1 { font: 600 28px/1.1 var(--font-display); letter-spacing: var(--track-display); }
+.h2 { font: 600 22px/1.15 var(--font-display); letter-spacing: var(--track-display); }
+.num { font-family: var(--font-display); font-weight: 800; letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.set-head { padding: 24px var(--pad) 16px; }
+.set-head p { margin-top: 8px; max-width: 34ch; font-size: 15px; color: var(--ink-soft); }
+
+/* ---------- shared controls ---------- */
+.opt-h { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 8px var(--pad); font-weight: 600; --ic-sw: 2; }
+.opt-t { font: 600 22px/1.15 var(--font-display); letter-spacing: var(--track-display); }
+.opt-m { margin-inline-start: auto; font-size: 14px; font-weight: 400; color: var(--ink-soft); text-align: right; }
+.opt-h .ic { margin-inline-start: auto; }
+.opt-h .opt-m + .ic { margin-inline-start: 0; }
+.kv { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; padding: 0 var(--pad); font-size: 15px; }
+.kv dt { color: var(--ink-soft); }
+.kv dd { font-weight: 500; text-align: right; }
+.kv dd.num { font-size: 20px; font-weight: 800; }
+.stat { padding: 8px var(--pad) 4px; font-size: 15px; font-weight: 500; }
+.sw { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 52px; padding: 0 var(--pad); font-size: 15px; font-weight: 500; }
+.sw-t { flex: none; width: 52px; height: 32px; padding: var(--ui-pad); border-radius: var(--ui-r-outer); background: var(--ui-edge-strong); }
+.sw-t i { display: block; width: 24px; height: 24px; border-radius: var(--ui-r-inner); background: var(--ui-sheet); }
+.sw[aria-checked="true"] .sw-t { background: var(--ink); }
+.sw[aria-checked="true"] .sw-t i { margin-inline-start: 20px; background: var(--on-ink); }
+.top3 { padding: 6px 0 8px; }
+.top3 h4 { padding: 6px var(--pad) 4px; font: 600 14px/1.3 var(--font-ui); }
+.top3 .none { padding: 4px var(--pad) 8px; font-size: 15px; color: var(--ink-soft); }
+.t3 { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 12px; min-height: 44px; padding: 0 var(--pad); font-size: 16px; font-weight: 500; }
+.t3 .num { font-size: 20px; }
+.t3 b { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: var(--track-display); }
+.t3:first-of-type { min-height: 56px; font-weight: 600; }
+.t3:first-of-type .num { font-size: 28px; }
+.t3:first-of-type b { font-size: 22px; }
+.tbtn { display: inline-flex; align-items: center; gap: 8px; padding: 0 var(--pad); min-height: var(--ui-tap); font-size: 15px; font-weight: 600; --ic-sw: 2; }
+.tbtn--q { font-weight: 500; --ic-sw: 1.75; color: var(--ink-soft); }
+.links { display: flex; flex-wrap: wrap; gap: 0 20px; padding: 8px var(--pad) 12px; }
+.links button { min-height: var(--ui-tap); font-size: 14px; font-weight: 500; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--ui-edge-strong); }
+.links button:hover { background: none; color: var(--ink); }
+
+/* The bottom bar: the action it starts plus the state it starts with. Never a lone full-width button. */
+.dock { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--ui-sheet); border-top: 1px solid var(--ui-edge); }
+.dk-s { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--ink-soft); line-height: 1.25; }
+.dk-s b { font: 600 18px/1.15 var(--font-display); letter-spacing: var(--track-display); color: var(--ink); }
+.go { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; flex: 0 1 auto; max-width: 64%; min-height: 56px; padding: 6px 18px; border-radius: var(--ui-r-outer); background: var(--red); color: var(--paper-card); font-size: 17px; font-weight: 600; line-height: 1.2; --ic-sw: 2; }
+.go:hover { background-color: var(--red-deep); }
+
+/* ---------- S1: two peer panels, B's structure ---------- */
+.pns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding-bottom: 4px; }
+.pn { --pad: 20px; padding-bottom: 8px; border-top: 2px solid var(--ui-edge); }
+.pn.is-on { background: var(--ui-sel); border-top-color: var(--ui-edge-strong); }
+.pn.is-on .opt-h:hover { background-color: transparent; }
+.pn .kv:first-of-type { margin-top: 2px; }
+
+/* ---------- S2: the week is the stage ---------- */
+.s2b { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+.stg { padding: 4px 0 16px; }
+.stg-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 var(--pad); }
+.stg-h span { font-size: 14px; color: var(--ink-soft); text-align: right; }
+.rd { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 14px var(--pad) 0; }
+.rd p { font-size: 14px; color: var(--ink-soft); }
+.rd .rd-big { font: 800 88px/0.95 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; color: var(--ink); }
+.rd .rd-big small { font-size: 30px; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); }
+.rd .rd-n { font: 800 36px/1 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; color: var(--ink); text-align: right; }
+.rd-r { text-align: right; padding-bottom: 4px; }
+.rd-r .rd-n { margin-bottom: 2px; }
+.stg .stat { padding-top: 14px; }
+.pr { padding: 2px 0 8px; border-top: 2px solid var(--ui-edge-strong); }
+.pr .stg-h { padding-bottom: 4px; }
+
+/* ---------- 1440: wide frame ---------- */
+@media (min-width: 900px) {
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; }
+  .art--wide { grid-column: 1 / -1; max-width: none; padding-inline: 32px; }
+  .art--wide .lbl, .art--wide .lbl-s { padding-inline: 0; }
+  .phone { --pad: 40px; min-height: 0; }
+  .set-head { padding-top: 48px; padding-bottom: 28px; }
+  .set-head .h1 { font-size: 44px; }
+  .set-head p { font-size: 17px; max-width: 40ch; }
+  .pns { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; padding-inline: 20px; align-items: start; }
+  .pn { padding-bottom: 12px; }
+  .s2b { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; padding-inline: 20px; align-items: start; }
+  .s2b > * { --pad: 20px; }
+  .stg-h .h2 { font-size: 26px; }
+  .rd .rd-big { font-size: 168px; }
+  .rd .rd-big small { font-size: 52px; }
+  .rd .rd-n { font-size: 56px; }
+  .rd p { font-size: 15px; }
+  .pr { border-top-width: 2px; }
+  .dock { justify-content: flex-end; gap: 28px; padding-block: 14px; }
+  .dk-s { flex: 0 1 auto; text-align: right; }
+  .dk-s b { font-size: 20px; }
+  .go { max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+</svg>
+
+<header class="bar">
+  <h1 class="bar-t">Setup options S1 and S2</h1>
+  <div class="gs" role="group" aria-label="Ground">
+    <button type="button" data-ground-set="bone" aria-pressed="true">Bone</button>
+    <button type="button" data-ground-set="white" aria-pressed="false">White</button>
+  </div>
+</header>
+
+<main class="board">
+
+<!-- S1 unposted ==================================================== -->
+<section class="art art--wide" id="s1-unposted" aria-label="S1 setup, weekly not posted">
+  <h2 class="lbl">S1 Setup, weekly not posted</h2>
+  <p class="lbl-s">B's structure: Practice and This week as two peer panels, side by side on a wide screen. No photo, no route line, no ruled readout. The bottom bar starts whichever panel is picked.</p>
+  <div class="phone">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="body">
+      <div class="pns">
+        <section class="pn is-on" aria-labelledby="s1u-p">
+          <button type="button" class="opt-h" aria-pressed="true"><span class="opt-t" id="s1u-p">Practice</span><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <dl>
+            <div class="kv"><dt>Session</dt><dd>10 carcasses, shuffled</dd></div>
+            <div class="kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
+          <button type="button" class="sw" role="switch" aria-checked="false"><span>Use my personal images instead</span><span class="sw-t" aria-hidden="true"><i></i></span></button>
+        </section>
+        <section class="pn" aria-labelledby="s1u-w">
+          <button type="button" class="opt-h" aria-pressed="false"><span class="opt-t" id="s1u-w">This week</span><span class="opt-m">Nov 16 to Nov 22</span></button>
+          <dl>
+            <div class="kv"><dt>Closes in</dt><dd class="num">5d 07h</dd></div>
+            <div class="kv"><dt>Graders</dt><dd class="num">-</dd></div>
+          </dl>
+          <p class="stat" aria-live="polite">This week&rsquo;s carcasses aren&rsquo;t posted yet.</p>
+          <div class="top3">
+            <h4>Top 3 so far, high school</h4>
+            <p class="none">No scores yet this week.</p>
+          </div>
+        </section>
+      </div>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+    <div class="dock">
+      <p class="dk-s"><b>Practice</b><span>10 carcasses, shuffled</span></p>
+      <button type="button" class="go"><span>Start drill</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- S1 posted ====================================================== -->
+<section class="art art--wide" id="s1-posted" aria-label="S1 setup, weekly posted">
+  <h2 class="lbl">S1 Setup, weekly posted</h2>
+  <p class="lbl-s">The week fills in: graders and the top three show, This week is picked, and the bar offers the weekly challenge.</p>
+  <div class="phone">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="body">
+      <div class="pns">
+        <section class="pn" aria-labelledby="s1p-p">
+          <button type="button" class="opt-h" aria-pressed="false"><span class="opt-t" id="s1p-p">Practice</span></button>
+          <dl>
+            <div class="kv"><dt>Session</dt><dd>10 carcasses, shuffled</dd></div>
+            <div class="kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
+          <button type="button" class="sw" role="switch" aria-checked="false"><span>Use my personal images instead</span><span class="sw-t" aria-hidden="true"><i></i></span></button>
+        </section>
+        <section class="pn is-on" aria-labelledby="s1p-w">
+          <button type="button" class="opt-h" aria-pressed="true"><span class="opt-t" id="s1p-w">This week</span><span class="opt-m">Nov 16 to Nov 22</span><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></button>
+          <dl>
+            <div class="kv"><dt>Closes in</dt><dd class="num">5d 07h</dd></div>
+            <div class="kv"><dt>Graders</dt><dd class="num">41</dd></div>
+          </dl>
+          <p class="stat" aria-live="polite">You haven&rsquo;t taken this week&rsquo;s challenge yet.</p>
+          <div class="top3">
+            <h4>Top 3 so far, high school</h4>
+            <ol>
+              <li class="t3"><span class="num">1</span><span>Brooke T.</span><b>94%</b></li>
+              <li class="t3"><span class="num">2</span><span>Cole M.</span><b>91%</b></li>
+              <li class="t3"><span class="num">3</span><span>Ana R.</span><b>89%</b></li>
+            </ol>
+          </div>
+        </section>
+      </div>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+    <div class="dock">
+      <p class="dk-s"><b>This week</b><span>41 graders</span></p>
+      <button type="button" class="go"><span>Open the weekly challenge</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- S2 unposted ==================================================== -->
+<section class="art art--wide" id="s2-unposted" aria-label="S2 setup, weekly not posted">
+  <h2 class="lbl">S2 Setup, weekly not posted</h2>
+  <p class="lbl-s">The week is the stage: one big countdown on the ground, Practice below it as a quiet block. No photo. The bar starts the drill while the week is closed.</p>
+  <div class="phone">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="body">
+      <div class="s2b">
+        <section class="stg" aria-labelledby="s2u-w">
+          <div class="stg-h"><h3 class="h2" id="s2u-w">This week</h3><span>Nov 16 to Nov 22</span></div>
+          <div class="rd">
+            <div><p class="rd-big" aria-label="5 days 7 hours">5<small>d</small> 07<small>h</small></p><p>Closes in</p></div>
+            <div class="rd-r"><p class="rd-n">-</p><p>Graders</p></div>
+          </div>
+          <p class="stat" aria-live="polite">This week&rsquo;s carcasses aren&rsquo;t posted yet.</p>
+          <div class="top3">
+            <h4>Top 3 so far, high school</h4>
+            <p class="none">No scores yet this week.</p>
+          </div>
+          <button type="button" class="tbtn tbtn--q">Open the weekly challenge<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </section>
+        <section class="pr" aria-labelledby="s2u-p">
+          <div class="stg-h"><h3 class="h2" id="s2u-p">Practice</h3></div>
+          <dl>
+            <div class="kv"><dt>Session</dt><dd>10 carcasses, shuffled</dd></div>
+            <div class="kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
+          <button type="button" class="sw" role="switch" aria-checked="false"><span>Use my personal images instead</span><span class="sw-t" aria-hidden="true"><i></i></span></button>
+        </section>
+      </div>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+    <div class="dock">
+      <p class="dk-s"><b>Practice</b><span>10 carcasses, shuffled</span></p>
+      <button type="button" class="go"><span>Start drill</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- S2 posted ====================================================== -->
+<section class="art art--wide" id="s2-posted" aria-label="S2 setup, weekly posted">
+  <h2 class="lbl">S2 Setup, weekly posted</h2>
+  <p class="lbl-s">Same stage with the top three under the countdown. The bar moves to the weekly challenge; Practice keeps its own Start drill.</p>
+  <div class="phone">
+    <header class="set-head">
+      <h3 class="h1">Start a session</h3>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="body">
+      <div class="s2b">
+        <section class="stg" aria-labelledby="s2p-w">
+          <div class="stg-h"><h3 class="h2" id="s2p-w">This week</h3><span>Nov 16 to Nov 22</span></div>
+          <div class="rd">
+            <div><p class="rd-big" aria-label="5 days 7 hours">5<small>d</small> 07<small>h</small></p><p>Closes in</p></div>
+            <div class="rd-r"><p class="rd-n">41</p><p>Graders</p></div>
+          </div>
+          <p class="stat" aria-live="polite">You haven&rsquo;t taken this week&rsquo;s challenge yet.</p>
+          <div class="top3">
+            <h4>Top 3 so far, high school</h4>
+            <ol>
+              <li class="t3"><span class="num">1</span><span>Brooke T.</span><b>94%</b></li>
+              <li class="t3"><span class="num">2</span><span>Cole M.</span><b>91%</b></li>
+              <li class="t3"><span class="num">3</span><span>Ana R.</span><b>89%</b></li>
+            </ol>
+          </div>
+        </section>
+        <section class="pr" aria-labelledby="s2p-p">
+          <div class="stg-h"><h3 class="h2" id="s2p-p">Practice</h3></div>
+          <dl>
+            <div class="kv"><dt>Session</dt><dd>10 carcasses, shuffled</dd></div>
+            <div class="kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
+          <button type="button" class="sw" role="switch" aria-checked="false"><span>Use my personal images instead</span><span class="sw-t" aria-hidden="true"><i></i></span></button>
+          <button type="button" class="tbtn tbtn--q">Start drill<svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </section>
+      </div>
+      <div class="links">
+        <button type="button">Manage photos</button>
+        <button type="button">Help grade practice images</button>
+        <button type="button">Field guide</button>
+      </div>
+    </div>
+    <div class="dock">
+      <p class="dk-s"><b>This week</b><span>41 graders</span></p>
+      <button type="button" class="go"><span>Open the weekly challenge</span><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('[data-ground-set]');
+  function sync() {
+    var g = root.getAttribute('data-ground');
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-ground-set') === g)); });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var g = b.getAttribute('data-ground-set');
+      root.setAttribute('data-ground', g);
+      try { localStorage.setItem('bg-v3-ground', g); } catch (e) {}
+      sync();
+    });
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

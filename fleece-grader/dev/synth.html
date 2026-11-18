@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Fleece synthetic tests</title>
+<style>body{font:14px system-ui;margin:12px;background:#222;color:#eee}canvas{max-width:30%;border:1px solid #555;margin:4px}pre{background:#111;padding:8px;white-space:pre-wrap}</style></head>
+<body><h3>Synthetic marks on the blank photo</h3><button id="run">Generate + test</button><pre id="out"></pre><div id="imgs"></div>
+<script type="module">
+import { runSynth } from './synth.js';
+window.runSynth = runSynth;
+document.getElementById('run').addEventListener('click', async () => {
+  const out = document.getElementById('out'); out.textContent = 'running...';
+  const t = await runSynth(m => out.textContent += '\n' + m);
+  out.textContent += '\n' + JSON.stringify(t, null, 1);
+  const box = document.getElementById('imgs'); box.innerHTML = ''; window.__synthImages.forEach(i => box.appendChild(i.canvas));
+});
+</script></body></html>

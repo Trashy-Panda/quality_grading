@@ -1,0 +1,44 @@
+Fleece grader baseline (pre-move, pre-redesign)
+Date: 2026-11-17
+Git HEAD: ee3d1a3 (branch dev, clean tree)
+
+Commands
+  1. node --test fleece-grader/tests/*.test.mjs   (from repo root; Node v25.8.1)
+     NOTE: the documented form `node --test fleece-grader/tests` (directory arg) FAILS on Node 25
+     (Cannot find module ...fleece-grader/tests, exit 1) - Node treats the dir as a script. Use the glob form.
+  2. python fleece-grader/dev/devserver.py 8012   (serves fleece-grader/ at http://localhost:8012)
+  3. Open http://localhost:8012/dev/eval.html (no query params = 13 real + 4 synthetic sheets).
+     Done signal: <p>EVALDONE</p> inserted in body and document.title becomes "done"; results in window.__results.
+     Run via headless Chrome 157 driven over CDP (Playwright MCP browser was locked by another process); ~84s total.
+
+Test summary: tests 18, suites 0, pass 18, fail 0, cancelled 0, skipped 0, todo 0 (exit 0)
+
+Legend: st = cell status counts over 120 cells (6 fields x 20 rows); truth = scored vs truth.json {n,ok,unsure,unsureRight,silent,bad}
+  (silent = read cleanly but WRONG; must be 0). Synthetic: ok/unsure/silent/bad vs synthetic truth.
+  Real sheets with truth:null have no truth entry; only status counts are comparable. ms timing omitted (varies per run).
+
+REAL SHEETS (13)
+sheet01 {"st":{"ok":118,"blank":0,"unsure":1,"multiple":1},"truth":null,"review":"16g:m 20y:u6","lattice":{"rowScore":1,"rowFound":167,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,7],"pitch":73.39,"bend":-0.24},"levels":{"pencil":0.637,"pencilDigits":0.422},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet02 {"st":{"ok":120,"blank":0,"unsure":0,"multiple":0},"truth":{"n":120,"ok":120,"unsure":0,"unsureRight":0,"silent":0,"bad":[]},"review":"","lattice":{"rowScore":0.896,"rowFound":167,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,7],"pitch":73.89,"bend":-0.22},"levels":{"pencil":0.638,"pencilDigits":0.39},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet03 {"st":{"ok":119,"blank":0,"unsure":1,"multiple":0},"truth":null,"review":"19y:u5","lattice":{"rowScore":0.963,"rowFound":168,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,9],"pitch":69.49,"bend":0},"levels":{"pencil":0.538,"pencilDigits":0.27},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet04 {"st":{"ok":119,"blank":0,"unsure":1,"multiple":0},"truth":null,"review":"5y:u5","lattice":{"rowScore":0.63,"rowFound":151,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,9,6],"pitch":70.99,"bend":-0.6},"levels":{"pencil":0.6,"pencilDigits":0.388},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet05 {"st":{"ok":119,"blank":0,"unsure":1,"multiple":0},"truth":{"n":56,"ok":55,"unsure":1,"unsureRight":1,"silent":0,"bad":[]},"review":"2c:u1","lattice":{"rowScore":1,"rowFound":149,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,9],"pitch":69.39,"bend":-0.28},"levels":{"pencil":0.634,"pencilDigits":0.408},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet06 {"st":{"ok":118,"blank":1,"unsure":1,"multiple":0},"truth":null,"review":"14l:b 18y:u6","lattice":{"rowScore":0.943,"rowFound":161,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,7],"pitch":65.89,"bend":-0.26},"levels":{"pencil":0.534,"pencilDigits":0.332},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet07 {"st":{"ok":120,"blank":0,"unsure":0,"multiple":0},"truth":null,"review":"","lattice":{"rowScore":1,"rowFound":167,"rowTotal":168,"colTraced":9,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,9,0],"pitch":74.19,"bend":-0.38},"levels":{"pencil":0.45,"pencilDigits":0.251},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet08 {"st":{"ok":115,"blank":0,"unsure":5,"multiple":0},"truth":null,"review":"9y:u6 13y:u6 16l:u1 19y:u6 20c:u1","lattice":{"rowScore":0.808,"rowFound":168,"rowTotal":168,"colTraced":9,"colTotal":10,"colN":[10,9,10,10,10,10,10,10,9,0],"pitch":74.19,"bend":-0.2},"levels":{"pencil":0.385,"pencilDigits":0.204},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet09 {"st":{"ok":119,"blank":0,"unsure":0,"multiple":1},"truth":null,"review":"14g:m","lattice":{"rowScore":1,"rowFound":167,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,9,9],"pitch":74.29,"bend":-0.28},"levels":{"pencil":0.431,"pencilDigits":0.27},"warnings":[]}
+sheet10 {"st":{"ok":119,"blank":0,"unsure":1,"multiple":0},"truth":null,"review":"18g:u1","lattice":{"rowScore":1,"rowFound":167,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,9,9],"pitch":75.09,"bend":-0.32},"levels":{"pencil":0.502,"pencilDigits":0.274},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet11 {"st":{"ok":120,"blank":0,"unsure":0,"multiple":0},"truth":null,"review":"","lattice":{"rowScore":0.987,"rowFound":167,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,9,6],"pitch":73.39,"bend":-0.48},"levels":{"pencil":0.644,"pencilDigits":0.395},"warnings":["no coloured ink found: only shape slash mode applies"]}
+sheet13 {"st":{"ok":115,"blank":2,"unsure":3,"multiple":0},"truth":{"n":111,"ok":108,"unsure":3,"unsureRight":3,"silent":0,"bad":[]},"review":"7y:u5 15g:u1 17g:b 19g:u7 20g:b","lattice":{"rowScore":1,"rowFound":168,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,8],"pitch":74.39,"bend":-0.48},"levels":{"pencil":0.656,"pencilDigits":0.4},"warnings":[]}
+sheet13-flat {"st":{"ok":118,"blank":0,"unsure":2,"multiple":0},"truth":{"n":111,"ok":109,"unsure":2,"unsureRight":2,"silent":0,"bad":[]},"review":"6y:u5 7y:u5","lattice":{"rowScore":1,"rowFound":168,"rowTotal":168,"colTraced":10,"colTotal":10,"colN":[10,10,10,10,10,10,10,10,10,6],"pitch":73.09,"bend":-0.4},"levels":{"pencil":0.582,"pencilDigits":0.319},"warnings":["the sheet is small in the photo; move closer for a safer read"]}
+
+SYNTHETIC SHEETS (4)
+synth1.jpg {"ok":104,"unsure":4,"silent":12,"bad":["3yieldTens:blanknull!=5","3yieldOnes:blanknull!=5","5yieldTens:blanknull!=4","18purity:blanknull!=1","19yieldTens:blanknull!=4","19yieldOnes:blanknull!=6","19purity:blanknull!=0","19character:ok0!=1","20yieldTens:blanknull!=9","20yieldOnes:blanknull!=5","20purity:blanknull!=0","20character:blanknull!=0"],"warnings":[]}
+synth2.jpg {"ok":103,"unsure":5,"silent":12,"bad":["3yieldTens:blanknull!=9","5yieldTens:blanknull!=9","5yieldOnes:blanknull!=3","14purity:blanknull!=1","15purity:blanknull!=0","19yieldTens:blanknull!=3","19yieldOnes:blanknull!=3","19purity:blanknull!=0","19character:ok1!=2","20yieldTens:blanknull!=6","20purity:ok0!=null","20character:ok0!=1"],"warnings":[]}
+synth3.jpg {"ok":105,"unsure":3,"silent":12,"bad":["3yieldOnes:blanknull!=2","5yieldOnes:blanknull!=3","15purity:blanknull!=1","18purity:blanknull!=1","18character:blanknull!=1","19yieldTens:blanknull!=4","19yieldOnes:blanknull!=5","19purity:blanknull!=0","19character:ok0!=1","20yieldTens:blanknull!=6","20yieldOnes:blanknull!=6","20character:blanknull!=0"],"warnings":["no coloured ink found: only shape slash mode applies"]}
+synth4.jpg {"ok":103,"unsure":8,"silent":9,"bad":["3yieldTens:blanknull!=7","5yieldTens:blanknull!=7","5yieldOnes:blanknull!=4","17purity:blanknull!=1","19yieldTens:blanknull!=6","19character:blanknull!=0","20yieldTens:blanknull!=0","20purity:blanknull!=0","20character:blanknull!=0"],"warnings":["no coloured ink found: only shape slash mode applies"]}
+
+TOTALS
+Real, truth-scored (sheet02, sheet05, sheet13, sheet13-flat): {"n":398,"ok":392,"unsure":6,"unsureRight":6,"silent":0}
+Real, all 13 sheets cell status counts (of 1560): {"ok":1539,"blank":3,"unsure":16,"multiple":2}
+Synthetic, 4 sheets (of 480 cells): {"ok":415,"unsure":20,"silent":45}

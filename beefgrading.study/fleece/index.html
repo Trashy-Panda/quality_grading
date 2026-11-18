@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fleece Grader</title>
+<meta name="description" content="Scan and score wool-judging grading sheets from a phone photo.">
+<meta name="theme-color" content="#eeedea">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Fleece Grader">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/red-hat-text-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/red-hat-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="rails.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></symbol>
+  <symbol id="i-corners" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+</svg>
+<div class="app">
+  <header class="top">
+    <h1 class="brand">Fleece Grader</h1>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Steps">
+      <button type="button" class="tab" role="tab" id="tab-session" data-tab="session" aria-controls="view-session" aria-selected="true">Session</button>
+      <button type="button" class="tab" role="tab" id="tab-scan" data-tab="scan" aria-controls="view-scan" aria-selected="false" tabindex="-1">Scan</button>
+      <button type="button" class="tab" role="tab" id="tab-review" data-tab="review" aria-controls="view-review" aria-selected="false" tabindex="-1">Review</button>
+      <button type="button" class="tab" role="tab" id="tab-results" data-tab="results" aria-controls="view-results" aria-selected="false" tabindex="-1">Results</button>
+      <button type="button" class="tab" role="tab" id="tab-rails" data-tab="rails" aria-controls="view-rails" aria-selected="false" tabindex="-1">Rails</button>
+    </div>
+  </header>
+  <aside id="a2hs" class="a2hs" aria-label="Add Fleece Grader to your home screen" hidden>
+    <div class="a2hs-b"><p class="a2hs-t">Add Fleece Grader to your home screen</p><p class="a2hs-s" id="a2hs-s"></p></div>
+    <div class="a2hs-a">
+      <button type="button" class="ibtn" id="a2hs-install" hidden>Install</button>
+      <button type="button" class="tbtn tbtn--q" id="a2hs-no">Not now</button>
+    </div>
+  </aside>
+  <main id="main" tabindex="-1">
+    <section id="view-session" class="view" role="tabpanel" aria-labelledby="tab-session"></section>
+    <section id="view-scan" class="view" role="tabpanel" aria-labelledby="tab-scan" hidden></section>
+    <section id="view-review" class="view" role="tabpanel" aria-labelledby="tab-review" hidden></section>
+    <section id="view-results" class="view" role="tabpanel" aria-labelledby="tab-results" hidden></section>
+    <section id="view-rails" class="view" role="tabpanel" aria-labelledby="tab-rails" hidden></section>
+  </main>
+</div>
+<div id="busy" class="busy" role="status" aria-live="polite" hidden>
+  <div class="busy-card"><p id="busy-text">Working</p><div class="spin" id="busy-spin" aria-hidden="true" hidden></div><div class="progbar"><i></i></div></div>
+</div>
+<dialog id="sv" class="sv" aria-labelledby="sv-t"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

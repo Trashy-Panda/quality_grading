@@ -126,7 +126,7 @@
           avatar.style.display = user.photoURL ? '' : 'none';
         }
         if (displayName) {
-          displayName.textContent = user.displayName || user.email || 'Signed In';
+          displayName.textContent = user.displayName || user.email || 'Signed in';
         }
       } else {
         signinBtn.classList.remove('hidden');

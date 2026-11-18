@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel — Beef Grading Drill</title>
+  <title>Admin Panel | Beef Grading Drill</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" href="beefgrade.svg" type="image/svg+xml" />
@@ -94,15 +94,15 @@
 
         <div class="admin-stats-row" id="lb-stats">
           <div class="admin-stat-chip">
-            <div class="stat-value" id="lb-stat-total">—</div>
+            <div class="stat-value" id="lb-stat-total">–</div>
             <div class="stat-label">Total Submissions</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="lb-stat-top">—</div>
+            <div class="stat-value" id="lb-stat-top">–</div>
             <div class="stat-label">Top Score</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="lb-stat-avg">—</div>
+            <div class="stat-value" id="lb-stat-avg">–</div>
             <div class="stat-label">Avg Score</div>
           </div>
         </div>
@@ -163,7 +163,7 @@
           </div>
           <p class="admin-card-sub">Click X to remove. Any number is valid.</p>
           <div id="wc-selected-grid" class="wc-selected-grid">
-            <div class="admin-empty wc-empty-full">No carcasses selected — pick from the pool below.</div>
+            <div class="admin-empty wc-empty-full">No carcasses selected. Pick from the pool below.</div>
           </div>
           <div id="wc-save-status" class="wc-save-status"></div>
         </div>
@@ -185,7 +185,7 @@
             <input type="url" id="wc-add-url" placeholder="https://..." />
             <input type="text" id="wc-add-name" placeholder="Label (e.g. Carcass A)" />
             <select id="wc-add-grade">
-              <option value="">— Grade —</option>
+              <option value="">Select grade</option>
               <option value="PR_HI">High Prime</option>
               <option value="PR_AVG">Average Prime</option>
               <option value="PR_LO">Low Prime</option>
@@ -248,7 +248,7 @@
         <!-- Count stat -->
         <div class="admin-stats-row">
           <div class="admin-stat-chip">
-            <div class="stat-value" id="community-stat-count">—</div>
+            <div class="stat-value" id="community-stat-count">–</div>
             <div class="stat-label">Total Carcasses</div>
           </div>
         </div>
@@ -263,7 +263,7 @@
               <input type="url" id="community-add-url" placeholder="Image URL (https://…)" />
               <input type="text" id="community-add-name" placeholder="Name (e.g. Carcass A)" />
               <select id="community-add-grade">
-                <option value="">— Grade —</option>
+                <option value="">Select grade</option>
                 <option value="PR_HI">High Prime</option>
                 <option value="PR_AVG">Average Prime</option>
                 <option value="PR_LO">Low Prime</option>
@@ -318,15 +318,15 @@
         <!-- Stats row -->
         <div class="admin-stats-row">
           <div class="admin-stat-chip">
-            <div class="stat-value" id="gv-stat-images">—</div>
+            <div class="stat-value" id="gv-stat-images">–</div>
             <div class="stat-label">Images Voted On</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="gv-stat-votes">—</div>
+            <div class="stat-value" id="gv-stat-votes">–</div>
             <div class="stat-label">Total Votes</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="gv-stat-promoted">—</div>
+            <div class="stat-value" id="gv-stat-promoted">–</div>
             <div class="stat-label">Promoted</div>
           </div>
         </div>
@@ -354,19 +354,19 @@
 
         <div class="admin-stats-row">
           <div class="admin-stat-chip">
-            <div class="stat-value" id="an-stat-users">—</div>
+            <div class="stat-value" id="an-stat-users">–</div>
             <div class="stat-label">Users</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="an-stat-subs">—</div>
+            <div class="stat-value" id="an-stat-subs">–</div>
             <div class="stat-label">Total Submissions</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="an-stat-week">—</div>
+            <div class="stat-value" id="an-stat-week">–</div>
             <div class="stat-label">This Week</div>
           </div>
           <div class="admin-stat-chip">
-            <div class="stat-value" id="an-stat-community">—</div>
+            <div class="stat-value" id="an-stat-community">–</div>
             <div class="stat-label">Community Carcasses</div>
           </div>
         </div>
@@ -393,7 +393,7 @@
         </div>
 
         <div class="admin-card">
-          <h3 class="admin-card-label">Score Distribution — This Week</h3>
+          <h3 class="admin-card-label">Score Distribution, This Week</h3>
           <div id="an-dist" class="an-dist">
             <div class="admin-empty">Loading…</div>
           </div>
@@ -422,7 +422,7 @@
 
         <div class="admin-card">
           <h3 class="admin-card-label">Most Contested Images</h3>
-          <p class="admin-card-sub">Crowdsource votes with the least consensus (min 3 votes) — the images students disagree on most.</p>
+          <p class="admin-card-sub">Crowdsource votes with the least consensus (min 3 votes): the images students disagree on most.</p>
           <div class="admin-table-wrap">
             <table class="admin-table" id="an-contested-table">
               <thead>
@@ -446,7 +446,7 @@
            ============================================= -->
       <div class="admin-section hidden" id="tab-powerrank">
         <div class="admin-toolbar">
-          <h2 class="admin-section-title">Power Rankings &mdash; Contests</h2>
+          <h2 class="admin-section-title">Power Rankings: Contests</h2>
           <div class="admin-toolbar-controls">
             <button id="pr-refresh-btn" class="admin-btn-secondary">Refresh</button>
           </div>
@@ -509,7 +509,7 @@
                 <input type="url" id="pr-form-sourceurl" placeholder="https://www.judgingcard.com/Results/Team.aspx?ID=..." />
               </label>
             </div>
-            <div class="pr-slug-line">Doc ID: <code id="pr-slug-preview">&mdash;</code></div>
+            <div class="pr-slug-line">Doc ID: <code id="pr-slug-preview">&ndash;</code></div>
             <div class="pr-teams-header">
               <span class="pr-teams-title">Team Results</span>
               <button id="pr-add-row-btn" class="admin-btn-secondary admin-btn-sm">+ Add Team Row</button>

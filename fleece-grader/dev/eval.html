@@ -1,0 +1,47 @@
+<!doctype html><meta charset="utf-8"><title>eval</title><pre id="out"></pre>
+<script type="module">
+// Accuracy harness. ?only=sheet02 limits to one sheet; ?synth=0 skips the synthetic sheets.
+// ok = read cleanly and right; unsure = sent to review; silent = read cleanly but WRONG (the number that must be 0).
+import { readSheet, drawOverlay, FIELDS } from '../omr.js';
+const out = document.getElementById('out');
+const IDX = { grade: 0, length: 1, yieldTens: 2, yieldOnes: 3, purity: 4, character: 5 };
+const REAL = ['sheet01', 'sheet02', 'sheet03', 'sheet04', 'sheet05', 'sheet06', 'sheet07', 'sheet08', 'sheet09', 'sheet10', 'sheet11', 'sheet13', 'sheet13-flat'];
+window.__res = {};
+async function evalReal(name, truthRows) {
+  const t0 = performance.now();
+  let r; try { r = await readSheet('../assets/test/real/' + name + '.jpg', {}); } catch (e) { return { name, error: String(e) }; }
+  const ms = Math.round(performance.now() - t0); window.__res[name] = r;
+  if (!r.ok) return { name, ms, error: r.error, warnings: r.warnings, lattice: r.lattice, method: r.cornerMethod };
+  let ok = 0, unsure = 0, silent = 0, unsureRight = 0, n = 0; const bad = [], uns = []; const st = { ok: 0, blank: 0, unsure: 0, multiple: 0 };
+  r.rows.forEach((row, i) => FIELDS.forEach(f => {
+    const g = row[f]; st[g.status]++;
+    if (g.status !== 'ok') uns.push((i + 1) + f[0] + (f === 'yieldOnes' ? 'o' : '') + ':' + g.status[0] + (g.value ?? ''));
+    if (!truthRows) return; const t = truthRows[i][IDX[f]]; if (t === '?') return; n++;
+    if (g.status === 'ok' || g.status === 'blank') { const gv = g.status === 'ok' ? g.value : null; if (gv === t) ok++; else { silent++; bad.push((i + 1) + f + ':' + gv + '!=' + t); } }
+    else { unsure++; if (g.value === t) unsureRight++; }
+  }));
+  return { name, ms, st, truth: truthRows ? { n, ok, unsure, unsureRight, silent, bad } : null, review: uns.join(' '), lattice: r.lattice, levels: r.levels, warnings: r.warnings };
+}
+async function evalSynth(truth) {
+  const res = [];
+  for (const [file, rows] of Object.entries(truth)) {
+    const r = await readSheet('../assets/test/' + file, {}); window.__res[file] = r;
+    if (!r.ok) { res.push({ name: file, error: r.error }); continue; }
+    let ok = 0, unsure = 0, silent = 0; const bad = [];
+    r.rows.forEach((row, i) => FIELDS.forEach(f => {
+      const t = rows[i][f].value, g = row[f];
+      if (g.status === 'unsure') { unsure++; return; }
+      const gv = g.status === 'ok' ? g.value : null; if (gv === t) ok++; else { silent++; bad.push((i + 1) + f + ':' + g.status + gv + '!=' + t); }
+    }));
+    res.push({ name: file, ok, unsure, silent, bad: bad.slice(0, 20), warnings: r.warnings });
+  }
+  return res;
+}
+window.overlay = name => { const c = drawOverlay(window.__res[name]); c.id = 'ov'; document.getElementById('ov')?.remove(); document.body.prepend(c); return [c.width, c.height]; };
+const q = new URLSearchParams(location.search); const only = q.get('only');
+const rt = await (await fetch('../assets/test/real/truth.json')).json();
+const results = [];
+for (const n of REAL) { if (only && !only.split(',').includes(n)) continue; results.push(await evalReal(n, rt[n.replace('-flat', '')])); out.textContent = JSON.stringify(results, null, 1); }
+if (!only && q.get('synth') !== '0') results.push(...await evalSynth(await (await fetch('../assets/test/truth.json')).json()));
+window.__results = results; out.textContent = JSON.stringify(results, null, 1); document.title = 'done'; document.body.insertAdjacentHTML('afterbegin', '<p>EVALDONE</p>');
+</script>

@@ -35,10 +35,19 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      # Publish only the site: design comps, docs, dev servers and the Python
+      # grading / ingest tools live in beefgrading.study/ but are not public.
+      - name: Stage site
+        run: |
+          rsync -a \
+            --exclude='.hallmark/' --exclude='docs/' --exclude='deployment/' \
+            --exclude='grader/' --exclude='__pycache__/' --exclude='*.py' \
+            --exclude='README.md' \
+            beefgrading.study/ _site/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'beefgrading.study'
+          path: '_site'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

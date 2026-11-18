@@ -147,8 +147,29 @@ moving the *data*.
 | `sourceUrl` | string | optional; must start with `https://` if present |
 | `teamCount` | int | 1–80 |
 | `results` | list | size 1–80; elements `{school, place, score?, categories?}` |
+| `individuals` | list | optional; every contestant, see below |
 | `createdAt` | timestamp | server time on create; immutable on update |
 | `updatedAt` | timestamp | server time on every write |
+
+**`results[i].splits` (optional, 2026 scorecard scrapes):** `{beef, pork, lamb}`,
+each `{placing:int, reasons:int}` = the team's points from that species' placing
+classes vs its reasons classes. `beef.placing + beef.reasons` equals
+`categories.beefJudging.score` (same for pork and lamb). Historic contests lack
+it; the UI falls back to the species judging totals. The client derives six
+per-contest categories from it (`beefPlacing`, `beefReasons`, `porkPlacing`,
+`porkReasons`, `lambPlacing`, `lambReasons`) by ranking teams within the contest
+(competition ranking, ties share a place) and runs them through the normal
+category engine.
+
+**`individuals` (optional, top-level):** array of `{name, school, alt:bool,
+place:int, score:int, categories:{beefGrading|beefJudging|lambJudging|porkJudging|
+specifications|overallBeef|totalPlacings|reasons: {place:int|null, score:int}},
+splits:{same shape as above}, counted?:true}`. `place` is the official individual
+place; `alt` marks the alternate squad; `counted` marks the four scores that made
+the team score. Full names are displayed. The Individuals toggle on the rankings
+screen runs the same ranking engine over contestants (key = name + school) and
+only counts contests that carry `individuals` (weight-2 contests are skipped). In that mode a contestant's rating is the plain average of their raw scores (no placement factor or recency), alternates included; 2+ contests are needed for a numbered rank. Both `splits` and `individuals` are
+produced by `powerrankings/ingest_scorecards.py`.
 
 **Access rules:**
 - read: public (rankings render without auth)
@@ -219,6 +240,36 @@ drops much below ~0.90 even for a bad placement. The historic archive data
 (1926–2026, 539 docs) stays in Firestore regardless of any of the above — it
 just isn't used to blend current-season ratings anymore; it's earmarked for a
 future "program history / most championships" feature.
+
+## fleece_keys
+Official wool-grading answer keys posted from the fleece grader (`fleece/`) and
+shared publicly. Auto-ID docs written with `addDoc`. Browse with
+`orderBy('createdAt','desc'), limit(30)`; open one with `getDoc`.
+
+| Field | Type | Constraints |
+|---|---|---|
+| `v` | int | must be `1` (key format version) |
+| `title` | string | 1–80 chars |
+| `n` | int | 1–20 (fleeces in the key) |
+| `key` | string | exactly 120 chars, regex-validated (see below) |
+| `ownerUid` | string | must equal `request.auth.uid` |
+| `ownerName` | string | 0–60 chars (display name) |
+| `createdAt` | timestamp | server time (`serverTimestamp()` == `request.time`) |
+
+No other fields allowed (`hasOnly` + `hasAll` on the 7 above).
+
+**`key` encoding:** 20 fleeces x 6 chars = 120. Per fleece: grade `0-9`, length
+`0-2`, yield 2 digits (or `--`), purity `0-1`, character `0-2`. `-` = blank.
+Rows beyond `n` are `------`. Rule regex:
+`^([0-9-][0-2-]([0-9]{2}|--)[01-][0-2-]){20}$`.
+
+**Access rules:**
+- read: public (no sign-in to browse or use a key)
+- create: signed-in, non-anonymous user, all fields validated
+- update: never (delete and repost instead)
+- delete: poster (`ownerUid`) or admin (`KLoBqbA2P9UkQ83urzmgpxT4Oit1`)
+
+**Note:** Rules publish manually (Firebase Console → Firestore → Rules → Publish).
 
 ---
 

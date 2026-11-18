@@ -1822,8 +1822,25 @@ function prValidateContest(raw) {
           if (Object.keys(cats).length) row.categories = cats;
         }
       }
+      if (r.splits !== undefined && r.splits !== null) {
+        var sp = prValidateSplits(r.splits, rowLabel + '.splits', errors);
+        if (sp) row.splits = sp;
+      }
       results.push(row);
     });
+  }
+
+  var individuals = null;
+  if (raw.individuals !== undefined && raw.individuals !== null) {
+    if (!Array.isArray(raw.individuals) || raw.individuals.length > PR_MAX_INDIVIDUALS) {
+      errors.push('individuals: optional array of up to ' + PR_MAX_INDIVIDUALS + ' contestants.');
+    } else {
+      individuals = [];
+      raw.individuals.forEach(function (p, i) {
+        var v = prValidateIndividual(p, 'individuals[' + i + ']', errors);
+        if (v) individuals.push(v);
+      });
+    }
   }
 
   var teamCount = raw.teamCount;
@@ -1847,7 +1864,88 @@ function prValidateContest(raw) {
     results: results
   };
   if (sourceUrl) doc.sourceUrl = sourceUrl;
+  if (individuals && individuals.length) doc.individuals = individuals;
   return { errors: [], doc: doc };
+}
+
+// ---------- splits + individuals (from ingest_scorecards.py) ----------
+
+function isInt(v) { return typeof v === 'number' && isFinite(v) && Math.floor(v) === v; }
+
+var PR_MAX_INDIVIDUALS = 400;
+var PR_SPLIT_SPECIES = ['beef', 'pork', 'lamb'];
+
+// {beef|pork|lamb: {placing, reasons}} of non-negative integers.
+function prValidateSplits(s, label, errors) {
+  if (!s || typeof s !== 'object' || Array.isArray(s)) {
+    errors.push(label + ': must be an object {beef, pork, lamb}.');
+    return null;
+  }
+  var out = {};
+  var ok = true;
+  Object.keys(s).forEach(function (k) {
+    if (PR_SPLIT_SPECIES.indexOf(k) === -1) { errors.push(label + '.' + k + ': unknown species.'); ok = false; return; }
+    var v = s[k];
+    if (!v || typeof v !== 'object' || !isInt(v.placing) || !isInt(v.reasons) || v.placing < 0 || v.reasons < 0) {
+      errors.push(label + '.' + k + ': needs integer placing and reasons ≥ 0.');
+      ok = false;
+      return;
+    }
+    out[k] = { placing: v.placing, reasons: v.reasons };
+  });
+  return ok && Object.keys(out).length ? out : null;
+}
+
+function prValidateIndividual(p, label, errors) {
+  if (!p || typeof p !== 'object' || Array.isArray(p)) { errors.push(label + ': must be an object.'); return null; }
+  var name = typeof p.name === 'string' ? p.name.replace(/\s+/g, ' ').trim() : '';
+  var school = typeof p.school === 'string' ? p.school.replace(/\s+/g, ' ').trim() : '';
+  if (!name || name.length > 120) { errors.push(label + '.name: required string, 1–120 chars.'); return null; }
+  if (!school || school.length > 120) { errors.push(label + '.school: required string, 1–120 chars.'); return null; }
+  var out = { name: name, school: school, alt: p.alt === true };
+  if (p.counted === true) out.counted = true;
+  if (p.place !== null && p.place !== undefined) {
+    if (!isInt(p.place) || p.place < 1) { errors.push(label + '.place: integer ≥ 1 or null.'); return null; }
+    out.place = p.place;
+  } else {
+    out.place = null;
+  }
+  if (isInt(p.officialPlace) && p.officialPlace >= 1) out.officialPlace = p.officialPlace;
+  if (typeof p.score === 'number' && isFinite(p.score)) out.score = p.score;
+  if (p.categories && typeof p.categories === 'object' && !Array.isArray(p.categories)) {
+    var cats = {};
+    Object.keys(p.categories).forEach(function (k) {
+      if (!PR_CATEGORIES.some(function (c) { return c.key === k; })) return;
+      var c = p.categories[k];
+      if (!c || typeof c !== 'object') return;
+      var e = {};
+      e.place = (isInt(c.place) && c.place >= 1) ? c.place : null;
+      if (typeof c.score === 'number' && isFinite(c.score)) e.score = c.score;
+      cats[k] = e;
+    });
+    if (Object.keys(cats).length) out.categories = cats;
+  }
+  if (p.splits !== undefined && p.splits !== null) {
+    var sp = prValidateSplits(p.splits, label + '.splits', errors);
+    if (sp) out.splits = sp;
+  }
+  return out;
+}
+
+// Splits and individuals have no form fields, so the manual form carries them
+// over from whatever contest/import was loaded into it. Without this, editing
+// a contest in the form would silently erase them on save.
+var _prFormExtras = null; // { individuals: [], splitsBySchool: { normSchool: splits } }
+
+function prSetFormExtras(d) {
+  var bySchool = {};
+  (Array.isArray(d && d.results) ? d.results : []).forEach(function (r) {
+    if (r && r.splits && typeof r.school === 'string') bySchool[prNormSchool(r.school)] = r.splits;
+  });
+  var inds = Array.isArray(d && d.individuals) ? d.individuals : [];
+  _prFormExtras = (inds.length || Object.keys(bySchool).length)
+    ? { individuals: inds, splitsBySchool: bySchool }
+    : null;
 }
 
 // ---------- school-name consistency ----------
@@ -2553,9 +2651,15 @@ function prCollectFormRaw() {
     });
     if (Object.keys(categories).length) r.categories = categories;
 
+    if (_prFormExtras && school) {
+      var sp = _prFormExtras.splitsBySchool[prNormSchool(school)];
+      if (sp) r.splits = sp;
+    }
+
     results.push(r);
   });
   raw.results = results;
+  if (_prFormExtras && _prFormExtras.individuals.length) raw.individuals = _prFormExtras.individuals;
   return raw;
 }
 
@@ -2624,6 +2728,7 @@ function prSaveManual() {
 function prLoadIntoForm(contest) {
   var d = contest.data || {};
   _prEditingSlug = contest.slug;
+  prSetFormExtras(d);
 
   var banner = document.getElementById('pr-editing-banner');
   var slugEl = document.getElementById('pr-editing-slug');
@@ -2673,6 +2778,7 @@ function prLoadParsedImportIntoForm(parsed) {
   if (!parsed || !parsed.doc) return;
   var d = parsed.doc;
   _prEditingSlug = null; // treat as a fresh manual entry; slug recomputes from the fields
+  prSetFormExtras(d);
 
   var banner = document.getElementById('pr-editing-banner');
   var slugEl = document.getElementById('pr-editing-slug');
@@ -2716,6 +2822,7 @@ function prLoadParsedImportIntoForm(parsed) {
 
 function prResetForm() {
   _prEditingSlug = null;
+  _prFormExtras = null;
   var banner = document.getElementById('pr-editing-banner');
   if (banner) banner.classList.add('hidden');
   ['pr-form-name', 'pr-form-shortname', 'pr-form-date', 'pr-form-season', 'pr-form-sourceurl'].forEach(function (id) {

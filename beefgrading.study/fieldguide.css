@@ -1,357 +1,318 @@
-/* fieldguide.css — Rollmark design system
-   Grade Field Guide — the letterboard study card.
-   Uses global tokens from style.css (:root). */
+/* fieldguide.css - Grade field guide (v3 body UI).
+   A reading page on the ground: lists and photos, no cards. At 1000+ the grade
+   ladder is a sticky rail beside the sections; below that everything stacks.
+   Edges are translucent ink (--ui-edge). Tokens from style.css (:root). */
 
 #fieldguide-screen {
   position: relative;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--paper);
+  background: var(--ui-ground);
   min-height: 100vh;
+  min-height: 100dvh;
   color: var(--ink);
-}
-
-/* Faint overprint — same ink-over-content technique as the landing hero.
-   Negative z-index (contained by #fieldguide-screen's own stacking
-   context) keeps it strictly behind every normal-flow child. */
-.fg-overprint {
-  --art: url(assets/art-rib.png);
-  position: absolute;
-  top: 0;
-  right: -40px;
-  width: 340px;
-  aspect-ratio: 1400 / 1053;
-  color: var(--ink);
-  opacity: 0.05;
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
 }
 
 .fg-inner {
-  max-width: 760px;
+  width: var(--lab-measure);
   margin: 0 auto;
-  padding: 36px 20px 64px;
+  padding: 2rem 0 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
 }
 
-/* ── Hero ───────────────────────────────────────────────────── */
-
-.fg-hero {
-  position: relative;
-  text-align: center;
-  padding: 8px 0 4px;
-}
-
-.fg-postmark {
-  position: absolute;
-  top: -6px;
-  right: 0;
-  opacity: 0.5;
-}
-
-.fg-eyebrow {
-  display: block;
-  font-family: var(--font-script);
-  font-size: 26px;
-  color: var(--red);
-  line-height: 1.2;
-  transform: rotate(-2deg);
-  margin-bottom: 2px;
-}
+/* ── Header ─────────────────────────────────────────────────── */
 
 .fg-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 4.4vw, 2.3rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  line-height: 1.12;
-  margin: 0 0 10px;
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  text-wrap: balance;
 }
 
 .fg-sub {
+  max-width: var(--measure-prose);
+  margin: 0.5rem 0 0;
   font-family: var(--font-ui);
-  font-size: 15px;
-  color: var(--ink-soft);
+  font-size: 1rem;
   line-height: 1.6;
-  max-width: 48ch;
-  margin: 0 auto;
+  color: var(--ink-soft);
 }
 
 /* ── Sections ───────────────────────────────────────────────── */
 
-.fg-section {
-  margin-top: 40px;
-}
-
-/* Letterboard band section header — torn strip (sawtooth edges,
-   same mask technique as the .ticket receipt system) */
-.fg-board-header {
+.fg-head {
+  margin: 0 0 1rem;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 1.5rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--board-text);
-  background: var(--board-bg);
-  padding: 16px 18px 13px;
-  margin: 0 0 18px;
-  text-align: center;
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
-    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'/%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 7 L8 0 L16 7 Z'/%3E%3C/svg%3E") repeat-x top / 16px 7px,
-    linear-gradient(#000, #000) 0 7px / 100% calc(100% - 14px) no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='7'%3E%3Cpath d='M0 0 L8 7 L16 0 Z'%3E%3C/path%3E%3C/svg%3E") repeat-x bottom / 16px 7px;
+  line-height: 1.15;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
 }
 
-.fg-lead {
-  font-family: var(--font-ui);
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.6;
-  margin: 0 0 14px;
-  text-align: center;
-}
-
-/* Prose sections — no box, just measured text between ornaments */
-.fg-section--prose {
-  text-align: center;
-}
-
-.fg-prose-heading {
-  font-family: var(--font-script);
-  font-size: 27px;
-  font-weight: 400;
-  color: var(--red);
-  margin: 4px 0 10px;
-  transform: rotate(-1.5deg);
-}
-
+.fg-lead,
 .fg-body {
+  max-width: var(--measure-prose);
+  margin: 0 0 1.25rem;
   font-family: var(--font-ui);
-  font-size: 14.5px;
+  font-size: 1rem;
+  line-height: 1.65;
   color: var(--ink-soft);
-  line-height: 1.7;
-  margin: 0 auto;
-  max-width: 58ch;
-  text-align: left;
 }
+.fg-body { margin-bottom: 0; }
 
 .fg-note {
+  max-width: var(--measure-prose);
+  margin: 1rem 0 0;
   font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
-  line-height: 1.6;
-  margin: 14px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
 }
 
-/* ── Grade ladder ───────────────────────────────────────────── */
+/* ── Grade ladder: a list of rows, a heavier rule at each family ── */
 
 .fg-ladder {
-  list-style: none;
+  max-width: 35rem;
   margin: 0;
   padding: 0;
-  border: 1.5px solid var(--ink);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  list-style: none;
+  border-top: 2px solid var(--ui-edge);
 }
 
 .fg-rung {
+  --fam: var(--lab-heat-1);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-  background: var(--paper-card);
+  gap: 0.875rem;
+  min-height: 3.25rem;
+  padding: 0 0.25rem;
+  border-top: 1px solid var(--ui-edge);
 }
-.fg-rung:last-child { border-bottom: none; }
+.fg-rung:first-child { border-top: 0; }
+.fg-rung::before {
+  content: '';
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--ui-pad);
+  background: var(--fam);
+}
+.fg-rung--prime    { --fam: var(--lab-heat-1); }
+.fg-rung--choice   { --fam: var(--lab-heat-2); }
+.fg-rung--select   { --fam: var(--lab-heat-3); }
+.fg-rung--standard { --fam: var(--lab-heat-4); }
 
-/* Family boundary — the heavy rule where contests are won */
-.fg-rung--boundary {
-  border-top: 2px solid var(--ink);
-}
+/* Family boundary: the heavier rule where contests are won */
+.fg-rung--boundary { border-top: 2px solid var(--ui-edge-strong); }
 
 .fg-rung-grade {
-  font-family: var(--font-display);
-  font-size: 13.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--ink);
 }
-
 .fg-rung-family {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--ink);
-  color: var(--ink);
-  background: transparent;
+  flex: none;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
 }
 
-.fg-rung--prime .fg-rung-grade { color: var(--red); }
-.fg-rung--prime .fg-rung-family {
-  background: var(--red);
-  border-color: var(--ink);
-  color: var(--poster-cream);
-}
-.fg-rung--choice .fg-rung-family {
-  background: var(--board-bg);
-  color: var(--board-text);
-}
-.fg-rung--select .fg-rung-family {
-  background: var(--paper-deep);
-}
-.fg-rung--standard .fg-rung-family {
-  background: transparent;
-  color: var(--ink-faint);
-  border-color: var(--ink-faint);
-}
-
-/* ── Marbling specimens — butcher-chart rows w/ USDA photos ── */
+/* ── Marbling plates: the photo is the stage, the label sits under it ── */
 
 .fg-specimen-list {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
 }
 
 .fg-specimen-row {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 9px 4px;
-  border-bottom: 1px dashed var(--line);
-}
-.fg-specimen-row:last-child {
-  border-bottom: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
 }
 
-/* Clickable thumbnail — opens the shared image modal full screen */
+/* Clickable photo: opens the shared image modal full screen */
 .fg-specimen-view {
   position: relative;
   display: block;
-  flex-shrink: 0;
-  border: none;
-  background: none;
+  width: 100%;
   padding: 0;
+  border: 0;
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-outer);
+  overflow: hidden;
   cursor: pointer;
-  border-radius: 3px;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
+.fg-specimen-view:hover { background: var(--ui-edge); }
 .fg-specimen-view:focus-visible {
   outline: 2px solid var(--red);
   outline-offset: 2px;
+  transition: none;
 }
-/* alternate rows lean the specimen slightly — pinned prints, not a grid */
-.fg-specimen-row:nth-child(odd) .fg-specimen-view { transform: rotate(-1.6deg); }
-.fg-specimen-row:nth-child(even) .fg-specimen-view { transform: rotate(1.3deg); }
 
-/* Zoom badge — signals the photo is tappable */
+/* Zoom badge: signals the photo is tappable (the whole photo takes the tap) */
+.fg-specimen-view::before,
 .fg-specimen-view::after {
   content: '';
   position: absolute;
-  right: 1px;
-  bottom: 1px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--ink);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F5EFE2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px 12px;
-  opacity: 0.85;
   pointer-events: none;
 }
+.fg-specimen-view::before {
+  right: 0.625rem;
+  bottom: 0.625rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--ui-r-round);
+  background: var(--ui-scrim);
+}
+.fg-specimen-view::after {
+  right: 1.125rem;
+  bottom: 1.125rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--on-ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cline x1='20' y1='20' x2='15.5' y2='15.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
 
+/* 2:3 portraits (anchors 01-05) and the two square USDA originals (06, 07)
+   both sit uncropped in the same 4:5 plate. */
 .fg-specimen-img {
   display: block;
-  width: 68px;
-  height: 86px;
-  object-fit: cover;
-  background: var(--paper-card);
-  border: 1.5px solid var(--ink);
-  border-radius: 3px;
-  padding: 4px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  background: transparent;
+  /* white photo backgrounds sink into the plate; black ones stay black */
+  mix-blend-mode: multiply;
 }
 
 .fg-specimen-text {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  padding: 0 0.25rem;
 }
 
+/* Footnotes sit clear of the plates */
+.fg-specimen-list + .fg-note { margin-top: 1.5rem; }
+
+/* The one degree with no USDA photo: a plate of the same shape, text only */
 .fg-specimen-row--nophoto {
-  padding-left: 90px;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-outer);
 }
+.fg-specimen-row--nophoto .fg-specimen-text { padding: 0; }
 
 .fg-marbling-degree {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
   line-height: 1.3;
 }
-
 .fg-marbling-grade {
-  font-family: var(--font-script);
-  font-size: 19px;
-  color: var(--red);
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  line-height: 1.25;
 }
 
-/* ── Scoring menu — dotted-leader price list, no box ────────── */
+/* ── Scoring: the shared ladder chart as rows on the ground ─── */
 
-.fg-scoring-menu {
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.fg-scoring-menu .scoring-explainer-list {
-  margin: 0;
+.fg-scoring-menu { max-width: 40rem; }
+.fg-scoring-menu .sc-chart {
   padding: 0;
-  gap: 10px;
-  font-size: 14px;
+  border-top: 2px solid var(--ui-edge);
+}
+.fg-scoring-menu .sc-row {
+  min-height: 3.25rem;
+  padding: 0.5rem 0.25rem;
+  border-top: 1px solid var(--ui-edge);
+}
+.fg-scoring-menu .sc-row:first-child { border-top: 0; }
+.fg-scoring-menu .sc-k { font-size: 0.9375rem; color: var(--ink); }
+.fg-scoring-menu .sc-bar {
+  height: 0.75rem;
+  background: var(--ui-sel);
+  border-radius: var(--ui-pad);
+}
+.fg-scoring-menu .sc-bar--ok   { --bar: var(--ui-ok); }
+.fg-scoring-menu .sc-bar--near { --bar: var(--ui-warn); }
+.fg-scoring-menu .sc-bar--miss { --bar: var(--ui-edge-strong); }
+.fg-scoring-menu .sc-v {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+}
+.fg-scoring-menu .fg-note {
+  max-width: none;
+  margin: 0;
+  padding: 1rem 0.25rem 0;
+  border-top: 1px solid var(--ui-edge);
 }
 
 /* ── Footer ─────────────────────────────────────────────────── */
 
-.fg-footer {
-  margin-top: 44px;
-  text-align: center;
+.fg-footer { display: flex; }
+.fg-footer .wk-btn { width: 100%; }
+
+/* ── Tablet: two-up plates become four, the footer button relaxes ── */
+
+@media (min-width: 700px) {
+  .fg-specimen-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fg-footer .wk-btn { width: auto; min-width: 17.5rem; }
 }
 
-.fg-footer .btn-primary {
-  margin-top: 8px;
+/* ── Desktop (1000+): ladder rail on the left, sections on the right ── */
+
+@media (min-width: 1000px) {
+  .fg-inner {
+    display: grid;
+    grid-template-columns: 21.25rem minmax(0, 1fr);
+    column-gap: 4.5rem;
+    row-gap: 3.5rem;
+    align-items: start;
+    padding: 3.5rem 0 6rem;
+  }
+  .fg-inner > * { grid-column: 2; min-width: 0; }
+  .fg-hero { grid-column: 1 / -1; }
+  .fg-inner > [aria-labelledby="fg-ladder-heading"] {
+    grid-column: 1;
+    grid-row: 2 / span 4;
+    position: sticky;
+    top: 5.25rem;
+  }
+  .fg-title { font-size: 3.5rem; }
+  .fg-sub { margin-top: 0.75rem; font-size: 1.125rem; }
+  .fg-head { font-size: 1.75rem; }
+  .fg-inner > [aria-labelledby="fg-ladder-heading"] .fg-head { font-size: 1.375rem; }
 }
 
-/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .fg-inner { gap: 2rem; }
+  .fg-marbling-grade { font-size: 1rem; }
+  .fg-scoring-menu .sc-row { gap: 0.5rem; }
+}
 
-@media (max-width: 640px) {
-  .fg-postmark { display: none; }
-  .fg-overprint { display: none; }
-  .fg-rung {
-    padding: 9px 12px;
-  }
-  .fg-rung-grade { font-size: 12px; }
-  .fg-specimen-row {
-    gap: 14px;
-  }
-  .fg-specimen-img {
-    width: 60px;
-    height: 78px;
-  }
-  .fg-specimen-row--nophoto {
-    padding-left: 78px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .fg-specimen-view { transition: none; }
 }

@@ -36,7 +36,6 @@ QUALITY_GRADES.forEach(g => { GRADE_POSITIONS[g.key] = g.position; });
 // ------------------------------------------------------------------
 const state = {
   ruleSet: 'collegiate',
-  setupMode: 'practice',
   currentIndex: 0,
   carcasses: [],
   answers: [],
@@ -123,13 +122,11 @@ function cacheElements() {
   el.startBtn       = document.getElementById('start-btn');
   el.startError     = document.getElementById('start-error');
   el.managePhotosBtn= document.getElementById('manage-photos-btn');
-  el.practiceView   = document.getElementById('practice-setup-view');
-  el.weeklyView     = document.getElementById('weekly-setup-view');
   el.useCustomSetToggle = document.getElementById('use-custom-set-toggle');
   el.openContributeLink  = document.getElementById('open-contribute-link');
 
   // Drill
-  el.headerScore    = document.getElementById('header-score');
+  el.drillScore     = document.getElementById('drill-score');
   el.progressBar    = document.getElementById('progress-bar');
   el.progressText   = document.getElementById('progress-text');
   el.carcassImage   = document.getElementById('carcass-image');
@@ -152,6 +149,11 @@ function cacheElements() {
   // Summary
   el.summaryTotal   = document.getElementById('summary-total');
   el.summaryPct     = document.getElementById('summary-pct');
+  el.summaryExact   = document.getElementById('summary-exact');
+  el.summaryNear    = document.getElementById('summary-near');
+  el.summarySub     = document.getElementById('summary-sub');
+  el.summaryStrip   = document.getElementById('summary-strip');
+  el.summaryLegend  = document.getElementById('summary-legend');
   el.summaryTable   = document.getElementById('summary-table');
   el.restartBtn     = document.getElementById('restart-btn');
   el.exportBtn      = document.getElementById('export-btn');
@@ -196,25 +198,10 @@ function showScreen(name) {
 //  HOME SCREEN
 // ------------------------------------------------------------------
 
-function renderHomeScreen(mode) {
-  if (mode) state.setupMode = mode;
-  const activeMode = state.setupMode || 'practice';
+function renderHomeScreen() {
   showScreen('home');
-  el.practiceView.classList.toggle('hidden', activeMode !== 'practice');
-  el.weeklyView.classList.toggle('hidden', activeMode !== 'weekly');
-  // Mode switcher tabs mirror the active view
-  const tabPractice = document.getElementById('setup-tab-practice');
-  const tabWeekly = document.getElementById('setup-tab-weekly');
-  if (tabPractice && tabWeekly) {
-    tabPractice.classList.toggle('active', activeMode === 'practice');
-    tabPractice.setAttribute('aria-selected', String(activeMode === 'practice'));
-    tabWeekly.classList.toggle('active', activeMode === 'weekly');
-    tabWeekly.setAttribute('aria-selected', String(activeMode === 'weekly'));
-  }
-  window._isWeeklySession = activeMode === 'weekly';
-  if (activeMode === 'weekly' && typeof renderWeeklyCard === 'function') {
-    renderWeeklyCard();
-  }
+  window._isWeeklySession = false;
+  // weekly.js re-renders the setup weekly panel when this screen becomes visible
 }
 
 // ------------------------------------------------------------------
@@ -227,10 +214,13 @@ function renderFamilyButtons() {
 
   families.forEach(fam => {
     const btn = document.createElement('button');
-    btn.className = 'grade-btn family-btn';
+    btn.type = 'button';
+    btn.className = 'dr-seg-btn family-btn';
     btn.textContent = fam;
     btn.dataset.family = fam;
-    if (state.selectedFamily === fam) btn.classList.add('active');
+    const on = state.selectedFamily === fam;
+    if (on) btn.classList.add('active');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.addEventListener('click', () => onFamilyClick(fam));
     el.familyBtns.appendChild(btn);
   });
@@ -241,22 +231,57 @@ function renderSubButtons(family) {
   const subs = getSubsForFamily(family);
 
   if (!subs.length || subs[0].sub === null) {
-    el.subRow.classList.add('hidden');
+    // No subdivisions (Standard): the one call is made, show it as a settled row
     state.selectedKey = resolveKey(family);
+    const solo = state.selectedKey ? GRADE_MAP[state.selectedKey] : null;
+    if (solo) {
+      el.subRow.classList.remove('is-idle');
+      el.subBtns.appendChild(buildChoiceRow(solo.label, 'No subdivisions', true, 'is-on'));
+    } else {
+      el.subRow.classList.add('is-idle');
+    }
     updateGradeDisplay();
     return;
   }
 
-  el.subRow.classList.remove('hidden');
+  el.subRow.classList.remove('is-idle');
   subs.forEach(g => {
     const btn = document.createElement('button');
-    btn.className = 'grade-btn sub-btn';
-    btn.textContent = g.sub;
+    btn.type = 'button';
+    btn.className = 'gr-row sub-btn';
     btn.dataset.key = g.key;
-    if (state.selectedKey === g.key) btn.classList.add('active');
+    const on = state.selectedKey === g.key;
+    if (on) btn.classList.add('active');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.innerHTML = '<span class="gr-t"></span>' + CHECK_ICON;
+    btn.firstChild.textContent = g.label;
     btn.addEventListener('click', () => onSubClick(g.key));
     el.subBtns.appendChild(btn);
   });
+}
+
+const CHECK_ICON = '<svg class="ic gr-ck" aria-hidden="true" focusable="false"><use href="#i-check"/></svg>';
+
+// A row that is not a control: the settled call, or a result row. Same anatomy
+// as the choice rows so the pick and the answer read as one list.
+function buildChoiceRow(title, note, withCheck, extraCls) {
+  const row = document.createElement('div');
+  row.className = 'gr-row gr-row--static' + (extraCls ? ' ' + extraCls : '');
+  const txt = document.createElement('span');
+  txt.className = 'gr-tx';
+  const t = document.createElement('span');
+  t.className = 'gr-t';
+  t.textContent = title;
+  txt.appendChild(t);
+  if (note) {
+    const n = document.createElement('span');
+    n.className = 'gr-n';
+    n.textContent = note;
+    txt.appendChild(n);
+  }
+  row.appendChild(txt);
+  if (withCheck) row.insertAdjacentHTML('beforeend', CHECK_ICON);
+  return row;
 }
 
 function onFamilyClick(family) {
@@ -270,14 +295,22 @@ function onFamilyClick(family) {
 function onSubClick(key) {
   state.selectedKey = key;
   document.querySelectorAll('.sub-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.key === key);
+    const on = btn.dataset.key === key;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   updateGradeDisplay();
 }
 
+function setDockSub(text) {
+  const sub = document.getElementById('dr-dock-sub');
+  if (sub) sub.textContent = text;
+}
+
 function updateGradeDisplay() {
+  setDockSub('Your call');
   if (!state.selectedKey) {
-    el.gradeDisplay.textContent = '— select a grade —';
+    el.gradeDisplay.textContent = 'Select a grade';
     el.gradeDisplay.className = 'grade-display unset';
     return;
   }
@@ -290,9 +323,106 @@ function resetGradeSelector() {
   state.selectedFamily = null;
   state.selectedKey = null;
   renderFamilyButtons();
-  el.subRow.classList.add('hidden');
+  el.subRow.classList.add('is-idle');
   el.subBtns.innerHTML = '';
   updateGradeDisplay();
+}
+
+// ------------------------------------------------------------------
+//  RESULT HELPERS (drill feedback + summary)
+// ------------------------------------------------------------------
+
+// 'ok' = exact, 'near' = within one third (9 or 7 pts), 'miss' = everything else
+function resultTier(score) {
+  return score === 10 ? 'ok' : (score === 9 || score === 7) ? 'near' : 'miss';
+}
+
+function resultVerdict(score) {
+  if (score === 10) return 'Exact';
+  if (score === 9)  return 'One subdivision off';
+  if (score === 7)  return 'Two subdivisions off';
+  if (score === 4)  return 'One full grade off';
+  return 'More than one grade off';
+}
+
+// The run so far: one cell per carcass, scored ones take their tier, the
+// current one is marked. Real data only; shown on the desktop rail.
+function renderRunStrip() {
+  const strip = document.getElementById('dr-run-strip');
+  if (!strip) return;
+  const n = state.carcasses.length;
+  const cells = [];
+  for (let i = 0; i < n; i++) {
+    const a = state.answers[i];
+    if (a) cells.push('<i class="' + resultTier(a.score) + '"><b>' + a.score + '</b></i>');
+    else cells.push('<i' + (i === state.currentIndex ? ' class="now"' : '') + '><b></b></i>');
+  }
+  strip.style.setProperty('--n', String(Math.max(n, 1)));
+  strip.classList.toggle('sm-strip--dense', n > 18);
+  strip.setAttribute('aria-label', state.answers.length + ' of ' + n + ' carcasses scored');
+  strip.innerHTML = cells.join('');
+}
+
+function updateDrillScore() {
+  const earned = sessionTotal();
+  const max = state.answers.length * 10;
+  el.drillScore.textContent = earned + ' / ' + max;
+}
+
+// Callable grades, best to worst (Average Select and Commercial are collegiate-only
+// and not on the drill's buttons, so they sit between neighbours on the scale).
+function ladderGrades() {
+  return QUALITY_GRADES.filter(g => !g.collegiateOnly).sort((a, b) => b.position - a.position);
+}
+
+// Fractional index of a grade on the ladder (0 = High Prime).
+function ladderIndex(key) {
+  const list = ladderGrades();
+  const pos = GRADE_POSITIONS[key];
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].position === pos) return i;
+    if (list[i].position < pos) {
+      if (i === 0) return 0;
+      return i - (pos - list[i].position) / (list[i - 1].position - list[i].position);
+    }
+  }
+  return list.length - 1;
+}
+
+// Prime-to-Standard scale with your mark above and the official-call mark below.
+function buildLadderHtml(userKey, correctKey) {
+  const list = ladderGrades();
+  const n = list.length;
+  const u = ladderIndex(userKey);
+  const c = ladderIndex(correctKey);
+  const lo = Math.round(Math.min(u, c));
+  const hi = Math.round(Math.max(u, c));
+  const x = i => ((i + 0.5) / n).toFixed(4);
+
+  let cells = '';
+  for (let i = 0; i < n; i++) {
+    cells += '<i' + (i >= lo && i <= hi ? ' class="on"' : '') + '></i>';
+  }
+
+  const fams = [];
+  list.forEach(g => {
+    const last = fams[fams.length - 1];
+    if (last && last.name === g.family) last.span++;
+    else fams.push({ name: g.family, span: 1 });
+  });
+  const famHtml = fams.map(f =>
+    '<span style="grid-column: span ' + f.span + '">' + escapeHtml(f.name) + '</span>'
+  ).join('');
+
+  const label = 'Grade scale from ' + list[0].family + ' to ' + list[n - 1].family +
+    '. You called ' + GRADE_MAP[userKey].label + ', official call ' + GRADE_MAP[correctKey].label + '.';
+
+  return '<div class="fb-scale" role="img" aria-label="' + escapeAttr(label) + '" style="--n:' + n + '">' +
+    '<div class="fb-row"><span class="fb-mk fb-mk--you' + (u / (n - 1) > 0.6 ? ' fb-mk--end' : '') + '" style="--x:' + x(u) + '"><i></i><b>You</b></span></div>' +
+    '<div class="fb-track">' + cells + '</div>' +
+    '<div class="fb-row"><span class="fb-mk fb-mk--key' + (c / (n - 1) > 0.6 ? ' fb-mk--end' : '') + '" style="--x:' + x(c) + '"><i></i><b>Official&nbsp;call</b></span></div>' +
+    '<div class="fb-fams">' + famHtml + '</div>' +
+    '</div>';
 }
 
 // ------------------------------------------------------------------
@@ -313,12 +443,12 @@ function renderCarcass(index) {
   const c = state.carcasses[index];
   const total = state.carcasses.length;
 
-  el.progressText.textContent = `Carcass ${index + 1} of ${total}`;
-  el.progressBar.style.width = ((index / total) * 100) + '%';
+  el.progressText.textContent = `${index + 1} of ${total}`;
+  // scaleX fraction, not width %: see #progress-bar in style.css
+  el.progressBar.style.setProperty('--progress', total ? index / total : 0);
 
-  const earned = sessionTotal();
-  const max = state.answers.length * 10;
-  el.headerScore.textContent = `Score: ${earned}/${max} pts`;
+  updateDrillScore();
+  renderRunStrip();
 
   const imgWrap = el.carcassImage.parentElement;
   imgWrap.classList.add('img-loading');
@@ -347,8 +477,9 @@ function renderCarcass(index) {
 
   resetGradeSelector();
 
+  delete el.drillScreen.dataset.result;
   el.feedbackPanel.className = 'feedback-panel hidden';
-  el.feedbackQuality.textContent = '';
+  el.feedbackQuality.innerHTML = '';
   el.feedbackNotes.textContent = '';
   el.feedbackNotes.classList.add('hidden');
 
@@ -381,12 +512,23 @@ function onSubmit() {
   });
 
   el.feedbackPanel.classList.remove('hidden', 'feedback-perfect', 'feedback-partial', 'feedback-zero');
-  if (score === 10)    el.feedbackPanel.classList.add('feedback-perfect');
-  else if (score >= 5) el.feedbackPanel.classList.add('feedback-partial');
-  else                 el.feedbackPanel.classList.add('feedback-zero');
+  const tierCls = { ok: 'feedback-perfect', near: 'feedback-partial', miss: 'feedback-zero' };
+  el.feedbackPanel.classList.add(tierCls[resultTier(score)]);
 
+  // The answer takes the place of the choices: your row, then the right row
+  // beside it (one row when the call was exact). Tone, not an error state.
+  el.drillScreen.dataset.result = resultTier(score);
   el.feedbackQuality.innerHTML =
-    `<strong>${score}/10 pts</strong> — You: ${userLabel} &nbsp;|&nbsp; Correct: ${correctLabel}`;
+    `<div class="fb-line"><strong class="fb-pts">${score}/10</strong><span class="fb-verdict">${escapeHtml(resultVerdict(score))}</span></div>` +
+    `<div class="fb-rows"></div>` +
+    buildLadderHtml(state.selectedKey, c.correct.qualityGrade);
+  const fbRows = el.feedbackQuality.querySelector('.fb-rows');
+  if (score === 10) {
+    fbRows.appendChild(buildChoiceRow(correctLabel, 'Right answer, your call', true, 'is-key'));
+  } else {
+    fbRows.appendChild(buildChoiceRow(userLabel, 'Your call', false, 'is-you'));
+    fbRows.appendChild(buildChoiceRow(correctLabel, 'Right answer', true, 'is-key'));
+  }
 
   if (c.notes && score < 10) {
     el.feedbackNotes.textContent = c.notes;
@@ -394,14 +536,28 @@ function onSubmit() {
   }
 
   el.submitBtn.classList.add('hidden');
+  const last = state.currentIndex + 1 >= state.carcasses.length;
+  el.nextBtn.firstElementChild.textContent = last ? 'See results' : 'Next carcass';
   el.nextBtn.classList.remove('hidden');
 
-  const earned = sessionTotal();
-  const max = state.answers.length * 10;
-  el.headerScore.textContent = `Score: ${earned}/${max} pts`;
+  updateDrillScore();
+  renderRunStrip();
+
+  // The dock stops repeating the pick: it carries the run instead
+  const earnedNow = sessionTotal();
+  const maxNow = state.answers.length * 10;
+  el.gradeDisplay.className = 'grade-display';
+  if (last) {
+    el.gradeDisplay.textContent = 'Total ' + earnedNow + '/' + maxNow;
+    setDockSub(state.carcasses.length + ' of ' + state.carcasses.length + ' graded');
+  } else {
+    el.gradeDisplay.textContent = (state.currentIndex + 2) + ' of ' + state.carcasses.length + ' next';
+    setDockSub('Total ' + earnedNow + '/' + maxNow);
+  }
 }
 
 function onNext() {
+  window.scrollTo(0, 0);
   state.currentIndex++;
   if (state.currentIndex >= state.carcasses.length) {
     renderSummary();
@@ -438,6 +594,10 @@ function initImageModal() {
   el.carcassImage.addEventListener('click', () => {
     openImageModal(el.carcassImage.src, el.carcassImage.alt);
   });
+  const zoomBtn = document.querySelector('.zoom-hint');
+  if (zoomBtn) zoomBtn.addEventListener('click', () => {
+    openImageModal(el.carcassImage.src, el.carcassImage.alt);
+  });
   el.imageModalClose.addEventListener('click', closeImageModal);
   el.imageModal.addEventListener('click', e => {
     if (e.target === el.imageModal) closeImageModal();
@@ -460,27 +620,43 @@ function renderSummary() {
   const max = state.answers.length * 10;
   const p = pct(earned, max);
 
-  el.summaryTotal.textContent = `${earned} / ${max} pts`;
-  el.summaryPct.textContent = `${p}%`;
-  el.summaryPct.className = 'summary-pct ' + (p >= 80 ? 'pct-green' : p >= 60 ? 'pct-yellow' : 'pct-red');
+  const n = state.answers.length;
+  const exact = state.answers.filter(a => a.score === 10).length;
+  const near = state.answers.filter(a => resultTier(a.score) === 'near').length;
+  const miss = n - exact - near;
 
-  // Perfect session → Certified Prime stamp
+  el.summaryTotal.innerHTML = `${earned}<span class="sm-of"> / ${max}</span>`;
+  el.summaryPct.textContent = `${p}%`;
+  el.summaryExact.textContent = `${exact} of ${n}`;
+  el.summaryNear.textContent = String(near);
+  el.summarySub.textContent = `${n} ${n === 1 ? 'carcass' : 'carcasses'} graded. Each call below is scored against the official call.`;
+
+  // One cell per carcass, same read as the Weekly "Your result" panel
+  el.summaryStrip.style.setProperty('--n', String(Math.max(n, 1)));
+  el.summaryStrip.setAttribute('aria-label',
+    'Carcass by carcass: ' + exact + ' exact, ' + near + ' within a third, ' + miss + (miss === 1 ? ' miss' : ' misses'));
+  el.summaryStrip.classList.toggle('sm-strip--dense', n > 18);
+  el.summaryStrip.innerHTML = state.answers.map(a =>
+    `<i class="${resultTier(a.score)}"><b>${a.score}</b></i>`).join('');
+  el.summaryLegend.textContent = n ? `Carcass 1 to ${n}, points each: exact, within a third, miss` : '';
+
+  // Perfect session: Certified Prime badge
   const certStamp = document.getElementById('summary-cert-stamp');
   if (certStamp) certStamp.classList.toggle('hidden', !(max > 0 && earned === max));
 
   let html = `
     <thead><tr>
-      <th>#</th><th>Carcass</th><th>Your Grade</th><th>Correct Grade</th><th>Points</th>
+      <th class="num c-n">#</th><th class="c-name">Carcass</th><th class="c-you">Your call</th><th class="c-key">Correct</th><th class="num c-pts">Pts</th>
     </tr></thead><tbody>`;
 
   state.answers.forEach((a, i) => {
-    const cls = a.score === 10 ? 'row-good' : a.score >= 5 ? 'row-ok' : 'row-bad';
+    const cls = { ok: 'row-good', near: 'row-ok', miss: 'row-bad' }[resultTier(a.score)];
     html += `<tr class="${cls}">
-      <td>${i + 1}</td>
-      <td>${escapeHtml(a.carcassName)}</td>
-      <td>${a.userQualityLabel}</td>
-      <td>${a.correctQualityLabel}</td>
-      <td><strong>${a.score}/10</strong></td>
+      <td class="num c-n">${i + 1}</td>
+      <td class="c-name">${escapeHtml(a.carcassName)}</td>
+      <td class="c-you" data-k="You">${escapeHtml(a.userQualityLabel)}</td>
+      <td class="c-key" data-k="Official call">${escapeHtml(a.correctQualityLabel)}</td>
+      <td class="num c-pts">${a.score}</td>
     </tr>`;
   });
 
@@ -570,8 +746,8 @@ function startEdit(index) {
   const c = list[index];
 
   el.editIndex.value = index;
-  el.formSectionLabel.textContent = 'Edit Carcass';
-  el.addCustomBtn.textContent = 'Save Changes';
+  el.formSectionLabel.textContent = 'Edit carcass';
+  el.addCustomBtn.textContent = 'Save changes';
   el.cancelEditBtn.classList.remove('hidden');
 
   el.customUrl.value = c.imageUrl || '';
@@ -591,7 +767,7 @@ function startEdit(index) {
 function cancelEdit() {
   el.editIndex.value = '-1';
   el.formSectionLabel.textContent = 'Add a Carcass';
-  el.addCustomBtn.textContent = 'Add to My Set';
+  el.addCustomBtn.textContent = 'Add to my set';
   el.cancelEditBtn.classList.add('hidden');
   el.customUrl.value = '';
   el.customName.value = '';
@@ -670,9 +846,10 @@ function attachUrlDotChecks(container) {
 function updateCommunityLabel() {
   if (!el.communitySetSub) return;
   if (!state.communitySet.length) {
-    el.communitySetSub.textContent = 'No community carcasses yet - add real ones via Manage Photos';
+    el.communitySetSub.textContent = 'No community carcasses yet';
   } else {
-    el.communitySetSub.textContent = state.communitySet.length + ' carcasses available';
+    const n = state.communitySet.length;
+    el.communitySetSub.textContent = n + (n === 1 ? ' carcass, shuffled' : ' carcasses, shuffled');
   }
 }
 
@@ -784,7 +961,7 @@ async function onSubmitToCommunity() {
 function renderCommunityList() {
   if (!el.communityList) return;
   if (!state.communitySet.length) {
-    el.communityStatus.textContent = 'No community carcasses yet — use "Submit to Community" to add the first one!';
+    el.communityStatus.textContent = 'No community carcasses yet. Use "Submit to Community" to add the first one!';
     el.communityList.innerHTML = '';
     return;
   }
@@ -1059,19 +1236,52 @@ async function loadContributeStats() {
 function pageNavGo(target) {
   const lbScreen = document.getElementById('leaderboard-screen');
   const fgScreen = document.getElementById('fieldguide-screen');
-  if (lbScreen && !lbScreen.classList.contains('hidden') && typeof hideLeaderboardScreen === 'function') {
-    hideLeaderboardScreen();
+  const lbOpen = lbScreen && !lbScreen.classList.contains('hidden');
+  const toWeekly = target === 'weekly' || target === 'leaderboard';
+  // Leaving the weekly page via the nav drops the live listener without
+  // restoring the screen it was opened from.
+  if (lbOpen && !toWeekly && typeof hideLeaderboardScreen === 'function') {
+    hideLeaderboardScreen({ restore: false });
   }
   if (fgScreen && !fgScreen.classList.contains('hidden')) {
     hideFieldGuideScreen();
   }
-  if (target === 'practice' || target === 'weekly') {
-    renderHomeScreen(target);
-  } else if (target === 'leaderboard' && typeof showLeaderboardScreen === 'function') {
+  if (target === 'practice') {
+    renderHomeScreen();
+  } else if ((target === 'weekly' || target === 'leaderboard') && typeof showLeaderboardScreen === 'function') {
     showLeaderboardScreen();
   } else if (target === 'fieldguide') {
     showFieldGuideScreen();
   }
+}
+
+// Mark the current page's link in the shared nav. Watches the four screens'
+// class changes, so none of the routers need to know about it.
+function initSiteNavCurrent() {
+  const map = {
+    'home-screen': 'practice',
+    'leaderboard-screen': 'weekly',
+    'powerrank-screen': 'rankings',
+    'fieldguide-screen': 'fieldguide'
+  };
+  const links = document.querySelectorAll('#site-nav .pnav-link');
+  const update = () => {
+    let current = null;
+    Object.keys(map).forEach(id => {
+      const node = document.getElementById(id);
+      if (node && !node.classList.contains('hidden')) current = map[id];
+    });
+    links.forEach(a => {
+      if (a.dataset.nav === current) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+  };
+  const obs = new MutationObserver(update);
+  Object.keys(map).forEach(id => {
+    const node = document.getElementById(id);
+    if (node) obs.observe(node, { attributes: true, attributeFilter: ['class'] });
+  });
+  update();
 }
 
 // ------------------------------------------------------------------
@@ -1159,12 +1369,6 @@ function init() {
     if (el.startError) el.startError.classList.add('hidden');
   });
 
-  // Setup mode switcher tabs
-  const setupTabPractice = document.getElementById('setup-tab-practice');
-  if (setupTabPractice) setupTabPractice.addEventListener('click', () => renderHomeScreen('practice'));
-  const setupTabWeekly = document.getElementById('setup-tab-weekly');
-  if (setupTabWeekly) setupTabWeekly.addEventListener('click', () => renderHomeScreen('weekly'));
-
   // Field guide back / practice buttons
   const fgBackBtn = document.getElementById('fieldguide-back-btn');
   if (fgBackBtn) fgBackBtn.addEventListener('click', hideFieldGuideScreen);
@@ -1177,11 +1381,12 @@ function init() {
   document.querySelectorAll('.pnav-link').forEach(btn => {
     btn.addEventListener('click', () => pageNavGo(btn.dataset.nav));
   });
+  initSiteNavCurrent();
   const fgDrillBtn = document.getElementById('fieldguide-drill-btn');
   if (fgDrillBtn) {
     fgDrillBtn.addEventListener('click', () => {
       document.getElementById('fieldguide-screen').classList.add('hidden');
-      renderHomeScreen('practice');
+      renderHomeScreen();
     });
   }
 
@@ -1287,3 +1492,32 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Landing nav slab: [data-proxy] buttons forward to the existing landing buttons;
+// [data-nav] opens a section through the shared pageNavGo (powerrank.js wraps it).
+document.addEventListener('click', (e) => {
+  if (!e.target.closest) return;
+  const proxy = e.target.closest('[data-proxy]');
+  if (proxy) { document.getElementById(proxy.dataset.proxy)?.click(); return; }
+  const nav = e.target.closest('.landing-nav [data-nav], .landing-footer [data-nav]');
+  if (nav) {
+    const landing = document.getElementById('landing-hero');
+    if (landing && !landing.classList.contains('hidden')) landing.classList.add('hidden');
+    if (typeof window.pageNavGo === 'function') window.pageNavGo(nav.dataset.nav);
+    else if (nav.dataset.nav === 'rankings' && typeof window.showPowerRankScreen === 'function') window.showPowerRankScreen();
+    return;
+  }
+  // Plate view: marbling map (default) or photo.
+  const view = e.target.closest('.landing-view-btn');
+  if (view) {
+    const plate = document.getElementById('landing-plate');
+    if (!plate) return;
+    plate.classList.toggle('is-photo', view.dataset.view === 'photo');
+    view.parentElement.querySelectorAll('.landing-view-btn').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b === view));
+    });
+  }
+});
+
+// The view control is inert without script, so it stays hidden until now.
+document.querySelector('.landing-view')?.removeAttribute('hidden');

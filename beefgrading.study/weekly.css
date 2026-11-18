@@ -1,336 +1,122 @@
-/* weekly.css — Rollmark design system
-   Weekly Challenge card + injected weekly.js UI */
+/* weekly.css - v3 body controls shared by the weekly page and the setup screen
+   (buttons, division control, action row) + the summary-screen submit button. */
 
-/* ── Weekly Challenge Card ──────────────────────────────────── */
+/* ── Buttons: 56px, --ui-r-outer, flat fill ─────────────────── */
+/* Primary = scarlet (one per screen). Secondary = --ui-sel fill. The fill is
+   the edge: no border. Icon strokes follow the 600 label weight (2). */
 
-.weekly-card {
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Standalone treatment when the card is the whole screen */
-.weekly-card-standalone {
-  box-shadow: var(--shadow-md);
-}
-
-/* Header strip */
-.weekly-card-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 18px 24px 0;
-  gap: 12px;
-}
-
-/* "WEEKLY CHALLENGE" badge — rotated scarlet stamp */
-.weekly-stamp {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--red);
-  background: transparent;
-  border: 1.5px solid var(--red);
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  display: inline-block;
-  justify-self: start;
-  line-height: 1.5;
-  white-space: nowrap;
-  transform: rotate(-1.5deg);
-}
-
-/* Countdown — ink chip, tabular numerals */
-.weekly-countdown {
-  font-family: var(--font-ui);
-  font-variant-numeric: tabular-nums;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--paper-deep);
-  border: 1.5px solid var(--ink);
-  padding: 4px 14px;
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-}
-
-/* ── Card Body ──────────────────────────────────────────────── */
-
-.weekly-card-body {
-  padding: 0 24px 22px;
-}
-
-.weekly-week-label {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--ink);
-  padding: 14px 0 4px;
-  display: block;
-}
-
-.weekly-division-label {
-  font-family: var(--font-ui);
-  font-size: 12.5px;
-  color: var(--ink-faint);
-  margin: 8px 0 8px;
-}
-
-/* Division toggle — segmented ink-bordered control */
-.weekly-ruleset-toggle {
+.wk-btn {
   display: inline-flex;
-  gap: 0;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-sm);
-  padding: 0;
-  margin-bottom: 14px;
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 3.5rem;
+  padding: 0.375rem 1.125rem;
+  border: 0;
+  border-radius: var(--ui-r-outer);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  --ic-sw: 2;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.wk-btn:active:not(:disabled) { transform: translateY(1px); }
+.wk-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+.wk-btn--primary {
+  background: var(--red);
+  color: var(--paper-card);
+}
+.wk-btn--primary:hover:not(:disabled) { background: var(--red-deep); }
+
+.wk-btn--secondary {
+  background: var(--ui-sel);
+  color: var(--ink);
+}
+.wk-btn--secondary:hover:not(:disabled) { background: var(--ui-edge); }
+
+.wk-btn:disabled {
+  background: var(--ui-edge-strong);
+  color: var(--ink-soft);
+  cursor: not-allowed;
+}
+
+/* ── Action row: division, one status sentence, the button ──── */
+
+.wk-act {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 1.25rem 0;
+}
+
+/* Segmented track: --ui-sel track, 4px pad, segments at --ui-r-inner,
+   selected segment on --ui-sheet. 44px segments. */
+.wk-seg {
+  display: inline-flex;
+  gap: var(--ui-pad);
+  padding: var(--ui-pad);
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-outer);
 }
 
 .weekly-rule-btn {
-  padding: 9px 20px;
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  border: none;
-  background: transparent;
-  color: var(--ink-soft);
-  cursor: pointer;
-  border-radius: 0;
-  transition: background 140ms ease, color 140ms ease;
-}
-
-.weekly-rule-btn.active {
-  background: var(--ink);
-  color: var(--board-text);
-}
-
-.weekly-rule-btn:hover:not(.active) {
-  background: var(--paper-deep);
-  color: var(--ink);
-}
-
-.weekly-rule-btn:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: -2px;
-}
-
-/* ── Card Meta ──────────────────────────────────────────────── */
-
-.weekly-card-meta {
+  min-height: var(--ui-tap);
+  padding: 0 1rem;
   font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
-  padding: 0 0 12px;
-}
-
-/* ── User Status Area ───────────────────────────────────────── */
-
-.weekly-user-status {
-  padding: 4px 0 12px;
-}
-
-/* Score display when user has submitted */
-.weekly-score-display {
-  font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-  font-size: 40px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.weekly-score-label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-}
-
-.weekly-rank {
-  font-family: var(--font-ui);
-  font-size: 13.5px;
+  font-size: 0.9375rem;
+  font-weight: 500;
   color: var(--ink-soft);
-  margin-top: 5px;
-}
-
-.weekly-rank strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-/* Status stamp variants */
-.weekly-status-confirmed {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--poster-cream);
-  background: var(--red);
-  border: 1.5px solid var(--ink);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  display: inline-block;
-}
-
-.weekly-status-pending {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--ink);
-  background: transparent;
-  border: 1.5px solid var(--ink);
-  padding: 4px 12px;
-  border-radius: var(--radius-sm);
-  display: inline-block;
-}
-
-/* ── Card Actions ───────────────────────────────────────────── */
-
-.weekly-card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 4px 0 6px;
-}
-
-/* ── Action Buttons inside Weekly Card ──────────────────────── */
-
-.btn-weekly-primary {
-  background: var(--red);
-  color: var(--poster-cream);
-  border: var(--border-ink);
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  padding: 13px 26px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease, transform 140ms ease;
-  min-height: 44px;
-}
-
-.btn-weekly-primary:hover {
-  background: var(--red-deep);
-}
-
-.btn-weekly-primary:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-.btn-weekly-primary:active {
-  transform: translateY(1px);
-}
-
-.btn-weekly-secondary {
-  background: var(--paper-card);
-  color: var(--ink);
-  border: var(--border-ink);
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  padding: 12px 24px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease, color 140ms ease;
-  min-height: 44px;
-}
-
-.btn-weekly-secondary:hover {
-  background: var(--ink);
-  color: var(--board-text);
-}
-
-.btn-weekly-secondary:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-.btn-weekly-secondary:active {
-  opacity: 0.9;
-}
-
-/* Leaderboard link row at the bottom of the card */
-.weekly-leaderboard-link {
-  padding: 10px 0 0;
-  border-top: 1px dashed var(--line);
-  margin-top: 6px;
-}
-
-.weekly-lb-link-btn {
   background: none;
-  border: none;
-  color: var(--ink-soft);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  font-weight: 600;
+  border: 0;
+  border-radius: var(--ui-r-inner);
   cursor: pointer;
-  padding: 6px 0;
-  transition: color 120ms ease;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
-.weekly-lb-link-btn:hover { color: var(--red); }
+.weekly-rule-btn:hover:not(.active) { background: var(--ui-edge); color: var(--ink); }
+.weekly-rule-btn.active,
+.weekly-rule-btn.active:hover { background: var(--ui-sheet); color: var(--ink); font-weight: 600; }
+.weekly-rule-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+.wk-status {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.wk-actions { margin-left: auto; display: flex; gap: 0.75rem; }
+.wk-actions[hidden], .wk-status[hidden] { display: none; }
+
+@media (max-width: 719px) {
+  .wk-act { flex-direction: column; align-items: stretch; }
+  .wk-seg { display: flex; }
+  .weekly-rule-btn { flex: 1 1 0; }
+  .wk-status { flex: 0 0 auto; }
+  .wk-actions { margin-left: 0; flex-direction: column; }
+  .wk-actions .wk-btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-btn, .weekly-rule-btn, .weekly-submit-btn { transition: none; }
+  .wk-btn:active:not(:disabled), .weekly-submit-btn:active { transform: none; }
+}
 
 /* ── Weekly Submit Button (on summary screen) ───────────────── */
+/* Ink fill: the scarlet primary on that screen is New session. */
 
 .weekly-submit-btn {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  padding: 13px 26px;
-  background: var(--board-bg);
-  color: var(--board-text);
-  border: var(--border-ink);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  line-height: 1.2;
-  border-radius: var(--radius-sm);
-  transition: background 140ms ease;
+  background: var(--ink);
+  color: var(--on-ink);
 }
 
-.weekly-submit-btn:hover {
-  background: #3A342A;
-}
-
-.weekly-submit-btn:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
-
-.weekly-submit-btn:active {
-  opacity: 0.9;
+.weekly-submit-btn:hover:not(:disabled) {
+  background: var(--ink-soft);
 }
 
 .weekly-submit-btn:disabled {
@@ -339,8 +125,8 @@
 }
 
 .weekly-submit-btn.weekly-submit-success {
-  background: var(--red);
-  color: var(--poster-cream);
+  background: var(--ui-ok);
+  color: var(--paper-card);
 }
 
 .weekly-submit-btn.hidden {

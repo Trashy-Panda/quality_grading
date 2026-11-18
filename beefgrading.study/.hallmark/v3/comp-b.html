@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en" data-ground="bone">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Direction B, Path | beefgrading.study v3 comp</title>
+<script>
+/* Ground is set before first paint: ?ground= wins, then the remembered choice. */
+(function () {
+  var g = null;
+  try { g = new URLSearchParams(location.search).get('ground'); } catch (e) {}
+  if (g !== 'bone' && g !== 'white') { try { g = localStorage.getItem('v3-ground'); } catch (e) { g = null; } }
+  if (g === 'bone' || g === 'white') document.documentElement.setAttribute('data-ground', g);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Tokens: values copied from style.css :root ───────────────────────── */
+:root {
+  --paper:      oklch(96% 0.011 85);
+  --paper-deep: oklch(92% 0.016 85);
+  --paper-card: oklch(99.5% 0.005 85);
+  --line:       oklch(88% 0.013 85);
+  --ink:        oklch(18% 0.006 60);
+  --ink-soft:   oklch(34% 0.01 60);
+  --ink-faint:  oklch(44% 0.012 60);
+  --red:        oklch(52% 0.2 22);
+  --red-deep:   oklch(44% 0.18 22);
+  --red-wash:   oklch(94% 0.03 22);
+  --color-green: oklch(48% 0.11 150);
+  --lab-near:   oklch(80% 0.1 85);
+  --band-bg:    oklch(18% 0.006 60);
+  --band-text:  oklch(96% 0.011 85);
+  --band-dim:   oklch(72% 0.012 85);
+  --font-display: 'Red Hat Display', 'Red Hat Text', ui-sans-serif, system-ui, sans-serif;
+  --font-ui:      'Red Hat Text', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-mono:    'Red Hat Mono', ui-monospace, 'Cascadia Mono', Menlo, monospace;
+  --track-display: -0.03em;
+  --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-fast:   140ms;
+  --z-bar:      100;
+  --z-switch:   200;
+
+  /* ── --ui-* tokens for the v3 comps ─────────────────────────────────── */
+  --ui-ground:      var(--paper);                         /* ground, changes with data-ground */
+  --ui-sunk:        var(--paper-deep);                    /* recessed track fill, changes with data-ground */
+  --ui-sunk-2:      oklch(88% 0.02 85);
+  --ui-edge:        oklch(18% 0.006 60 / 0.12);           /* alpha ink hairline */
+  --ui-edge-strong: oklch(18% 0.006 60 / 0.3);            /* stronger step, section rules, route line */
+  --ui-node:        oklch(18% 0.006 60 / 0.58);           /* hollow node outline, 3:1 on both grounds */
+  --ui-warn-fill:   oklch(84% 0.13 85);
+  --ui-warn-ink:    oklch(38% 0.09 70);
+  --ui-scrim:       oklch(18% 0.006 60 / 0.42);
+  --ui-on-photo:    oklch(98% 0.006 85);
+  /* concentric radii: inner = outer minus the gap between them */
+  --ui-r-outer: 16px;
+  --ui-pad:     4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  --ui-r-round: 50%;
+  --ui-r-pill:  999px;
+  --ui-r-btn:   14px;
+  --ui-r-sq:    3px;
+  --ui-tap:     44px;
+}
+:root[data-ground="white"] {
+  --ui-ground: oklch(99.2% 0.003 85);
+  --ui-sunk:   oklch(95.4% 0.005 85);
+  --ui-sunk-2: oklch(91.5% 0.007 85);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--ui-ground); color: var(--ink);
+  font: 400 16px/1.45 var(--font-ui); overflow-x: hidden;
+}
+h1, h2, h3, p, ol, ul, dl, dd { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+img, svg { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ic { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ic--400 { stroke-width: 1.5; }
+.ic--500 { stroke-width: 1.75; }
+
+/* ── Comp chrome (not part of the app) ────────────────────────────────── */
+.bar { padding: 16px 16px 18px; padding-right: 172px; background: var(--ui-ground); }
+.bar-t { font: 700 20px/1.1 var(--font-display); letter-spacing: var(--track-display); }
+.bar-d { margin-top: 6px; font-size: 14px; color: var(--ink-soft); max-width: 60ch; }
+.sw {
+  --ui-r-outer: 16px; --ui-pad: 4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  position: fixed; top: 8px; right: 8px; z-index: var(--z-switch);
+  display: flex; padding: var(--ui-pad); background: var(--ui-sunk); border-radius: var(--ui-r-outer);
+}
+.sw button {
+  min-height: var(--ui-tap); min-width: 64px; padding: 0 12px; border: 0; background: transparent;
+  border-radius: var(--ui-r-inner); font: 600 14px var(--font-ui); color: var(--ink-soft);
+}
+.sw button[aria-pressed="true"] { background: var(--ink); color: var(--paper-card); }
+
+.scr { border-top: 2px solid var(--ink); }
+.cap { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 12px 16px; color: var(--ink-soft); font-size: 14px; }
+.cap-n { font: 500 13px var(--font-mono); color: var(--ink); }
+.cap-t { font-weight: 600; color: var(--ink); }
+.cap-d { flex: 1 1 260px; }
+.phone { max-width: 430px; margin: 0 auto; background: var(--ui-ground); }
+@media (min-width: 600px) { .phone { border-inline: 1px solid var(--ui-edge); } }
+
+/* ── Shared app pieces ────────────────────────────────────────────────── */
+.appbar { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 16px 0; }
+.appname { font: 700 18px var(--font-display); letter-spacing: var(--track-display); }
+.appsub { font-size: 14px; color: var(--ink-soft); }
+
+/* stage path: the four steps are one line */
+.stage { padding: 4px 8px 0; }
+.stage ol { display: grid; grid-template-columns: repeat(4, 1fr); }
+.stage li { position: relative; }
+.stage li::before { content: ""; position: absolute; top: 19px; left: 0; right: 0; height: 3px; background: var(--ui-edge-strong); }
+.stage li:first-child::before { left: 50%; }
+.stage li:last-child::before { right: 50%; }
+.stage li[data-s="done"]::before { background: var(--ink); }
+.stage li[data-s="here"]::before { background: linear-gradient(90deg in oklch, var(--ink) 50%, var(--ui-edge-strong) 50%); }
+.stage a {
+  position: relative; display: block; min-height: 58px; padding-top: 34px; text-align: center; text-decoration: none;
+  font: 600 14px var(--font-ui); color: var(--ink-soft);
+}
+.stage a::before {
+  content: ""; position: absolute; top: 20px; left: 50%; width: 14px; height: 14px; transform: translate(-50%, -50%);
+  border-radius: var(--ui-r-round); background: var(--ui-ground); border: 2px solid var(--ui-node);
+}
+.stage li[data-s="done"] a { color: var(--ink); }
+.stage li[data-s="done"] a::before { background: var(--ink); border-color: var(--ink); }
+.stage li[data-s="here"] a { color: var(--ink); font-weight: 700; }
+.stage li[data-s="here"] a::before { background: var(--ink); border-color: var(--ink); outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.head { padding: 20px 16px 8px; }
+.head h2 { font: 700 32px/1.05 var(--font-display); letter-spacing: var(--track-display); }
+.head p { margin-top: 6px; color: var(--ink-soft); max-width: 44ch; }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px;
+  border: 0; border-radius: var(--ui-r-btn); background: var(--ui-sunk); color: var(--ink);
+  font: 600 16px var(--font-ui); text-decoration: none; white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.btn:hover { background: var(--ui-sunk-2); }
+.btn--ink { background: var(--ink); color: var(--paper-card); }
+.btn--ink:hover { background: var(--ink-soft); }
+.btn--ghost { background: transparent; color: var(--ink-soft); padding: 0 12px; }
+.btn--ghost:hover { background: var(--ui-sunk); }
+.btn--sm { min-height: var(--ui-tap); padding: 0 14px; font-size: 15px; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* fields: recessed, no outline box */
+.fld { display: block; font-weight: 500; font-size: 14px; color: var(--ink-soft); }
+.fld input, .fld select, .num-in {
+  display: block; width: 100%; min-height: 48px; margin-top: 6px; padding: 0 14px; border: 0;
+  border-radius: var(--ui-r-btn); background: var(--ui-sunk); color: var(--ink); font: 500 17px var(--font-ui);
+}
+.fld input::placeholder { color: var(--ink-faint); }
+
+/* segmented track: one nest, thumb radius = track radius minus the gap */
+.track {
+  --ui-r-outer: 14px; --ui-pad: 4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); padding: var(--ui-pad);
+  background: var(--ui-sunk); border-radius: var(--ui-r-outer);
+}
+.track button {
+  position: relative; min-height: var(--ui-tap); padding: 0 2px; border: 0; background: transparent;
+  border-radius: var(--ui-r-inner); font: 600 15px var(--font-ui); color: var(--ink-soft);
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.track button:hover { background: var(--ui-sunk-2); }
+.track button[aria-pressed="true"] { background: var(--ink); color: var(--paper-card); }
+.track button[data-prev]::after {
+  content: ""; position: absolute; left: 50%; bottom: 5px; width: 5px; height: 5px; transform: translateX(-50%);
+  border-radius: var(--ui-r-round); background: currentColor; opacity: 0.55;
+}
+.track--10 button { font-size: 14px; letter-spacing: -0.02em; }
+
+/* docked bar: the primary action plus its state */
+.dock {
+  position: sticky; bottom: 0; z-index: var(--z-bar); display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 24px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--ui-ground);
+  border-top: 1px solid var(--ui-edge-strong);
+}
+.dock-s { font-size: 14px; color: var(--ink-soft); line-height: 1.3; }
+.dock-s b { display: block; font: 700 17px var(--font-display); color: var(--ink); letter-spacing: -0.02em; }
+
+/* ── The path (trail) ─────────────────────────────────────────────────── */
+.trail { position: relative; margin-top: 10px; padding: 38px 8px 0; --n: 20; --i: 0; }
+.trail ol { display: flex; }
+.trail li { flex: 1 1 0; min-width: 0; }
+.tn { display: block; position: relative; width: 100%; height: var(--ui-tap); padding: 0; border: 0; background: transparent; }
+.tn::before { content: ""; position: absolute; top: 12.5px; left: 0; right: 0; height: 3px; background: var(--ui-edge-strong); }
+.trail li:first-child .tn::before { left: 50%; }
+.trail li:last-child .tn::before { right: 50%; }
+.trail--route li:first-child .tn::before { left: 0; }
+.tn::after {
+  content: ""; position: absolute; top: 14px; left: 50%; width: var(--dot, 12px); height: var(--dot, 12px);
+  transform: translate(-50%, -50%); border-radius: var(--ui-r-round); background: var(--ui-ground); border: 2px solid var(--ui-node);
+}
+.tl { position: absolute; top: 26px; left: -4px; right: -4px; text-align: center; font: 500 12px/1 var(--font-mono); color: var(--ink-soft); }
+.tn[data-s="done"]::before { background: var(--ink); }
+.tn[data-s="done"]::after { background: var(--ink); border-color: var(--ink); }
+.tn[data-s="here"]::before { background: linear-gradient(90deg in oklch, var(--ink) 50%, var(--ui-edge-strong) 50%); }
+.tn[data-s="here"]::after, .tn[data-s="sel"]::after {
+  --dot: 20px; background: var(--red); border-color: var(--red); outline: 2px solid var(--red); outline-offset: 3px;
+}
+.tn[data-s="sel"]::before { background: var(--ink); }
+.tn[data-s="ok"]::before { background: var(--ink); }
+.tn[data-s="ok"]::after { background: var(--ink); border-color: var(--ink); }
+.tn[data-s="off"]::before { background: var(--ink); }
+.tn[data-s="off"]::after { border: 3px solid var(--ink); background: var(--ui-ground); }
+.tn[data-s="flag"]::before, .tn[data-s="audit"]::before { background: var(--ink); }
+.tn[data-s="flag"]::after {
+  --dot: 15px; transform: translate(-50%, -50%) rotate(45deg); border-radius: var(--ui-r-sq);
+  background: var(--ui-warn-fill); border: 2px solid var(--ink);
+}
+.tn[data-s="audit"]::after { --dot: 14px; background: var(--ui-warn-fill); border: 2px solid var(--ink); }
+.tn[data-s="empty"]::before { background: var(--ui-edge); }
+.tn[data-s="empty"]::after { border-style: dashed; border-color: var(--ui-edge-strong); }
+.trail--flat .tn[data-s="todo"]::before { background: var(--ui-edge-strong); }
+.pin {
+  position: absolute; top: 0; left: clamp(40px, calc(var(--i) / var(--n) * 100%), calc(100% - 40px)); transform: translateX(-50%);
+  padding: 4px 12px; border-radius: var(--ui-r-pill); background: var(--red); color: var(--paper-card);
+  font: 600 13px/1.25 var(--font-ui); white-space: nowrap;
+}
+.pin::after {
+  content: ""; position: absolute; left: 50%; top: 100%; width: 12px; height: 7px; transform: translateX(-50%);
+  background: var(--red); clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.trail-cap { display: flex; justify-content: space-between; gap: 12px; padding: 0 16px; font-size: 14px; color: var(--ink-soft); }
+.trail-cap b { color: var(--ink); font-weight: 600; }
+
+/* ── Setup ────────────────────────────────────────────────────────────── */
+.su { max-width: 1180px; margin: 0 auto; padding: 8px 16px 40px; }
+.su-head { padding: 12px 0 8px; }
+.su-head h2 { font: 700 40px/1.02 var(--font-display); letter-spacing: var(--track-display); }
+.su-head p { margin-top: 8px; color: var(--ink-soft); max-width: 46ch; }
+.su-grid { display: grid; gap: 40px; margin-top: 24px; }
+.pan { padding-top: 14px; border-top: 2px solid var(--ink); }
+.pan-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.pan-h h2 { font: 700 26px/1.1 var(--font-display); letter-spacing: var(--track-display); }
+.pan-note { font-size: 14px; color: var(--ink-soft); }
+.kv { margin-top: 10px; }
+.kv > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: var(--ui-tap); border-bottom: 1px solid var(--ui-edge); }
+.kv dt { color: var(--ink-soft); font-size: 15px; }
+.kv dd { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.status { margin-top: 14px; font-weight: 500; }
+.run { display: flex; align-items: center; gap: 0; margin-top: 18px; }
+.go {
+  flex: none; width: 88px; height: 88px; padding: 0; border: 0; border-radius: var(--ui-r-round); background: var(--red); color: var(--paper-card);
+  font: 700 17px/1.1 var(--font-display); letter-spacing: -0.01em;
+}
+.go:hover { background: var(--red-deep); }
+.run .trail { flex: 1; margin-top: 0; padding: 0; min-width: 0; --dot: 14px; }
+.run .trail li:first-child .tn::before { left: 0; }
+.run .tn { height: 44px; }
+.run .tn::before { top: 20.5px; }
+.run .tn::after { top: 22px; }
+.run .tl { top: 34px; }
+.run .tn { margin-top: 0; }
+.run .trail ol { align-items: flex-start; }
+.run-cap { margin-top: 10px; font-size: 14px; color: var(--ink-soft); }
+.run--weekly { margin-top: 20px; }
+.run--weekly .trail { padding-left: 0; }
+.run--weekly .trail li:first-child .tn::before { left: 50%; }
+.sw-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--ui-tap); margin-top: 14px; cursor: pointer; }
+.sw-row input { position: absolute; opacity: 0; width: 44px; height: 44px; margin: 0; }
+.tg {
+  --ui-r-outer: 16px; --ui-pad: 3px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  position: relative; flex: none; width: 52px; height: 32px; padding: var(--ui-pad); border-radius: var(--ui-r-outer); background: var(--ui-sunk-2);
+}
+.tg::after { content: ""; display: block; width: 26px; height: 26px; border-radius: var(--ui-r-inner); background: var(--ui-ground); }
+.sw-row input:checked + .tg { background: var(--ink); }
+.sw-row input:checked + .tg::after { transform: translateX(20px); }
+.sw-row input:focus-visible + .tg { outline: 3px solid var(--ink); outline-offset: 2px; }
+.top3-h { margin-top: 22px; font: 700 17px var(--font-display); letter-spacing: -0.01em; }
+.top3 { margin-top: 4px; }
+.top3 li { display: flex; align-items: baseline; gap: 14px; min-height: var(--ui-tap); padding: 8px 0; border-bottom: 1px solid var(--ui-edge); }
+.top3-r { width: 28px; font: 700 20px var(--font-display); font-variant-numeric: tabular-nums; }
+.top3-n { flex: 1; font-weight: 500; }
+.top3-p { font-weight: 600; font-variant-numeric: tabular-nums; }
+.top3 li:first-child { border-bottom: 2px solid var(--ink); }
+.top3 li:first-child .top3-r { font-size: 28px; line-height: 1; }
+.top3 li:first-child .top3-n, .top3 li:first-child .top3-p { font-size: 18px; font-weight: 700; }
+.top3 li.top3-empty { display: block; padding: 12px 0; border-bottom: 1px solid var(--ui-edge); color: var(--ink-soft); }
+.pan .btn { margin-top: 18px; }
+.links { display: flex; flex-wrap: wrap; gap: 0 8px; margin-top: 28px; padding-top: 6px; border-top: 1px solid var(--ui-edge-strong); }
+.links a { display: inline-flex; align-items: center; min-height: var(--ui-tap); padding: 0 12px 0 0; font-weight: 500; color: var(--ink-soft); }
+@media (min-width: 900px) {
+  .su { padding: 24px 40px 64px; }
+  .su-head h2 { font-size: 64px; }
+  .su-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; margin-top: 36px; }
+  .go { width: 104px; height: 104px; font-size: 20px; }
+  .run .tn { height: 52px; }
+  .run .tn::before { top: 24.5px; }
+  .run .tn::after { top: 26px; }
+  .run .tl { top: 40px; }
+  .run .trail { --dot: 18px; }
+}
+
+/* ── Key entry ────────────────────────────────────────────────────────── */
+.setup-f { display: grid; gap: 14px; padding: 8px 16px 0; }
+.step { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.step .fld { flex: 1; }
+.step .fld .num-in { margin-top: 6px; text-align: center; font-weight: 700; font-size: 20px; }
+.step-b {
+  --ui-r-outer: 14px; flex: none; width: 48px; height: 48px; margin-top: 26px; padding: 0; border: 0; border-radius: var(--ui-r-outer);
+  background: var(--ui-sunk); display: grid; place-items: center;
+}
+.step-b:hover { background: var(--ui-sunk-2); }
+.keyh { display: flex; justify-content: space-between; align-items: baseline; padding: 24px 16px 0; }
+.keyh h3 { font: 700 20px var(--font-display); letter-spacing: -0.02em; }
+.keyh span { font-size: 14px; color: var(--ink-soft); }
+.rows { margin-top: 4px; padding: 0 16px; }
+.fl { border-top: 1px solid var(--ui-edge); }
+.fl-sum { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 8px 0; border: 0; background: transparent; text-align: left; }
+.nd {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--ui-r-round);
+  background: var(--ui-ground); border: 2px solid var(--ui-node); font: 700 15px var(--font-display); font-variant-numeric: tabular-nums;
+}
+.nd--done { background: var(--ink); border-color: var(--ink); color: var(--paper-card); }
+.nd--here { border: 3px solid var(--ink); }
+.sum { display: flex; flex: 1; flex-wrap: wrap; gap: 4px 12px; min-width: 0; }
+.v { display: flex; flex-direction: column; font-weight: 600; font-size: 15px; line-height: 1.2; }
+.v small { margin-top: 2px; font-weight: 400; font-size: 12px; color: var(--ink-soft); }
+.fl-muted { flex: 1; color: var(--ink-soft); }
+.fl--here { padding: 14px 0 6px; border-top: 2px solid var(--ink); }
+.fl-h { display: flex; align-items: center; gap: 12px; }
+.fl-h h4 { flex: 1; font: 700 22px var(--font-display); letter-spacing: -0.02em; margin: 0; }
+.fl-h span:last-child { font-size: 14px; color: var(--ink-soft); }
+.f { margin-top: 14px; }
+.f-l { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; font-size: 14px; font-weight: 600; }
+.f-l small { font-weight: 400; color: var(--ink-soft); font-size: 13px; }
+.f--in { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+.f--in .f-l { margin: 0; }
+.f--in .num-in { margin-top: 0; }
+.hint { margin-top: 12px; font-size: 13px; color: var(--ink-soft); }
+.hint i { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: var(--ui-r-round); background: var(--ink-soft); vertical-align: middle; opacity: 0.7; }
+
+/* ── Scan ─────────────────────────────────────────────────────────────── */
+.mount {
+  --ui-r-outer: 20px; --ui-pad: 4px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  position: relative; margin: 16px 16px 0; padding: var(--ui-pad); background: var(--ui-sunk); border-radius: var(--ui-r-outer);
+}
+.mount > svg { width: 100%; height: auto; border-radius: var(--ui-r-inner); background: var(--band-bg); }
+.vf-chip {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px;
+  border-radius: var(--ui-r-pill); background: var(--paper-card); font-size: 14px; font-weight: 600;
+}
+.vf-chip i { width: 10px; height: 10px; border-radius: var(--ui-r-round); background: var(--ink); }
+.stack { margin-top: 22px; }
+.stack-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 16px; }
+.stack-h h3 { font: 700 20px var(--font-display); letter-spacing: -0.02em; }
+.stack-h span { font-size: 14px; color: var(--ink-soft); }
+.strip { display: flex; gap: 10px; margin-top: 10px; padding: 4px 16px 6px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+.th {
+  --ui-r-outer: 14px; --ui-pad: 3px;
+  --ui-r-inner: max(2px, calc(var(--ui-r-outer) - var(--ui-pad)));
+  flex: none; width: 112px; padding: var(--ui-pad); border: 0; border-radius: var(--ui-r-outer); background: var(--ui-sunk); text-align: left; scroll-snap-align: start;
+}
+.th svg { width: 100%; height: auto; border-radius: var(--ui-r-inner); }
+.th b { display: block; margin: 6px 4px 0; font-size: 14px; }
+.th span { display: block; margin: 0 4px 6px; font-size: 13px; color: var(--ink-soft); line-height: 1.25; }
+.th[aria-current="true"] { outline: 3px solid var(--ink); outline-offset: 2px; }
+.sheet { padding: 18px 16px 0; }
+.sheet-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
+.sheet-h b { font-size: 16px; }
+.sheet-h span { font-size: 14px; color: var(--ink-soft); }
+.sheet .btns { margin-top: 12px; }
+.btn[disabled] { color: var(--ink-faint); cursor: not-allowed; }
+.btn[disabled]:hover { background: var(--ui-sunk); }
+
+/* ── Review ───────────────────────────────────────────────────────────── */
+.score-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 16px 0; }
+.score-line b { white-space: nowrap; font: 700 30px var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.score-line span { flex: 1 1 200px; color: var(--ink-soft); font-size: 14px; }
+.review-f { padding: 8px 16px 0; }
+.review-f .btns { margin-top: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 10px 16px 0; font-size: 13px; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; min-height: 24px; }
+.legend svg { width: 22px; height: 22px; }
+.hit {
+  position: absolute; width: var(--ui-tap); height: var(--ui-tap); transform: translate(-50%, -50%); padding: 0;
+  border: 0; border-radius: var(--ui-r-round); background: transparent;
+}
+.hit:hover { background: var(--ui-scrim); }
+.ph-k { fill: none; stroke: var(--ink); stroke-width: 3.5; }
+.ph-d { fill: var(--ink); }
+.ph-u { fill: none; stroke: var(--ui-warn-ink); stroke-width: 3.5; stroke-dasharray: 6 5; }
+.ph-p { fill: var(--ui-warn-fill); stroke: var(--ink); stroke-width: 1.5; }
+.ph-t { font: 600 14px var(--font-ui); fill: var(--ink); text-anchor: middle; }
+.rv-row { margin: 22px 16px 0; padding-top: 14px; border-top: 2px solid var(--ink); }
+.tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: var(--ui-r-pill); background: var(--ui-warn-fill); color: var(--ink); font: 600 13px var(--font-ui); }
+.fl-h .pts { font: 700 17px var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); }
+.fields { margin-top: 10px; }
+.fields > button {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 52px; padding: 6px 0;
+  border: 0; border-bottom: 1px solid var(--ui-edge); background: transparent; text-align: left;
+}
+.fields .fn { width: 84px; flex: none; font-size: 14px; color: var(--ink-soft); }
+.fields .fv { flex: 1; font-weight: 600; }
+.fields .fk { font-size: 13px; color: var(--ink-soft); text-align: right; }
+.fields .fv--u { display: inline-flex; align-items: center; gap: 8px; }
+.fields .fv--u i { width: 12px; height: 12px; transform: rotate(45deg); border: 2px solid var(--ink); border-radius: var(--ui-r-sq); background: var(--ui-warn-fill); }
+.fields > button[aria-expanded="true"] { background: var(--ui-sunk); padding-inline: 10px; border-radius: var(--ui-r-btn) var(--ui-r-btn) 0 0; }
+.editor { margin-top: 0; padding: 12px 10px 12px; background: var(--ui-sunk); border-end-start-radius: var(--ui-r-btn); border-end-end-radius: var(--ui-r-btn); }
+.editor .f-l { font-weight: 500; color: var(--ink-soft); }
+.editor .track { background: var(--ui-ground); }
+.editor .track button:hover { background: var(--ui-sunk); }
+.editor .btns { margin-top: 10px; }
+.editor .btn { background: var(--ui-ground); }
+
+/* ── Results ──────────────────────────────────────────────────────────── */
+.big { padding: 18px 16px 0; }
+.big-n { display: flex; align-items: baseline; gap: 10px; }
+.big-n b { font: 700 clamp(88px, 28vw, 120px)/0.9 var(--font-display); letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+.big-n span { font: 600 28px var(--font-display); color: var(--ink-soft); }
+.big p { margin-top: 6px; font-size: 18px; font-weight: 500; }
+.big small { display: block; margin-top: 2px; font-size: 14px; color: var(--ink-soft); }
+.notes { padding: 6px 16px 0; }
+.notes li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--ui-edge); font-size: 15px; }
+.notes i { flex: none; width: 12px; height: 12px; margin-top: 6px; transform: rotate(45deg); border: 2px solid var(--ink); border-radius: var(--ui-r-sq); background: var(--ui-warn-fill); }
+.notes i.au { transform: none; border-radius: var(--ui-r-round); }
+.pick { margin: 14px 16px 0; padding: 12px 0 0; border-top: 2px solid var(--ink); }
+.pick-h { display: flex; justify-content: space-between; align-items: baseline; }
+.pick-h h3 { font: 700 20px var(--font-display); letter-spacing: -0.02em; }
+.pick-h b { font: 700 20px var(--font-display); font-variant-numeric: tabular-nums; }
+.pick dl { margin-top: 6px; }
+.pick dl > div { display: flex; justify-content: space-between; min-height: 40px; align-items: center; border-bottom: 1px solid var(--ui-edge); font-size: 15px; }
+.pick dt { color: var(--ink-soft); }
+.pick dd { font-weight: 600; font-variant-numeric: tabular-nums; }
+.all { margin: 26px 16px 0; }
+.all > h3 { padding-bottom: 8px; border-bottom: 2px solid var(--ink); font: 700 20px var(--font-display); letter-spacing: -0.02em; }
+.sheetrow {
+  display: block; width: 100%; min-height: 68px; padding: 10px 0 8px; border: 0; border-bottom: 1px solid var(--ui-edge); background: transparent; text-align: left;
+}
+.sheetrow[aria-current="true"] { background: var(--ui-sunk); padding-inline: 10px; border-radius: var(--ui-r-btn); border-bottom-color: transparent; }
+.sheetrow-t { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.sheetrow-t b { font-size: 17px; }
+.sheetrow-t span { font: 700 18px var(--font-display); font-variant-numeric: tabular-nums; }
+.sheetrow-t small { font-weight: 400; font-size: 14px; color: var(--ink-soft); }
+.sheetrow-m { display: flex; justify-content: space-between; gap: 10px; margin-top: 2px; font-size: 13px; color: var(--ink-soft); }
+.mini { display: flex; gap: 4px; margin-top: 8px; }
+.mini i { flex: 1; max-width: 12px; height: 8px; border-radius: var(--ui-r-pill); background: var(--ink); }
+.mini i.o { background: var(--ui-ground); border: 2px solid var(--ink); }
+.mini i.n { background: var(--ui-edge-strong); }
+.sheetrow[aria-current="true"] .mini i.o { background: var(--ui-sunk); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5h3.2L8.8 6h6.4l1.6 2.5H20V19H4z"/><circle cx="12" cy="13.2" r="3.6"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+</svg>
+
+<div class="sw" role="group" aria-label="Ground">
+  <button type="button" data-g="bone" aria-pressed="true">Bone</button>
+  <button type="button" data-g="white" aria-pressed="false">White</button>
+</div>
+
+<header class="bar">
+  <h1 class="bar-t">Direction B, Path</h1>
+  <p class="bar-d">Every session is one line of nodes. Drill questions, or fleeces 1 to 20, fill in as you go, with a marker where you are. Scarlet is used once per screen, on that marker.</p>
+</header>
+
+<!-- ================= 1. SETUP, WEEKLY NOT POSTED ================= -->
+<section class="scr" id="scr-setup-unposted" aria-label="Setup, weekly not posted">
+  <div class="cap"><span class="cap-n">01</span><span class="cap-t">Setup, weekly not posted</span><span class="cap-d">The drill is a route you start at the first node. The week has a route too, drawn empty until carcasses are posted.</span></div>
+  <div class="su">
+    <header class="su-head">
+      <h2>Start a session</h2>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="su-grid">
+      <section class="pan" aria-labelledby="u-pr">
+        <div class="pan-h"><h2 id="u-pr">Practice</h2></div>
+        <dl class="kv">
+          <div><dt>Session</dt><dd>10 community carcasses</dd></div>
+          <div><dt>Scoring</dt><dd>10 pts each</dd></div>
+        </dl>
+        <div class="run">
+          <button type="button" class="go" aria-label="Start drill, 10 carcasses">Start<br>drill</button>
+          <div class="trail trail--route" style="--n:10">
+            <ol>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"><b class="tl">10</b></span></li>
+            </ol>
+          </div>
+        </div>
+        <label class="sw-row"><span>Use my personal images instead</span><input type="checkbox"><span class="tg" aria-hidden="true"></span></label>
+      </section>
+
+      <section class="pan" aria-labelledby="u-wk">
+        <div class="pan-h"><h2 id="u-wk">This week</h2><span class="pan-note">Nov 16 to Nov 22</span></div>
+        <dl class="kv">
+          <div><dt>Closes in</dt><dd>4d 07h 12m</dd></div>
+          <div><dt>Graders</dt><dd>-</dd></div>
+        </dl>
+        <p class="status" aria-live="polite">This week&rsquo;s carcasses aren&rsquo;t posted yet.</p>
+        <div class="run run--weekly">
+          <div class="trail trail--route" style="--n:10">
+            <ol>
+              <li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li>
+              <li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li><li><span class="tn" data-s="empty"></span></li>
+            </ol>
+          </div>
+        </div>
+        <h3 class="top3-h">Top 3 so far, high school</h3>
+        <ol class="top3"><li class="top3-empty">No scores yet this week.</li></ol>
+        <a class="btn" href="#scr-setup-posted">Open the weekly challenge</a>
+      </section>
+    </div>
+    <nav class="links" aria-label="More">
+      <a href="#scr-setup-unposted">Manage photos</a><a href="#scr-setup-unposted">Help grade practice images</a><a href="#scr-setup-unposted">Field guide</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ================= 2. SETUP, WEEKLY POSTED ================= -->
+<section class="scr" id="scr-setup-posted" aria-label="Setup, weekly posted">
+  <div class="cap"><span class="cap-n">02</span><span class="cap-t">Setup, weekly posted</span><span class="cap-d">Once the deck is posted the week&rsquo;s route fills with solid nodes, and the top three stand on the ground with the leader set heavier.</span></div>
+  <div class="su">
+    <header class="su-head">
+      <h2>Start a session</h2>
+      <p>Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+    </header>
+    <div class="su-grid">
+      <section class="pan" aria-labelledby="p-pr">
+        <div class="pan-h"><h2 id="p-pr">Practice</h2></div>
+        <dl class="kv">
+          <div><dt>Session</dt><dd>10 community carcasses</dd></div>
+          <div><dt>Scoring</dt><dd>10 pts each</dd></div>
+        </dl>
+        <div class="run">
+          <button type="button" class="go" aria-label="Start drill, 10 carcasses">Start<br>drill</button>
+          <div class="trail trail--route" style="--n:10">
+            <ol>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"><b class="tl">10</b></span></li>
+            </ol>
+          </div>
+        </div>
+        <label class="sw-row"><span>Use my personal images instead</span><input type="checkbox"><span class="tg" aria-hidden="true"></span></label>
+      </section>
+
+      <section class="pan" aria-labelledby="p-wk">
+        <div class="pan-h"><h2 id="p-wk">This week</h2><span class="pan-note">Nov 16 to Nov 22</span></div>
+        <dl class="kv">
+          <div><dt>Closes in</dt><dd>4d 07h 12m</dd></div>
+          <div><dt>Graders</dt><dd>23</dd></div>
+        </dl>
+        <p class="status" aria-live="polite">You haven&rsquo;t taken this week&rsquo;s challenge yet.</p>
+        <div class="run run--weekly">
+          <div class="trail trail--route" style="--n:10">
+            <ol>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li>
+              <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"><b class="tl">10</b></span></li>
+            </ol>
+          </div>
+        </div>
+        <h3 class="top3-h">Top 3 so far, high school</h3>
+        <ol class="top3">
+          <li><span class="top3-r">1</span><span class="top3-n">Maddie R.</span><span class="top3-p">94%</span></li>
+          <li><span class="top3-r">2</span><span class="top3-n">Cole T.</span><span class="top3-p">91%</span></li>
+          <li><span class="top3-r">3</span><span class="top3-n">Ava S.</span><span class="top3-p">88%</span></li>
+        </ol>
+        <a class="btn btn--ink" href="#scr-setup-posted">Open the weekly challenge</a>
+      </section>
+    </div>
+    <nav class="links" aria-label="More">
+      <a href="#scr-setup-posted">Manage photos</a><a href="#scr-setup-posted">Help grade practice images</a><a href="#scr-setup-posted">Field guide</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ================= 3. KEY ENTRY ================= -->
+<section class="scr" id="scr-key" aria-label="Fleece key entry">
+  <div class="cap"><span class="cap-n">03</span><span class="cap-t">Key entry</span><span class="cap-d">Fleeces 1 to 20 are the path. The number of fleeces sets its length. Each field shows the value above as a dot and the entry moves on by itself.</span></div>
+  <div class="phone">
+    <div class="appbar"><span class="appname">Fleece grader</span><span class="appsub">Spring practice</span></div>
+    <nav class="stage" aria-label="Steps"><ol>
+      <li data-s="here"><a href="#scr-key" aria-current="step">Session</a></li>
+      <li data-s="todo"><a href="#scr-scan">Scan</a></li>
+      <li data-s="todo"><a href="#scr-review">Review</a></li>
+      <li data-s="todo"><a href="#scr-results">Results</a></li>
+    </ol></nav>
+    <div class="head">
+      <h2>Session</h2>
+      <p>Set the official key. Only fleeces with a key are graded.</p>
+    </div>
+    <div class="setup-f">
+      <label class="fld">Practice name<input type="text" value="Spring practice" autocomplete="off" placeholder="e.g. Spring practice"></label>
+      <div class="step">
+        <button type="button" class="step-b" aria-label="Fewer fleeces"><svg class="ic ic--500" aria-hidden="true"><use href="#i-minus"/></svg></button>
+        <label class="fld">Number of fleeces<input class="num-in" type="number" inputmode="numeric" min="1" max="20" value="20"></label>
+        <button type="button" class="step-b" aria-label="More fleeces"><svg class="ic ic--500" aria-hidden="true"><use href="#i-plus"/></svg></button>
+      </div>
+      <div class="btns">
+        <button type="button" class="btn btn--sm">Scan official key sheet</button>
+        <button type="button" class="btn btn--sm btn--ghost">Clear key</button>
+      </div>
+    </div>
+
+    <div class="keyh"><h3>Official key</h3><span>7 of 20 keyed</span></div>
+    <div class="trail" style="--n:20;--i:7.5">
+      <span class="pin">Fleece 8</span>
+      <ol>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 1, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 2, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 3, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 4, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 5, keyed"><b class="tl">5</b></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 6, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="done" aria-label="Fleece 7, keyed"></button></li>
+        <li><button type="button" class="tn" data-s="here" aria-label="Fleece 8, you are here" aria-current="step"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 9"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 10"><b class="tl">10</b></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 11"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 12"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 13"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 14"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 15"><b class="tl">15</b></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 16"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 17"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 18"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 19"></button></li>
+        <li><button type="button" class="tn" data-s="todo" aria-label="Fleece 20"><b class="tl">20</b></button></li>
+      </ol>
+    </div>
+
+    <ol class="rows">
+      <li class="fl">
+        <button type="button" class="fl-sum" aria-label="Edit fleece 7">
+          <span class="nd nd--done">7</span>
+          <span class="sum">
+            <span class="v">64s<small>Grade</small></span><span class="v">Staple<small>Length</small></span><span class="v">18<small>Yield</small></span><span class="v">Good<small>Purity</small></span><span class="v">Avg<small>Character</small></span>
+          </span>
+        </button>
+      </li>
+      <li class="fl fl--here" aria-current="step">
+        <div class="fl-h"><span class="nd nd--here">8</span><h4>Fleece 8</h4><span>2 of 5 set</span></div>
+        <div class="f">
+          <div class="f-l">Grade<small>Dot is fleece 7</small></div>
+          <div class="track track--10" style="--cols:10" role="group" aria-label="Grade for fleece 8">
+            <button type="button" aria-pressed="false">70s</button>
+            <button type="button" aria-pressed="false" data-prev>64s</button>
+            <button type="button" aria-pressed="true">62s</button>
+            <button type="button" aria-pressed="false">60s</button>
+            <button type="button" aria-pressed="false">58s</button>
+            <button type="button" aria-pressed="false">56s</button>
+            <button type="button" aria-pressed="false">54s</button>
+            <button type="button" aria-pressed="false">50s</button>
+            <button type="button" aria-pressed="false">48s</button>
+            <button type="button" aria-pressed="false">46s</button>
+          </div>
+        </div>
+        <div class="f">
+          <div class="f-l">Length</div>
+          <div class="track" style="--cols:3" role="group" aria-label="Length for fleece 8">
+            <button type="button" aria-pressed="true" data-prev>Staple</button>
+            <button type="button" aria-pressed="false">French</button>
+            <button type="button" aria-pressed="false">Cloth</button>
+          </div>
+        </div>
+        <div class="f f--in">
+          <div><div class="f-l">Yield<small>Above 18</small></div>
+            <input class="num-in" type="number" inputmode="numeric" min="0" max="99" step="1" placeholder="0-99" aria-label="Yield for fleece 8"></div>
+          <div><div class="f-l">Purity</div>
+            <div class="track" style="--cols:2" role="group" aria-label="Purity for fleece 8">
+              <button type="button" aria-pressed="false" data-prev>Good</button>
+              <button type="button" aria-pressed="false">Poor</button>
+            </div></div>
+        </div>
+        <div class="f">
+          <div class="f-l">Character</div>
+          <div class="track" style="--cols:3" role="group" aria-label="Character for fleece 8">
+            <button type="button" aria-pressed="false">Good</button>
+            <button type="button" aria-pressed="false" data-prev>Avg</button>
+            <button type="button" aria-pressed="false">Poor</button>
+          </div>
+        </div>
+        <p class="hint"><i></i>Dot marks the value on fleece 7. Entry moves to fleece 9 after Character.</p>
+      </li>
+      <li class="fl">
+        <button type="button" class="fl-sum" aria-label="Edit fleece 9">
+          <span class="nd">9</span><span class="fl-muted">Fleece 9, not keyed yet</span>
+        </button>
+      </li>
+    </ol>
+
+    <div class="dock">
+      <div class="dock-s"><b>Fleece 8 of 20</b>7 keyed</div>
+      <a class="btn btn--ink" href="#scr-scan">Next: scan sheets <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. SCAN ================= -->
+<section class="scr" id="scr-scan" aria-label="Scan card">
+  <div class="cap"><span class="cap-n">04</span><span class="cap-t">Scan</span><span class="cap-d">Viewfinder with corner brackets on the table. The path below it is the sheet being read, one node per fleece row. Captured sheets stack in a strip.</span></div>
+  <div class="phone">
+    <div class="appbar"><span class="appname">Fleece grader</span><span class="appsub">Spring practice</span></div>
+    <nav class="stage" aria-label="Steps"><ol>
+      <li data-s="done"><a href="#scr-key">Session</a></li>
+      <li data-s="here"><a href="#scr-scan" aria-current="step">Scan</a></li>
+      <li data-s="todo"><a href="#scr-review">Review</a></li>
+      <li data-s="todo"><a href="#scr-results">Results</a></li>
+    </ol></nav>
+    <div class="head">
+      <h2>Scan sheets</h2>
+      <p>One photo per sheet, flat, with the whole table in frame.</p>
+    </div>
+
+    <div class="mount">
+      <svg viewBox="150 420 1100 1320" role="img" aria-label="Sheet in the viewfinder, rows 1 to 13 read, row 14 being read">
+        <image href="../../fleece/assets/blank-sheet.jpg" width="1447" height="2000"/>
+        <path fill-rule="evenodd" fill="oklch(18% 0.006 60 / 0.42)" d="M150 420H1250V1740H150Z M215 462H1148V1700H215Z"/>
+        <rect x="215" y="1392" width="933" height="308" fill="oklch(18% 0.006 60 / 0.4)"/>
+        <rect x="215" y="1389" width="933" height="5" fill="oklch(98% 0.006 85)"/>
+        <g fill="none" stroke="oklch(98% 0.006 85)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M215 540V462H293"/><path d="M1148 540V462H1070"/><path d="M215 1622V1700H293"/><path d="M1148 1622V1700H1070"/>
+        </g>
+      </svg>
+      <span class="vf-chip"><i></i>Sheet found, hold steady</span>
+    </div>
+
+    <div class="trail" style="--n:20;--i:13.5;padding-top:40px">
+      <span class="pin">Reading fleece 14</span>
+      <ol>
+        <li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"><b class="tl">5</b></span></li>
+        <li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"><b class="tl">10</b></span></li>
+        <li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="done"></span></li><li><span class="tn" data-s="here"></span></li><li><span class="tn" data-s="todo"><b class="tl">15</b></span></li>
+        <li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"></span></li><li><span class="tn" data-s="todo"><b class="tl">20</b></span></li>
+      </ol>
+    </div>
+
+    <div class="setup-f" style="padding-top:12px">
+      <div class="btns">
+        <button type="button" class="btn btn--ink" style="flex:1 1 0"><svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg>Take photo</button>
+        <button type="button" class="btn" style="flex:1 1 0"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Upload photos</button>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="stack-h"><h3>Scanned sheets</h3><span>3 sheets</span></div>
+      <div class="strip">
+        <button type="button" class="th" aria-label="Student 1, read, 0 to confirm">
+          <svg viewBox="190 440 990 1280" aria-hidden="true"><image href="../../fleece/assets/blank-sheet.jpg" width="1447" height="2000"/></svg>
+          <b>Student 1</b><span>0 to confirm</span>
+        </button>
+        <button type="button" class="th" aria-label="Student 2, read, 2 to confirm, 1 grading check">
+          <svg viewBox="190 440 990 1280" aria-hidden="true"><image href="../../fleece/assets/blank-sheet.jpg" width="1447" height="2000"/></svg>
+          <b>Student 2</b><span>2 to confirm</span>
+        </button>
+        <button type="button" class="th" aria-current="true" aria-label="Student 3, reading">
+          <svg viewBox="190 440 990 1280" aria-hidden="true"><image href="../../fleece/assets/blank-sheet.jpg" width="1447" height="2000"/></svg>
+          <b>Student 3</b><span>Reading</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-h"><b>IMG_2041.jpg</b><span>Reading fleece 14 of 20</span></div>
+      <label class="fld" style="margin-top:10px">Student name<input type="text" value="Student 3" autocomplete="off"></label>
+      <div class="btns">
+        <button type="button" class="btn btn--sm">Adjust corners</button>
+        <button type="button" class="btn btn--sm" disabled>Review</button>
+        <button type="button" class="btn btn--sm btn--ghost">Remove</button>
+      </div>
+    </div>
+
+    <div class="dock">
+      <div class="dock-s"><b>3 sheets</b>2 read, 1 reading</div>
+      <a class="btn btn--ink" href="#scr-review">Review <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. REVIEW ================= -->
+<section class="scr" id="scr-review" aria-label="Review one row">
+  <div class="cap"><span class="cap-n">05</span><span class="cap-t">Review, one row</span><span class="cap-d">The official key is drawn on the sheet photo: a ring on the key bubble, a dot on the student&rsquo;s read. Unsure and mismatched marks carry a tappable flag.</span></div>
+  <div class="phone">
+    <div class="appbar"><span class="appname">Fleece grader</span><span class="appsub">Spring practice</span></div>
+    <nav class="stage" aria-label="Steps"><ol>
+      <li data-s="done"><a href="#scr-key">Session</a></li>
+      <li data-s="done"><a href="#scr-scan">Scan</a></li>
+      <li data-s="here"><a href="#scr-review" aria-current="step">Review</a></li>
+      <li data-s="todo"><a href="#scr-results">Results</a></li>
+    </ol></nav>
+    <div class="head"><h2>Review</h2></div>
+    <div class="review-f">
+      <label class="fld">Sheet<select><option>Student 1</option><option selected>Student 2</option><option>Student 3</option></select></label>
+    </div>
+    <div class="score-line"><b>372 / 400</b><span>2 to confirm, 1 grading checks. Tap any field to correct it.</span></div>
+    <div class="review-f"><div class="btns">
+      <button type="button" class="btn btn--sm" aria-pressed="false">Show flagged only</button>
+      <a class="btn btn--sm" href="#scr-results">Results</a>
+    </div></div>
+
+    <div class="mount" style="margin-top:16px">
+      <svg viewBox="235 738 385 262" role="img" aria-label="Sheet photo, fleeces 2 to 6, with the official key drawn beside each read mark. Fleece 4 grade is unsure. Fleece 5 grade read 58s, key 56s.">
+        <image href="../../fleece/assets/blank-sheet.jpg" width="1447" height="2000"/>
+        <!-- fleece 2: read 64s, key 64s; length Staple -->
+        <circle class="ph-k" cx="316.7" cy="774.4" r="12"/><circle class="ph-d" cx="316.7" cy="774.4" r="6.5"/>
+        <circle class="ph-k" cx="556" cy="774.4" r="12"/><circle class="ph-d" cx="556" cy="774.4" r="6.5"/>
+        <!-- fleece 3: read 62s, key 62s; length French -->
+        <circle class="ph-k" cx="341.4" cy="823.8" r="12"/><circle class="ph-d" cx="341.4" cy="823.8" r="6.5"/>
+        <circle class="ph-k" cx="578" cy="823.8" r="12"/><circle class="ph-d" cx="578" cy="823.8" r="6.5"/>
+        <!-- fleece 4: two faint marks, key 60s -->
+        <circle class="ph-k" cx="366.1" cy="873.2" r="12"/>
+        <circle class="ph-u" cx="366.1" cy="873.2" r="16"/><circle class="ph-u" cx="390.8" cy="873.2" r="16"/>
+        <rect class="ph-p" x="341" y="835" width="75" height="22" rx="11"/><text class="ph-t" x="378.5" y="850.5">unsure</text>
+        <circle class="ph-k" cx="556" cy="873.2" r="12"/><circle class="ph-d" cx="556" cy="873.2" r="6.5"/>
+        <!-- fleece 5: read 58s, key 56s -->
+        <circle class="ph-d" cx="390.8" cy="922.6" r="6.5"/><circle class="ph-k" cx="415.5" cy="922.6" r="12"/>
+        <rect class="ph-p" x="376" y="885" width="79" height="22" rx="11"/><text class="ph-t" x="415.5" y="900.5">key 56s</text>
+        <circle class="ph-k" cx="556" cy="922.6" r="12"/><circle class="ph-d" cx="556" cy="922.6" r="6.5"/>
+        <!-- fleece 6: read 62s, key 62s; length Clothing -->
+        <circle class="ph-k" cx="341.4" cy="972" r="12"/><circle class="ph-d" cx="341.4" cy="972" r="6.5"/>
+        <circle class="ph-k" cx="600" cy="972" r="12"/><circle class="ph-d" cx="600" cy="972" r="6.5"/>
+      </svg>
+      <button type="button" class="hit" style="left:37.3%;top:41.2%" aria-label="Fleece 4 grade is unsure, tap to correct"></button>
+      <button type="button" class="hit" style="left:46.9%;top:61%" aria-label="Fleece 5 grade read 58s, key 56s, tap to correct"></button>
+    </div>
+    <div class="legend" aria-label="Legend">
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="ph-k" cx="12" cy="12" r="8"/></svg>Official key</span>
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="ph-d" cx="12" cy="12" r="5.5"/></svg>Student read</span>
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="ph-u" cx="12" cy="12" r="9"/></svg>Unsure</span>
+    </div>
+
+    <div class="trail trail--flat" style="--n:20;--i:3.5">
+      <span class="pin">Fleece 4</span>
+      <ol>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 1, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 2, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 3, ok"></button></li>
+        <li><button type="button" class="tn" data-s="here" aria-label="Fleece 4, confirm, open" aria-current="step"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 5, 2 points off"><b class="tl">5</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 6, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 7, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 8, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 9, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 10, ok"><b class="tl">10</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 11, ok"></button></li>
+        <li><button type="button" class="tn" data-s="flag" aria-label="Fleece 12, confirm"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 13, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 14, ok"></button></li>
+        <li><button type="button" class="tn" data-s="audit" aria-label="Fleece 15, grading check"><b class="tl">15</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 16, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 17, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 18, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 19, ok"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 20, ok"><b class="tl">20</b></button></li>
+      </ol>
+    </div>
+    <p class="legend" style="padding-top:2px"><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" transform="rotate(45 12 12)" fill="oklch(84% 0.13 85)" stroke="oklch(18% 0.006 60)" stroke-width="2"/></svg>Confirm</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="oklch(84% 0.13 85)" stroke="oklch(18% 0.006 60)" stroke-width="2"/></svg>Grading check</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="none" stroke="oklch(18% 0.006 60)" stroke-width="3"/></svg>Points off</span></p>
+
+    <article class="rv-row" id="fl-4">
+      <div class="fl-h"><span class="nd nd--here">4</span><h4>Fleece 4</h4><span class="tag">confirm</span><span class="pts">14/20</span></div>
+      <div class="fields">
+        <button type="button" aria-expanded="true"><span class="fn">Grade</span><span class="fv fv--u"><i></i>unsure</span><span class="fk">key 60s | -6</span></button>
+        <div class="editor">
+          <div class="f-l">Correct Grade for fleece 4</div>
+          <div class="track track--10" style="--cols:10" role="group" aria-label="Correct grade for fleece 4">
+            <button type="button" aria-pressed="false">70s</button><button type="button" aria-pressed="false">64s</button><button type="button" aria-pressed="false">62s</button><button type="button" aria-pressed="true">60s</button><button type="button" aria-pressed="false">58s</button>
+            <button type="button" aria-pressed="false">56s</button><button type="button" aria-pressed="false">54s</button><button type="button" aria-pressed="false">50s</button><button type="button" aria-pressed="false">48s</button><button type="button" aria-pressed="false">46s</button>
+          </div>
+          <div class="btns"><button type="button" class="btn btn--sm">Blank</button><button type="button" class="btn btn--sm">Use scan read</button><button type="button" class="btn btn--sm btn--ghost">Close</button></div>
+        </div>
+        <button type="button" aria-expanded="false"><span class="fn">Length</span><span class="fv">Staple</span><span class="fk">key Staple | 0</span></button>
+        <button type="button" aria-expanded="false"><span class="fn">Yield</span><span class="fv">18</span><span class="fk">key 18 | 0</span></button>
+        <button type="button" aria-expanded="false"><span class="fn">Purity</span><span class="fv">Good</span><span class="fk">key Good | 0</span></button>
+        <button type="button" aria-expanded="false"><span class="fn">Character</span><span class="fv">Avg</span><span class="fk">key Avg | 0</span></button>
+      </div>
+    </article>
+
+    <div class="dock">
+      <div class="dock-s"><b>2 to confirm</b>Fleece 4, then 12</div>
+      <a class="btn btn--ink" href="#scr-results">Results <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6. RESULTS ================= -->
+<section class="scr" id="scr-results" aria-label="Results summary">
+  <div class="cap"><span class="cap-n">06</span><span class="cap-t">Results</span><span class="cap-d">The finished path. One big number on the ground, hollow nodes where points were lost, and each student&rsquo;s own path in the list.</span></div>
+  <div class="phone">
+    <div class="appbar"><span class="appname">Fleece grader</span><span class="appsub">Spring practice</span></div>
+    <nav class="stage" aria-label="Steps"><ol>
+      <li data-s="done"><a href="#scr-key">Session</a></li>
+      <li data-s="done"><a href="#scr-scan">Scan</a></li>
+      <li data-s="done"><a href="#scr-review">Review</a></li>
+      <li data-s="here"><a href="#scr-results" aria-current="step">Results</a></li>
+    </ol></nav>
+    <div class="head">
+      <h2>Results</h2>
+      <p>Spring practice &middot; 20 fleeces keyed</p>
+    </div>
+    <div class="big">
+      <p style="margin:0;font-size:15px;color:var(--ink-soft)">Student 2</p>
+      <div class="big-n"><b>372</b><span>/ 400</span></div>
+      <p>28 points off</p>
+    </div>
+
+    <div class="trail trail--flat" style="--n:20;--i:4.5">
+      <span class="pin">Fleece 5</span>
+      <ol>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 1, full points"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 2, full points"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 3, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 4, 6 points off"><b class="tl">-6</b></button></li>
+        <li><button type="button" class="tn" data-s="sel" aria-label="Fleece 5, 2 points off, selected" aria-current="true"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 6, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 7, 2 points off"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 8, 4 points off"><b class="tl">-4</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 9, full points"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 10, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 11, 2 points off"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 12, 6 points off"><b class="tl">-6</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 13, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 14, 2 points off"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 15, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 16, 2 points off"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 17, full points"></button></li>
+        <li><button type="button" class="tn" data-s="off" aria-label="Fleece 18, 2 points off"><b class="tl">-2</b></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 19, full points"></button></li>
+        <li><button type="button" class="tn" data-s="ok" aria-label="Fleece 20, full points"></button></li>
+      </ol>
+    </div>
+
+    <div class="pick">
+      <div class="pick-h"><h3>Fleece 5</h3><b>18/20</b></div>
+      <dl>
+        <div><dt>Grade</dt><dd>-2</dd></div>
+        <div><dt>Length</dt><dd>0</dd></div>
+        <div><dt>Yield</dt><dd>0</dd></div>
+        <div><dt>Purity</dt><dd>0</dd></div>
+        <div><dt>Character</dt><dd>0</dd></div>
+      </dl>
+    </div>
+
+    <ul class="notes">
+      <li><i></i><span>2 answers still need confirming in Review. Unconfirmed reads count as blank.</span></li>
+      <li><i class="au"></i><span>1 fields where the grader slash disagrees with the key.</span></li>
+    </ul>
+
+    <div class="all">
+      <h3>All sheets</h3>
+      <button type="button" class="sheetrow">
+        <span class="sheetrow-t"><b>Student 1</b><span>384 / 400</span></span>
+        <span class="sheetrow-m"><span>16 off</span><span>none</span></span>
+        <span class="mini" aria-hidden="true"><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i><i></i><i></i><i class="o"></i><i></i><i></i></span>
+      </button>
+      <button type="button" class="sheetrow" aria-current="true">
+        <span class="sheetrow-t"><b>Student 2</b><span>372 / 400</span></span>
+        <span class="sheetrow-m"><span>28 off</span><span>2 confirm, 1 check</span></span>
+        <span class="mini" aria-hidden="true"><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i></i><i class="o"></i><i></i><i class="o"></i><i></i><i></i></span>
+      </button>
+      <button type="button" class="sheetrow">
+        <span class="sheetrow-t"><b>Student 3</b><span>Reading</span></span>
+        <span class="sheetrow-m"><span>Fleece 14 of 20</span><span></span></span>
+        <span class="mini" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="n"></i><i class="n"></i><i class="n"></i><i class="n"></i><i class="n"></i><i class="n"></i><i class="n"></i></span>
+      </button>
+    </div>
+
+    <div class="dock">
+      <div class="dock-s"><b>372 / 400</b>Student 2</div>
+      <a class="btn btn--ink" href="#scr-results"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Download CSV</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('.sw button');
+  function sync() {
+    var g = root.getAttribute('data-ground');
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-g') === g)); });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      root.setAttribute('data-ground', b.getAttribute('data-g'));
+      try { localStorage.setItem('v3-ground', b.getAttribute('data-g')); } catch (e) {}
+      sync();
+    });
+  });
+  sync();
+})();
+</script>
+</body>
+</html>

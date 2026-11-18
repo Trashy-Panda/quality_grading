@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>hand labels</title>
+<style>body{margin:0;background:#fff;font:14px monospace}canvas{display:block}</style>
+<script type="module">
+// Contact sheet of the handwriting crops, for labelling by eye. ?sheet=sheet02&part=0 (rows 1-10) | 1 (rows 11-20) &scale=2.
+// window.dump() -> { rows:[{tens,ones,margin}] } each {w,h,g:base64 grey} (used to export crops for training/offline tuning).
+import { readSheet } from '../omr.js';
+const q = new URLSearchParams(location.search), OV = q.get('ov') === '1', name = q.get('sheet') || 'sheet02', part = +(q.get('part') || 0), S = +(q.get('scale') || 2);
+const res = await readSheet('../assets/test/real/' + name + '.jpg', { hand: true });
+window.__res = res;
+if (!res.ok) { document.body.textContent = 'FAIL ' + res.error; throw new Error(res.error); }
+const rows = res.hand, r0 = part * 10, n = 10, GAP = 8, LBL = 44;
+const wT = Math.max(...rows.map(r => r.tens.canvas.width)), wO = Math.max(...rows.map(r => r.ones.canvas.width)), wM = Math.max(...rows.map(r => r.margin.canvas.width));
+const hR = Math.max(...rows.map(r => r.tens.canvas.height));
+const c = document.createElement('canvas'); c.width = Math.round(LBL + (wT + wO + wM) * S + GAP * 4); c.height = Math.round(n * (hR * S + GAP));
+const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.font = 'bold 22px monospace'; g.imageSmoothingEnabled = false;
+for (let i = 0; i < n; i++) {
+  const r = r0 + i, y = i * (hR * S + GAP); let x = LBL;
+  g.fillStyle = '#c00'; g.fillText(String(r + 1), 2, y + hR * S / 2 + 8);
+  for (const [k, w] of [['tens', wT], ['ones', wO], ['margin', wM]]) {
+    const cv = rows[r][k].canvas; g.drawImage(cv, x, y, cv.width * S, cv.height * S);
+    g.strokeStyle = '#08f'; g.strokeRect(x - 0.5, y - 0.5, cv.width * S + 1, cv.height * S + 1);
+    if (OV) { const R = rows[r][k]; g.strokeStyle = '#f0f'; R.vlines.forEach(vx => { g.beginPath(); g.moveTo(x + vx * S, y); g.lineTo(x + vx * S, y + cv.height * S); g.stroke(); }); g.strokeStyle = '#0a0'; R.masks.forEach(m => { g.beginPath(); g.ellipse(x + m.x * S, y + m.y * S, m.rx * S, m.ry * S, 0, 0, 7); g.stroke(); }); }
+    x += w * S + GAP;
+  }
+}
+document.body.prepend(c); document.title = name + ' p' + part;
+const b64 = (cv) => { const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data, o = new Uint8Array(cv.width * cv.height); for (let i = 0; i < o.length; i++) o[i] = Math.round(0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]); let s = ''; for (let i = 0; i < o.length; i += 8192) s += String.fromCharCode(...o.subarray(i, i + 8192)); return btoa(s); };
+window.dump = () => ({ name, rows: rows.map(r => Object.fromEntries(['tens', 'ones', 'margin'].map(k => [k, { w: r[k].canvas.width, h: r[k].canvas.height, rect: r[k].rect, vlines: r[k].vlines, masks: r[k].masks, g: b64(r[k].canvas) }]))) });
+document.body.insertAdjacentHTML('beforeend', '<p id="done">HANDLABELDONE</p>');
+</script>

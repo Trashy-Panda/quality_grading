@@ -17,7 +17,7 @@
   <meta name="twitter:image" content="https://beefgrading.study/og-card.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Yellowtail&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800;900&family=Red+Hat+Text:wght@400;500;600&family=Red+Hat+Mono:wght@400;500&family=Yellowtail&display=swap" rel="stylesheet" />
   <link rel="icon" href="beefgrade.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="auth.css" />
@@ -26,6 +26,28 @@
   <link rel="stylesheet" href="powerrank.css" />
   <link rel="stylesheet" href="fieldguide.css" />
   <link rel="stylesheet" href="premium.css" />
+
+  <!-- Scroll reveals rest at opacity:0, so content must never depend on JS to
+       become readable. Two distinct failure modes, both covered here:
+
+       1. Scripting disabled: this inline script never runs, .js-reveals is
+          never added, and the resting rule in premium.css (scoped to
+          .js-reveals) never matches. Content renders plainly. Setting the
+          class here in <head> rather than from scroll.js also avoids a
+          flash of visible-then-hidden content.
+       2. Scripting enabled but scroll.js fails to arrive (404, blocked by a
+          school network filter, CSP, a dead connection). The <noscript>
+          route does NOT fire here, which is the trap. The failsafe below
+          removes the class if scroll.js has not registered in time, so the
+          page degrades to fully visible instead of silently blank. -->
+  <script>
+    document.documentElement.classList.add('js-reveals');
+    setTimeout(function () {
+      if (typeof window.initScrollReveals !== 'function') {
+        document.documentElement.classList.remove('js-reveals');
+      }
+    }, 2500);
+  </script>
 </head>
 <body>
 
@@ -53,207 +75,263 @@
   <header id="app-header" class="hidden">
     <div class="brand">
       <button id="brand-home-btn" class="brand-home-btn" title="Home" aria-label="Go to home screen">
-        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
+        <svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg>
+        <span class="landing-nav-word"><span class="landing-sr">beefgrading.study</span><span class="wm-beef" aria-hidden="true">BEEF</span><span class="wm-script" aria-hidden="true">Grading</span><span class="wm-study" aria-hidden="true">.study</span></span>
       </button>
     </div>
     <div class="header-right">
-      <span id="header-score" class="score-display" aria-live="polite">0 / 0 pts</span>
       <button id="settings-btn" class="icon-btn" title="Manage Images" aria-label="Manage Images">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
       <!-- AUTH HEADER CONTROLS -->
-      <button id="auth-signin-btn" class="auth-signin-btn">Sign In</button>
+      <button id="auth-signin-btn" class="auth-signin-btn">Sign in</button>
       <div id="auth-user-area" class="auth-user-area hidden">
-        <img id="auth-avatar" class="auth-avatar" src="" alt="" />
+        <img id="auth-avatar" class="auth-avatar" alt="" />
         <span id="auth-display-name" class="auth-display-name"></span>
-        <button id="auth-signout-btn" class="auth-signout-btn">Sign Out</button>
+        <button id="auth-signout-btn" class="auth-signout-btn">Sign out</button>
       </div>
     </div>
   </header>
 
   <!-- ===================================================
-       LANDING PAGE — scrolling broadsheet
+       LANDING PAGE - scrolling broadsheet
        =================================================== -->
-  <section id="landing-hero" aria-label="Welcome">
+  <div id="landing-hero">
 
-    <!-- 1. Brand block — the OG-card composition at viewport scale
-         (skip-link target). Overprints ride the TOP layer. -->
-    <div class="landing-brand" id="main-content" tabindex="-1">
-      <span class="landing-overprint landing-overprint--rib art-mask" aria-hidden="true"></span>
-      <span class="landing-overprint landing-overprint--hardhat art-mask" aria-hidden="true"></span>
-      <div class="landing-brand-inner">
-        <div class="landing-shield">
-          <svg class="shield-mark" viewBox="427 427 1094 1085" role="img" aria-label="Beef Grading Study shield logo"><use href="#gtm-shield"/></svg>
+    <!-- Nav: the slab. Buttons proxy the existing landing buttons below. -->
+    <header class="landing-nav">
+      <div class="landing-nav-inner">
+        <div class="landing-nav-brand">
+          <svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg>
+          <span class="landing-nav-word"><span class="landing-sr">beefgrading.study</span><span class="wm-beef" aria-hidden="true">BEEF</span><span class="wm-script" aria-hidden="true">Grading</span><span class="wm-study" aria-hidden="true">.study</span></span>
         </div>
-        <div class="landing-content">
-          <p class="landing-script" aria-hidden="true">Meat Judging</p>
-          <h1 class="landing-headline">Quality Grading Drills</h1>
-          <p class="landing-subtext">Competition-style practice for FFA, 4-H, and collegiate meat judging. Grade real ribeye images against USDA standards.</p>
-          <button class="landing-cta" id="landing-setup-btn">
-            Start Grading
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
+        <nav class="landing-nav-links" aria-label="Site">
+          <button type="button" class="landing-nav-btn landing-nav-btn--fg" data-proxy="landing-fieldguide-btn">Field guide</button>
+          <button type="button" class="landing-nav-btn" data-nav="rankings">Power rankings</button>
+          <button type="button" class="landing-nav-btn landing-nav-btn--key" data-proxy="landing-signin-link">Sign in</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 1. Hero: the counter (skip-link target) -->
+    <section class="landing-stage" id="main-content" tabindex="-1" aria-labelledby="landing-title">
+      <div class="landing-stage-inner">
+        <div class="landing-stage-copy">
+          <h1 class="landing-headline" id="landing-title">Quality grading drills</h1>
+          <p class="landing-subtext">Look at the ribeye. Call the grade. Get scored.</p>
+        </div>
+        <p class="landing-audience">For FFA, 4-H and collegiate meat judging.</p>
+        <div class="landing-sign">
+          <div class="landing-view" role="group" aria-label="Plate view" hidden>
+            <button type="button" class="landing-view-btn" data-view="map" aria-pressed="true">Marbling map</button>
+            <button type="button" class="landing-view-btn" data-view="photo" aria-pressed="false">Photo</button>
+          </div>
+          <figure class="landing-plate" id="landing-plate">
+            <img class="landing-plate-photo" src="assets/anchors-full/04_moderate.jpg" alt="USDA reference photo of a ribeye with Moderate marbling" width="863" height="1313" decoding="async" fetchpriority="high" />
+            <img class="landing-plate-gray" src="assets/anchors-full/04_moderate.jpg" alt="" aria-hidden="true" width="863" height="1313" decoding="async" />
+            <svg class="landing-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 863 1313" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+<path class="sv-cut" d="M225,129 L231,126 L233,135 L234,143 L238,147 L240,153 L237,157 L231,162 L227,165 L222,168 L218,174 L221,180 L228,180 L233,177 L239,174 L243,171 L248,165 L252,161 L255,155 L258,150 L260,141 L261,135 L267,131 L276,130 L285,131 L292,132 L300,133 L309,134 L315,135 L324,136 L333,138 L339,139 L348,141 L354,142 L363,144 L369,145 L378,147 L384,149 L390,152 L396,156 L399,160 L402,167 L405,173 L411,177 L417,178 L423,175 L423,170 L420,164 L417,159 L418,153 L426,152 L435,153 L441,154 L450,155 L456,156 L465,158 L474,159 L480,160 L489,161 L495,162 L504,164 L510,166 L516,169 L522,171 L531,171 L536,171 L541,174 L539,180 L533,183 L528,188 L530,192 L537,192 L543,191 L549,192 L552,186 L552,179 L558,176 L566,177 L573,177 L582,178 L591,179 L597,182 L600,186 L604,192 L606,198 L609,206 L610,213 L612,220 L615,226 L618,233 L620,240 L622,246 L625,252 L627,260 L628,267 L630,274 L631,282 L633,291 L634,297 L635,306 L636,313 L638,321 L640,327 L642,334 L644,342 L646,348 L647,357 L648,366 L648,372 L651,379 L653,387 L654,396 L656,402 L659,408 L662,414 L665,420 L667,426 L669,435 L672,441 L673,447 L675,456 L678,461 L681,467 L682,474 L683,483 L684,492 L682,501 L681,508 L679,516 L677,522 L677,531 L677,540 L677,549 L678,555 L679,564 L678,571 L678,576 L680,585 L684,591 L685,597 L683,603 L680,609 L687,609 L688,603 L696,603 L700,606 L705,612 L708,617 L710,624 L711,630 L711,636 L710,645 L712,651 L715,657 L717,663 L718,672 L715,678 L711,684 L707,687 L704,693 L705,700 L708,708 L710,714 L714,718 L714,712 L714,707 L717,701 L723,698 L727,702 L729,708 L733,714 L737,720 L741,726 L744,730 L750,735 L754,738 L758,744 L761,750 L765,754 L770,759 L774,765 L777,769 L781,774 L786,779 L789,783 L794,789 L796,795 L798,801 L800,810 L799,819 L798,825 L794,831 L790,837 L786,843 L783,846 L778,852 L776,858 L774,867 L772,873 L768,879 L765,883 L760,888 L756,892 L751,897 L747,901 L741,906 L736,909 L732,912 L726,917 L721,921 L716,924 L711,928 L705,932 L701,936 L696,941 L693,946 L689,951 L685,957 L681,962 L678,967 L674,972 L670,978 L667,984 L664,990 L660,996 L657,1001 L654,1006 L650,1011 L645,1017 L642,1021 L638,1026 L634,1032 L631,1038 L628,1044 L626,1050 L624,1057 L621,1064 L619,1071 L617,1077 L615,1083 L612,1092 L610,1098 L608,1104 L606,1112 L604,1119 L602,1125 L600,1131 L594,1136 L588,1138 L582,1140 L573,1142 L567,1143 L558,1146 L552,1147 L543,1149 L537,1150 L528,1152 L522,1154 L516,1155 L507,1157 L501,1158 L492,1160 L483,1160 L477,1161 L474,1161 L465,1162 L456,1164 L450,1165 L441,1164 L435,1162 L426,1163 L420,1167 L414,1167 L408,1166 L399,1165 L392,1164 L384,1162 L378,1160 L370,1158 L363,1157 L354,1156 L345,1156 L336,1156 L330,1155 L322,1155 L315,1155 L309,1154 L300,1154 L291,1153 L285,1152 L276,1150 L267,1150 L258,1150 L249,1152 L243,1153 L234,1153 L228,1151 L223,1146 L219,1142 L215,1137 L210,1132 L207,1127 L204,1122 L200,1116 L197,1110 L192,1104 L189,1100 L186,1094 L183,1089 L179,1083 L177,1077 L174,1069 L173,1062 L171,1055 L165,1051 L162,1044 L165,1038 L170,1032 L172,1026 L174,1017 L173,1008 L173,999 L171,991 L163,993 L159,997 L156,1003 L156,1008 L159,1014 L161,1023 L154,1023 L150,1019 L145,1014 L143,1008 L144,999 L145,993 L146,984 L150,979 L155,975 L155,966 L154,957 L159,952 L165,954 L171,959 L174,965 L175,972 L176,981 L179,987 L184,990 L188,996 L186,1002 L182,1008 L179,1014 L181,1020 L186,1025 L189,1029 L198,1029 L201,1026 L207,1026 L215,1026 L213,1018 L210,1014 L207,1007 L204,1000 L201,994 L198,987 L195,981 L193,975 L191,969 L188,963 L185,957 L183,950 L180,944 L176,939 L171,933 L168,929 L163,924 L159,921 L154,915 L152,909 L149,903 L145,897 L141,893 L135,889 L132,882 L130,876 L128,870 L130,864 L133,858 L134,849 L134,840 L134,831 L133,822 L132,816 L130,807 L129,800 L126,792 L122,789 L114,788 L110,792 L106,798 L104,804 L106,810 L108,816 L108,822 L110,828 L108,837 L103,840 L99,840 L93,834 L91,828 L89,822 L87,814 L86,807 L84,800 L83,792 L84,784 L87,777 L88,771 L93,767 L99,769 L103,774 L109,774 L111,768 L111,760 L105,756 L99,756 L93,756 L84,758 L81,753 L78,747 L75,741 L75,734 L75,726 L74,720 L76,714 L81,708 L88,711 L93,717 L96,720 L105,722 L110,717 L113,711 L112,702 L111,693 L109,687 L102,686 L93,685 L84,686 L77,684 L75,678 L75,669 L74,660 L74,651 L76,645 L79,639 L82,633 L82,624 L81,618 L78,612 L76,603 L76,594 L77,585 L78,578 L80,570 L81,562 L82,555 L83,546 L84,540 L86,531 L87,525 L90,516 L91,510 L93,502 L94,495 L96,488 L98,480 L99,473 L101,465 L103,459 L105,451 L106,444 L108,437 L110,429 L111,423 L114,414 L115,408 L116,399 L117,393 L120,384 L121,378 L123,371 L126,364 L128,357 L129,351 L132,342 L134,336 L136,330 L138,323 L140,315 L142,309 L145,303 L147,297 L150,291 L156,286 L159,282 L157,276 L158,267 L160,261 L162,254 L165,246 L167,240 L170,234 L172,228 L174,221 L177,214 L180,207 L182,201 L184,195 L187,189 L189,183 L192,177 L195,171 L198,165 L201,158 L204,152 L207,147 L211,141 L216,138 L223,135 L225,129 M122,891 L129,890 L133,894 L134,903 L136,909 L138,917 L141,922 L150,922 L153,930 L153,934 L150,939 L141,940 L135,938 L129,934 L126,930 L123,921 L120,915 L117,910 L114,906 L114,897 L117,893 L122,891"/>
+<path class="sv-eye" d="M285,201 L294,199 L303,198 L312,199 L321,199 L330,200 L336,201 L345,203 L351,204 L360,207 L366,209 L372,211 L378,214 L384,217 L390,220 L396,223 L402,227 L407,231 L411,235 L415,240 L419,246 L423,250 L429,254 L435,256 L444,256 L453,256 L459,258 L467,261 L474,264 L480,267 L486,270 L490,273 L495,277 L501,282 L504,285 L510,291 L513,295 L517,300 L521,306 L525,310 L529,315 L534,321 L537,325 L542,330 L546,335 L549,340 L552,347 L555,353 L558,360 L560,366 L562,372 L563,381 L564,388 L566,396 L568,402 L570,408 L573,417 L574,423 L574,432 L575,441 L576,447 L579,456 L581,462 L582,471 L583,477 L585,484 L588,491 L591,498 L592,504 L593,513 L594,519 L597,527 L599,534 L601,540 L602,549 L603,555 L605,564 L607,570 L609,578 L611,585 L613,591 L615,598 L617,606 L618,612 L619,621 L620,630 L620,639 L621,648 L622,654 L622,663 L623,672 L624,681 L621,690 L619,696 L621,705 L624,708 L630,713 L634,717 L639,721 L644,726 L648,729 L654,734 L658,738 L662,744 L666,750 L668,756 L672,762 L675,767 L678,771 L682,777 L685,783 L687,791 L688,798 L688,807 L688,816 L688,825 L689,834 L690,841 L692,849 L693,856 L695,864 L696,870 L699,879 L700,885 L700,894 L699,903 L698,909 L696,916 L693,924 L690,930 L687,936 L684,941 L681,946 L678,951 L674,957 L670,963 L666,969 L663,974 L660,978 L655,984 L651,988 L646,993 L642,997 L637,1002 L633,1005 L627,1010 L623,1014 L618,1019 L614,1023 L610,1029 L607,1035 L605,1041 L603,1048 L601,1056 L599,1062 L596,1068 L593,1074 L589,1080 L585,1086 L582,1090 L576,1095 L572,1098 L567,1101 L561,1104 L555,1107 L546,1110 L540,1112 L532,1113 L525,1114 L516,1114 L507,1114 L498,1114 L489,1113 L483,1112 L474,1111 L468,1110 L459,1109 L450,1108 L441,1108 L432,1108 L423,1108 L414,1108 L405,1108 L396,1108 L387,1107 L381,1106 L372,1106 L363,1105 L354,1104 L348,1103 L339,1101 L333,1099 L327,1095 L324,1092 L321,1085 L321,1077 L322,1071 L324,1065 L327,1058 L330,1053 L333,1047 L336,1040 L337,1032 L335,1026 L330,1021 L325,1017 L319,1014 L312,1011 L306,1008 L300,1006 L294,1003 L288,1000 L282,997 L276,994 L270,990 L266,987 L261,982 L257,978 L252,973 L249,969 L244,963 L240,957 L237,953 L234,948 L230,942 L226,936 L223,930 L219,924 L216,918 L213,913 L210,907 L207,901 L204,894 L202,888 L200,882 L198,876 L197,867 L196,858 L195,852 L194,843 L193,834 L193,825 L191,819 L189,812 L186,804 L184,798 L181,792 L178,786 L175,780 L172,774 L171,768 L169,759 L168,751 L166,744 L164,738 L162,732 L161,723 L160,714 L160,705 L159,699 L158,690 L159,681 L159,675 L159,669 L158,660 L158,651 L160,645 L162,638 L165,630 L168,626 L173,621 L179,618 L185,615 L189,612 L195,606 L198,603 L202,597 L202,588 L198,584 L192,581 L186,577 L183,573 L179,567 L177,561 L174,552 L173,546 L172,537 L172,528 L171,522 L169,513 L168,507 L167,498 L166,489 L166,480 L167,471 L168,462 L169,456 L170,447 L171,440 L173,432 L175,426 L177,419 L180,411 L183,405 L186,400 L189,396 L192,388 L193,381 L193,372 L192,363 L193,354 L194,345 L196,339 L198,332 L201,325 L204,318 L206,312 L209,306 L211,300 L214,294 L216,288 L219,280 L222,273 L224,267 L227,261 L230,255 L233,249 L236,243 L240,237 L243,232 L246,228 L251,222 L255,218 L260,213 L264,210 L270,207 L276,204 L285,201 L285,201"/>
+<path class="sv-c sv-c1" d="M316,216 L321,216 L326,222 L324,231 L318,234 L312,231 L309,222 L315,216 L316,216 M291,228 L296,228 L297,231 L291,235 L291,228 L291,228 M372,261 L381,258 L388,261 L396,262 L402,265 L407,270 L411,275 L414,281 L417,287 L420,292 L423,300 L417,305 L410,303 L402,300 L396,297 L392,294 L387,288 L384,282 L380,279 L374,276 L370,270 L372,261 L372,261 M264,273 L267,275 L270,279 L273,285 L276,291 L279,297 L283,303 L291,305 L291,310 L285,307 L276,308 L267,306 L261,303 L258,300 L255,291 L257,282 L260,276 L264,273 M438,279 L444,277 L450,280 L453,288 L448,294 L443,294 L438,291 L436,282 L438,279 M308,282 L314,282 L317,288 L312,292 L307,288 L308,282 M349,294 L357,292 L363,297 L364,303 L361,309 L357,312 L348,312 L345,306 L347,297 L349,294 M385,312 L393,311 L399,313 L408,314 L416,312 L423,311 L429,313 L438,315 L444,316 L450,320 L453,327 L453,330 L447,336 L441,337 L432,338 L426,340 L417,340 L411,339 L404,336 L399,332 L393,330 L386,327 L382,321 L384,313 L385,312 M324,333 L330,333 L336,335 L339,339 L341,348 L340,357 L337,363 L333,367 L324,367 L320,363 L318,357 L315,348 L315,342 L318,336 L324,333 L324,333 M440,363 L447,363 L450,366 L454,372 L457,378 L462,383 L468,381 L471,373 L477,372 L483,375 L484,381 L480,386 L477,390 L480,396 L483,402 L478,408 L471,410 L462,410 L453,408 L450,404 L450,396 L447,390 L441,386 L436,381 L435,375 L436,369 L440,363 L440,363 M230,369 L237,369 L237,375 L231,375 L230,369 L230,369 M303,396 L312,395 L321,396 L327,398 L333,401 L337,405 L340,411 L339,417 L332,420 L324,421 L318,420 L309,418 L303,416 L297,412 L291,410 L282,408 L276,405 L282,400 L289,399 L297,397 L303,396 L303,396 M501,396 L510,393 L519,395 L525,399 L528,402 L534,408 L537,412 L542,417 L546,420 L552,425 L555,431 L555,438 L555,444 L555,453 L558,459 L561,462 L567,468 L570,473 L571,480 L568,486 L564,489 L558,492 L550,495 L545,495 L537,493 L528,494 L522,496 L513,495 L507,492 L501,489 L495,486 L489,485 L483,483 L477,479 L471,474 L471,468 L474,465 L483,463 L492,463 L501,464 L508,462 L515,459 L519,456 L524,450 L526,444 L525,437 L522,432 L516,426 L513,422 L508,417 L504,414 L498,409 L496,402 L501,396 L501,396 M390,405 L396,404 L396,409 L390,406 L390,405 M211,423 L216,423 L222,427 L226,432 L230,438 L229,447 L230,456 L231,460 L228,465 L222,468 L213,470 L206,468 L204,462 L207,458 L213,456 L222,453 L222,448 L216,444 L212,441 L207,435 L206,429 L210,423 L211,423 M369,426 L378,425 L384,426 L390,432 L392,438 L387,444 L381,446 L372,446 L366,443 L363,435 L366,428 L369,426 M320,468 L327,467 L335,468 L340,471 L345,477 L347,483 L345,491 L339,494 L331,492 L324,490 L318,488 L313,483 L313,474 L318,469 L320,468 M461,501 L465,501 L471,506 L474,510 L477,519 L471,525 L468,525 L462,521 L458,516 L455,510 L456,504 L461,501 M377,513 L382,513 L389,516 L393,522 L393,525 L390,531 L383,531 L378,525 L375,519 L375,516 L377,513 M194,525 L201,525 L207,526 L214,528 L219,532 L220,540 L216,544 L207,546 L198,543 L195,540 L191,534 L192,526 L194,525 M269,528 L273,528 L279,531 L283,537 L282,543 L276,546 L270,545 L264,541 L263,534 L267,529 L269,528 M304,558 L312,558 L315,561 L321,567 L325,570 L330,573 L339,576 L345,578 L351,580 L357,584 L363,587 L369,591 L373,594 L377,600 L379,606 L375,612 L369,614 L360,613 L351,612 L345,610 L339,607 L333,603 L327,600 L322,597 L318,594 L312,588 L309,585 L303,579 L300,574 L299,567 L301,561 L304,558 M267,567 L271,567 L276,570 L276,578 L270,582 L264,579 L263,570 L267,567 M227,579 L234,579 L239,582 L237,590 L231,592 L222,591 L220,585 L225,580 L227,579 M458,579 L465,578 L471,581 L477,585 L480,588 L485,594 L486,597 L480,601 L474,600 L468,596 L462,591 L459,588 L458,579 L458,579 M465,618 L471,618 L468,622 L465,618 M229,633 L237,631 L243,633 L249,638 L253,642 L258,648 L258,653 L253,657 L248,657 L240,655 L234,652 L230,648 L227,642 L228,634 L229,633 M395,642 L402,640 L408,642 L412,648 L408,653 L402,651 L396,645 L395,642 M547,657 L554,657 L558,660 L561,669 L558,675 L549,675 L546,672 L543,663 L547,657 L547,657 M408,666 L414,665 L420,668 L423,672 L423,681 L417,682 L416,690 L416,699 L411,705 L405,705 L399,704 L393,700 L387,696 L384,693 L378,689 L372,690 L363,690 L358,690 L351,690 L345,689 L340,684 L338,678 L342,672 L348,672 L354,673 L362,675 L369,677 L375,681 L381,683 L387,679 L393,677 L401,675 L405,670 L408,666 M510,681 L516,679 L523,681 L531,684 L535,687 L538,693 L532,696 L528,696 L519,694 L513,691 L509,687 L510,681 M286,693 L294,691 L299,696 L303,702 L305,708 L303,717 L297,720 L288,717 L285,714 L282,706 L282,702 L285,694 L286,693 M602,693 L606,694 L611,699 L609,706 L603,710 L594,710 L588,708 L582,708 L574,711 L573,717 L576,723 L575,732 L574,741 L579,745 L588,746 L594,749 L594,754 L588,758 L582,759 L573,762 L570,765 L566,771 L563,777 L564,783 L570,789 L573,795 L569,801 L564,805 L559,810 L555,813 L546,814 L543,807 L546,801 L551,795 L554,789 L555,783 L552,778 L549,773 L546,767 L543,762 L537,756 L534,752 L533,744 L537,739 L543,737 L547,732 L546,726 L547,720 L552,716 L558,714 L567,711 L567,705 L576,704 L585,703 L589,699 L594,695 L602,693 L602,693 M253,705 L259,705 L265,708 L270,714 L272,720 L269,726 L264,732 L269,738 L273,743 L278,747 L282,752 L283,759 L279,763 L272,762 L266,759 L261,755 L255,750 L252,746 L249,739 L249,735 L253,729 L252,722 L249,716 L249,709 L253,705 L253,705 M320,723 L327,722 L333,723 L342,726 L348,728 L354,730 L360,733 L369,733 L375,736 L378,741 L381,750 L383,756 L384,762 L382,768 L381,773 L386,777 L392,780 L397,783 L402,787 L408,791 L412,795 L417,801 L421,804 L429,805 L438,805 L447,807 L453,809 L459,812 L465,816 L469,819 L474,825 L477,828 L483,832 L489,837 L492,840 L498,845 L502,849 L507,853 L513,857 L517,861 L522,867 L526,870 L531,875 L537,878 L546,877 L552,879 L555,885 L554,891 L549,895 L540,896 L534,893 L529,888 L525,885 L516,882 L510,881 L501,880 L493,879 L486,877 L480,874 L474,871 L468,868 L462,865 L456,863 L449,861 L441,859 L435,855 L432,852 L426,846 L422,843 L417,839 L413,834 L409,828 L405,822 L401,819 L396,815 L390,811 L384,807 L379,804 L375,801 L369,795 L366,791 L364,783 L365,774 L360,770 L354,767 L348,764 L342,760 L336,756 L331,753 L327,750 L321,744 L318,740 L315,732 L318,724 L320,723 M617,723 L621,723 L629,726 L633,731 L633,735 L629,741 L624,744 L615,747 L606,745 L601,741 L599,735 L600,728 L606,725 L615,723 L617,723 M287,741 L294,741 L295,747 L288,748 L287,741 L287,741 M196,771 L204,769 L213,770 L219,774 L222,777 L223,786 L220,792 L219,798 L222,803 L223,810 L219,816 L213,817 L207,814 L204,807 L203,801 L199,795 L195,790 L192,783 L192,779 L195,772 L196,771 M603,804 L612,802 L620,804 L626,807 L631,810 L636,815 L638,822 L633,828 L627,828 L618,829 L609,829 L603,826 L600,822 L598,813 L600,807 L603,804 M370,849 L378,848 L382,852 L381,859 L375,861 L369,859 L367,852 L370,849 M379,894 L387,893 L393,897 L396,900 L399,906 L402,913 L402,921 L399,926 L393,929 L384,929 L378,925 L375,920 L373,912 L374,903 L376,897 L379,894 M259,900 L264,900 L268,906 L271,912 L278,915 L285,918 L290,921 L293,927 L293,936 L292,945 L291,953 L288,957 L281,960 L276,960 L272,954 L270,948 L267,942 L264,936 L262,927 L261,920 L257,915 L251,912 L253,906 L258,901 L259,900 M623,924 L627,924 L632,930 L630,939 L628,945 L627,951 L626,960 L621,965 L617,966 L612,963 L612,954 L612,948 L612,942 L612,936 L616,930 L621,925 L623,924 M372,933 L381,932 L384,936 L390,942 L396,945 L401,948 L405,953 L406,960 L402,966 L399,969 L395,975 L393,982 L388,987 L381,988 L377,984 L378,978 L382,972 L383,963 L381,954 L380,948 L375,944 L370,939 L372,933 L372,933 M643,942 L651,942 L653,948 L648,954 L642,955 L638,951 L640,945 L643,942 M588,957 L594,956 L600,959 L603,963 L606,972 L611,975 L615,980 L617,987 L617,996 L612,1001 L609,1002 L602,999 L598,993 L594,987 L591,983 L586,978 L584,972 L584,963 L588,957 L588,957 M529,1029 L537,1027 L546,1029 L552,1030 L561,1031 L568,1032 L575,1035 L579,1039 L580,1047 L576,1052 L570,1056 L568,1062 L568,1071 L565,1077 L561,1081 L555,1085 L549,1087 L540,1086 L536,1083 L531,1077 L527,1074 L522,1068 L520,1062 L516,1058 L507,1057 L501,1062 L504,1071 L507,1076 L510,1080 L515,1086 L513,1093 L504,1095 L495,1092 L491,1089 L487,1083 L484,1077 L480,1073 L474,1070 L465,1069 L459,1067 L452,1065 L444,1063 L438,1062 L433,1065 L429,1068 L420,1070 L414,1073 L408,1074 L404,1071 L399,1067 L390,1066 L381,1068 L372,1066 L368,1062 L364,1056 L364,1047 L369,1041 L375,1039 L382,1038 L390,1037 L399,1037 L407,1038 L414,1038 L420,1036 L426,1033 L435,1033 L444,1034 L453,1033 L462,1035 L468,1036 L477,1036 L483,1034 L490,1032 L498,1031 L507,1032 L516,1032 L525,1030 L529,1029"/>
+<path class="sv-c sv-c2" d="M397,273 L402,274 L406,279 L409,285 L408,294 L400,291 L396,287 L393,279 L397,273 L397,273 M411,321 L420,319 L429,320 L435,321 L443,324 L438,329 L432,331 L426,334 L417,334 L411,331 L408,324 L411,321 M322,342 L330,340 L335,345 L334,354 L330,359 L324,357 L321,348 L321,345 L322,342 M307,402 L315,401 L322,402 L328,405 L331,411 L327,414 L318,415 L312,413 L306,410 L306,403 L307,402 M507,402 L513,400 L519,402 L525,406 L529,411 L534,417 L538,420 L543,424 L548,429 L550,435 L549,444 L548,450 L543,456 L535,453 L532,447 L531,440 L529,432 L525,427 L521,423 L516,417 L513,414 L507,408 L507,402 L507,402 M373,435 L381,435 L375,438 L373,435 M547,465 L553,465 L559,468 L564,474 L564,480 L561,484 L555,487 L549,489 L543,489 L534,487 L526,489 L519,491 L512,489 L506,486 L501,483 L495,479 L489,477 L486,472 L491,471 L495,471 L504,469 L510,467 L519,466 L528,467 L537,467 L546,465 L547,465 M325,474 L332,474 L337,477 L336,486 L327,484 L323,480 L325,474 L325,474 M307,570 L314,570 L318,573 L324,576 L332,579 L339,581 L345,584 L351,586 L357,590 L363,593 L368,597 L371,603 L366,608 L357,608 L349,606 L343,603 L337,600 L332,597 L327,594 L321,589 L317,585 L312,580 L309,576 L307,570 M235,642 L243,642 L243,647 L237,645 L235,642 M394,684 L402,684 L406,687 L409,693 L405,698 L397,696 L393,693 L393,684 L394,684 M290,705 L296,705 L297,711 L292,711 L290,705 L290,705 M554,723 L561,721 L567,723 L568,732 L564,736 L558,735 L553,729 L554,723 M325,729 L333,729 L339,730 L345,732 L352,735 L358,738 L366,740 L372,744 L375,750 L376,756 L375,763 L369,766 L363,765 L355,762 L350,759 L345,756 L339,753 L333,749 L328,744 L324,739 L323,732 L325,729 M609,732 L618,729 L624,735 L618,740 L609,738 L609,733 L609,732 M542,747 L549,746 L555,747 L562,750 L566,756 L564,762 L559,768 L555,768 L549,762 L546,757 L543,753 L542,747 M199,777 L207,775 L213,777 L215,786 L210,792 L206,792 L201,789 L198,783 L199,777 L199,777 M373,783 L381,783 L387,785 L393,789 L397,792 L402,795 L408,800 L411,804 L417,809 L423,811 L432,810 L436,810 L444,811 L450,813 L456,816 L462,820 L468,825 L471,829 L476,834 L481,837 L486,841 L492,846 L495,849 L501,854 L506,858 L510,862 L513,867 L513,873 L504,875 L495,874 L489,873 L483,870 L477,867 L471,864 L465,861 L458,858 L450,856 L444,854 L438,851 L433,846 L429,842 L423,837 L420,834 L415,828 L411,822 L408,817 L403,813 L398,810 L393,807 L387,803 L381,799 L377,795 L372,789 L372,784 L373,783 M606,810 L612,808 L620,810 L624,813 L624,821 L618,823 L609,823 L605,819 L606,810 L606,810 M380,903 L387,900 L393,906 L396,912 L396,918 L393,921 L385,921 L381,918 L379,909 L380,903 M272,921 L279,921 L285,924 L288,930 L287,939 L285,947 L279,948 L275,945 L271,939 L268,933 L268,924 L272,921 M390,954 L396,954 L396,960 L391,960 L390,954 L390,954 M530,1035 L537,1033 L546,1034 L552,1036 L561,1037 L567,1038 L572,1044 L567,1050 L564,1053 L560,1059 L560,1068 L555,1073 L553,1065 L549,1061 L540,1060 L531,1062 L526,1056 L522,1053 L513,1050 L508,1050 L501,1053 L498,1056 L494,1062 L494,1071 L489,1071 L483,1068 L474,1065 L468,1064 L460,1062 L453,1060 L447,1057 L441,1055 L435,1052 L429,1053 L423,1059 L417,1061 L408,1062 L399,1061 L390,1061 L384,1062 L378,1062 L372,1057 L371,1050 L375,1046 L381,1043 L390,1042 L399,1042 L408,1044 L414,1044 L420,1043 L426,1041 L434,1041 L440,1041 L447,1039 L456,1038 L464,1041 L471,1042 L477,1041 L486,1038 L492,1037 L501,1037 L507,1039 L515,1038 L522,1037 L530,1035 L530,1035"/>
+<path class="sv-c sv-c3" d="M537,432 L541,432 L543,438 L541,444 L538,441 L537,435 L537,432 M509,474 L516,472 L525,473 L534,474 L537,474 L546,472 L555,474 L555,479 L549,483 L544,483 L537,481 L528,482 L522,484 L513,484 L508,480 L509,474 M333,588 L339,588 L348,591 L353,594 L357,599 L354,601 L348,599 L342,596 L336,592 L333,588 M332,738 L339,736 L345,738 L351,741 L357,744 L363,747 L368,753 L363,759 L355,756 L350,753 L345,750 L339,746 L333,741 L332,738 M433,816 L441,816 L447,818 L453,820 L459,824 L463,828 L467,834 L471,837 L477,841 L483,845 L487,849 L492,853 L498,858 L501,861 L501,868 L492,868 L486,866 L480,863 L474,860 L468,856 L462,853 L456,852 L447,850 L441,847 L437,843 L432,838 L428,834 L423,828 L420,822 L426,818 L433,816 L433,816 M275,930 L280,930 L276,934 L275,930 M533,1041 L540,1039 L549,1041 L555,1042 L559,1047 L555,1052 L549,1054 L542,1053 L534,1050 L530,1047 L533,1041 L533,1041 M485,1044 L492,1043 L497,1047 L492,1053 L489,1057 L483,1060 L474,1059 L468,1058 L459,1056 L453,1054 L448,1050 L453,1044 L462,1046 L468,1048 L475,1047 L483,1045 L485,1044 M383,1050 L390,1049 L399,1049 L399,1053 L390,1055 L381,1054 L383,1050 L383,1050"/>
+</svg>
+            <span class="landing-pin landing-pin--marbling" aria-hidden="true"><span class="landing-pin-tag">Marbling</span></span>
+            <span class="landing-pin landing-pin--ring landing-pin--seam" aria-hidden="true"><span class="landing-pin-tag">Seam fat</span></span>
+            <span class="landing-pin landing-pin--ring landing-pin--cap" aria-hidden="true"><span class="landing-pin-tag">Fat cap</span></span>
+          </figure>
+          <div class="entry landing-entry">
+            <div class="entry-head"><span>USDA reference</span></div>
+            <dl class="entry-cells">
+              <div class="entry-cell"><dt>Marbling</dt><dd>Moderate</dd></div>
+              <div class="entry-cell"><dt>Grade</dt><dd>High Choice</dd></div>
+            </dl>
+            <p class="entry-legend"><span class="legend-dot legend-dot--on" aria-hidden="true"></span>Graded<span class="legend-dot legend-dot--ring" aria-hidden="true"></span>Not graded</p>
+            <div class="landing-scale" role="img" aria-label="Nine-grade scale, High Prime to Standard, with High Choice marked">
+              <span class="landing-scale-seg"></span><span class="landing-scale-seg"></span><span class="landing-scale-seg"></span>
+              <span class="landing-scale-seg landing-scale-seg--on"></span><span class="landing-scale-seg"></span><span class="landing-scale-seg"></span>
+              <span class="landing-scale-seg"></span><span class="landing-scale-seg"></span><span class="landing-scale-seg"></span>
+              <span class="landing-scale-fam landing-scale-fam--prime">Prime</span>
+              <span class="landing-scale-fam landing-scale-fam--choice">Choice</span>
+              <span class="landing-scale-fam landing-scale-fam--select">Select</span>
+              <span class="landing-scale-fam landing-scale-fam--standard">Standard</span>
+            </div>
+            <div class="entry-foot">
+              <button class="landing-cta" id="landing-setup-btn">Start grading</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 2. Study the standard — field guide feeder -->
-    <div class="landing-study">
-      <div class="landing-study-text">
-        <p class="landing-study-script" aria-hidden="true">know your beef</p>
-        <h2 class="landing-study-title">Study the Standard</h2>
-        <p class="landing-study-body">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
-        <button class="landing-study-link" id="landing-fieldguide-btn">Open the Field Guide &rarr;</button>
+    <!-- 1. The ladder -->
+    <section class="landing-section landing-ladder" aria-labelledby="landing-ladder-title">
+      <div class="landing-container landing-ladder-grid">
+        <div class="landing-ladder-head">
+          <h2 class="landing-h2" id="landing-ladder-title">Nine grades, one call</h2>
+          <p class="landing-lede">Every carcass lands on one rung. The drill scores how close your call is.</p>
+        </div>
+        <div class="landing-sheet">
+          <table class="landing-ladder-table">
+            <caption class="landing-sr">USDA quality grades with their family and marbling degree</caption>
+            <thead><tr><th scope="col">Grade</th><th scope="col">Family</th><th scope="col">Marbling</th></tr></thead>
+            <tbody>
+            <tr><th scope="row">High Prime</th><td><span class="landing-chip">Prime</span></td><td>Abundant</td></tr>
+            <tr><th scope="row">Average Prime</th><td><span class="landing-chip">Prime</span></td><td>Moderately abundant</td></tr>
+            <tr><th scope="row">Low Prime</th><td><span class="landing-chip">Prime</span></td><td>Slightly abundant</td></tr>
+            <tr class="is-ref"><th scope="row">High Choice<span class="landing-ref"><span class="legend-dot legend-dot--on" aria-hidden="true"></span>Reference above</span></th><td><span class="landing-chip">Choice</span></td><td>Moderate</td></tr>
+            <tr><th scope="row">Average Choice</th><td><span class="landing-chip">Choice</span></td><td>Modest</td></tr>
+            <tr><th scope="row">Low Choice</th><td><span class="landing-chip">Choice</span></td><td>Small</td></tr>
+            <tr><th scope="row">High Select</th><td><span class="landing-chip">Select</span></td><td>Slight (upper half)</td></tr>
+            <tr><th scope="row">Low Select</th><td><span class="landing-chip">Select</span></td><td>Slight (lower half)</td></tr>
+            <tr><th scope="row">Standard</th><td><span class="landing-chip">Standard</span></td><td>Traces to practically devoid</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="landing-study-specimens" aria-hidden="true">
+    </section>
+
+    <!-- 2. Study the standard -->
+    <section class="landing-section landing-study" aria-labelledby="landing-study-title">
+      <div class="landing-container">
+        <div class="landing-study-head">
+          <h2 class="landing-h2" id="landing-study-title">Study the standard</h2>
+          <div class="landing-study-text">
+            <p class="landing-lede">The official USDA marbling photographs, the nine-grade ladder, and how scoring works. Learn the pairings before you drill them.</p>
+            <button type="button" class="landing-cta landing-cta--secondary" id="landing-fieldguide-btn">Open the field guide</button>
+          </div>
+        </div>
+        <div class="landing-specimens">
         <figure class="landing-specimen">
-          <img src="assets/anchors/01_slight.jpg" alt="" loading="lazy" />
-          <figcaption>Slight</figcaption>
+          <img src="assets/anchors-full/01_slight.jpg" alt="USDA marbling reference photograph: Slight, paired with Select" width="863" height="1313" loading="lazy" decoding="async" />
+          <figcaption><span class="landing-spec-name">Slight</span> <span class="landing-spec-grade">Select</span></figcaption>
         </figure>
         <figure class="landing-specimen">
-          <img src="assets/anchors/03_modest.jpg" alt="" loading="lazy" />
-          <figcaption>Modest</figcaption>
+          <img src="assets/anchors-full/03_modest.jpg" alt="USDA marbling reference photograph: Modest, paired with Average Choice" width="863" height="1313" loading="lazy" decoding="async" />
+          <figcaption><span class="landing-spec-name">Modest</span> <span class="landing-spec-grade">Average Choice</span></figcaption>
         </figure>
         <figure class="landing-specimen">
-          <img src="assets/anchors/07_abundant.jpg" alt="" loading="lazy" />
-          <figcaption>Abundant</figcaption>
+          <img src="assets/anchors/07_abundant.jpg" alt="USDA marbling reference photograph: Abundant, paired with High Prime" width="520" height="520" loading="lazy" decoding="async" />
+          <figcaption><span class="landing-spec-name">Abundant</span> <span class="landing-spec-grade">High Prime</span></figcaption>
         </figure>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 3. This week's board — letterboard band -->
-    <div class="landing-board">
-      <span class="landing-board-rosette art-mask" aria-hidden="true"></span>
-      <p class="landing-board-line">Every Monday the board wipes clean. One run, one score, all season to prove it.</p>
-      <button class="landing-board-link" id="landing-leaderboard-btn">View Rankings &rarr;</button>
-    </div>
+    <!-- 3. Weekly board: the ink band -->
+    <section class="landing-section landing-board" aria-labelledby="landing-board-title">
+      <div class="landing-container">
+        <h2 class="landing-board-title" id="landing-board-title">Every Monday the board wipes clean.</h2>
+        <p class="landing-board-line">One run, one score, all season to prove it.</p>
+        <div class="landing-board-actions">
+          <button type="button" class="landing-cta" id="landing-setup-btn-2">Start grading</button>
+          <button type="button" class="landing-cta landing-cta--dark" id="landing-leaderboard-btn">View weekly rankings</button>
+        </div>
+      </div>
+    </section>
 
-    <!-- 4. Footer -->
-    <div class="landing-ticker" aria-hidden="true">
-      <span>&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;&nbsp; Prime &nbsp;&#9733;&nbsp; Choice &nbsp;&#9733;&nbsp; Select &nbsp;&#9733;&nbsp; Standard &nbsp;&#9733;</span>
-    </div>
+    <!-- 4. Footer mast -->
     <footer class="landing-footer">
-      <p class="landing-auth-note">
-        <span class="landing-note-script" aria-hidden="true">welcome to the rail.</span>
-        Have a score to submit?
-        <button id="landing-signin-link">Sign In</button>
-      </p>
-      <svg class="landing-arch" viewBox="0 0 220 56" aria-hidden="true" focusable="false">
-        <path id="landing-arch-path" d="M12,48 Q110,8 208,48" fill="none"/>
-        <text class="landing-arch-text"><textPath href="#landing-arch-path" startOffset="50%" text-anchor="middle">&#9733; BEEFGRADING.STUDY &#9733;</textPath></text>
-      </svg>
+      <div class="landing-container">
+        <p class="landing-mast"><span class="landing-sr">beefgrading.study</span><span class="wm-beef" aria-hidden="true">BEEF</span><span class="wm-script" aria-hidden="true">Grading</span><span class="wm-study" aria-hidden="true">.study</span></p>
+        <div class="landing-footer-row">
+          <nav class="landing-footer-links" aria-label="Footer">
+            <button type="button" class="landing-footer-link" data-proxy="landing-fieldguide-btn">Field guide</button>
+            <button type="button" class="landing-footer-link" data-nav="rankings">Power rankings</button>
+            <button type="button" class="landing-footer-link" data-proxy="landing-leaderboard-btn">Weekly rankings</button>
+          </nav>
+          <p class="landing-auth-note">Have a score to submit? <button type="button" id="landing-signin-link">Sign in</button></p>
+        </div>
+      </div>
     </footer>
-  </section>
+  </div>
+
+  <!-- ===================================================
+       SITE NAV (shared by setup, weekly/leaderboard, power rankings, field guide)
+       Shown by CSS only while one of those screens is visible.
+       =================================================== -->
+  <nav class="page-nav" id="site-nav" aria-label="Site">
+    <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
+      <svg class="shield-mark" viewBox="427 427 1094 1085" aria-hidden="true" focusable="false"><use href="#gtm-shield"/></svg>
+      <span class="landing-nav-word"><span class="landing-sr">beefgrading.study</span><span class="wm-beef" aria-hidden="true">BEEF</span><span class="wm-script" aria-hidden="true">Grading</span><span class="wm-study" aria-hidden="true">.study</span></span>
+    </button>
+    <div class="page-nav-links">
+      <button class="pnav-link" data-nav="practice">Practice</button>
+      <button class="pnav-link" data-nav="weekly">Weekly</button>
+      <button class="pnav-link" data-nav="rankings">Power rankings</button>
+      <button class="pnav-link" data-nav="fieldguide">Field guide</button>
+    </div>
+    <div class="page-nav-auth">
+      <button id="home-signin-btn" class="home-signin-btn">Sign in</button>
+      <div id="home-user-area" class="home-user-area hidden">
+        <img id="home-avatar" class="auth-avatar" alt="" />
+        <span id="home-display-name" class="auth-display-name"></span>
+        <button id="home-signout-btn" class="auth-signout-btn">Sign out</button>
+      </div>
+    </div>
+  </nav>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  </svg>
 
   <!-- ===================================================
        HOME SCREEN
        =================================================== -->
-  <main id="home-screen" class="screen hidden">
-    <span class="setup-overprint art-mask" aria-hidden="true"></span>
+  <main id="home-screen" class="screen hidden" data-pick="practice">
 
-    <!-- Settings page top nav -->
-    <nav class="page-nav" aria-label="Session setup">
-      <button class="page-nav-brand page-nav-brand-btn" id="back-to-landing-btn" title="Back to home" aria-label="Back to home">
-        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
-      </button>
-      <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
-      </div>
-      <div class="page-nav-auth">
-        <button id="home-signin-btn" class="home-signin-btn">Sign In</button>
-        <div id="home-user-area" class="home-user-area hidden">
-          <img id="home-avatar" class="auth-avatar" src="" alt="" />
-          <span id="home-display-name" class="auth-display-name"></span>
-          <button id="home-signout-btn" class="auth-signout-btn">Sign Out</button>
-        </div>
-      </div>
-    </nav>
 
-    <!-- Mode switcher — Practice vs Weekly -->
-    <div class="setup-switcher-wrap">
-      <div class="setup-switcher" role="tablist" aria-label="Session mode">
-        <button id="setup-tab-practice" class="setup-tab active" role="tab" aria-selected="true">Practice</button>
-        <button id="setup-tab-weekly" class="setup-tab" role="tab" aria-selected="false">Weekly Challenge</button>
+    <div class="su-page">
+      <header class="su-head">
+        <h1 class="su-title">Start a session</h1>
+        <p class="su-sub">Drill on your own, or take this week&rsquo;s challenge and see where you land.</p>
+      </header>
+
+      <div class="su-grid">
+        <!-- Practice -->
+        <section class="su-panel su-practice is-on" id="practice-carcasses-card" aria-labelledby="setup-practice-title">
+          <h2 class="su-panel-h" id="setup-practice-title"><button type="button" class="su-pick" data-pick="practice" aria-pressed="true"><span class="su-pick-t">Practice</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></h2>
+          <dl class="su-kvs">
+            <div class="su-kv"><dt>Session</dt><dd id="community-set-sub">Loading&hellip;</dd></div>
+            <div class="su-kv"><dt>Scoring</dt><dd class="num">10 pts each</dd></div>
+          </dl>
+          <label class="custom-set-toggle su-toggle">
+            <span>Use my personal images instead</span>
+            <input type="checkbox" id="use-custom-set-toggle" role="switch" />
+          </label>
+        </section>
+
+        <!-- This week -->
+        <section class="su-panel su-weekly" id="setup-weekly" aria-labelledby="setup-weekly-title">
+          <h2 class="su-panel-h" id="setup-weekly-title"><button type="button" class="su-pick" data-pick="weekly" aria-pressed="false"><span class="su-pick-t">This week</span><span class="su-pick-m" id="setup-weekly-week">&nbsp;</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button></h2>
+          <dl class="su-kvs">
+            <div class="su-kv"><dt>Closes in</dt><dd class="num" id="setup-weekly-countdown">&nbsp;</dd></div>
+            <div class="su-kv"><dt>Graders</dt><dd class="num" id="setup-weekly-graders">-</dd></div>
+          </dl>
+          <p class="su-status" id="setup-weekly-status" aria-live="polite"></p>
+          <h3 class="su-top3-h" id="setup-weekly-sub">Top 3 so far</h3>
+          <ol class="su-top3" id="setup-weekly-top3"><li class="su-top3-empty">Loading&hellip;</li></ol>
+        </section>
+      </div>
+
+      <div class="home-setup-footer-links">
+        <button id="manage-photos-btn" class="setup-footer-link">Manage photos</button>
+        <button id="open-contribute-link" class="setup-footer-link">Help grade practice images</button>
+        <button class="setup-footer-link setup-fieldguide-link">Field guide</button>
+        <a class="setup-footer-link" href="fleece/">Fleece grader</a>
       </div>
     </div>
 
-    <!-- PRACTICE PATH -->
-    <div class="home-setup-single" id="practice-setup-view">
-      <div class="setup-title-block">
-        <span class="setup-eyebrow" aria-hidden="true">grade at your own pace.</span>
-        <h1 class="home-panel-header">Practice Drill</h1>
-        <p class="setup-subtitle">Grade real carcass images and get instant feedback.</p>
+    <!-- Sheet: starts whichever panel is picked -->
+    <div class="su-dock">
+      <div class="su-dock-in">
+        <p id="start-error" class="submit-error hidden" role="alert"></p>
+        <p class="su-dk-s"><span class="su-dk-t" id="su-dock-title">Practice</span><span id="su-dock-sub">&nbsp;</span></p>
+        <button id="start-btn" class="wk-btn wk-btn--primary su-go"><span>Start drill</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+        <button type="button" id="setup-weekly-open-btn" class="wk-btn wk-btn--primary su-go"><span>Open the weekly challenge</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
       </div>
-
-      <button id="start-btn" class="btn-primary btn-lg" aria-label="Begin Session">
-        Begin Session
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-      <p id="start-error" class="submit-error hidden" role="alert"></p>
-
-      <hr class="zigzag-rule zigzag-rule--red" aria-hidden="true" />
-
-      <!-- Practice Carcasses -->
-      <div class="home-card" id="practice-carcasses-card">
-        <h2 class="card-label">
-          Practice Carcasses
-          <button id="manage-photos-btn" class="card-label-action">Manage Photos</button>
-        </h2>
-        <div class="practice-carcasses-body">
-          <p id="community-set-sub" class="practice-carcasses-status">Loading&hellip;</p>
-          <label class="custom-set-toggle">
-            <input type="checkbox" id="use-custom-set-toggle" />
-            <span>Practice with my personal images instead</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="home-setup-footer-links">
-        <button id="open-contribute-link" class="setup-footer-link">Help grade practice images &rarr;</button>
-        <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
-      </div>
-    </div><!-- /#practice-setup-view -->
-
-    <!-- WEEKLY PATH -->
-    <div class="home-setup-single hidden" id="weekly-setup-view">
-      <div class="setup-title-block">
-        <span class="setup-eyebrow" aria-hidden="true">earn your seat at the table</span>
-        <h1 class="home-panel-header">Weekly Challenge</h1>
-        <p class="setup-subtitle">One shot per week. Scores post to the public leaderboard.</p>
-      </div>
-
-      <div id="weekly-challenge-card" class="weekly-card weekly-card-standalone">
-        <div class="weekly-card-header">
-          <span class="weekly-stamp">Weekly Challenge</span>
-          <span id="weekly-countdown" class="weekly-countdown">Loading&hellip;</span>
-        </div>
-        <div class="weekly-card-body">
-          <div class="weekly-week-label" id="weekly-week-label">Week of &hellip;</div>
-          <!-- Division toggle — routes leaderboard only, full grades always used -->
-          <div class="weekly-division-label">Select your division for rankings</div>
-          <div class="weekly-ruleset-toggle">
-            <button id="weekly-rule-ffa" class="weekly-rule-btn active">High School (FFA/4-H)</button>
-            <button id="weekly-rule-collegiate" class="weekly-rule-btn">College</button>
-          </div>
-          <div class="weekly-card-meta" id="weekly-card-meta">
-            <!-- Dynamically filled: carcass count, rule set -->
-          </div>
-          <div id="weekly-user-status" class="weekly-user-status">
-            <!-- Dynamically filled based on auth state -->
-          </div>
-          <div class="weekly-card-actions" id="weekly-card-actions">
-            <!-- Buttons injected dynamically by weekly.js -->
-          </div>
-          <div class="weekly-leaderboard-link">
-            <button id="weekly-view-leaderboard-btn" class="weekly-lb-link-btn">View Rankings &rarr;</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="home-setup-footer-links">
-        <button class="setup-footer-link setup-fieldguide-link">Review the Field Guide &rarr;</button>
-      </div>
-    </div><!-- /#weekly-setup-view -->
+    </div>
 
   </main>
 
@@ -261,110 +339,122 @@
        DRILL SCREEN
        =================================================== -->
   <main id="drill-screen" class="hidden">
-    <div class="drill-layout">
+    <div class="dr-wrap">
 
-      <!-- LEFT: Carcass image -->
-      <div class="drill-left">
+      <!-- Stage: progress, the photo -->
+      <section class="dr-stage" aria-label="Carcass photo">
+        <div class="dr-head">
+          <div class="dr-name">
+            <h1 id="carcass-name" class="carcass-name">Carcass 1</h1>
+            <p id="image-source" class="image-source"></p>
+          </div>
+          <p class="dr-stats">
+            <span class="dr-stat">Carcass <span id="progress-text" class="dr-v">1 of 10</span></span>
+            <span class="dr-stat">Score <span id="drill-score" class="dr-v" aria-live="polite">0 / 0</span></span>
+          </p>
+        </div>
+        <div class="progress-wrap" role="presentation"><div id="progress-bar"></div></div>
         <div class="carcass-image-wrap">
           <img id="carcass-image" src="" alt="Beef carcass" />
-          <span class="zoom-hint">
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
-            Click to enlarge
-          </span>
-        </div>
-      </div>
-
-      <!-- RIGHT: Controls -->
-      <div class="drill-right">
-
-        <!-- Progress + meta -->
-        <div class="drill-meta">
-          <div class="drill-meta-top">
-            <div class="image-meta">
-              <span id="carcass-name" class="carcass-name">Carcass 1</span>
-              <span id="image-source" class="image-source"></span>
-            </div>
-            <div id="progress-text" class="progress-label">1 of 10</div>
-          </div>
-          <div class="progress-wrap"><div id="progress-bar"></div></div>
-        </div>
-
-        <!-- Grade Selector -->
-        <div class="grade-panel">
-          <div class="panel-label">Quality Grade</div>
-          <div id="family-btns"></div>
-          <div id="sub-row" class="hidden">
-            <div class="panel-label panel-label-sub">Subdivision</div>
-            <div id="sub-btns"></div>
-          </div>
-          <div id="selected-grade-display" class="grade-display unset">— select a grade —</div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-row">
-          <button id="submit-btn" class="btn-primary btn-submit">Submit Grade</button>
-          <button id="next-btn" class="btn-accent hidden">
-            Next Carcass
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <button type="button" class="zoom-hint" aria-label="Enlarge photo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+            Enlarge
           </button>
         </div>
-        <div id="submit-error" class="submit-error hidden"></div>
+      </section>
 
-        <!-- Feedback Panel -->
+      <!-- Sheet: the choices, then the answer, then the one action -->
+      <section class="dr-sheet" aria-label="Grade this carcass">
+
+        <div class="dr-pick">
+          <div class="dr-q">
+            <div class="dr-label" id="dr-grade-label">Quality grade</div>
+            <div id="family-btns" role="group" aria-labelledby="dr-grade-label"></div>
+          </div>
+          <div id="sub-row" class="dr-q is-idle">
+            <div class="dr-label" id="dr-sub-label">Subdivision</div>
+            <div id="sub-btns" role="group" aria-labelledby="dr-sub-label"></div>
+          </div>
+        </div>
+
         <div id="feedback-panel" class="feedback-panel hidden" aria-live="polite">
-          <p id="feedback-quality"></p>
+          <div id="feedback-quality"></div>
           <p id="feedback-notes" class="hidden"></p>
         </div>
 
-      </div><!-- end drill-right -->
-    </div><!-- end drill-layout -->
+        <div class="dr-run">
+          <h2 class="dr-label" id="dr-run-label">This run</h2>
+          <div id="dr-run-strip" class="sm-strip" role="img" aria-labelledby="dr-run-label"></div>
+        </div>
+
+        <div class="dr-dock">
+          <p class="dr-dk-s"><span id="selected-grade-display" class="grade-display unset">Select a grade</span><span id="dr-dock-sub" class="dr-dk-k">Your call</span></p>
+          <button id="submit-btn" class="wk-btn wk-btn--primary dr-go"><span>Submit grade</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+          <button id="next-btn" class="wk-btn wk-btn--primary dr-go hidden"><span>Next carcass</span><svg class="ic" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></button>
+          <div id="submit-error" class="submit-error hidden" role="alert"></div>
+        </div>
+
+      </section>
+    </div><!-- end dr-wrap -->
   </main>
 
   <!-- ===================================================
        SUMMARY SCREEN
        =================================================== -->
   <main id="summary-screen" class="screen hidden">
+    <div class="sm-page">
+      <div class="sm-grid">
 
-    <div class="summary-hero">
-      <span class="summary-stamp" aria-hidden="true"><svg class="shield-mark" viewBox="427 427 1094 1085" focusable="false"><use href="#gtm-shield"/></svg></span>
-      <span class="summary-eyebrow" aria-hidden="true">and the scantron says&#x2026;</span>
-      <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true"><span class="cert-rosette art-mask"></span>Certified<br />Prime</span>
-      <div class="summary-hero-label">Session Complete</div>
-      <div id="summary-total" class="summary-score">0 / 0 pts</div>
-      <span id="summary-pct" class="summary-pct pct-green">0%</span>
+        <div class="sm-main">
+          <header class="sm-head">
+            <div>
+              <h1 class="summary-hero-label sm-title">Session complete</h1>
+              <p id="summary-sub" class="sm-sub">Every call from this session, scored against the official call.</p>
+            </div>
+            <span id="summary-cert-stamp" class="summary-cert-stamp hidden" aria-hidden="true"><span class="cert-rosette art-mask"></span>Certified Prime</span>
+          </header>
+
+          <section class="sm-result" aria-label="Session readout">
+            <p class="sm-fig"><span id="summary-total" class="sm-fig-n">0 / 0</span><span id="summary-pct" class="sm-fig-pct">0%</span></p>
+            <p class="sm-facts"><span class="sm-fact"><span id="summary-exact" class="sm-fact-n">0</span> exact calls</span><span class="sm-fact"><span id="summary-near" class="sm-fact-n">0</span> within one third</span></p>
+          </section>
+
+          <section class="sm-you" aria-labelledby="sm-you-h">
+            <h2 id="sm-you-h" class="sm-sec-h">Carcass by carcass</h2>
+            <div id="summary-strip" class="sm-strip" role="img" aria-label=""></div>
+            <p id="summary-legend" class="sm-you-legend"></p>
+          </section>
+
+          <section class="sm-table-sec" aria-labelledby="sm-table-h">
+            <h2 id="sm-table-h" class="sm-sec-h">Your calls</h2>
+            <div class="summary-table-wrap">
+              <table id="summary-table"></table>
+            </div>
+          </section>
+        </div>
+
+        <aside class="sm-side scoring-explainer" aria-labelledby="sm-score-h">
+          <h2 id="sm-score-h" class="sm-sec-h">How scoring works: 10 pts per carcass</h2>
+          <ul class="sc-chart" aria-label="Points by how far off the call is">
+            <li class="sc-row"><span class="sc-k">Exact match</span><span class="sc-bar sc-bar--ok"><i style="--v:1"></i></span><span class="sc-v">10</span></li>
+            <li class="sc-row"><span class="sc-k">&#x2153; grade off (1 subdivision)</span><span class="sc-bar sc-bar--near"><i style="--v:0.9"></i></span><span class="sc-v">9</span></li>
+            <li class="sc-row"><span class="sc-k">&#x2154; grade off (2 subdivisions)</span><span class="sc-bar sc-bar--near"><i style="--v:0.7"></i></span><span class="sc-v">7</span></li>
+            <li class="sc-row"><span class="sc-k">1 full grade off (3 subdivisions)</span><span class="sc-bar sc-bar--miss"><i style="--v:0.4"></i></span><span class="sc-v">4</span></li>
+            <li class="sc-row"><span class="sc-k">More than 1 full grade off</span><span class="sc-bar sc-bar--miss"><i style="--v:0"></i></span><span class="sc-v">0</span></li>
+          </ul>
+          <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice to Low Prime counts as 1 subdivision off (9 pts).</p>
+        </aside>
+
+      </div>
+
+      <div class="sm-dock">
+        <div class="sm-dock-in summary-actions">
+          <button id="restart-btn" class="wk-btn wk-btn--primary"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span>New session</span></button>
+          <button id="export-btn" class="wk-btn wk-btn--secondary">Export results</button>
+          <button id="weekly-submit-btn" class="wk-btn weekly-submit-btn hidden">Submit to leaderboard</button>
+        </div>
+      </div>
     </div>
-
-    <div class="summary-actions">
-      <button id="restart-btn" class="btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        New Session
-      </button>
-      <button id="export-btn" class="btn-secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        Export Results
-      </button>
-      <button id="weekly-submit-btn" class="btn-primary weekly-submit-btn hidden">
-        Submit to Leaderboard &rarr;
-      </button>
-    </div>
-
-    <div class="summary-table-wrap">
-      <table id="summary-table"></table>
-    </div>
-
-    <div class="scoring-explainer">
-      <span class="explainer-art art-mask" aria-hidden="true"></span>
-      <h3>How scoring works: 10 pts per carcass</h3>
-      <ul class="scoring-explainer-list">
-        <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
-        <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
-        <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
-        <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
-        <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
-      </ul>
-      <p class="scoring-explainer-note">One subdivision = one-third of a grade. High Choice &#x2192; Low Prime counts as 1 subdivision off (9 pts).</p>
-    </div>
-
   </main>
 
   <!-- ===================================================
@@ -372,7 +462,7 @@
        =================================================== -->
   <div id="image-modal" class="modal-overlay hidden">
     <button id="image-modal-close" class="modal-close" aria-label="Close">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
     </button>
     <img id="image-modal-img" src="" alt="Full-size carcass" />
   </div>
@@ -405,7 +495,7 @@
 
       <div class="form-row">
         <label for="custom-name">Label <span class="optional">(optional)</span></label>
-        <input type="text" id="custom-name" placeholder="e.g. Class 1 – Carcass A" />
+        <input type="text" id="custom-name" placeholder="e.g. Class 1, Carcass A" />
       </div>
 
       <div class="form-row">
@@ -414,14 +504,14 @@
       </div>
 
       <div class="form-row">
-        <label for="custom-notes">Notes <span class="optional">(optional — shown after wrong answer)</span></label>
+        <label for="custom-notes">Notes <span class="optional">(optional, shown after a wrong answer)</span></label>
         <textarea id="custom-notes" placeholder="Tips about marbling, fat cover, etc."></textarea>
       </div>
 
       <div class="form-btn-row">
         <button id="submit-community-btn" class="btn-primary btn-add">Submit to Community</button>
-        <button id="add-custom-btn" class="btn-secondary">Add to My Set</button>
-        <button id="cancel-edit-btn" class="btn-secondary hidden">Cancel Edit</button>
+        <button id="add-custom-btn" class="btn-secondary">Add to my set</button>
+        <button id="cancel-edit-btn" class="btn-secondary hidden">Cancel edit</button>
       </div>
 
       <!-- Custom list -->
@@ -434,7 +524,7 @@
       <textarea id="import-json" class="json-textarea" placeholder="Paste a JSON array of carcass records here to import…"></textarea>
       <div class="btn-row">
         <button id="import-btn" class="btn-secondary">Import JSON</button>
-        <button id="export-json-btn" class="btn-secondary">Export My Set</button>
+        <button id="export-json-btn" class="btn-secondary">Export my set</button>
       </div>
 
       <!-- Community Set -->
@@ -450,159 +540,218 @@
 
   <!-- LEADERBOARD SCREEN -->
   <main id="leaderboard-screen" class="screen hidden">
-    <span class="leaderboard-overprint art-mask" aria-hidden="true"></span>
-    <nav class="page-nav" aria-label="Leaderboard">
-      <button class="page-nav-back" id="leaderboard-back-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Home
-      </button>
-      <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+    <div class="wk-page">
+      <header class="wk-head">
+        <div class="wk-head-text">
+          <h1 class="wk-title">Weekly challenge</h1>
+          <p id="leaderboard-week-label" class="wk-sub">&nbsp;</p>
+          <div class="wk-weeknav" role="group" aria-label="Choose week">
+            <button type="button" id="leaderboard-prev-week" class="wk-navbtn" aria-label="Previous week">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+              <span class="wk-navbtn-text">Previous week</span>
+            </button>
+            <button type="button" id="leaderboard-next-week" class="wk-navbtn" aria-label="Next week">
+              <span class="wk-navbtn-text">Next week</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <button type="button" id="leaderboard-back-btn" class="wk-back" hidden>Back to your results</button>
+          </div>
+        </div>
+        <div class="wk-readout" role="group" aria-label="This week at a glance">
+          <div class="wk-ro-cell"><span class="wk-ro-k" id="weekly-closes-k">Closes in</span><span class="wk-ro-v num" id="weekly-countdown">&nbsp;</span></div>
+          <div class="wk-ro-cell"><span class="wk-ro-k">Graders</span><span class="wk-ro-v num" id="wk-graders">-</span></div>
+          <div class="wk-ro-cell" id="wk-median-cell" hidden><span class="wk-ro-k">Field median</span><span class="wk-ro-v num" id="wk-median">-</span></div>
+        </div>
+      </header>
+
+      <section id="weekly-challenge-card" class="wk-act" aria-label="This week&rsquo;s challenge">
+        <div class="wk-seg" role="group" aria-label="Division">
+          <button type="button" id="weekly-rule-ffa" class="weekly-rule-btn active" aria-pressed="true">High school</button>
+          <button type="button" id="weekly-rule-collegiate" class="weekly-rule-btn" aria-pressed="false">College</button>
+        </div>
+        <p id="weekly-user-status" class="wk-status" aria-live="polite"></p>
+        <div id="weekly-card-actions" class="wk-actions"></div>
+      </section>
+
+      <section class="wk-plot" aria-labelledby="wk-plot-h">
+        <div class="wk-plot-h">
+          <h2 id="wk-plot-h">Where the field landed</h2>
+          <span class="wk-note">Each dot is one grader.</span>
+        </div>
+        <p id="wk-plot-sum" class="wk-sr"></p>
+        <div id="wk-scale" class="wk-scale" role="img" aria-labelledby="wk-plot-sum"></div>
+      </section>
+
+      <div id="wk-grid" class="wk-grid" aria-live="polite">
+        <div class="wk-tablewrap">
+          <table class="wk-table">
+            <caption class="wk-sr">Standings</caption>
+            <thead><tr><th class="wk-th-rank" scope="col">Rank</th><th scope="col">Grader</th><th class="n" scope="col">Points</th><th class="n" scope="col">Pct</th><th class="n wk-col-date" scope="col">Submitted</th></tr></thead>
+            <tbody id="leaderboard-list"></tbody>
+          </table>
+        </div>
+        <aside id="wk-you-panel" class="wk-you" tabindex="-1" aria-label="Your result" hidden></aside>
       </div>
-      <span class="page-nav-brand">
-        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
-      </span>
-    </nav>
-    <div class="leaderboard-hero">
-      <div class="leaderboard-hero-stamp">WEEK RANKINGS</div>
-      <h1 class="leaderboard-title">Leaderboard</h1>
-      <p id="leaderboard-week-label" class="leaderboard-week-label">Week of Mar 17 – Mar 23, 2026</p>
-    </div>
-    <div class="leaderboard-tabs">
-      <button id="leaderboard-tab-ffa" class="leaderboard-tab active">High School (FFA/4-H)</button>
-      <button id="leaderboard-tab-collegiate" class="leaderboard-tab">College</button>
-    </div>
-    <div class="leaderboard-table-wrap">
-      <table class="leaderboard-table">
-        <thead>
-          <tr>
-            <th class="col-rank">Rank</th>
-            <th class="col-name">Grader</th>
-            <th class="col-score">Score</th>
-            <th class="col-pct">%</th>
-            <th class="col-date">Date</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-tbody"></tbody>
-      </table>
     </div>
   </main>
 
   <!-- POWER RANKINGS SCREEN -->
   <main id="powerrank-screen" class="screen hidden">
-    <nav class="page-nav" aria-label="Power rankings">
-      <button class="page-nav-back" id="powerrank-back-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Home
-      </button>
-      <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
+    <div class="pr-wrap">
+
+      <header class="pr-head">
+        <div class="pr-titleblock">
+          <h1 class="pr-title">Power rankings</h1>
+          <p class="pr-sub" id="powerrank-sub">Collegiate meat judging</p>
+        </div>
+        <div class="pr-controls">
+          <div class="pr-seg" role="group" aria-label="Show">
+            <button type="button" id="powerrank-mode-teams" class="pr-seg-btn active" aria-pressed="true">Teams</button>
+            <button type="button" id="powerrank-mode-people" class="pr-seg-btn" aria-pressed="false">Individuals</button>
+          </div>
+          <div class="pr-seg" role="group" aria-label="Division">
+            <button type="button" id="powerrank-tab-senior" class="pr-seg-btn active" aria-pressed="true">Senior colleges</button>
+            <button type="button" id="powerrank-tab-junior" class="pr-seg-btn" aria-pressed="false">Junior colleges</button>
+          </div>
+          <div class="pr-season-field">
+            <label class="pr-season-label" for="powerrank-view">View</label>
+            <select id="powerrank-view" class="pr-season-select pr-view-select"></select>
+          </div>
+          <div class="pr-season-field" id="powerrank-school-field" hidden>
+            <label class="pr-season-label" for="powerrank-school">School</label>
+            <select id="powerrank-school" class="pr-season-select pr-school-select"></select>
+          </div>
+          <div class="pr-season-field">
+            <label class="pr-season-label" for="powerrank-season">Season</label>
+            <select id="powerrank-season" class="pr-season-select"></select>
+          </div>
+        </div>
+      </header>
+
+      <div class="pr-notice" id="powerrank-status" role="status" hidden></div>
+
+      <div id="powerrank-content" hidden>
+
+        <div class="pr-latest" id="powerrank-latest" hidden>
+          <span class="pr-latest-tag">Latest</span>
+          <span class="pr-latest-text" id="powerrank-latest-text"></span>
+          <span class="pr-latest-date" id="powerrank-latest-date"></span>
+        </div>
+
+        <section class="pr-readout" id="powerrank-summary" aria-label="Season readout" hidden>
+          <div class="pr-readout-cell"><span class="pr-readout-label">Contests</span><span class="pr-readout-value" id="powerrank-sum-contests"></span></div>
+          <div class="pr-readout-cell"><span class="pr-readout-label" id="powerrank-sum-teams-label">Ranked teams</span><span class="pr-readout-value" id="powerrank-sum-teams"></span></div>
+          <div class="pr-readout-cell"><span class="pr-readout-label" id="powerrank-sum-top-label">No. 1 rating</span><span class="pr-readout-value" id="powerrank-sum-top"></span></div>
+          <div class="pr-readout-cell"><span class="pr-readout-label" id="powerrank-sum-gap-label">Gap, No. 1 to No. 2</span><span class="pr-readout-value" id="powerrank-sum-gap"></span></div>
+          <div class="pr-readout-cell"><span class="pr-readout-label" id="powerrank-sum-field-label">Average field size</span><span class="pr-readout-value" id="powerrank-sum-field"></span></div>
+        </section>
+
+        <section class="pr-section" id="powerrank-board-block" aria-labelledby="powerrank-board-heading">
+          <h2 class="pr-h2" id="powerrank-board-heading">The board</h2>
+          <p class="pr-cap pr-board-cap" id="powerrank-board-cap"></p>
+          <p class="pr-school-note" id="powerrank-school-note" role="status" hidden></p>
+          <div class="pr-board">
+            <div class="pr-thead" aria-hidden="true">
+              <span class="pr-c-rank">Rank</span>
+              <span class="pr-c-school" id="powerrank-board-school-head">Team</span>
+              <span class="pr-c-rating" id="powerrank-board-rating-head">Rating</span>
+              <span class="pr-c-move">Move</span>
+              <span class="pr-c-wins">Wins</span>
+              <span class="pr-c-top3">Top 3</span>
+              <span class="pr-c-avg">Avg finish</span>
+              <span class="pr-c-form">Form, last 5</span>
+              <span class="pr-c-contests">Contests</span>
+            </div>
+            <ol class="pr-rows" id="powerrank-tbody"></ol>
+            <div class="pr-group" id="powerrank-provisional" hidden>
+              <div class="pr-group-head">
+                <h3 class="pr-group-title">Not yet ranked</h3>
+                <p class="pr-group-sub" id="powerrank-prov-sub">Too few results this season for a fair rating. Actual results shown.</p>
+              </div>
+              <ol class="pr-rows" id="powerrank-provisional-list"></ol>
+              <div class="pr-more" id="powerrank-prov-more"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pr-section" id="powerrank-spread-block" aria-labelledby="powerrank-spread-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-spread-heading">Rating spread</h2>
+          <p class="pr-cap" id="powerrank-spread-cap">One dot per ranked team. The further right, the higher the rating.</p>
+          <div id="powerrank-spread"></div>
+        </section>
+
+        <section class="pr-section" id="powerrank-history-block" aria-labelledby="powerrank-history-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-history-heading">Rank history</h2>
+          <p class="pr-cap" id="powerrank-history-cap">Where the current top teams stood on the board after each contest. Pick a team to follow its line.</p>
+          <div id="powerrank-history"></div>
+          <div class="pr-legend" id="powerrank-history-legend" role="group" aria-label="Teams on the chart"></div>
+        </section>
+
+        <section class="pr-section" id="powerrank-categories" aria-labelledby="powerrank-cat-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-cat-heading">Category leaders</h2>
+          <p class="pr-cap" id="powerrank-cat-cap">Top three teams in each category. A board appears once three contests this season carry the category.</p>
+          <div class="pr-tiles" id="powerrank-cat-grid"></div>
+        </section>
+
+        <section class="pr-section" id="powerrank-matrix-block" aria-labelledby="powerrank-matrix-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-matrix-heading">Category strength</h2>
+          <p class="pr-cap" id="powerrank-matrix-cap">Each cell is the team's rank on that category's board. Beef, pork and lamb are split into placing classes and reasons. Lighter is better.</p>
+          <div id="powerrank-matrix"></div>
+          <p class="pr-cap pr-matrix-key" id="powerrank-matrix-key"></p>
+        </section>
+
+        <section class="pr-section" id="powerrank-grid-block" aria-labelledby="powerrank-grid-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-grid-heading">Season results</h2>
+          <p class="pr-cap" id="powerrank-grid-cap">Each cell is the team's overall place at that contest. Lighter is better, and a blank means the team did not compete. Hover, tap or tab to a cell for the full contest card.</p>
+          <div id="powerrank-grid"></div>
+        </section>
+
+        <section class="pr-section" id="powerrank-contests-block" aria-labelledby="powerrank-contests-heading" hidden>
+          <h2 class="pr-h2" id="powerrank-contests-heading">Contests in ranking</h2>
+          <ul id="powerrank-contest-list" class="pr-contests"></ul>
+        </section>
+
+        <div class="pr-method">
+          <details class="pr-method-details">
+            <summary>How these rankings work</summary>
+            <p class="pr-method-text">
+              Each result is rated from the team's placing, scaled by field size, how
+              recent the contest is, the contest's weight, and field strength (the
+              average rating of the top ten teams there). The solver repeats until field
+              strengths and team ratings agree. A school's rating is the average of its
+              five best results this season. Only real results count, and nothing
+              carries over from other seasons. Schools with too few contests this season
+              stay unranked and show their actual results. Movement compares the board
+              with the one before the most recent contest. New marks a school's first
+              appearance. Individuals mode is different: each contestant, alternates
+              included, is ranked by the average of their overall scores across the
+              season's contests, and needs at least two contests for a numbered rank.
+              International alternates are left out because their reasons are not
+              scored there.
+            </p>
+          </details>
+        </div>
+
       </div>
-      <span class="page-nav-brand">
-        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
-      </span>
-    </nav>
-
-    <div class="leaderboard-hero powerrank-hero">
-      <div class="leaderboard-hero-stamp">Team Poll</div>
-      <h1 class="leaderboard-title">Power Rankings</h1>
-      <p class="powerrank-season-line">Collegiate Meat Judging</p>
     </div>
-
-    <div class="powerrank-controls">
-      <div class="leaderboard-tabs" role="group" aria-label="Division">
-        <button id="powerrank-tab-senior" class="leaderboard-tab active" aria-pressed="true">Senior Colleges</button>
-        <button id="powerrank-tab-junior" class="leaderboard-tab" aria-pressed="false">Junior Colleges</button>
-      </div>
-      <div class="powerrank-season-field">
-        <label class="powerrank-season-label" for="powerrank-season">Season</label>
-        <select id="powerrank-season" class="powerrank-season-select"></select>
-      </div>
-    </div>
-
-    <div class="leaderboard-table-wrap">
-      <table class="leaderboard-table powerrank-table">
-        <thead>
-          <tr>
-            <th class="col-rank">Rank</th>
-            <th class="pr-col-school">School</th>
-            <th class="pr-col-rating">Rating</th>
-            <th class="pr-col-move">Move</th>
-            <th class="pr-col-contests">Contests</th>
-          </tr>
-        </thead>
-        <tbody id="powerrank-tbody"></tbody>
-      </table>
-    </div>
-
-    <section class="powerrank-strip" id="powerrank-provisional-block" hidden aria-label="Not yet ranked">
-      <h2 class="powerrank-strip-header">Not Yet Ranked &mdash; Limited Data This Season</h2>
-      <p class="powerrank-strip-sub">Not enough real results yet this season to compare fairly against the ranked board above. Shown here with their actual contest results instead of an estimated rating.</p>
-      <ul id="powerrank-provisional-list" class="powerrank-contest-list"></ul>
-    </section>
-
-    <section class="powerrank-strip" id="powerrank-categories" hidden aria-label="Category leaders">
-      <h2 class="powerrank-strip-header">Category Leaders</h2>
-      <p class="powerrank-strip-sub">Top three teams per category &mdash; boards appear once three contests carry the category.</p>
-      <div class="powerrank-cards" id="powerrank-cards"></div>
-    </section>
-
-    <section class="powerrank-strip" id="powerrank-contests-block" hidden aria-label="Contests in ranking">
-      <h2 class="powerrank-strip-header">Contests in Ranking</h2>
-      <ul id="powerrank-contest-list" class="powerrank-contest-list"></ul>
-    </section>
-
-    <div class="powerrank-method">
-      <details class="powerrank-method-details">
-        <summary>How these rankings work</summary>
-        <p class="powerrank-method-text">
-          Each team result earns a rating from its placing, scaled by field size, how
-          recent the contest is, the contest's weight, and the strength of the field
-          (the average rating of the top ten teams there). The solver iterates until
-          field strengths and team ratings agree, then rates each school by the average
-          of its five best results in the selected season, using only that team's own
-          real results this season &mdash; no cross-season blending. Teams need enough
-          real contests this season to be numerically ranked; thinner résumés are shown
-          separately with their actual results instead of an estimated rating. Movement
-          compares today's board against the board before the most recent contest; NEW
-          marks a school's first appearance.
-        </p>
-      </details>
-    </div>
+    <div class="pr-card" id="powerrank-card" role="tooltip" hidden></div>
   </main>
 
   <!-- ===================================================
        GRADE FIELD GUIDE
        =================================================== -->
   <main id="fieldguide-screen" class="screen hidden">
-    <span class="fg-overprint art-mask" aria-hidden="true"></span>
-
-    <nav class="page-nav" aria-label="Field guide">
-      <button class="page-nav-back" id="fieldguide-back-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Back
-      </button>
-      <div class="page-nav-links">
-        <button class="pnav-link" data-nav="practice">Practice</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="weekly">Weekly</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="leaderboard">Leaderboard</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="rankings">Rankings</button><span class="pnav-sep" aria-hidden="true">/</span><button class="pnav-link" data-nav="fieldguide">Field Guide</button>
-      </div>
-      <span class="page-nav-brand">
-        <span class="page-nav-script" aria-hidden="true">beefgrading.study</span>
-      </span>
-    </nav>
 
     <div class="fg-inner">
 
       <header class="fg-hero">
-        <span class="fg-postmark postmark" aria-hidden="true">Reference<br />&#9733; official &#9733;<br />BG.Study</span>
-        <span class="fg-eyebrow" aria-hidden="true">know your beef</span>
-        <h1 class="fg-title">Grade Field Guide</h1>
+        <h1 class="fg-title">Grade field guide</h1>
         <p class="fg-sub">The USDA quality-grade ladder, the marbling behind it, and how the drill scores you. All on one card.</p>
-        <hr class="zigzag-rule zigzag-rule--red zigzag-rule--wide" aria-hidden="true" />
       </header>
 
       <!-- 1. The grade ladder -->
       <section class="fg-section" aria-labelledby="fg-ladder-heading">
-        <h2 id="fg-ladder-heading" class="fg-board-header">Quality Grade Ladder (A Maturity)</h2>
+        <h2 id="fg-ladder-heading" class="fg-head">Quality grade ladder (A maturity)</h2>
         <ol class="fg-ladder" reversed>
           <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">High Prime</span><span class="fg-rung-family">Prime</span></li>
           <li class="fg-rung fg-rung--prime"><span class="fg-rung-grade">Average Prime</span><span class="fg-rung-family">Prime</span></li>
@@ -614,26 +763,26 @@
           <li class="fg-rung fg-rung--select"><span class="fg-rung-grade">Low Select</span><span class="fg-rung-family">Select</span></li>
           <li class="fg-rung fg-rung--standard fg-rung--boundary"><span class="fg-rung-grade">Standard</span><span class="fg-rung-family">Standard</span></li>
         </ol>
-        <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong>. One subdivision (High &rarr; Average &rarr; Low) is one-third of a grade.</p>
+        <p class="fg-note">Nine callable grades, best to worst. The heavy rules mark <strong>family boundaries</strong>. One subdivision (High, Average, Low) is one-third of a grade.</p>
       </section>
 
-      <!-- 2. Marbling degrees — specimen chart with USDA anchor photos -->
+      <!-- 2. Marbling degrees - specimen chart with USDA anchor photos -->
       <section class="fg-section" aria-labelledby="fg-marbling-heading">
-        <h2 id="fg-marbling-heading" class="fg-board-header">Marbling Degrees &rarr; Grades</h2>
+        <h2 id="fg-marbling-heading" class="fg-head">Marbling degrees to grades</h2>
         <p class="fg-lead">Within A maturity, the marbling score in the ribeye sets the quality grade. Each photo is the official USDA reference for the <em>minimum</em> of its degree. Tap any photo to view it full screen.</p>
         <ol class="fg-specimen-list">
-          <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/07_abundant.jpg" data-full-alt="USDA reference photo: Abundant marbling, minimum of the degree" aria-label="View full screen: Abundant marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
+          <li class="fg-specimen-row fg-specimen-row--square">
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/07_abundant.jpg" data-full-alt="USDA reference photo: Abundant marbling, minimum of the degree" aria-label="View full screen: Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/07_abundant.jpg" alt="USDA reference photo: Abundant marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Abundant</span>
               <span class="fg-marbling-grade">High Prime</span>
             </div>
           </li>
-          <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/06_moderately_abundant.jpg" data-full-alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" aria-label="View full screen: Moderately Abundant marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
+          <li class="fg-specimen-row fg-specimen-row--square">
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/06_moderately_abundant.jpg" data-full-alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" aria-label="View full screen: Moderately Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/06_moderately_abundant.jpg" alt="USDA reference photo: Moderately Abundant marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Moderately Abundant</span>
@@ -641,8 +790,8 @@
             </div>
           </li>
           <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/05_slightly_abundant.jpg" data-full-alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" aria-label="View full screen: Slightly Abundant marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/05_slightly_abundant.jpg" data-full-alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" aria-label="View full screen: Slightly Abundant marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/05_slightly_abundant.jpg" alt="USDA reference photo: Slightly Abundant marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Slightly Abundant</span>
@@ -650,8 +799,8 @@
             </div>
           </li>
           <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/04_moderate.jpg" data-full-alt="USDA reference photo: Moderate marbling, minimum of the degree" aria-label="View full screen: Moderate marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/04_moderate.jpg" data-full-alt="USDA reference photo: Moderate marbling, minimum of the degree" aria-label="View full screen: Moderate marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/04_moderate.jpg" alt="USDA reference photo: Moderate marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Moderate</span>
@@ -659,8 +808,8 @@
             </div>
           </li>
           <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/03_modest.jpg" data-full-alt="USDA reference photo: Modest marbling, minimum of the degree" aria-label="View full screen: Modest marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/03_modest.jpg" data-full-alt="USDA reference photo: Modest marbling, minimum of the degree" aria-label="View full screen: Modest marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/03_modest.jpg" alt="USDA reference photo: Modest marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Modest</span>
@@ -668,8 +817,8 @@
             </div>
           </li>
           <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/02_small.jpg" data-full-alt="USDA reference photo: Small marbling, minimum of the degree" aria-label="View full screen: Small marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/02_small.jpg" data-full-alt="USDA reference photo: Small marbling, minimum of the degree" aria-label="View full screen: Small marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/02_small.jpg" alt="USDA reference photo: Small marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Small</span>
@@ -677,8 +826,8 @@
             </div>
           </li>
           <li class="fg-specimen-row">
-            <button class="fg-specimen-view" data-full-src="assets/anchors/01_slight.jpg" data-full-alt="USDA reference photo: Slight marbling, minimum of the degree" aria-label="View full screen: Slight marbling reference photo">
-              <img class="fg-specimen-img" src="assets/anchors/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
+            <button class="fg-specimen-view" data-full-src="assets/anchors-full/01_slight.jpg" data-full-alt="USDA reference photo: Slight marbling, minimum of the degree" aria-label="View full screen: Slight marbling reference photo">
+              <img class="fg-specimen-img" src="assets/anchors-full/01_slight.jpg" alt="USDA reference photo: Slight marbling, minimum of the degree" loading="lazy" />
             </button>
             <div class="fg-specimen-text">
               <span class="fg-marbling-degree">Slight&sup1;</span>
@@ -692,35 +841,32 @@
             </div>
           </li>
         </ol>
-        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight 50&ndash;100 grades High Select, Slight 0&ndash;50 grades Low Select.<br />&sup2; USDA publishes no reference photo below Slight; genuinely negligible marbling is rare in fed cattle.<br />Photographs: official USDA marbling references (public domain).</p>
+        <p class="fg-note">&sup1; Select splits on the upper/lower half of Slight: Slight 50 to 100 grades High Select, Slight 0 to 50 grades Low Select.<br />&sup2; USDA publishes no reference photo below Slight; genuinely negligible marbling is rare in fed cattle.<br />Photographs: official USDA marbling references (public domain).</p>
       </section>
 
-      <!-- 3. Maturity — plain prose, no box -->
+      <!-- 3. Maturity - plain prose, no box -->
       <section class="fg-section fg-section--prose" aria-labelledby="fg-maturity-heading">
-        <hr class="zigzag-rule" aria-hidden="true" />
-        <h2 id="fg-maturity-heading" class="fg-prose-heading">A word on maturity</h2>
-        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity, so this drill assumes every carcass is <strong>A maturity</strong> (roughly 9&ndash;30 months, nearly all fed cattle) and grades it straight off the marbling. In the ring, maturity is read from the actual bones and lean, and building that into this drill isn't realistic with the resources available right now. A maturity study tool may be a future addition.</p>
-        <hr class="zigzag-rule" aria-hidden="true" />
+        <h2 id="fg-maturity-heading" class="fg-head">A word on maturity</h2>
+        <p class="fg-body">Quality grade is marbling <em>plus</em> maturity, so this drill assumes every carcass is <strong>A maturity</strong> (roughly 9 to 30 months, nearly all fed cattle) and grades it straight off the marbling. In the ring, maturity is read from the actual bones and lean, and building that into this drill is not realistic with the resources available right now. A maturity study tool may be a future addition.</p>
       </section>
 
       <!-- 4. How scoring works -->
       <section class="fg-section" aria-labelledby="fg-scoring-heading">
-        <h2 id="fg-scoring-heading" class="fg-board-header">How the Drill Scores</h2>
+        <h2 id="fg-scoring-heading" class="fg-head">How the drill scores</h2>
         <div class="fg-scoring-menu">
-          <ul class="scoring-explainer-list">
-            <li><span>Exact match</span><span class="ticket-leader"></span><span class="pts-chip">10</span></li>
-            <li><span>&#x2153; grade off (1 subdivision)</span><span class="ticket-leader"></span><span class="pts-chip">9</span></li>
-            <li><span>&#x2154; grade off (2 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">7</span></li>
-            <li><span>1 full grade off (3 subdivisions)</span><span class="ticket-leader"></span><span class="pts-chip">4</span></li>
-            <li><span>More than 1 full grade off</span><span class="ticket-leader"></span><span class="pts-chip pts-chip-zero">0</span></li>
-          </ul>
-          <p class="fg-note">One subdivision = one-third of a grade. High Choice &rarr; Low Prime counts as 1 subdivision off (9 pts).</p>
+          <ul class="sc-chart" aria-label="Points by how far off the call is">
+          <li class="sc-row"><span class="sc-k">Exact match</span><span class="sc-bar sc-bar--ok"><i style="--v:1"></i></span><span class="sc-v">10</span></li>
+          <li class="sc-row"><span class="sc-k">&#x2153; grade off (1 subdivision)</span><span class="sc-bar sc-bar--near"><i style="--v:0.9"></i></span><span class="sc-v">9</span></li>
+          <li class="sc-row"><span class="sc-k">&#x2154; grade off (2 subdivisions)</span><span class="sc-bar sc-bar--near"><i style="--v:0.7"></i></span><span class="sc-v">7</span></li>
+          <li class="sc-row"><span class="sc-k">1 full grade off (3 subdivisions)</span><span class="sc-bar sc-bar--miss"><i style="--v:0.4"></i></span><span class="sc-v">4</span></li>
+          <li class="sc-row"><span class="sc-k">More than 1 full grade off</span><span class="sc-bar sc-bar--miss"><i style="--v:0"></i></span><span class="sc-v">0</span></li>
+        </ul>
+          <p class="fg-note">One subdivision = one-third of a grade. High Choice to Low Prime counts as 1 subdivision off (9 pts).</p>
         </div>
       </section>
 
       <div class="fg-footer">
-        <hr class="zigzag-rule" aria-hidden="true" />
-        <button id="fieldguide-drill-btn" class="btn-primary">Put It to Practice &rarr;</button>
+        <button id="fieldguide-drill-btn" class="wk-btn wk-btn--primary">Put it to practice</button>
       </div>
 
     </div>
@@ -730,8 +876,7 @@
   <div id="auth-modal" class="auth-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-heading">
     <div id="auth-modal-panel" class="auth-modal-panel">
       <button id="auth-modal-close" class="auth-modal-close" aria-label="Close sign-in dialog">&#x2715;</button>
-      <div class="auth-modal-stamp">Weekly Challenge</div>
-      <h2 id="auth-modal-heading" class="auth-modal-title">Sign In to Compete</h2>
+      <h2 id="auth-modal-heading" class="auth-modal-title">Sign in to compete</h2>
       <p class="auth-modal-sub">Your score goes on the leaderboard. Sign in once, drill forever.</p>
       <button id="auth-google-btn" class="auth-provider-btn auth-google-btn" type="button">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -770,15 +915,15 @@
           </div>
         </div>
         <button class="contribute-modal-close" id="contribute-modal-close" aria-label="Close grading research panel">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
         </button>
       </div>
 
       <!-- Auth prompt (shown when signed out) -->
       <div id="contribute-auth-prompt" class="contribute-auth-prompt hidden">
-        <p class="contribute-auth-msg">Sign in to contribute — your grades are credited to your profile</p>
+        <p class="contribute-auth-msg">Sign in to contribute. Your grades are credited to your profile.</p>
         <button class="contribute-signin-btn" id="contribute-signin-btn" aria-label="Sign in to contribute grades">
-          Sign In to Contribute
+          Sign in to contribute
         </button>
       </div>
 
@@ -820,7 +965,7 @@
   </div>
 
   <script src="data.js"></script>
-  <!-- Firebase compat SDKs — must load before auth.js -->
+  <!-- Firebase compat SDKs - must load before auth.js -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -829,12 +974,13 @@
   <script src="weekly.js"></script>
   <script src="leaderboard.js"></script>
   <script src="powerrank.js"></script>
+  <script src="scroll.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const landing   = document.getElementById('landing-hero');
       const homeScreen = document.getElementById('home-screen');
 
-      // app.js init() shows home-screen — re-hide it so landing shows first
+      // app.js init() shows home-screen - re-hide it so landing shows first
       homeScreen.classList.add('hidden');
 
       // ── Landing navigation helper ───────────────────────────────
@@ -847,7 +993,7 @@
         }, 260);
       }
 
-      // Start Grading — the landing's single job: get people to the setup page
+      // Start Grading - the landing's single job: get people to the setup page
       const landingSetupBtn = document.getElementById('landing-setup-btn');
       if (landingSetupBtn) {
         landingSetupBtn.addEventListener('click', () => {
@@ -856,6 +1002,10 @@
           });
         });
       }
+
+      // Second Start Grading CTA (drill band) forwards to the hero CTA
+      const landingSetupBtn2 = document.getElementById('landing-setup-btn-2');
+      if (landingSetupBtn2) landingSetupBtn2.addEventListener('click', () => landingSetupBtn.click());
 
       // Sign In link below cards
       const landingSigninLink = document.getElementById('landing-signin-link');
@@ -886,6 +1036,9 @@
 
       // Setup page → back to landing
       document.getElementById('back-to-landing-btn').addEventListener('click', () => {
+        const lb = document.getElementById('leaderboard-screen');
+        if (lb && !lb.classList.contains('hidden') && typeof hideLeaderboardScreen === 'function') hideLeaderboardScreen();
+        document.querySelectorAll('main.screen').forEach(m => m.classList.add('hidden'));
         homeScreen.classList.add('hidden');
         landing.classList.remove('hidden', 'landing-exit');
         landing.style.opacity = '';
@@ -901,14 +1054,6 @@
       if (openContributeLink) {
         openContributeLink.addEventListener('click', () => {
           if (typeof openContributeModal === 'function') openContributeModal();
-        });
-      }
-
-      // Weekly challenge → View Rankings button (always visible)
-      const weeklyLbBtn = document.getElementById('weekly-view-leaderboard-btn');
-      if (weeklyLbBtn) {
-        weeklyLbBtn.addEventListener('click', () => {
-          if (typeof showLeaderboardScreen === 'function') showLeaderboardScreen();
         });
       }
 

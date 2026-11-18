@@ -6,7 +6,38 @@
       "Bash(cmd.exe /c \"where node 2>&1 & where npm 2>&1 & where npx 2>&1\")",
       "Bash(del \"c:\\\\Users\\\\gunny\\\\code\\\\_brutalist_section.css\")",
       "Bash(wc -l /c/Users/gunny/code/*.js /c/Users/gunny/code/*.css /c/Users/gunny/code/*.html)",
-      "Bash(grep -n \"_escapeAttr\\\\|escapeAttr\" /c/Users/gunny/code/*.js)"
+      "Bash(grep -n \"_escapeAttr\\\\|escapeAttr\" /c/Users/gunny/code/*.js)",
+      "Bash(claude mcp *)",
+      "PowerShell(claude mcp add --transport http --scope user notion https://mcp.notion.com/mcp)",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(git clone --depth 1 https://github.com/makenotion/notion-cookbook.git C:\\\\Users\\\\gunny\\\\notion-cookbook)",
+      "mcp__claude_ai_Notion__notion-create-database",
+      "mcp__claude_ai_Notion__notion-create-pages",
+      "mcp__claude_ai_Notion__notion-update-data-source",
+      "mcp__claude_ai_Notion__notion-update-page",
+      "PowerShell(git -C c:\\\\Users\\\\gunny\\\\code ls-files grader)",
+      "Bash(node --check app.js)",
+      "Bash(node --check weekly.js)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Never serve placeholder carcasses: inline empty-state errors for practice and weekly decks *)",
+      "WebFetch(domain:firebase.google.com)",
+      "Bash(ls -lt ~/Downloads/*.png 2>/dev/null | head -4)",
+      "Read(//c/Users/gunny/Downloads/**)",
+      "WebFetch(domain:www.judgingcard.com)",
+      "Bash(python ingest_judgingcard.py \"https://www.judgingcard.com/Results/Team.aspx?ID=27671&EID=166763\" --out nwss2026.json)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(node --check powerrank.js)",
+      "Read(//c/Users/gunny/AppData/Local/Temp/claude/c--Users-gunny-code/c8e67d5b-e1fe-4214-81b3-5eb15e1fb134/scratchpad/**)",
+      "Bash(node prtest.js)",
+      "Bash(echo \"grep exit: $?\")",
+      "WebFetch(domain:registry.npmjs.org)"
     ]
-  }
+  },
+  "skillOverrides": {
+    "full-output-enforcement": "off",
+    "motion": "off",
+    "website-builder-setup": "off"
+  },
+  "disableClaudeAiConnectors": true
 }

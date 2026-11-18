@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Fleece template calibration</title>
+<style>body{font:14px system-ui;margin:12px;background:#222;color:#eee}canvas{max-width:100%;border:1px solid #555}pre{white-space:pre-wrap;max-height:260px;overflow:auto;background:#111;padding:8px}</style></head>
+<body><h3>Template calibration (blank-sheet.jpg)</h3><button id="run">Run calibration</button> <span id="st"></span>
+<pre id="out"></pre><div id="view"></div>
+<script type="module">
+import { calibrate } from './calibrate.js';
+window.calibrate = calibrate;
+document.getElementById('run').addEventListener('click', async () => {
+  const st = document.getElementById('st'); st.textContent = 'running...';
+  const r = await calibrate('../assets/blank-sheet.jpg', m => st.textContent = m);
+  window.__cal = r;
+  document.getElementById('out').textContent = JSON.stringify(r.out, null, 1);
+  const v = document.getElementById('view'); v.innerHTML = ''; v.appendChild(r.canvas); st.textContent = 'done';
+});
+</script></body></html>

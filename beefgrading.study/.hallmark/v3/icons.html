@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleece grader app icon, four candidates</title>
+<style>
+/* Tokens copied from style.css:28-193 (OKLCH). Only the ones this page uses
+   are kept, with their original names. */
+:root {
+  --paper:      oklch(96% 0.011 85);
+  --paper-deep: oklch(92% 0.016 85);
+  --paper-card: oklch(99.5% 0.005 85);
+  --line:       oklch(88% 0.013 85);
+  --line-heavy: oklch(76% 0.02 85);
+  --ink:        oklch(18% 0.006 60);
+  --ink-soft:   oklch(34% 0.01 60);
+  --ink-faint:  oklch(44% 0.012 60);
+  --red:        oklch(52% 0.2 22);
+  --red-deep:   oklch(44% 0.18 22);
+  --red-lift:   oklch(68% 0.2 22);
+  --color-sheet: oklch(99.3% 0.004 85);
+  --ribbon:     oklch(52% 0.14 262);
+  --on-ink:     oklch(96% 0.011 85);
+  --on-ink-dim: oklch(72% 0.012 85);
+  --hair-on-paper:  oklch(18% 0.006 60 / 0.16);
+  --hair-on-carbon: oklch(96% 0.011 85 / 0.16);
+
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px oklch(18% 0.006 60 / 0.08);
+
+  --font-display: 'Red Hat Display', 'Red Hat Text', ui-sans-serif, system-ui, sans-serif;
+  --font-ui:      'Red Hat Text', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-mono:    'Red Hat Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, monospace;
+  --track-display: -0.035em;
+
+  /* page-local */
+  --app-r: 22%;                 /* iOS-like mask radius, share of the side */
+  --tile-r-outer: var(--radius-lg);
+  --tile-pad: 16px;
+  --tile-r-inner: max(2px, calc(var(--tile-r-outer) - var(--tile-pad)));
+  --gap: 16px;
+  --measure: min(1180px, 100% - 32px);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--paper); color: var(--ink); }
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 40px 0 88px;
+}
+.wrap { width: var(--measure); margin-inline: auto; }
+
+header h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+header p { margin: 0; max-width: 62ch; color: var(--ink-soft); }
+header p + p { margin-top: 8px; }
+.legend { font-size: 14px; color: var(--ink-faint); }
+
+.cand { margin-top: 56px; }
+.cand h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: var(--track-display);
+  line-height: 1.15;
+  margin: 0 0 4px;
+}
+.cand h2 span {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink-faint);
+  margin-right: 10px;
+}
+.cand p { margin: 0 0 20px; max-width: 70ch; color: var(--ink-soft); }
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+@media (max-width: 1000px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px)  { .row { grid-template-columns: minmax(0, 1fr); } }
+
+.tile {
+  --edge: var(--hair-on-paper);
+  --tile-bg: var(--paper);
+  --tile-fg: var(--ink-faint);
+  background: var(--tile-bg);
+  color: var(--tile-fg);
+  padding: var(--tile-pad);
+  border-radius: var(--tile-r-outer);
+  box-shadow: 0 0 0 1px var(--edge);
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: end;
+  column-gap: 20px;
+  row-gap: 12px;
+}
+.tile.bone  { --tile-bg: var(--paper); }
+.tile.white { --tile-bg: var(--color-sheet); }
+.tile.ink   { --tile-bg: var(--ink); --tile-fg: var(--on-ink-dim); --edge: var(--hair-on-carbon); }
+.tile .cap {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* the rounded app mask */
+.app {
+  --s: 180px;
+  width: var(--s);
+  height: var(--s);
+  border-radius: var(--app-r);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--hair-on-paper);
+  background: var(--paper-deep);
+  display: block;
+}
+.app.sm { --s: 48px; }
+.tile.ink .app { box-shadow: 0 0 0 1px var(--hair-on-carbon); }
+.app svg, .safe svg { display: block; width: 100%; height: 100%; }
+
+/* safe-zone copy: square art, the maskable circle drawn over it */
+.safe { width: 180px; height: 180px; display: block; box-shadow: 0 0 0 1px var(--hair-on-paper); }
+.safe .guide { fill: none; stroke: var(--ribbon); stroke-width: 3; stroke-dasharray: 10 8; }
+.safe .guide-fill { fill: oklch(52% 0.14 262 / 0.07); stroke: none; }
+
+
+.round { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--ink-faint); margin: 64px 0 0; padding-top: 12px; border-top: 1px solid var(--hair-on-paper); }
+.round.first { margin-top: 48px; }
+.r2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px var(--gap); margin-top: 24px; }
+@media (max-width: 1000px) { .r2 { grid-template-columns: minmax(0, 1fr); } }
+.r2 h3 { font-family: var(--font-display); font-weight: 600; font-size: 20px; letter-spacing: var(--track-display); line-height: 1.15; margin: 0 0 4px; }
+.r2 h3 span { font-family: var(--font-mono); font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--ink-faint); margin-right: 10px; }
+.r2 p { margin: 0 0 14px; color: var(--ink-soft); }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+@media (max-width: 640px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+
+footer { margin-top: 64px; font-size: 14px; color: var(--ink-faint); max-width: 70ch; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Fleece grader app icon</h1>
+  <p>Four candidates for the home-screen icon. Each is shown in a rounded app mask at 180px and 48px on bone, white and ink, plus one copy with the maskable safe zone (central 80% circle, dashed) over the square art.</p>
+  <p class="legend">All art is inside the circle. Each icon is a standalone 512 unit SVG with its own background, so it can be lifted out as a file. Fills are token values written as OKLCH.</p>
+</header>
+
+<h2 class="round first">Round 4</h2>
+<p class="legend">Clipboards and a refined fleece. Bone and ink only, 180px and 48px.</p>
+<div class="r2">
+  <div>
+    <h3><span>6a</span>Clipboard, tick</h3>
+    <p>The judge's clipboard as a plain, bold shape: a sheet and one heavy tick.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-6a" viewBox="0 0 512 512" role="img" aria-label="A clipboard with a scarlet tick on the sheet"><rect width="512" height="512" fill="oklch(52% 0.2 22)"/><rect x="148" y="108" width="216" height="304" rx="22" fill="oklch(18% 0.006 60)"/><rect x="170" y="148" width="172" height="240" rx="8" fill="oklch(99.5% 0.005 85)"/><rect x="204" y="88" width="104" height="56" rx="14" fill="oklch(99.5% 0.005 85)" stroke="oklch(18% 0.006 60)" stroke-width="10"/><rect x="238" y="104" width="36" height="12" rx="6" fill="oklch(18% 0.006 60)"/><path d="M204 272L246 314L312 226" fill="none" stroke="oklch(52% 0.2 22)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6a"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6a"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6a"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>6b</span>Clipboard, fleece, tick</h3>
+    <p>The clipboard holds a small fleece with a tick: judging and wool in one mark.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-6b" viewBox="0 0 512 512" role="img" aria-label="A clipboard holding a small white fleece with a scarlet tick"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><rect x="132" y="108" width="248" height="304" rx="24" fill="oklch(52% 0.2 22)"/><rect x="152" y="146" width="208" height="246" rx="8" fill="oklch(99.5% 0.005 85)"/><rect x="204" y="88" width="104" height="56" rx="14" fill="oklch(99.5% 0.005 85)" stroke="oklch(18% 0.006 60)" stroke-width="10"/><rect x="238" y="104" width="36" height="12" rx="6" fill="oklch(18% 0.006 60)"/><g transform="translate(256 278) scale(.5) translate(-256 -256)" fill="oklch(18% 0.006 60)"><circle cx="256" cy="256" r="140"/><circle cx="379.8" cy="307.3" r="52"/><circle cx="307.3" cy="379.8" r="52"/><circle cx="204.7" cy="379.8" r="52"/><circle cx="132.2" cy="307.3" r="52"/><circle cx="132.2" cy="204.7" r="52"/><circle cx="204.7" cy="132.2" r="52"/><circle cx="307.3" cy="132.2" r="52"/><circle cx="379.8" cy="204.7" r="52"/></g><path d="M220 280L248 308L298 248" fill="none" stroke="oklch(68% 0.2 22)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>6c</span>Fleece, big tick</h3>
+    <p>Seven chunky scallops (odd count, no dial) and a tick as wide as the fleece, so it reads at 48px.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-6c" viewBox="0 0 512 512" role="img" aria-label="A seven-scallop white fleece on ink with a large scarlet tick"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><g fill="oklch(99.5% 0.005 85)"><circle cx="256" cy="256" r="138"/><circle cx="256.0" cy="122.0" r="54"/><circle cx="360.8" cy="172.5" r="54"/><circle cx="386.6" cy="285.8" r="54"/><circle cx="314.1" cy="376.7" r="54"/><circle cx="197.9" cy="376.7" r="54"/><circle cx="125.4" cy="285.8" r="54"/><circle cx="151.2" cy="172.5" r="54"/></g><path d="M172 268L232 328L342 196" fill="none" stroke="oklch(52% 0.2 22)" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6c"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6c"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-6c"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="round">Round 3</h2>
+<p class="legend">Tied fleeces. Bone and ink only, 180px and 48px.</p>
+<div class="r2">
+  <div>
+    <h3><span>5a</span>Tied fleece on scarlet</h3>
+    <p>Lumpy, off-centre fleece with no dial or tick, so it cannot read as a clock; twine ties mark it as a judged fleece.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-5a" viewBox="0 0 512 512" role="img" aria-label="A white fleece tied with two bands of twine on a scarlet field"><rect width="512" height="512" fill="oklch(52% 0.2 22)"/><g fill="oklch(99.5% 0.005 85)"><circle cx="256" cy="256" r="110"/><circle cx="170" cy="240" r="70"/><circle cx="344" cy="240" r="70"/><circle cx="190" cy="328" r="62"/><circle cx="322" cy="326" r="62"/><circle cx="232" cy="164" r="58"/><circle cx="300" cy="172" r="54"/><circle cx="130" cy="300" r="40"/><circle cx="384" cy="296" r="42"/></g><g fill="none" stroke="oklch(18% 0.006 60)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"><path d="M196 136C176 200 178 320 198 376"/><path d="M316 134C336 200 334 320 314 378"/></g><g fill="oklch(18% 0.006 60)"><circle cx="182" cy="258" r="20"/><circle cx="330" cy="258" r="20"/></g></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5a"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5a"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5a"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>5b</span>Tied fleece, score badge</h3>
+    <p>A bigger badge with a thick tick that survives 48px; red twine ties the fleece.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-5b" viewBox="0 0 512 512" role="img" aria-label="A tied white fleece on ink with a scarlet tick badge"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><g transform="translate(-16 -18) translate(256 256) scale(.86) translate(-256 -256)"><g fill="oklch(99.5% 0.005 85)"><circle cx="256" cy="256" r="110"/><circle cx="170" cy="240" r="70"/><circle cx="344" cy="240" r="70"/><circle cx="190" cy="328" r="62"/><circle cx="322" cy="326" r="62"/><circle cx="232" cy="164" r="58"/><circle cx="300" cy="172" r="54"/><circle cx="130" cy="300" r="40"/><circle cx="384" cy="296" r="42"/></g><g fill="none" stroke="oklch(52% 0.2 22)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"><path d="M196 136C176 200 178 320 198 376"/><path d="M316 134C336 200 334 320 314 378"/></g><g fill="oklch(52% 0.2 22)"><circle cx="182" cy="258" r="24"/><circle cx="330" cy="258" r="24"/></g></g><circle cx="336" cy="336" r="76" fill="oklch(52% 0.2 22)" stroke="oklch(18% 0.006 60)" stroke-width="14"/><path d="M310 338L330 358L366 312" fill="none" stroke="oklch(99.5% 0.005 85)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>5c</span>Tied fleece, graded</h3>
+    <p>Scarlet field, ink twine and an ink badge: tied for judging and scored, with one accent.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-5c" viewBox="0 0 512 512" role="img" aria-label="A tied white fleece on scarlet with an ink tick badge"><rect width="512" height="512" fill="oklch(52% 0.2 22)"/><g transform="translate(-16 -18) translate(256 256) scale(.86) translate(-256 -256)"><g fill="oklch(99.5% 0.005 85)"><circle cx="256" cy="256" r="110"/><circle cx="170" cy="240" r="70"/><circle cx="344" cy="240" r="70"/><circle cx="190" cy="328" r="62"/><circle cx="322" cy="326" r="62"/><circle cx="232" cy="164" r="58"/><circle cx="300" cy="172" r="54"/><circle cx="130" cy="300" r="40"/><circle cx="384" cy="296" r="42"/></g><g fill="none" stroke="oklch(18% 0.006 60)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"><path d="M196 136C176 200 178 320 198 376"/><path d="M316 134C336 200 334 320 314 378"/></g><g fill="oklch(18% 0.006 60)"><circle cx="182" cy="258" r="24"/><circle cx="330" cy="258" r="24"/></g></g><circle cx="336" cy="336" r="76" fill="oklch(18% 0.006 60)" stroke="oklch(52% 0.2 22)" stroke-width="14"/><path d="M310 338L330 358L366 312" fill="none" stroke="oklch(99.5% 0.005 85)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5c"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5c"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-5c"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="round">Round 2</h2>
+<p class="legend">Refinements after feedback. Bone and ink only, 180px and 48px.</p>
+<div class="r2">
+  <div>
+    <h3><span>4a</span>Chunky fleece</h3>
+    <p>Fewer, bigger scallops and a heavier tick, so the shape holds at 48px.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-4a" viewBox="0 0 512 512" role="img" aria-label="Eight-scallop fleece with a heavy scarlet tick"><rect width="512" height="512" fill="oklch(99.5% 0.005 85)"/><g fill="oklch(18% 0.006 60)"><circle cx="256" cy="256" r="140"/><circle cx="379.8" cy="307.3" r="52"/><circle cx="307.3" cy="379.8" r="52"/><circle cx="204.7" cy="379.8" r="52"/><circle cx="132.2" cy="307.3" r="52"/><circle cx="132.2" cy="204.7" r="52"/><circle cx="204.7" cy="132.2" r="52"/><circle cx="307.3" cy="132.2" r="52"/><circle cx="379.8" cy="204.7" r="52"/></g><path d="M182 264L236 314L334 202" fill="none" stroke="oklch(68% 0.2 22)" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4a"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4a"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4a"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>4b</span>Scarlet fleece</h3>
+    <p>The scarlet field carries the accent, the tick goes ink, and finer scallops read as wool.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-4b" viewBox="0 0 512 512" role="img" aria-label="Twelve-scallop fleece with an ink tick on a scarlet field"><rect width="512" height="512" fill="oklch(52% 0.2 22)"/><g fill="oklch(99.5% 0.005 85)"><circle cx="256" cy="256" r="140"/><circle cx="388" cy="256" r="34"/><circle cx="370.3" cy="322" r="34"/><circle cx="322" cy="370.3" r="34"/><circle cx="256" cy="388" r="34"/><circle cx="190" cy="370.3" r="34"/><circle cx="141.7" cy="322" r="34"/><circle cx="124" cy="256" r="34"/><circle cx="141.7" cy="190" r="34"/><circle cx="190" cy="141.7" r="34"/><circle cx="256" cy="124" r="34"/><circle cx="322" cy="141.7" r="34"/><circle cx="370.3" cy="190" r="34"/></g><path d="M188 260L234 304L326 208" fill="none" stroke="oklch(18% 0.006 60)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>4c</span>Fleece with score badge</h3>
+    <p>The tick moves to a corner badge, so the fleece stays a clean silhouette and the badge is the accent.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-4c" viewBox="0 0 512 512" role="img" aria-label="Fleece on ink with a scarlet score badge at the lower right"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><g fill="oklch(99.5% 0.005 85)"><circle cx="232" cy="232" r="118"/><circle cx="344" cy="232" r="40"/><circle cx="322.6" cy="297.8" r="40"/><circle cx="266.6" cy="338.5" r="40"/><circle cx="197.4" cy="338.5" r="40"/><circle cx="141.4" cy="297.8" r="40"/><circle cx="120" cy="232" r="40"/><circle cx="141.4" cy="166.2" r="40"/><circle cx="197.4" cy="125.5" r="40"/><circle cx="266.6" cy="125.5" r="40"/><circle cx="322.6" cy="166.2" r="40"/></g><circle cx="346" cy="346" r="64" fill="oklch(52% 0.2 22)" stroke="oklch(18% 0.006 60)" stroke-width="16"/><path d="M318 348L338 368L376 322" fill="none" stroke="oklch(99.5% 0.005 85)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4c"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4c"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4c"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>1b</span>Tied fibres</h3>
+    <p>Crimp runs vertically as a bound bundle of fibres, so it no longer reads as water or bacon.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-1b" viewBox="0 0 512 512" role="img" aria-label="Five crimped vertical fibres tied with a scarlet band"><rect width="512" height="512" fill="oklch(96% 0.011 85)"/><g transform="translate(256 256) scale(1.22) translate(-256 -256)"><g fill="none" stroke="oklch(18% 0.006 60)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><path d="M186 148q14 26 0 53t0 53t0 53t0 53"/><path d="M221 148q-14 26 0 53t0 53t0 53t0 53"/><path d="M256 148q14 26 0 53t0 53t0 53t0 53"/><path d="M291 148q-14 26 0 53t0 53t0 53t0 53"/><path d="M326 148q14 26 0 53t0 53t0 53t0 53"/></g><rect x="150" y="268" width="212" height="40" rx="12" fill="oklch(52% 0.2 22)"/></g></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>3b</span>Frame the staple</h3>
+    <p>A squared base, crimp lines and fibre tips make a wool staple, not a droplet.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-3b" viewBox="0 0 512 512" role="img" aria-label="Camera corner brackets around a wool staple"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><g fill="none" stroke="oklch(68% 0.2 22)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"><path d="M132 192V132H192"/><path d="M320 132H380V192"/><path d="M132 320V380H192"/><path d="M320 380H380V320"/></g><g transform="translate(256 256) scale(1.15) translate(-256 -256)"><path d="M206 352V274C206 242 222 216 238 198H274C290 216 306 242 306 274V352Z" fill="oklch(99.5% 0.005 85)" stroke="oklch(99.5% 0.005 85)" stroke-width="8" stroke-linejoin="round"/><path d="M240 198L233 160M256 198V152M272 198L279 160" fill="none" stroke="oklch(99.5% 0.005 85)" stroke-width="12" stroke-linecap="round"/><g fill="none" stroke="oklch(18% 0.006 60)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"><path d="M222 262q17-22 34 0t34 0"/><path d="M220 312q18-22 36 0t36 0"/></g></g></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3><span>2b</span>Score gauge</h3>
+    <p>Three grade bands and a needle say "graded" without naming a number.</p>
+    <div class="pair">
+      <div class="tile bone">
+        <span class="app"><svg id="icon-2b" viewBox="0 0 512 512" role="img" aria-label="A three-band score gauge with a scarlet needle"><rect width="512" height="512" fill="oklch(18% 0.006 60)"/><g transform="translate(0 16)"><g fill="none" stroke="oklch(99.5% 0.005 85)" stroke-width="34" stroke-linecap="round"><path d="M126 300A130 130 0 0 1 176 197.6"/><path d="M199 183.2A130 130 0 0 1 313 183.2"/><path d="M336 197.6A130 130 0 0 1 386 300"/></g><path d="M256 300L290 206" fill="none" stroke="oklch(68% 0.2 22)" stroke-width="24" stroke-linecap="round"/><circle cx="256" cy="300" r="28" fill="oklch(99.5% 0.005 85)"/></g></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2b"/></svg></span>
+        <span class="cap">bone</span>
+      </div>
+      <div class="tile ink">
+        <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2b"/></svg></span>
+        <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2b"/></svg></span>
+        <span class="cap">ink</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="round">Round 1</h2>
+
+<!-- ============ 1 ============ -->
+<section class="cand" aria-labelledby="h1">
+  <h2 id="h1"><span>1</span>Crimp wave</h2>
+  <p>Crimp is the first thing a judge reads in wool. Three waves hold up at 48px, and the middle one is the only scarlet.</p>
+  <div class="row">
+    <div class="tile bone">
+      <span class="app">
+        <svg id="icon-1" viewBox="0 0 512 512" role="img" aria-label="Three crimp waves, the middle one scarlet">
+          <rect width="512" height="512" fill="oklch(96% 0.011 85)"/>
+          <g fill="none" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M100 186q39-56 78 0t78 0t78 0t78 0" stroke="oklch(18% 0.006 60)"/>
+            <path d="M100 256q39-56 78 0t78 0t78 0t78 0" stroke="oklch(52% 0.2 22)"/>
+            <path d="M100 326q39-56 78 0t78 0t78 0t78 0" stroke="oklch(18% 0.006 60)"/>
+          </g>
+        </svg>
+      </span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/></svg></span>
+      <span class="cap">bone</span>
+    </div>
+    <div class="tile white">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/></svg></span>
+      <span class="cap">white</span>
+    </div>
+    <div class="tile ink">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/></svg></span>
+      <span class="cap">ink</span>
+    </div>
+    <div class="tile bone">
+      <span class="safe"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-1"/><circle class="guide-fill" cx="256" cy="256" r="204.8"/><circle class="guide" cx="256" cy="256" r="204.8"/></svg></span>
+      <span class="cap">safe zone, 80% circle</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="cand" aria-labelledby="h2">
+  <h2 id="h2"><span>2</span>64s</h2>
+  <p>The spin-count grade as a mark: a number first, wool second. Drawn as strokes, not type, so it needs no font. Scarlet field, matching the landing poster.</p>
+  <div class="row">
+    <div class="tile bone">
+      <span class="app">
+        <svg id="icon-2" viewBox="0 0 512 512" role="img" aria-label="The numeral 64 and a small s on a scarlet field">
+          <rect width="512" height="512" fill="oklch(52% 0.2 22)"/>
+          <g transform="translate(11 0)" fill="none" stroke="oklch(99.5% 0.005 85)" stroke-linecap="round" stroke-linejoin="round">
+            <g stroke-width="28">
+              <circle cx="134" cy="290" r="52"/>
+              <path d="M82 290C82 222 108 170 174 170"/>
+              <path d="M310 342V170L240 280H340"/>
+            </g>
+            <path d="M410 284C410 262 374 262 374 285C374 304 410 302 410 324C410 346 374 346 374 324" stroke-width="22"/>
+          </g>
+        </svg>
+      </span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/></svg></span>
+      <span class="cap">bone</span>
+    </div>
+    <div class="tile white">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/></svg></span>
+      <span class="cap">white</span>
+    </div>
+    <div class="tile ink">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/></svg></span>
+      <span class="cap">ink</span>
+    </div>
+    <div class="tile bone">
+      <span class="safe"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-2"/><circle class="guide-fill" cx="256" cy="256" r="204.8"/><circle class="guide" cx="256" cy="256" r="204.8"/></svg></span>
+      <span class="cap">safe zone, 80% circle</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="cand" aria-labelledby="h3">
+  <h2 id="h3"><span>3</span>Frame the lock</h2>
+  <p>Scan brackets around a lock of wool: the camera action and the fibre in one mark. The brackets are the one accent.</p>
+  <div class="row">
+    <div class="tile bone">
+      <span class="app">
+        <svg id="icon-3" viewBox="0 0 512 512" role="img" aria-label="Camera corner brackets around a lock of wool">
+          <rect width="512" height="512" fill="oklch(18% 0.006 60)"/>
+          <g fill="none" stroke="oklch(68% 0.2 22)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M132 192V132H192"/>
+            <path d="M320 132H380V192"/>
+            <path d="M132 320V380H192"/>
+            <path d="M320 380H380V320"/>
+          </g>
+          <g transform="translate(256 256) scale(1.2) translate(-256 -258)">
+            <path d="M256 166C302 198 322 250 310 300C302 338 278 354 256 350C234 354 210 338 202 300C190 250 210 198 256 166Z" fill="oklch(99.5% 0.005 85)"/>
+            <g fill="none" stroke="oklch(18% 0.006 60)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M219 246q18-24 37 0t37 0"/>
+              <path d="M215 296q20-24 41 0t41 0"/>
+            </g>
+          </g>
+        </svg>
+      </span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/></svg></span>
+      <span class="cap">bone</span>
+    </div>
+    <div class="tile white">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/></svg></span>
+      <span class="cap">white</span>
+    </div>
+    <div class="tile ink">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/></svg></span>
+      <span class="cap">ink</span>
+    </div>
+    <div class="tile bone">
+      <span class="safe"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-3"/><circle class="guide-fill" cx="256" cy="256" r="204.8"/><circle class="guide" cx="256" cy="256" r="204.8"/></svg></span>
+      <span class="cap">safe zone, 80% circle</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="cand" aria-labelledby="h4">
+  <h2 id="h4"><span>4</span>Graded fleece</h2>
+  <p>My own: a scalloped fleece, the sheep-cloud silhouette, with a scored tick. Ink on a light field, so it is the quiet one next to a scarlet or ink app on the home screen.</p>
+  <div class="row">
+    <div class="tile bone">
+      <span class="app">
+        <svg id="icon-4" viewBox="0 0 512 512" role="img" aria-label="A scalloped fleece with a scarlet tick">
+          <rect width="512" height="512" fill="oklch(99.5% 0.005 85)"/>
+          <g fill="oklch(18% 0.006 60)">
+            <circle cx="256" cy="256" r="135"/>
+            <circle cx="384" cy="256" r="46"/>
+            <circle cx="359.6" cy="331.2" r="46"/>
+            <circle cx="295.6" cy="377.7" r="46"/>
+            <circle cx="216.4" cy="377.7" r="46"/>
+            <circle cx="152.4" cy="331.2" r="46"/>
+            <circle cx="128" cy="256" r="46"/>
+            <circle cx="152.4" cy="180.8" r="46"/>
+            <circle cx="216.4" cy="134.3" r="46"/>
+            <circle cx="295.6" cy="134.3" r="46"/>
+            <circle cx="359.6" cy="180.8" r="46"/>
+          </g>
+          <path d="M188 260L234 304L326 208" fill="none" stroke="oklch(68% 0.2 22)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/></svg></span>
+      <span class="cap">bone</span>
+    </div>
+    <div class="tile white">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/></svg></span>
+      <span class="cap">white</span>
+    </div>
+    <div class="tile ink">
+      <span class="app"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/></svg></span>
+      <span class="app sm"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/></svg></span>
+      <span class="cap">ink</span>
+    </div>
+    <div class="tile bone">
+      <span class="safe"><svg viewBox="0 0 512 512" aria-hidden="true"><use href="#icon-4"/><circle class="guide-fill" cx="256" cy="256" r="204.8"/><circle class="guide" cx="256" cy="256" r="204.8"/></svg></span>
+      <span class="cap">safe zone, 80% circle</span>
+    </div>
+  </div>
+</section>
+
+<footer>Token map: bone = --paper, white = --color-sheet, ink = --ink, scarlet = --red, scarlet on ink = --red-lift, light field = --paper-card.</footer>
+
+</div>
+</body>
+</html>

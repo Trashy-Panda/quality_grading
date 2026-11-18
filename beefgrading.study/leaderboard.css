@@ -1,383 +1,502 @@
-/* leaderboard.css — Rollmark design system
-   Weekly Grading Rankings — the letterboard menu */
+/* leaderboard.css - Weekly page (v3 body UI).
+   The stage is the field plot and the standings, on the ground, never in a
+   card. "Your result" is the one raised surface (--ui-sheet): a rail beside the
+   standings at 900+, stacked on top under 900. Edges are translucent ink.
+   Buttons and the division control live in weekly.css; tokens in style.css. */
 
-/* ── Leaderboard Screen ─────────────────────────────────────── */
-
-#leaderboard-screen {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--paper);
-  min-height: 100vh;
-  color: var(--ink);
-}
-
-/* Faint corner overprint — same technique as setup/field guide.
-   Negative z-index (contained by #leaderboard-screen's own stacking
-   context) keeps it strictly behind every normal-flow child. */
-.leaderboard-overprint {
-  --art: url(assets/art-ribeye.png);
-  position: absolute;
-  top: 60px;
-  left: -70px;
-  width: 300px;
-  aspect-ratio: 899 / 685;
-  color: var(--ink);
-  opacity: 0.055;
-  transform: rotate(-10deg);
-  z-index: -1;
-  pointer-events: none;
-  user-select: none;
-}
-
-@media (max-width: 767px) {
-  .leaderboard-overprint {
-    display: none;
-  }
-}
-
-/* Page nav inherits from global .page-nav styles in style.css */
-
-/* ── Leaderboard Hero Header ────────────────────────────────── */
-
-.leaderboard-hero {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 40px 20px 8px;
-  text-align: center;
-}
-
-/* Blue-ribbon rosette above the stamp badge (award context) */
-.leaderboard-hero::before {
-  content: '';
-  display: block;
-  width: 52px;
-  aspect-ratio: 565 / 939;
-  margin: 0 auto 10px;
-  background: var(--ribbon);
-  -webkit-mask: url(assets/art-rosette.png) center / contain no-repeat;
-  mask: url(assets/art-rosette.png) center / contain no-repeat;
-  transform: rotate(-5deg);
-}
-
-.leaderboard-hero-stamp {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  color: var(--red);
-  background: transparent;
-  border: 1.5px solid var(--red);
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
-  transform: rotate(-1.5deg);
-}
-
-.leaderboard-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--ink);
-  margin-bottom: 6px;
-  line-height: 1.12;
-}
-
-.leaderboard-week-label {
-  font-family: var(--font-script);
-  font-size: 20px;
-  color: var(--ink-soft);
-}
-
-/* ── Tabs — segmented ink-bordered control ──────────────────── */
-
-.leaderboard-tabs {
-  display: inline-flex;
-  gap: 0;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-sm);
-  padding: 0;
-  margin: 20px auto 0;
-  overflow: hidden;
-}
-
-/* center the inline-flex tabs */
-#leaderboard-screen .leaderboard-tabs {
-  display: flex;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.leaderboard-tab {
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  color: var(--ink-soft);
-  background: transparent;
-  border: none;
-  padding: 9px 22px;
-  cursor: pointer;
-  border-radius: 0;
-  transition: background 140ms ease, color 140ms ease;
-}
-
-.leaderboard-tab:hover {
-  background: var(--paper-deep);
-  color: var(--ink);
-}
-
-.leaderboard-tab.active {
-  color: var(--board-text);
-  background: var(--ink);
-}
-
-.leaderboard-tab:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: -2px;
-}
-
-/* ── Table Wrapper ──────────────────────────────────────────── */
-
-.leaderboard-table-wrap {
-  max-width: 860px;
-  margin: 20px auto 0;
-  padding: 0 20px 56px;
-  overflow-x: auto;
-}
-
-/* ── Data Table — letterboard header, paper rows ────────────── */
-
-.leaderboard-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 13.5px;
-  background: var(--paper-card);
-  border: var(--border-ink);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
-}
-
-.leaderboard-table th {
-  background: var(--board-bg);
-  color: var(--board-text);
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-wide);
-  padding: 12px 16px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.leaderboard-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink-soft);
-  vertical-align: middle;
-  font-family: var(--font-ui);
-  font-size: 13.5px;
-}
-
-.leaderboard-table tr:last-child td {
-  border-bottom: none;
-}
-
-/* ── Rank Column ────────────────────────────────────────────── */
-
-.col-rank {
-  width: 64px;
-  text-align: center;
-}
-
-.leaderboard-table td.col-rank {
-  font-variant-numeric: tabular-nums;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  text-align: center;
-}
-
-/* ── Name Column ────────────────────────────────────────────── */
-
-.leaderboard-name-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.leaderboard-table td.col-name {
-  font-weight: 600;
-  color: var(--ink);
-}
-
-/* ── Score Column ───────────────────────────────────────────── */
-
-.col-score {
-  text-align: right;
-}
-
-.leaderboard-table td.col-score {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--ink);
-  text-align: right;
-  white-space: nowrap;
-}
-
-/* ── Pct Column ─────────────────────────────────────────────── */
-
-.col-pct {
-  text-align: right;
-}
-
-.leaderboard-table td.col-pct {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--ink-soft);
-  text-align: right;
-}
-
-.leaderboard-table td.col-pct.high-score {
-  color: var(--red);
-}
-
-/* ── Date Column ────────────────────────────────────────────── */
-
-.col-date {
-  white-space: nowrap;
-}
-
-.leaderboard-table td.col-date {
-  font-size: 12px;
-  color: var(--ink-faint);
-}
-
-/* ── My Row Highlight ───────────────────────────────────────── */
-
-.leaderboard-row-me td {
-  background: var(--red-wash) !important;
-}
-
-.leaderboard-row-me td.col-rank,
-.leaderboard-row-me td.col-score,
-.leaderboard-row-me td.col-pct {
-  color: var(--red);
-}
-
-/* ── Avatar ─────────────────────────────────────────────────── */
+/* ── Avatar (built by leaderboard.js) ───────────────────────── */
 
 .leaderboard-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: var(--ui-r-round);
   object-fit: cover;
-  vertical-align: middle;
   flex-shrink: 0;
 }
+.leaderboard-avatar-fallback circle { fill: var(--ui-sel); }
+.leaderboard-avatar-fallback text {
+  fill: var(--ink-soft);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
 
-/* ── Rank Badges — stamped plates ───────────────────────────── */
+/* ── Screen ─────────────────────────────────────────────────── */
 
-.rank-badge {
+#leaderboard-screen {
+  background: var(--ui-ground);
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--ink);
+}
+
+.wk-page {
+  width: var(--lab-measure);
+  margin: 0 auto;
+  padding: 0 0 4.5rem;
+}
+.wk-page [hidden] { display: none !important; }
+
+.wk-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Header: title and week left, three big figures right ───── */
+
+.wk-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem 2rem;
+  align-items: end;
+  padding: 1.75rem 0 1.25rem;
+  border-bottom: 1px solid var(--ui-edge);
+}
+.wk-head-text { min-width: 0; }
+
+.wk-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.wk-sub {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+
+.wk-weeknav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.wk-navbtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  min-width: 36px;
-  height: 24px;
-  padding: 0 8px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--ink);
-}
-
-.rank-1st {
-  color: var(--poster-cream);
-  background: var(--red);
-}
-
-.rank-2nd {
-  color: var(--board-text);
-  background: var(--board-bg);
-}
-
-.rank-3rd {
+  gap: 0.375rem;
+  min-height: var(--ui-tap);
+  min-width: var(--ui-tap);
+  padding: 0 1rem;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 500;
   color: var(--ink);
-  background: transparent;
+  background: var(--ui-sel);
+  border: 0;
+  border-radius: var(--ui-r-outer);
+  cursor: pointer;
+  --ic-sw: 1.75;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.wk-navbtn svg {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+  stroke-width: var(--ic-sw);
+}
+.wk-navbtn:hover:not(:disabled) { background: var(--ui-edge); }
+.wk-navbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; transition: none; }
+.wk-navbtn:disabled { color: var(--ink-soft); opacity: 0.5; cursor: not-allowed; }
+
+.wk-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ui-tap);
+  margin-left: 0.5rem;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--ui-edge-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.wk-back:hover { text-decoration-color: var(--ink); }
+.wk-back:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* The readout: each figure at display size with its label under it. No
+   boxes, no rules between them. The markup puts the label first; the column
+   is reversed so the figure leads. */
+.wk-readout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+}
+.wk-ro-cell {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+  min-width: 0;
+}
+.wk-ro-k {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.wk-ro-v {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
 }
 
-/* ── Skeleton Loading Rows ──────────────────────────────────── */
+/* ── Field plot: the stage, on the ground ───────────────────── */
 
-@keyframes leaderboard-shimmer {
+.wk-plot {
+  padding: 1.25rem 0 0.5rem;
+  border-top: 2px solid var(--ui-edge);
+}
+.wk-plot-h {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+.wk-plot-h h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+}
+.wk-note { font-family: var(--font-ui); font-size: 0.875rem; color: var(--ink-soft); }
+
+.wk-scale { position: relative; height: 9.375rem; margin-top: 0.75rem; }
+.wk-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.75rem;
+  height: 1px;
+  background: var(--ui-edge-strong);
+}
+.wk-ticks { position: absolute; left: 0; right: 0; bottom: 0; height: 1.75rem; }
+.wk-tick {
+  position: absolute;
+  top: 0;
+  padding-top: 0.625rem;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--ink-soft);
+}
+.wk-tick::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 0.5rem;
+  background: var(--ui-edge-strong);
+}
+
+.wk-dot {
+  position: absolute;
+  bottom: 2rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--ui-r-round);
+  background: color-mix(in oklch, var(--ink) 42%, transparent);
+  transform: translateX(-50%);
+}
+.wk-dot--top { width: 0.75rem; height: 0.75rem; background: var(--ink); }
+/* You: the largest dot, ringed. Scarlet stays on the one primary action. */
+.wk-dot--me {
+  width: 0.875rem;
+  height: 0.875rem;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--ui-ground), 0 0 0 5px var(--ui-edge-strong);
+}
+
+.wk-flag {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.wk-flag b { font-weight: 600; }
+.wk-flag--me { font-weight: 600; }
+.wk-stem { position: absolute; width: 1px; background: var(--ui-edge-strong); }
+.wk-stem--me { background: color-mix(in oklch, var(--ink) 80%, transparent); }
+
+.wk-scale-msg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+/* ── Standings (the list) and your result (the sheet) ───────── */
+
+.wk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem 3rem;
+  margin-top: 1rem;
+  align-items: start;
+}
+.wk-grid.has-you { grid-template-columns: minmax(0, 1fr); }
+
+.wk-tablewrap { overflow-x: auto; }
+.wk-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ui-edge);
+}
+.wk-table th {
+  padding: 0.875rem 0.75rem;
+  text-align: left;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--ui-edge);
+}
+.wk-table td {
+  padding: 0.5rem 0.75rem;
+  height: 3.5rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ui-edge);
+}
+.wk-table tbody tr:last-child td { border-bottom: 0; }
+.wk-table th.n,
+.wk-table td.n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.wk-table td.n {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+/* The percentage is the figure; points and date support it */
+.wk-table td.n:nth-child(4) {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+}
+.wk-table td.rk {
+  width: 3.5rem;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+.wk-table td.who { width: 100%; max-width: 0; font-weight: 500; }
+.wk-who { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.wk-who .leaderboard-avatar { width: 1.75rem; height: 1.75rem; }
+.wk-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wk-you-tag {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* The top row is the heaviest; the numerals do the ranking, no medals */
+.wk-table tbody tr:first-child td { height: 4.25rem; }
+.wk-table tbody tr:first-child td.who { font-weight: 600; }
+.wk-medal {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+}
+.wk-medal--1 { font-size: 1.75rem; }
+
+.wk-table tr.wk-me td { background: var(--ui-sel); font-weight: 600; }
+.wk-table tr.wk-me td.rk { color: var(--ink); }
+
+.wk-skel td span {
+  display: block;
+  height: 0.9rem;
+  width: 70%;
+  background: var(--ui-sel);
+  border-radius: var(--ui-r-inner);
+  animation: wk-shimmer 1.6s ease-in-out infinite;
+}
+.wk-skel td:first-child span { width: 1.5rem; }
+@keyframes wk-shimmer {
   0%   { opacity: 0.4; }
-  50%  { opacity: 0.8; }
+  50%  { opacity: 1; }
   100% { opacity: 0.4; }
 }
 
-.leaderboard-skeleton td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-}
-
-.leaderboard-skeleton td > span {
-  display: block;
-  height: 0.9rem;
-  background: var(--paper-deep);
-  animation: leaderboard-shimmer 1.6s ease-in-out infinite;
-  border-radius: var(--radius-sm);
-}
-
-/* ── Loading / Empty States ─────────────────────────────────── */
-
-.leaderboard-empty {
-  text-align: center;
-  padding: 44px 16px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
-}
-
-.leaderboard-empty strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
+/* Your result: the one sheet on this screen. One display-size figure, then
+   the carcass-by-carcass strip, then the detail rows. */
+.wk-you {
+  padding: 1.25rem 1.25rem 1rem;
+  background: var(--ui-sheet);
+  border-top: 2px solid var(--ui-edge-strong);
   color: var(--ink);
 }
-
-/* ── Sign-in Prompt ─────────────────────────────────────────── */
-
-.leaderboard-signin {
-  text-align: center;
-  padding: 44px 16px;
+.wk-you:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.wk-you-k {
   font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-faint);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+.wk-you-k:first-child { font-weight: 600; color: var(--ink); }
+.wk-you-big {
+  margin: 0.25rem 0 2px;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+}
+.wk-you-big small {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink-soft);
 }
 
-.leaderboard-signin strong {
+/* One bar per carcass; the height carries the result as well as the tone */
+.wk-ladder {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 10), minmax(0, 1fr));
+  align-items: end;
+  gap: var(--ui-pad);
+  height: 1.75rem;
+  margin-top: 1.25rem;
+}
+.wk-ladder i {
   display: block;
+  height: 1.75rem;
+  border-radius: var(--ui-pad);
+  background: var(--ui-sel);
+}
+.wk-ladder i.ok { background: var(--ui-ok); }
+.wk-ladder i.near { height: 1.25rem; background: var(--ui-warn); }
+.wk-ladder i.miss { height: 0.5rem; background: var(--ui-edge-strong); }
+.wk-you-legend {
+  margin-top: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
+.wk-you-dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0 1rem;
+  margin: 1rem 0 0;
+  border-top: 1px solid var(--ui-edge);
+}
+.wk-you-dl dt,
+.wk-you-dl dd { min-height: 3rem; display: flex; align-items: center; }
+.wk-you-dl dt { font-family: var(--font-ui); font-size: 0.9375rem; color: var(--ink-soft); }
+.wk-you-dl dd {
+  margin: 0;
+  justify-content: flex-end;
   font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: var(--track-stamp);
-  margin-bottom: 6px;
-  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Phone (under 900): the sheet leads, columns thin out ───── */
+
+@media (max-width: 899px) {
+  .wk-you { order: -1; }
+  .wk-col-date { display: none; }
+  .wk-tick--odd { color: transparent; }
+  .wk-table th, .wk-table td { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+
+@media (max-width: 560px) {
+  .wk-navbtn-text { display: none; }
+  .wk-navbtn { padding: 0; width: var(--ui-tap); }
+  .wk-table td.rk { width: 2.5rem; }
+  .wk-you-big { font-size: 3.5rem; }
+}
+
+/* ── Desktop (900+): head, then plot on the full width, then the
+   standings beside the sheet rail ─────────────────────────── */
+
+@media (min-width: 900px) {
+  .wk-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 3.5rem 0 2rem;
+  }
+  .wk-title { font-size: 3.25rem; }
+  .wk-sub { font-size: 1.125rem; }
+  .wk-readout { justify-content: flex-start; gap: 2.5rem; padding-bottom: 0.25rem; }
+  .wk-ro-cell { align-items: flex-start; }
+  .wk-ro-k { font-size: 0.875rem; }
+  .wk-ro-v { font-size: 2.25rem; }
+
+  .wk-plot { padding: 1.75rem 0 0.75rem; }
+  .wk-plot-h h2 { font-size: 1.75rem; }
+
+  .wk-grid { margin-top: 1.5rem; }
+  .wk-grid.has-you { grid-template-columns: minmax(0, 1fr) 23.75rem; }
+  .wk-table th, .wk-table td { padding-left: 1rem; padding-right: 1rem; }
+  .wk-table td { height: 3.75rem; }
+  .wk-table tbody tr:first-child td { height: 4.75rem; }
+
+  .wk-you {
+    position: sticky;
+    top: 5.25rem;
+    padding: 1.75rem 1.75rem 1.25rem;
+  }
+  .wk-you-big { font-size: 5.5rem; }
+  .wk-you-big small { font-size: 1.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-skel td span { animation: none; opacity: 0.7; }
+  .wk-navbtn { transition: none; }
 }

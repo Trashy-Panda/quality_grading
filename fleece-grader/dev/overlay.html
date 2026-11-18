@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Fleece OMR overlay</title>
+<style>body{font:14px system-ui;margin:12px;background:#222;color:#eee}canvas{max-width:100%;border:1px solid #555}pre{white-space:pre-wrap;background:#111;padding:8px}</style></head>
+<body><h3>OMR overlay</h3>
+<p>Image URL (relative to this page): <input id="url" size="50" value="../assets/blank-sheet.jpg"> or file: <input type="file" id="file" accept="image/*"> <button id="go">Read</button></p>
+<p>Green = marked bubble, orange = filled but not decisive, blue = blank, magenta diagonal = detected grader slash.</p>
+<pre id="msg"></pre><div id="view"></div>
+<script type="module">
+import { readSheet, drawOverlay, FIELDS } from '../omr.js';
+const msg = document.getElementById('msg'), view = document.getElementById('view');
+async function run(src) {
+  msg.textContent = 'reading...'; const t = performance.now();
+  const r = await readSheet(src, { marginCrops: true }); window.__res = r;
+  if (!r.ok) { msg.textContent = 'FAILED: ' + r.warnings.join('; '); return; }
+  const lines = r.rows.map((row, i) => (i + 1) + ': ' + FIELDS.map(f => f.slice(0, 3) + '=' + (row[f].value ?? '-') + (row[f].status === 'ok' ? '' : '(' + row[f].status + ')') + (row[f].slashStatus === 'ok' ? '/' + row[f].slash : '')).join(' '));
+  msg.textContent = 'corners: ' + r.cornerMethod + ', ' + Math.round(performance.now() - t) + ' ms\n' + r.warnings.join('\n') + '\n' + lines.join('\n');
+  view.innerHTML = ''; view.appendChild(drawOverlay(r));
+}
+window.runOverlay = run;
+document.getElementById('go').addEventListener('click', () => { const f = document.getElementById('file').files[0]; run(f || document.getElementById('url').value); });
+const q = new URLSearchParams(location.search).get('img'); if (q) run(q);
+</script></body></html>
