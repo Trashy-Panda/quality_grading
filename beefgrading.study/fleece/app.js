@@ -1020,7 +1020,12 @@ function renderReview() {
 
 // ---------- results ----------
 let csvUrl = null;
-function csvEscape(v) { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+// Quote when needed; neutralize spreadsheet formulas in text cells (a name starting = + - @ tab CR), leave plain numbers.
+function csvEscape(v) {
+  let s = String(v == null ? '' : v);
+  if (typeof v === 'string' && /^[=+\-@\t\r]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s)) s = "'" + s;
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
 function buildCsv() {
   const head = ['Name', 'Score', 'Total', 'Points off', 'To confirm', 'Grading checks'];
   for (let i = 1; i <= S.n; i++) head.push('F' + i + ' off');
