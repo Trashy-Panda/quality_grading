@@ -10,7 +10,7 @@
 /* ============================================================
    BEEF CARCASS GRADING DRILL - Stylesheet
    Design System: Furrow-derived (Hallmark theme, recomposed)
-   Warm manila paper · near-black ink · brand scarlet as a fill
+   White paper ground · near-black ink · brand scarlet as a fill
    Red Hat Display / Text / Mono · notebook card · moulded keys
    Green marks a correct call. (Replaces the earlier ROLLMARK
    print system; some older comments below still use its names.)
@@ -26,13 +26,14 @@
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  /* paper - warm manila (Furrow). Existing token names are re-pointed so
-     every screen follows; nothing below the block carries a colour literal. */
-  --paper:      oklch(96% 0.011 85);    /* page bg - manila */
-  --paper-deep: oklch(92% 0.016 85);    /* recessed fills, hover, zero-feedback */
-  --paper-card: oklch(99.5% 0.005 85);  /* raised card surface (paper-2) */
-  --line:       oklch(88% 0.013 85);    /* hairline rules */
-  --line-heavy: oklch(76% 0.02 85);     /* resting borders on interactive tiles */
+  /* paper - neutral white ground, the same as the v3 app screens. Token names
+     keep the old paper vocabulary so every screen follows; nothing below the
+     block carries a colour literal. */
+  --paper:      oklch(99.6% 0.003 85);   /* page bg - white, = --ui-ground */
+  --paper-deep: oklch(94.5% 0.004 85);  /* recessed fills, = --ui-board, hover, zero-feedback */
+  --paper-card: oklch(99.9% 0.002 85);  /* raised card surface, edged by --line */
+  --line:       oklch(90% 0.004 85);    /* hairline rules */
+  --line-heavy: oklch(78% 0.006 85);    /* resting borders on interactive tiles */
 
   /* ink */
   --ink:        oklch(18% 0.006 60);    /* near-black */
@@ -51,9 +52,9 @@
      grid = the 8px notebook grid */
   --color-green:      oklch(48% 0.11 150);
   --color-green-soft: oklch(92% 0.04 150);
-  --color-sheet:      oklch(99.3% 0.004 85);
-  --color-grid:       oklch(90% 0.014 85);
-  --color-grid-strong: oklch(85% 0.018 85);
+  --color-sheet:      oklch(99.9% 0.002 85);
+  --color-grid:       oklch(93% 0.004 85);
+  --color-grid-strong: oklch(88% 0.005 85);
 
   /* stock-show blue - AWARD moments only (blue ribbon = 1st place) */
   --ribbon: oklch(52% 0.14 262);

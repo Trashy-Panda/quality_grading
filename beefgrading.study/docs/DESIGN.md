@@ -15,9 +15,10 @@ in a separate comp (`.hallmark/v3/comp-setup.html`) and is not described here.
 
 Tokens live in `style.css` `:root`, the single source of truth. Never a literal
 colour or font-family below it. **The landing page, hero and Power rankings
-scoreboard are kept as they are**: v3 tokens are new names (`--ui-*`); never
-repoint the landing tokens (`--paper`, `--band-*`, `--poster-*`, ...) or the
-`--lab-*` / `--sb-*` names they still use.
+scoreboard keep their layout**: v3 tokens are new names (`--ui-*`). The landing
+paper tokens (`--paper`, `--paper-deep`, `--paper-card`, `--line*`) are now the
+same white ground as the app screens (no manila); `--band-*`, `--poster-*`,
+`--lab-*` and `--sb-*` are unchanged.
 
 ## Materials
 - **Ground** `--ui-ground`: the screen. **Board** `--ui-board`: the page behind a
