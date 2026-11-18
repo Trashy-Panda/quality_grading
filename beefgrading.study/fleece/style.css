@@ -140,7 +140,11 @@ main:focus-visible { outline-offset: -2px; }
 .pk.is-key { background: var(--ui-ok-wash); --ic-sw: 2; }
 .pk.is-key .pk-m { color: var(--ui-ok); font-weight: 600; }
 .pk.is-key[aria-pressed="true"] .pk-m { color: var(--ui-ok); }
-@media (hover: hover) { .pk[aria-pressed="true"]:hover { background-color: var(--ui-sel); } .pk.is-key:hover { background-color: var(--ui-ok-wash); } }
+/* Autofilled Purity/Character stays quiet until the user picks a value. */
+.pk.is-auto[aria-pressed="true"] { background: transparent; }
+.pk.is-auto[aria-pressed="true"] .pk-v { font-weight: 600; color: var(--ink-soft); }
+.pk.is-auto[aria-pressed="true"] .pk-m { color: var(--ink-soft); font-weight: 500; }
+@media (hover: hover) { .pk.is-auto[aria-pressed="true"]:hover { background-color: transparent; } .pk[aria-pressed="true"]:hover { background-color: var(--ui-sel); } .pk.is-key:hover { background-color: var(--ui-ok-wash); } }
 
 /* Field tabs on the sheet */
 .ftabs { display: flex; padding: 0 12px; }
@@ -171,6 +175,7 @@ main:focus-visible { outline-offset: -2px; }
 .fl .num { font-size: 28px; line-height: 1; }
 .fl-v { display: flex; flex-wrap: wrap; gap: 2px 14px; font-size: 16px; font-weight: 500; }
 .fl-v .e { color: var(--ink-faint); font-weight: 400; }
+.fl-v .auto { color: var(--ink-soft); font-weight: 400; }
 .fl.is-on { min-height: 92px; background: var(--ui-sel); }
 .fl .cur { font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; text-decoration-color: var(--ink-rule); }
 .fl.is-on .e { color: var(--ink-soft); }

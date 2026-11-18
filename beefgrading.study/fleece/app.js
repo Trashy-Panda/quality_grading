@@ -17,9 +17,13 @@ const GRADE_D = ['20.59 µ or finer', '20.60 to 22.04 µ', '22.05 to 23.49 µ', 
 const FIELD_NAMES = { grade: 'Grade', length: 'Length', yield: 'Yield', purity: 'Purity', character: 'Character' };
 const SIMPLE = ['grade', 'length', 'purity', 'character'];
 const ORDER = ['grade', 'length', 'yield', 'purity', 'character'];
+// Next/Enter walk only these; Purity and Character are autofilled and reached by tapping.
+const CORE = ['grade', 'length', 'yield'];
+const AUTOF = ['purity', 'character'];
 const STORE = 'fleece-grader-v1';
 
 const emptyFleece = () => ({ grade: null, length: null, yield: null, purity: null, character: null });
+const emptyAuto = () => ({ purity: false, character: false });
 const S = {
   tab: 'session', name: '', n: 20,
   key: Array.from({ length: 20 }, emptyFleece),
@@ -27,6 +31,7 @@ const S = {
   edit: null, onlyFlags: false, nextId: 1,
   kRow: 0, kField: 'grade', adjust: false, detail: false,
   all: { purity: 0, character: 1 }, svZoom: null,
+  auto: Array.from({ length: 20 }, emptyAuto), // per key row: purity/character values filled by default, not picked
 };
 
 // ---------- helpers ----------
@@ -67,7 +72,7 @@ function save() {
     id: s.id, name: s.name, file: s.file, corr: s.corr,
     saved: { answers: answersOf(s), flags: flagsOf(s) },
   }));
-  lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, sheets, nextId: S.nextId }));
+  lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, auto: S.auto, sheets, nextId: S.nextId }));
 }
 function load() {
   const raw = lsGet(STORE); if (!raw) return;
@@ -76,6 +81,10 @@ function load() {
     if (typeof d.name === 'string') S.name = d.name;
     if (Number.isInteger(d.n) && d.n >= 1 && d.n <= 20) S.n = d.n;
     if (Array.isArray(d.key)) S.key = Array.from({ length: 20 }, (_, i) => ({ ...emptyFleece(), ...(d.key[i] || {}) }));
+    S.auto = Array.from({ length: 20 }, (_, i) => {
+      const a = Array.isArray(d.auto) && d.auto[i] || {}, k = S.key[i];
+      return { purity: a.purity === true && k.purity != null, character: a.character === true && k.character != null };
+    });
     if (Array.isArray(d.sheets)) S.sheets = d.sheets.map((s) => ({ id: s.id, name: String(s.name || ''), file: s.file || '', corr: s.corr || {}, saved: s.saved || null, res: null, src: null }));
     S.nextId = d.nextId || S.sheets.length + 1;
   } catch (e) { /* ignore corrupt */ }
@@ -169,16 +178,29 @@ function emptyView(title, sub, ctaText, act) {
 // ---------- session: the key ----------
 function keyDone(k) { return ORDER.every((f) => k[f] != null); }
 function keyedCount() { let c = 0; for (let i = 0; i < S.n; i++) if (keyDone(S.key[i])) c++; return c; }
-function firstIncomplete() { for (let i = 0; i < S.n; i++) if (!keyDone(S.key[i])) return i; return 0; }
+function coreDone(k) { return CORE.every((f) => k[f] != null); }
+function firstIncomplete() { for (let i = 0; i < S.n; i++) if (!coreDone(S.key[i])) return i; return 0; }
+// First grade/length/yield value on a fleece fills blank Purity and Character with the Set all defaults, marked auto.
+function autofillPC(i) {
+  const k = S.key[i]; if (!CORE.some((f) => k[f] != null)) return;
+  for (const f of AUTOF) if (k[f] == null) { k[f] = S.all[f]; S.auto[i][f] = true; }
+}
+// Where Next goes: grade -> length -> yield -> next fleece's grade. Purity/Character tabs hand off to the next fleece.
+function nextStep() {
+  const ci = CORE.indexOf(S.kField);
+  if (ci >= 0 && ci < CORE.length - 1) return { row: S.kRow, field: CORE[ci + 1] };
+  return S.kRow < S.n - 1 ? { row: S.kRow + 1, field: 'grade' } : null;
+}
 function lastWith(f, v, i) { for (let j = i - 1; j >= 0; j--) if (S.key[j][f] === v) return j + 1; return 0; }
 
 // The picker for one simple field of the active fleece: choice rows, aria-pressed on each.
 function segHtml(f, i, k) {
   const rows = LONG[f].map((l, v) => {
-    const on = k[f] === v, prev = lastWith(f, v, i);
-    const mark = `${prev ? 'Fleece ' + prev : ''}${on ? ic('check') : ''}`;
-    if (f === 'grade') return `<button type="button" class="pk" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-d">${escapeHtml(GRADE_D[v])}</span><span class="pk-m">${mark}</span></button>`;
-    return `<button type="button" class="pk pk--b" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-m">${mark}</span></button>`;
+    const on = k[f] === v, prev = lastWith(f, v, i), auto = on && !!S.auto[i][f];
+    const mark = `${prev ? '<span>Fleece ' + prev + '</span>' : ''}${on ? (auto ? '<span>Auto</span>' : ic('check')) : ''}`;
+    const cls = auto ? ' is-auto' : '';
+    if (f === 'grade') return `<button type="button" class="pk${cls}" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-d">${escapeHtml(GRADE_D[v])}</span><span class="pk-m">${mark}</span></button>`;
+    return `<button type="button" class="pk pk--b${cls}" data-act="key" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${on}"><span class="pk-v">${escapeHtml(l)}</span><span class="pk-m">${mark}</span></button>`;
   }).join('');
   return `<div class="pick pick-fade" role="tabpanel" aria-label="${escapeHtml(FIELD_NAMES[f])} for fleece ${i + 1}">${rows}</div>`;
 }
@@ -189,23 +211,23 @@ function keyValsHtml(i) {
   const k = S.key[i], on = i === S.kRow;
   return ORDER.map((f) => {
     const empty = k[f] == null;
-    const cls = [empty ? 'e' : '', on && f === S.kField ? 'cur' : ''].filter(Boolean).join(' ');
+    const cls = [empty ? 'e' : '', !empty && S.auto[i][f] ? 'auto' : '', on && f === S.kField ? 'cur' : ''].filter(Boolean).join(' ');
     const txt = empty ? FIELD_NAMES[f] : longLabel(f, k[f]);
     return `<span${cls ? ` class="${cls}"` : ''}>${escapeHtml(txt)}</span>`;
   }).join('');
 }
 function keyRowInner(i) {
   const k = S.key[i], on = i === S.kRow;
-  const spoken = ORDER.map((f) => `${FIELD_NAMES[f]} ${k[f] == null ? 'not set' : longLabel(f, k[f])}`).join(', ');
+  const spoken = ORDER.map((f) => `${FIELD_NAMES[f]} ${k[f] == null ? 'not set' : longLabel(f, k[f]) + (S.auto[i][f] ? ', automatic' : '')}`).join(', ');
   return `<button type="button" class="fl${on ? ' is-on' : ''}" data-act="key-open" data-row="${i}"${on ? ' aria-current="true"' : ''} aria-label="Fleece ${i + 1}. ${escapeHtml(spoken)}"><span class="num">${i + 1}</span><span class="fl-v">${keyValsHtml(i)}</span></button>`;
 }
 function keyRowHtml(i) { return `<li data-keyrow="${i}">${keyRowInner(i)}</li>`; }
 function keySheetHtml() {
-  const i = S.kRow, f = S.kField, k = S.key[i], fi = ORDER.indexOf(f);
+  const i = S.kRow, f = S.kField, k = S.key[i];
   const tabs = ORDER.map((x) => `<button type="button" role="tab" data-act="key-tab" data-row="${i}" data-field="${x}" aria-selected="${x === f}"${x === f ? '' : ' tabindex="-1"'}>${escapeHtml(FIELD_NAMES[x])}</button>`).join('');
   const panel = f === 'yield' ? keyYieldHtml(i, k) : segHtml(f, i, k);
-  const lastField = fi === ORDER.length - 1;
-  const text = !lastField ? 'Next, ' + FIELD_NAMES[ORDER[fi + 1]] : i < S.n - 1 ? 'Next, fleece ' + (i + 2) : 'Done, scan sheets';
+  const ns = nextStep();
+  const text = !ns ? 'Done, scan sheets' : ns.row === i ? 'Next, ' + FIELD_NAMES[ns.field] : 'Next, fleece ' + (ns.row + 1);
   return `<div class="ftabs" role="tablist" aria-label="Fleece ${i + 1} fields">${tabs}</div>${panel}${ctaHtml(text, `Fleece ${i + 1} of ${S.n}`, 'key-next')}`;
 }
 function updateKeyMeta() {
@@ -317,7 +339,7 @@ async function scanKey(file) {
       for (const f of SIMPLE) k[f] = fieldFromRead(r[f]);
       k.yield = yieldFromDigits(fieldFromRead(r.yieldTens), fieldFromRead(r.yieldOnes));
       if (keyHas(k)) filled++;
-      S.key[i] = k;
+      S.key[i] = k; S.auto[i] = emptyAuto();
     }
     save(); if (S.tab === 'session') { S.kRow = firstIncomplete(); S.kField = 'grade'; renderKeyRows(); }
     const nt = $('key-notice');
@@ -817,26 +839,28 @@ function onClick(e) {
   switch (act) {
     case 'key': {
       const val = Number(t.dataset.val), k = S.key[row];
-      k[f] = k[f] === val ? null : val; refreshKeyRow(row); save(); break;
+      // Tapping an auto value confirms it instead of clearing it.
+      const confirmAuto = AUTOF.includes(f) && S.auto[row][f] && k[f] === val;
+      k[f] = k[f] === val && !confirmAuto ? null : val;
+      if (AUTOF.includes(f)) S.auto[row][f] = false; else if (k[f] != null) autofillPC(row);
+      refreshKeyRow(row); save(); break;
     }
     case 'key-open': {
-      const k = S.key[row], first = ORDER.find((x) => k[x] == null);
+      const k = S.key[row], first = CORE.find((x) => k[x] == null);
       setKeyActive(row, row === S.kRow ? S.kField : (first || 'grade'), true); break;
     }
     case 'all-pick': S.all[f] = Number(t.dataset.val); t.parentElement.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === t))); break;
     case 'all-apply': applySetAll(); break;
     case 'key-tab': setKeyActive(row, f, false); break;
     case 'key-next': {
-      const fi = ORDER.indexOf(S.kField);
-      if (fi < ORDER.length - 1) setKeyActive(S.kRow, ORDER[fi + 1], false);
-      else if (S.kRow < S.n - 1) setKeyActive(S.kRow + 1, 'grade', true);
-      else setTab('scan');
+      const ns = nextStep();
+      if (ns) setKeyActive(ns.row, ns.field, ns.row !== S.kRow); else setTab('scan');
       break;
     }
     case 'n-dec': setN(S.n - 1); break;
     case 'n-inc': setN(S.n + 1); break;
     case 'scan-key': inputs['f-key'].click(); break;
-    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); S.kRow = 0; S.kField = 'grade'; save(); renderSession(); break;
+    case 'clear-key': S.key = Array.from({ length: 20 }, emptyFleece); S.auto = Array.from({ length: 20 }, emptyAuto); S.kRow = 0; S.kField = 'grade'; save(); renderSession(); break;
     case 'goto-scan': setTab('scan'); break;
     case 'goto-results': setTab('results'); break;
     case 'goto-session': setTab('session'); break;
@@ -957,7 +981,9 @@ function init() {
     if (t.id === 's-name') { S.name = t.value; save(); }
     else if (t.dataset.act === 'key-yield') {
       const raw = t.value.trim(), n = Number(raw), row = Number(t.dataset.row);
-      S.key[row].yield = raw !== '' && Number.isInteger(n) && n >= 0 && n <= 99 ? n : null; save(); refreshKeyRow(row, false);
+      S.key[row].yield = raw !== '' && Number.isInteger(n) && n >= 0 && n <= 99 ? n : null;
+      if (S.key[row].yield != null) autofillPC(row);
+      save(); refreshKeyRow(row, false);
     } else if (t.dataset.act === 'name') { const sh = sheetById(Number(t.dataset.id)); if (sh) { sh.name = t.value; save(); } }
   });
   main.addEventListener('change', (e) => {
