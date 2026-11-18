@@ -9,6 +9,8 @@
 //   --eval "JS"     expression run after load (may return a Promise); result printed
 //   --eval2 "JS"    second expression, run after --eval and another --wait
 //   --offline       set the network offline after the first load, then reload
+//   --reload        reload between --eval and --eval2 (same profile, so localStorage
+//                   survives): test persistence in one call. Each call is a fresh profile.
 // Prints one JSON line: { consoleErrors, failedRequests, overflowX, evalResult, eval2Result }.
 // Pass "-" as out to skip the screenshot.
 import { spawn } from 'node:child_process';
@@ -19,7 +21,7 @@ import { join } from 'node:path';
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const a = process.argv.slice(2);
 const [url, widthArg, out] = a;
-if (!url || !widthArg || !out) { console.error('usage: cdp-shot.mjs <url> <width> <out.png|-> [--height N] [--full] [--wait MS] [--eval JS] [--eval2 JS] [--offline]'); process.exit(2); }
+if (!url || !widthArg || !out) { console.error('usage: cdp-shot.mjs <url> <width> <out.png|-> [--height N] [--full] [--wait MS] [--eval JS] [--eval2 JS] [--offline] [--reload]'); process.exit(2); }
 const opt = (k, d) => { const i = a.indexOf(k); return i >= 0 ? a[i + 1] : d; };
 const width = +widthArg;
 const height = +opt('--height', width <= 500 ? 844 : 900);
@@ -28,6 +30,7 @@ const evalJs = opt('--eval', null);
 const eval2Js = opt('--eval2', null);
 const full = a.includes('--full');
 const offline = a.includes('--offline');
+const reload = a.includes('--reload');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const port = 9300 + Math.floor(Math.random() * 600);
@@ -82,6 +85,11 @@ async function main() {
   }
   const result = { consoleErrors, failedRequests };
   if (evalJs) { result.evalResult = await evaluate(evalJs); await sleep(wait); }
+  if (reload) {
+    loaded = once('Page.loadEventFired');
+    await send('Page.reload', {});
+    await Promise.race([loaded, sleep(10000)]); await sleep(wait);
+  }
   if (eval2Js) { result.eval2Result = await evaluate(eval2Js); await sleep(wait); }
   result.overflowX = await evaluate('document.documentElement.scrollWidth > window.innerWidth');
   if (out !== '-') {

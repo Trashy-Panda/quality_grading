@@ -19,4 +19,7 @@ paths:
   44px minimum touch targets on the drill.
 - After edits: preflight exits 0, `node --check` on touched JS,
   `grep -n "onerror=\|onclick=" *.html *.js` returns nothing.
+- UI test hooks: `?ground=bone|white`, `?wktest=notsetup|signedout|nottaken|submitted|past`,
+  `#prtest`, `#prlocal`; reach setup via `#landing-setup-btn`. Shots:
+  `.claude/tools/cdp-shot.mjs` (each call is a fresh profile; `--reload` tests persistence).
 - v3 UI (docs/DESIGN.md): app screens size in rem (the root scales above 1500px); px-designed landing and Power rankings boxes use `calc(var(--u) * N)`. Radii come from `--ui-r-*` tokens (inner = outer minus gap), never literals; box edges are translucent `--ui-edge*` ink; new colour in `oklch()`.
