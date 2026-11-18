@@ -1,0 +1,59 @@
+/* Rails dashboard (fleece/railsview.js). Loaded after style.css and uses only its tokens and
+   component classes (.h2 .mut .lab .fld .cta .ibtn .tbtn .num). Phone first; two columns from 900px.
+   Rows, not cards: each rail is a full-width row that opens in place. */
+.rl { --rl-gut: 20px; display: block; grid-column: 1 / -1; min-width: 0; padding-bottom: 32px; }
+.rl-main, .rl-side { min-width: 0; }
+.rl-head { padding: 24px var(--rl-gut) 4px; }
+.rl-head .mut { margin-top: 6px; }
+.rl .cta { margin-block: 16px 8px; }
+.rl-tools { display: grid; gap: 8px; padding: 8px var(--rl-gut) 0; }
+.rl-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.rl-chip { min-height: var(--ui-tap); padding: 0 14px; border-radius: var(--ui-r-outer); font-size: 14px; font-weight: 500; color: var(--ink-soft); text-align: center; overflow-wrap: anywhere; }
+.rl-chip[aria-pressed="true"] { background: var(--ui-sel); color: var(--ink); font-weight: 600; box-shadow: inset 0 0 0 1px var(--ui-edge-strong); }
+.rl-count { padding: 12px var(--rl-gut) 4px; font-size: 13px; }
+.rl-count:empty { display: none; }
+
+/* list rows */
+.rl-list { margin-top: 4px; border-top: 1px solid var(--ui-edge); }
+.rl-row { border-bottom: 1px solid var(--ui-edge); }
+.rl-row.is-open { background: var(--ui-sel); }
+.rl-hd { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; min-height: 76px; padding: 10px var(--rl-gut); }
+.rl-t { display: grid; gap: 2px; min-width: 0; }
+.rl-name { font-size: 16px; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+.rl-meta { font-size: 13px; line-height: 1.35; color: var(--ink-soft); overflow-wrap: anywhere; }
+.rl-tg { font-weight: 600; color: var(--ink); }
+.rl-score { text-align: right; font: 800 26px/1 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.rl-score small { display: block; margin-top: 2px; font: 500 13px/1.3 var(--font-ui); letter-spacing: 0; color: var(--ink-soft); }
+.rl-dt { padding: 0 var(--rl-gut) 16px; }
+.rl-stat { font-size: 14px; color: var(--ink-soft); }
+.rl-notes { margin-top: 8px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rl-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 12px; }
+.rl-del { color: var(--red-deep); }
+.rl-empty { display: grid; gap: 6px; justify-items: start; padding: 24px var(--rl-gut); }
+
+/* posted officials */
+.rl-side { margin-top: 24px; border-top: 1px solid var(--ui-edge); }
+.rl-oflist { margin-top: 12px; border-top: 1px solid var(--ui-edge); }
+.rl-of { padding: 12px var(--rl-gut) 8px; border-bottom: 1px solid var(--ui-edge); }
+.rl-of .rl-acts { margin-top: 6px; }
+.rl-quiet { display: grid; gap: 4px; justify-items: start; padding: 12px var(--rl-gut); }
+.rl-sk { display: grid; gap: 12px; padding: 16px var(--rl-gut); }
+.rl-sk i { display: block; height: 44px; border-radius: var(--ui-r-inner); background: var(--ui-sel); }
+.rl-sk i:nth-child(2) { width: 80%; }
+.rl-sk i:nth-child(3) { width: 62%; }
+
+/* dialog: forms and confirms */
+.rl-dlg { width: min(480px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 32px); margin: auto; padding: 20px; overflow-y: auto; border: 1px solid var(--ui-edge-strong); border-radius: var(--ui-r-outer); background: var(--ui-sheet); color: var(--ink); }
+.rl-dlg::backdrop { background: var(--ui-scrim); }
+.rl-f { display: grid; gap: 12px; }
+.rl-f .fld textarea { width: 100%; min-height: 96px; padding: 14px; border: 0; border-radius: var(--ui-r-outer); background: var(--ui-sel); font-size: 16px; line-height: 1.4; resize: vertical; }
+.rl-dacts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.rl-danger { background: var(--red); color: var(--paper-card); }
+@media (hover: hover) { .rl-danger:hover { background-color: var(--red-deep); } }
+
+@media (min-width: 900px) {
+  .rl { --rl-gut: 32px; display: grid; grid-template-columns: minmax(0, 1fr) var(--rail); align-items: start; padding-bottom: 0; }
+  .rl-main { min-height: calc(100dvh - var(--top-h)); padding-bottom: 32px; }
+  .rl .cta { width: calc(100% - 2 * var(--rl-gut)); margin-inline: var(--rl-gut); }
+  .rl-side { margin-top: 0; border-top: 0; border-inline-start: 1px solid var(--ui-edge); min-height: calc(100dvh - var(--top-h)); }
+}

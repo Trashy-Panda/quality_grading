@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rails demo</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/rails.css">
+</head>
+<body>
+<!-- Standalone test bed for railsview.js against a fake host. ?online=fake swaps in an in-memory officials service. -->
+<div class="app">
+  <header class="top"><div class="brand">Rails demo</div></header>
+  <main id="mount" tabindex="-1"></main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script type="module">
+import { mountRails, escapeHtml } from '/railsview.js';
+
+const f = (grade, length, y, purity, character) => ({ grade, length, yield: y, purity, character });
+const blank = () => f(null, null, null, null, null);
+const key = Array.from({ length: 20 }, blank);
+key[0] = f(0, 0, 50, 0, 1); key[1] = f(3, 1, 0, 1, 2); key[2] = f(9, 2, 99, 0, 0);
+const ans = (a) => { const r = Array.from({ length: 20 }, blank); a.forEach((x, i) => { r[i] = x; }); return r; };
+const sheet = (id, name, a, need = 0, audit = 0) => ({ id, name, file: '', corr: {}, saved: { answers: ans(a), flags: { need, audit } } });
+
+// The session the fake app holds. Tests replace demo.session.
+const demo = {
+  session: {
+    name: 'Region 3 Class A', n: 3, key,
+    auto: Array.from({ length: 20 }, () => ({ purity: false, character: false })),
+    sheets: [
+      sheet(1, 'Ann', [f(0, 0, 50, 0, 1), f(3, 1, 0, 1, 2), f(9, 2, 99, 0, 0)], 0, 1),
+      sheet(2, 'Bo', [f(1, 0, 55, 0, 1), blank(), f(9, 2, 99, 0, 0)], 2, 0),
+      sheet(3, '=Evil, "Name"', [f(0, 0, 50, 0, 1), f(3, 1, 0, 1, 2), f(9, 2, 99, 0, 0)]),
+    ],
+    nextId: 4,
+  },
+  calls: [], toasts: [],
+};
+const emptySession = () => ({ name: '', n: 20, key: Array.from({ length: 20 }, blank), auto: [], sheets: [], nextId: 1 });
+demo.emptySession = emptySession;
+
+const toastEl = document.getElementById('toast');
+const host = {
+  getSession: () => demo.session,
+  loadSession: (s) => { demo.calls.push({ fn: 'loadSession', arg: s }); demo.session = s; },
+  loadKey: (fleeces, n, title) => { demo.calls.push({ fn: 'loadKey', fleeces, n, title }); },
+  toast: (m) => { demo.toasts.push(m); toastEl.textContent = m; toastEl.hidden = false; },
+  escapeHtml,
+};
+
+if (new URLSearchParams(location.search).get('online') === 'fake') {
+  const items = [];
+  let seq = 0;
+  const { decodeKey } = await import('/keycodec.js');
+  const mk = (title, n, k, owner, uid) => ({ id: 'o' + (++seq), title, n, key: k, fleeces: decodeKey(k), ownerUid: uid, ownerName: owner, createdAt: Date.now() - seq * 86400000 });
+  const { encodeKey } = await import('/keycodec.js');
+  items.push(mk('State Finals Class 2', 10, encodeKey(key, 10), 'Pat Rivera', 'someone-else'));
+  items.push(mk('County Practice <b>1</b>', 20, encodeKey(key, 20), 'Me', 'me'));
+  host.online = {
+    listOfficials: async () => ({ ok: true, items: items.slice() }),
+    currentUser: async () => ({ ok: true, user: { uid: 'me', name: 'Me', anonymous: false } }),
+    postOfficial: async (o) => { const x = mk(o.title, o.n, o.key, 'Me', 'me'); items.unshift(x); return { ok: true, id: x.id }; },
+    deleteOfficial: async (id) => { const i = items.findIndex((x) => x.id === id); if (i >= 0) items.splice(i, 1); return { ok: true }; },
+  };
+}
+
+window.demo = demo;
+window.railsView = mountRails(document.getElementById('mount'), host);
+document.title = 'ready';
+</script>
+</body>
+</html>
