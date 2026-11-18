@@ -281,6 +281,8 @@ main:focus-visible { outline-offset: -2px; }
 .ph-ring { fill: none; vector-effect: non-scaling-stroke; }
 .ph-ring--ok { stroke: var(--ui-ok); stroke-width: 2.5px; }
 .ph-ring--key { stroke: var(--ink-rule); stroke-width: 3px; }
+.ph-hw, .lg-hw { fill: none; stroke: var(--ink-faint); stroke-width: 1.5px; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+.sv-hwl { fill: var(--ink-soft); font-family: var(--font-ui); font-weight: 600; paint-order: stroke; stroke: var(--paper-card); stroke-width: 3px; stroke-linejoin: round; }
 .ph-unsure { fill: none; stroke: var(--ink-rule); stroke-width: 2.5px; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
 .ph-hit { position: absolute; left: 0; width: 100%; min-height: 0; padding: 0; border-radius: 0; background: none; }
 .ph-hit.is-on { background: none; }
@@ -308,10 +310,10 @@ main:focus-visible { outline-offset: -2px; }
 .cell { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 52px; padding: 2px; border: 2px solid transparent; border-radius: var(--ui-r-inner); text-align: center; font-size: 14px; font-weight: 500; line-height: 1.15; min-width: 0; }
 .cell i { display: block; font-style: normal; font-size: 12px; font-weight: 400; color: var(--ink-soft); white-space: nowrap; }
 .cell.is-miss { font-weight: 600; }
-.cell.is-need, .cell.is-audit { background: var(--ui-warn-wash); }
+.cell.is-need, .cell.is-audit, .cell.is-wd { background: var(--ui-warn-wash); }
 .cell.is-off { color: var(--ink-faint); }
 .cell.is-on { border-color: var(--ink-rule); }
-@media (hover: hover) { .cell.is-need:hover, .cell.is-audit:hover { background-color: var(--ui-warn-wash); } }
+@media (hover: hover) { .cell.is-need:hover, .cell.is-audit:hover, .cell.is-wd:hover { background-color: var(--ui-warn-wash); } }
 .rw-p { font: 600 14px/1.2 var(--font-ui); text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
 .rw-p small { display: block; font: 400 12px/1.2 var(--font-ui); }
 .ed-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 20px 6px; }
@@ -321,6 +323,16 @@ main:focus-visible { outline-offset: -2px; }
 .ed-y .fld { flex: 1; }
 .ed-crop { padding: 8px 20px 0; }
 .ed-crop canvas { max-width: 100%; height: 52px; width: auto; background: var(--paper-card); border-radius: var(--ui-r-inner); }
+/* Handwriting beside the yield bubbles: crop cards in the same look as the key photo checks. */
+.hw { display: grid; gap: 2px; padding: 8px 20px 0; }
+.hw-r { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: var(--ui-tap); }
+.hw-k { font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--ink-soft); }
+.hw-cv { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.hw-cv > span:empty { display: none; }
+.hw-cv canvas { display: block; max-width: 100%; height: 44px; width: auto; background: var(--paper-card); border-radius: var(--ui-r-inner); }
+.hw-v { min-width: 44px; text-align: right; font: 600 18px/1.2 var(--font-display); letter-spacing: var(--track-display); font-variant-numeric: tabular-nums; }
+.hw-n { padding: 4px 0; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
+.hw .go { justify-self: start; margin-block: 4px 2px; }
 
 /* Whole sheet: full-screen dialog, zoom by width, pan by scrolling. */
 dialog.sv { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); border: 0; background: var(--ui-ground); color: var(--ink); overflow: hidden; }

@@ -76,7 +76,7 @@ function scrollTo(el, block) { if (el) el.scrollIntoView({ block: block || 'near
 function save() {
   const sheets = S.sheets.map((s) => ({
     id: s.id, name: s.name, file: s.file, corr: s.corr,
-    saved: { answers: answersOf(s), flags: flagsOf(s) },
+    saved: { answers: answersOf(s), flags: flagsOf(s), hand: handRows(s) },
   }));
   lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, auto: S.auto, keySrc: S.keySrc, sheets, nextId: S.nextId }));
 }
@@ -96,12 +96,24 @@ function load() {
       for (const f of ORDER) { const v = src[f]; if (v && typeof v.s === 'string' && SRC_WORDS[v.s] && S.key[i][f] != null) out[f] = v.low === true ? { s: v.s, low: true } : { s: v.s }; }
       return out;
     });
-    if (Array.isArray(d.sheets)) S.sheets = d.sheets.map((s) => ({ id: s.id, name: String(s.name || ''), file: s.file || '', corr: s.corr || {}, saved: s.saved || null, res: null, src: null }));
+    if (Array.isArray(d.sheets)) S.sheets = d.sheets.map((s) => ({ id: s.id, name: String(s.name || ''), file: s.file || '', corr: s.corr || {}, saved: s.saved || null, res: null, src: null, hr: null }));
     S.nextId = d.nextId || S.sheets.length + 1;
   } catch (e) { /* ignore corrupt */ }
 }
 
 // ---------- answers, flags ----------
+// Handwriting (advisory, bubbles still decide). hr[row] = { t: {d, c}, o: {d, c}, m: {v, c, x} }: Written tens, Written ones, official margin.
+// Only these OCR numbers persist; the crops stay in memory with the photo.
+function handRows(sh) { return sh.hr || (sh.saved && Array.isArray(sh.saved.hand) ? sh.saved.hand : null); }
+function writtenOf(sh, i) {
+  const hr = handRows(sh), r = hr && hr[i]; if (!r || !r.t || !r.o) return null;
+  const ok = (x) => x && Number.isInteger(x.d) && x.c >= DIGITS.confidentDigit;
+  return ok(r.t) && ok(r.o) ? r.t.d * 10 + r.o.d : null;
+}
+function marginOf(sh, i) {
+  const hr = handRows(sh), m = hr && hr[i] && hr[i].m; if (!m || !Number.isInteger(m.v)) return null;
+  return { v: m.v, x: m.x || null, sure: m.c >= DIGITS.confidentMargin };
+}
 function readOf(sh, i, f) { return sh.res && sh.res.rows[i] ? sh.res.rows[i][f] : null; }
 function corrOf(sh, i, f) { const c = sh.corr[i]; return c && Object.prototype.hasOwnProperty.call(c, f) ? c[f] : undefined; }
 
@@ -126,8 +138,11 @@ function fieldInfo(sh, i, f) {
   }
   if (slash != null && keyed && slash !== k) slashBad = true;
   const confirmed = corr !== undefined;
+  const written = f === 'yield' ? writtenOf(sh, i) : null;
+  const offer = written != null && !confirmed && status !== 'ok' ? written : null; // no clear bubble: one tap uses the Written digits
+  const wd = written != null && keyed && !confirmed && status === 'ok' && student !== written; // clear bubble, Written confidently differs
   if (confirmed) student = corr;
-  return { student, status, confirmed, keyed, key: k, need: keyed && !confirmed && status !== 'ok', audit: slashBad, slash, cands };
+  return { student, status, confirmed, keyed, key: k, need: keyed && !confirmed && status !== 'ok', audit: slashBad, slash, cands, written, offer, wd };
 }
 function answersOf(sh) {
   if (!sh.res) return (sh.saved && sh.saved.answers) || [];
@@ -138,15 +153,16 @@ function answersOf(sh) {
   });
 }
 function flagsOf(sh) {
-  if (!sh.res) return (sh.saved && sh.saved.flags) || { need: 0, audit: 0 };
-  let need = 0, audit = 0;
-  for (let i = 0; i < S.n; i++) for (const f of ORDER) { const fi = fieldInfo(sh, i, f); if (fi.need) need++; if (fi.audit) audit++; }
-  return { need, audit };
+  if (!sh.res) { const v = (sh.saved && sh.saved.flags) || {}; return { need: v.need || 0, audit: v.audit || 0, wd: v.wd || 0 }; }
+  let need = 0, audit = 0, wd = 0;
+  for (let i = 0; i < S.n; i++) for (const f of ORDER) { const fi = fieldInfo(sh, i, f); if (fi.need) need++; if (fi.audit) audit++; if (fi.wd) wd++; }
+  return { need, audit, wd };
 }
+const toConfirm = (fl) => fl.need + fl.wd;
 function resultOf(sh) { return scoreSheet(answersOf(sh), sheetKey()); }
 function flagList(sh) {
   const out = [];
-  for (let i = 0; i < S.n; i++) for (const f of ORDER) { const fi = fieldInfo(sh, i, f); if (fi.need || fi.audit) out.push({ row: i, field: f }); }
+  for (let i = 0; i < S.n; i++) for (const f of ORDER) { const fi = fieldInfo(sh, i, f); if (fi.need || fi.audit || fi.wd) out.push({ row: i, field: f }); }
   return out;
 }
 function firstFlag(sh) { const l = flagList(sh); return l.length ? l[0] : null; }
@@ -157,6 +173,37 @@ function nextFlag(sh, from) {
   return l.find((x) => pos(x) > pos(from)) || l[0];
 }
 function sheetById(id) { return S.sheets.find((s) => s.id === id) || null; }
+
+// ---------- handwriting reader (after the bubbles paint, never before) ----------
+const fl2 = (x) => Math.floor(x * 100) / 100; // never round a confidence up across the confident line
+function handRow(h) {
+  const one = (fn, c) => { try { return fn(c); } catch (e) { return null; } };
+  const t = one(readDigit, h.tens), o = one(readDigit, h.ones), m = one(readMarginYield, h.margin);
+  const d = (r) => ({ d: r && Number.isInteger(r.digit) ? r.digit : null, c: r ? fl2(r.conf) : 0 });
+  return { t: d(t), o: d(o), m: { v: m && Number.isInteger(m.value) ? m.value : null, c: m ? fl2(m.conf) : 0, x: m && m.extra ? String(m.extra) : null } };
+}
+let handChain = Promise.resolve();
+// Read the Written digits and the margin yield of one sheet once, a few rows at a time so taps stay live.
+function ensureHand(sh) {
+  if (!sh || !sh.res || !sh.res.hand || sh.hr || sh.hrP) return sh && sh.hrP;
+  const res = sh.res;
+  sh.hrP = handChain = handChain.then(async () => {
+    try {
+      await initDigits();
+      const rows = [];
+      for (let r = 0; r < res.hand.length; r++) { rows.push(handRow(res.hand[r])); if (r % 4 === 3) await tick(0); }
+      if (sh.res === res) { sh.hr = rows; save(); handDone(sh); }
+    } catch (e) { /* handwriting is optional: the bubbles still stand */ }
+    sh.hrP = null;
+  });
+  return sh.hrP;
+}
+// New flags can appear once the reads land: refresh what is on screen, but never over a field being typed in.
+function handDone(sh) {
+  const a = document.activeElement;
+  if (S.tab === 'scan') { const st = scanSel(); if (st && st.id === sh.id) { const el = document.querySelector('.s-st span:last-child'); if (el && !sh.err) el.textContent = statusText(sh).t; } }
+  else if ((S.tab === 'review' && sh.id === S.reviewId) || S.tab === 'results') { if (!(a && a.tagName === 'INPUT' && a.closest('main'))) rerender(); }
+}
 
 // ---------- nav ----------
 const VIEWS = { session: renderSession, scan: renderScan, review: renderReview, results: renderResults };
@@ -488,7 +535,7 @@ async function addFiles(files) {
     S.sheets.push(sh); lastId = sh.id;
     busy(`Reading sheet ${n + 1} of ${list.length}`); await tick();
     try {
-      const res = await readSheet(f, { marginCrops: true });
+      const res = await readSheet(f, { hand: true });
       sh.src = res.sourceCanvas || null;
       if (res.ok) {
         sh.res = res; sh.corners = res.corners; sh.warnings = res.warnings || [];
@@ -498,12 +545,13 @@ async function addFiles(files) {
   }
   busy(); S.cornerId = lastId; S.adjust = false; save();
   if (S.tab !== 'scan') setTab('scan'); else rerender();
+  S.sheets.filter((x) => x.res && !x.hr).forEach(ensureHand); // after the bubble result is on screen
 }
 function statusText(sh) {
   if (sh.err) return { t: sh.err, err: true };
   if (!sh.res) return { t: 'Saved scores only, the photo is not kept.', err: false };
   const fl = flagsOf(sh);
-  return { t: `Read. ${fl.need} to confirm, ${plural(fl.audit, 'grading check')}.`, err: false };
+  return { t: `Read. ${toConfirm(fl)} to confirm, ${plural(fl.audit, 'grading check')}.`, err: false };
 }
 function scanSel() { return sheetById(S.cornerId) || S.sheets[S.sheets.length - 1] || null; }
 function thumbOf(sh) {
@@ -622,15 +670,15 @@ function mountCorners(slot, sh, o = {}) {
 async function reread(sh) {
   busy('Re-reading sheet'); await tick();
   try {
-    const res = await readSheetWithCorners(sh.src, sh.corners, { marginCrops: true });
+    const res = await readSheetWithCorners(sh.src, sh.corners, { hand: true });
     if (res.ok) {
-      sh.res = res; sh.photoUrl = null; sh.sheetUrl = null; sh.err = null; sh.warnings = res.warnings || [];
+      sh.res = res; sh.hr = null; sh.hrP = null; sh.photoUrl = null; sh.sheetUrl = null; sh.err = null; sh.warnings = res.warnings || [];
       S.adjust = false;
       toast('Re-read done.');
     }
     else { sh.err = (res.warnings && res.warnings[0]) || 'Read failed. Adjust corners.'; }
   } catch (e) { sh.err = 'Read failed: ' + e.message; }
-  busy(); save(); rerender();
+  busy(); save(); rerender(); ensureHand(sh);
 }
 
 // ---------- review ----------
@@ -643,8 +691,9 @@ function chipHtml(sh, i, f, rs) {
   if (fi.student != null) main = f === 'yield' ? String(fi.student) : SHORT[f][fi.student];
   else if (fi.need) main = fi.status === 'blank' ? 'Blank' : 'Unsure';
   else main = fi.confirmed || fi.keyed ? 'Blank' : '-';
-  if (fi.need) { cls += ' is-need'; sub = 'confirm'; state = 'needs a look'; }
+  if (fi.need) { cls += ' is-need'; sub = fi.offer != null ? 'written ' + fi.offer : 'confirm'; state = fi.offer != null ? `needs a look, written digits say ${fi.offer}` : 'needs a look'; }
   else if (fi.audit) { cls += ' is-audit'; sub = 'slash ' + label(f, fi.slash); state = 'grader slash disagrees with the key'; }
+  else if (fi.wd) { cls += ' is-wd'; sub = 'written ' + fi.written; state = `written digits say ${fi.written}, bubbles say ${fi.student}`; }
   else if (graded && fi.keyed && off > 0) { cls += ' is-miss'; sub = 'key ' + label(f, fi.key); state = `${off} points off, key ${longLabel(f, fi.key)}`; }
   else if (!fi.keyed) { cls += ' is-off'; state = 'no key'; }
   else state = 'matches the key';
@@ -655,6 +704,7 @@ function chipHtml(sh, i, f, rs) {
 function edStatus(fi, f) {
   if (fi.need) return fi.status === 'multiple' ? 'Two marks read' : fi.status === 'unsure' ? 'Faint read' : 'No mark read';
   if (fi.audit) return `Grader slash says ${label(f, fi.slash)}`;
+  if (fi.wd) return `Written ${fi.written}, bubbles ${fi.student}`;
   if (fi.confirmed) return 'Confirmed';
   return fi.student == null ? 'Blank' : 'Read cleanly';
 }
@@ -667,13 +717,27 @@ function optRow(sh, i, f, v, fi) {
   else if (fi.cands.includes(v)) m = 'Scan saw a mark';
   return `<button type="button" class="pk pk--b${isK ? ' is-key' : ''}" data-act="set" data-row="${i}" data-field="${f}" data-val="${v}" aria-pressed="${isS}"><span class="pk-v">${escapeHtml(longLabel(f, v))}</span><span class="pk-m">${m}</span></button>`;
 }
+// What the student wrote beside the yield bubbles and what the grader wrote in the margin: crops to settle a doubtful bubble by eye.
+function hwHtml(sh, i, fi) {
+  const h = sh.res.hand && sh.res.hand[i], hr = handRows(sh), r = hr && hr[i]; if (!h) return '';
+  const blank = r && r.t.d == null && r.o.d == null && r.t.c >= DIGITS.confidentDigit && r.o.c >= DIGITS.confidentDigit;
+  const wtxt = !r ? 'Reading' : fi.written != null ? String(fi.written) : blank ? 'Nothing' : 'Not clear';
+  const m = marginOf(sh, i), mtxt = !r ? 'Reading' : m && m.sure ? m.v + (m.x ? ' ' + m.x : '') : m ? m.v + '?' : 'Not clear';
+  const note = fi.wd ? `Bubbles say ${fi.student}. The Written digits say ${fi.written}. Bubbles count unless you change them.` : fi.offer != null ? `No clear bubble. The Written digits say ${fi.offer}.` : '';
+  const spoken = (t) => t.replace('?', ', unsure');
+  return `<div class="hw" role="group" aria-label="Handwriting beside fleece ${i + 1}">
+    <div class="hw-r"><span class="hw-k">Student wrote</span><span class="hw-cv"><span data-hw="tens" data-row="${i}"></span><span data-hw="ones" data-row="${i}"></span></span><span class="hw-v" aria-label="Written digits read ${escapeHtml(spoken(wtxt))}">${escapeHtml(wtxt)}</span></div>
+    <div class="hw-r"><span class="hw-k">Official, margin</span><span class="hw-cv"><span data-hw="margin" data-row="${i}"></span></span><span class="hw-v" aria-label="Margin read ${escapeHtml(spoken(mtxt))}">${escapeHtml(mtxt)}</span></div>
+    ${note ? `<p class="hw-n">${escapeHtml(note)}</p>` : ''}
+    ${fi.written != null && (fi.offer != null || fi.wd) ? `<button type="button" class="ibtn go" data-act="use-written" data-row="${i}">Use written ${escapeHtml(fi.written)}</button>` : ''}</div>`;
+}
 function editorHtml(sh, i, f) {
   const fi = fieldInfo(sh, i, f), flags = flagList(sh);
   let body;
   if (f === 'yield') {
     body = `<div class="ed-y"><label class="fld"><span class="lab">${fi.keyed ? 'Yield, official key ' + escapeHtml(fi.key) : 'Yield, 0 to 99'}</span><input type="number" inputmode="numeric" min="0" max="99" step="1" id="ed-yield" value="${fi.student == null ? '' : fi.student}"></label>
       <button type="button" class="ibtn" data-act="set-yield" data-row="${i}">Set yield</button></div>
-      ${sh.res.marginCrops ? `<div class="ed-crop"><span class="lab">Written on the sheet</span><span data-crop="${i}"></span></div>` : ''}`;
+      ${hwHtml(sh, i, fi)}`;
   } else {
     const blankOn = fi.confirmed && fi.student == null;
     const bOff = fi.keyed ? scoreField(f, null, fi.key).off : 0;
@@ -682,7 +746,7 @@ function editorHtml(sh, i, f) {
   }
   const hasCorr = corrOf(sh, i, f) !== undefined;
   const links = `<div class="links">${f === 'yield' ? `<button type="button" data-act="set" data-row="${i}" data-field="yield" data-val="blank">Blank</button>` : ''}${hasCorr ? `<button type="button" data-act="unset" data-row="${i}" data-field="${f}">Use scan read</button>` : ''}<button type="button" data-act="close-edit">Close</button></div>`;
-  const cta = flags.length ? ctaHtml(fi.need ? 'Confirm, next flag' : 'Next flag', `${flags.length} flagged`, 'confirm-next') : ctaHtml('See results', '', 'goto-results');
+  const cta = flags.length ? ctaHtml(fi.need ? 'Confirm, next flag' : fi.wd ? 'Keep bubbles, next flag' : 'Next flag', `${flags.length} flagged`, 'confirm-next') : ctaHtml('See results', '', 'goto-results');
   return `<div class="ed-h"><b>Fleece ${i + 1}, ${escapeHtml(FIELD_NAMES[f])}</b><span>${escapeHtml(edStatus(fi, f))}</span></div>${body}${cta}${links}`;
 }
 function reviewSheetHtml(sh) {
@@ -736,7 +800,10 @@ function photoHtml(sh) {
   const ext = (gn) => { let lo = Infinity, hi = -Infinity; for (let r = 0; r < 20; r++) for (const b of g[r][gn]) { lo = Math.min(lo, b.x - b.rx); hi = Math.max(hi, b.x + b.rx); } return [lo, hi]; };
   let x0, x1;
   if (zone === 'A') { x0 = vw.x0; x1 = ext('length')[1] + 34; }
-  else if (zone === 'B') { x0 = ext('yieldTens')[0] - 36; x1 = ext('yieldOnes')[1] + 36; }
+  else if (zone === 'B') {
+    x0 = ext('yieldTens')[0] - 36; x1 = ext('yieldOnes')[1] + 36;
+    if (res.hand) for (const h of res.hand) { x0 = Math.min(x0, h.tens.rect.x - 6); x1 = Math.max(x1, h.ones.rect.x + h.ones.rect.w + 6); } // keep the Written boxes in frame
+  }
   else { x0 = ext('yieldOnes')[0] - 12; x1 = vw.x1; }
   x0 = Math.max(vw.x0, x0); x1 = Math.min(vw.x1, x1);
   const rowY = (r) => { let s = 0, n = 0; for (const gn of ['grade', 'length', 'purity', 'character']) for (const b of g[r][gn]) { s += b.y; n++; } return s / n; };
@@ -756,6 +823,7 @@ function photoHtml(sh) {
   for (let r = r0; r <= r1; r++) {
     if (S.edit && S.edit.row === r) shapes += `<rect class="ph-band" x="${x0}" y="${top(r)}" width="${w}" height="${pitch}"/>`;
     const fieldsSeen = {};
+    if (zone === 'B' && res.hand) shapes += handBoxes(res.hand[r], ['tens', 'ones']);
     for (const [gn, f] of GROUPS) {
       const bs = g[r][gn];
       if (!bs.length || !bs.some(inX)) continue;
@@ -769,6 +837,7 @@ function photoHtml(sh) {
       const fs = fieldsSeen[f], fi = fs.fi, cx = fs.xs.reduce((a, b) => a + b, 0) / fs.xs.length;
       if (fi.need) tags += tagFor(cx, fs.ymin, fi.status === 'blank' ? 'Blank, tap to fix' : 'Unsure, tap to fix', '', r, f);
       else if (fi.audit) tags += tagFor(cx, fs.ymin, 'Slash differs, tap', '', r, f);
+      else if (fi.wd) tags += tagFor(cx, fs.ymin, `Written ${fi.written}, tap`, '', r, f);
       else if (fi.keyed && fi.student != null && fi.student !== fi.key) tags += tagFor(fs.ki.length ? fs.ki[0].x : cx, fs.ymin, 'key ' + label(f, fi.key), ' ph-tag--key', r, f);
     }
     html += `<button type="button" class="ph-hit${S.edit && S.edit.row === r ? ' is-on' : ''}" data-act="focus-row" data-row="${r}" style="top:${py(top(r))}%;height:${(pitch / h * 100).toFixed(3)}%" aria-label="Fleece ${r + 1}"></button>`;
@@ -778,17 +847,27 @@ function photoHtml(sh) {
   const cap = `Fleeces ${r0 + 1} to ${r1 + 1}, ${where}`;
   return { html: `<div id="ovslot" class="ph" style="--ar:${(w / h).toFixed(4)}" role="group" aria-label="Scan photo. ${escapeHtml(cap)}"><svg viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${html}${nums}${tags}<button type="button" class="ph-full" data-act="sheet-view">${ic('corners')}Whole sheet</button></div>`, cap };
 }
-const legendHtml = (cap) => `<div class="legend" aria-hidden="true">
+const legendHtml = (cap, hw) => `<div class="legend" aria-hidden="true">
   <span class="lg-cap">${escapeHtml(cap)}</span>
   <span><svg viewBox="0 0 18 14"><ellipse class="lg-dot" cx="9" cy="7" rx="6" ry="4.5"/></svg>Scan read</span>
   <span><svg viewBox="0 0 18 14"><ellipse class="lg-key" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Official key</span>
   <span><svg viewBox="0 0 18 14"><ellipse class="lg-ok" cx="9" cy="7" rx="7.5" ry="5.5"/></svg>Matches key</span>
-  <span><svg viewBox="0 0 18 14"><rect class="lg-warn" x="1" y="2" width="16" height="10" rx="2"/></svg>Needs a look</span></div>`;
+  <span><svg viewBox="0 0 18 14"><rect class="lg-warn" x="1" y="2" width="16" height="10" rx="2"/></svg>Needs a look</span>${hw ? '<span><svg viewBox="0 0 18 14"><rect class="lg-hw" x="1.5" y="2.5" width="15" height="9"/></svg>Handwriting read</span>' : ''}</div>`;
 // The whole scanned page with every read mark on it, in a full-screen view you can zoom and pan.
 const ZOOMS = [1, 1.6, 2.5, 4];
 function sheetUrl(sh) {
   if (!sh.sheetUrl) sh.sheetUrl = sh.res.warpedCanvas.toDataURL('image/jpeg', 0.8);
   return sh.sheetUrl;
+}
+// Outlines of the Written boxes and the margin, so the coach sees where the reader looked.
+function handBoxes(h, keys = ['tens', 'ones', 'margin']) {
+  return keys.map((k) => { const b = h[k].rect; return `<rect class="ph-hw" x="${b.x.toFixed(1)}" y="${b.y.toFixed(1)}" width="${b.w.toFixed(1)}" height="${b.h.toFixed(1)}"/>`; }).join('');
+}
+function handLabels(sh, pitch) {
+  const h = sh.res.hand && sh.res.hand[0]; if (!h) return '';
+  const fs = Math.max(10, pitch * 0.42), y = Math.max(fs + 2, h.tens.rect.y - 4);
+  const t = (x, txt) => `<text class="sv-hwl" x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${fs.toFixed(1)}">${txt}</text>`;
+  return t(h.tens.rect.x, 'Written') + t(h.margin.rect.x, 'Official');
 }
 function sheetViewHtml(sh) {
   const g = sh.res.geometry, W = sh.res.warpedCanvas.width, H = sh.res.warpedCanvas.height;
@@ -804,20 +883,23 @@ function sheetViewHtml(sh) {
       const q = box[f] = box[f] || [Infinity, Infinity, -Infinity, -Infinity];
       for (const b of bs) { q[0] = Math.min(q[0], b.x - b.rx); q[1] = Math.min(q[1], b.y - b.ry); q[2] = Math.max(q[2], b.x + b.rx); q[3] = Math.max(q[3], b.y + b.ry); }
     }
+    if (sh.res.hand && sh.res.hand[r]) shapes += handBoxes(sh.res.hand[r]);
     for (const f of Object.keys(box)) {
-      const fi = fieldInfo(sh, r, f); if (!fi.need && !fi.audit) continue;
-      const q = box[f], pad = 5; nflag++;
-      const why = fi.need ? (fi.status === 'blank' ? 'blank' : 'unsure') : 'slash differs';
+      const fi = fieldInfo(sh, r, f); if (!fi.need && !fi.audit && !fi.wd) continue;
+      const q = box[f].slice(), pad = 5; nflag++;
+      if (f === 'yield' && sh.res.hand && sh.res.hand[r]) for (const k of ['tens', 'ones']) { const hb = sh.res.hand[r][k].rect; q[0] = Math.min(q[0], hb.x); q[1] = Math.min(q[1], hb.y); q[2] = Math.max(q[2], hb.x + hb.w); q[3] = Math.max(q[3], hb.y + hb.h); }
+      const why = fi.need ? (fi.status === 'blank' ? 'blank' : 'unsure') : fi.audit ? 'slash differs' : `written ${fi.written}, bubbles ${fi.student}`;
       flags += `<button type="button" class="sv-flag" data-act="sv-edit" data-row="${r}" data-field="${f}" aria-label="Fleece ${r + 1} ${escapeHtml(FIELD_NAMES[f])}, ${why}. Fix it" style="left:${((q[0] - pad) / W * 100).toFixed(3)}%;top:${((q[1] - pad) / H * 100).toFixed(3)}%;width:${((q[2] - q[0] + 2 * pad) / W * 100).toFixed(3)}%;height:${((q[3] - q[1] + 2 * pad) / H * 100).toFixed(3)}%"></button>`;
     }
   }
+  if (sh.res.hand) shapes += handLabels(sh, pitch);
   const z = ZOOMS[S.svZoom];
   const hint = nflag ? `${plural(nflag, 'mark')} to check. Tap an amber box to fix it.` : 'Every mark read cleanly.';
   return `<div class="sv-bar"><div class="sv-h"><h2 class="sv-t" id="sv-t">Whole sheet</h2><p class="mut">${escapeHtml(sh.name)}. ${hint}</p></div>
     <div class="sv-z" role="group" aria-label="Zoom"><button type="button" data-act="sv-zoom" data-d="-1" aria-label="Zoom out"${S.svZoom === 0 ? ' disabled' : ''}>${ic('minus')}</button><button type="button" data-act="sv-zoom" data-d="1" aria-label="Zoom in"${S.svZoom === ZOOMS.length - 1 ? ' disabled' : ''}>${ic('plus')}</button></div>
     <button type="button" class="sv-x" data-act="sv-close" aria-label="Close whole sheet">${ic('x')}</button></div>
     <div class="sv-scroll" id="sv-scroll" tabindex="0" role="group" aria-label="Scanned sheet with read marks. Scroll to pan."><div class="sv-pan" id="sv-pan" style="--ar:${(W / H).toFixed(4)};--z:${z}"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true" focusable="false">${shapes}</svg>${flags}</div></div>
-    ${legendHtml('Dot is what the scan read')}`;
+    ${legendHtml('Dot is what the scan read', !!sh.res.hand)}`;
 }
 function openSheetView() {
   const sh = sheetById(S.reviewId), dlg = $('sv'); if (!sh || !sh.res || !dlg) return;
@@ -857,6 +939,7 @@ function renderReview() {
     return;
   }
   const rs = resultOf(sh), fl = flagsOf(sh), ph = photoHtml(sh);
+  ensureHand(sh);
   let rows = '';
   for (let i = 0; i < S.n; i++) {
     const infos = ORDER.map((f) => fieldInfo(sh, i, f));
@@ -872,7 +955,7 @@ function renderReview() {
       <div class="sheet" id="rv-sheet">${reviewSheetHtml(sh)}</div>
     </div>
     <div class="rv-side">
-      <header class="rv-head"><div><h2 class="h2">Review</h2><p class="mut">${rs.score} / ${rs.total}. ${fl.need} to confirm, ${plural(fl.audit, 'grading check')}.</p></div>${sel}</header>
+      <header class="rv-head"><div><h2 class="h2">Review</h2><p class="mut">${rs.score} / ${rs.total}. ${toConfirm(fl)} to confirm, ${plural(fl.audit, 'grading check')}.</p></div>${sel}</header>
       <div class="rv-bar">
         <button type="button" class="sw" role="switch" data-act="only-flags" aria-checked="${S.onlyFlags}"><span class="sw-t" aria-hidden="true"><i></i></span><span>Show flagged only</span></button>
         <button type="button" class="tbtn" data-act="goto-results">Results${ic('arrow')}</button>
@@ -880,9 +963,11 @@ function renderReview() {
       ${(sh.warnings || []).map((w) => `<p class="rv-note">${escapeHtml(w)}</p>`).join('')}
       <ol id="rows" class="rows">${rows || '<li class="empty">Nothing flagged.</li>'}</ol>
     </div>`;
-  v.querySelectorAll('[data-crop]').forEach((el) => {
-    const cv = sh.res.marginCrops && sh.res.marginCrops[Number(el.dataset.crop)];
-    if (cv) { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.getContext('2d').drawImage(cv, 0, 0); c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Handwritten yield, fleece ' + (Number(el.dataset.crop) + 1)); el.appendChild(c); }
+  const HW_NAMES = { tens: 'Written tens digit', ones: 'Written ones digit', margin: 'Official yield in the margin' };
+  v.querySelectorAll('[data-hw]').forEach((el) => {
+    const n = Number(el.dataset.row), h = sh.res.hand && sh.res.hand[n], cv = h && h[el.dataset.hw] && h[el.dataset.hw].canvas; if (!cv) return;
+    const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; c.getContext('2d').drawImage(cv, 0, 0);
+    c.setAttribute('role', 'img'); c.setAttribute('aria-label', `${HW_NAMES[el.dataset.hw]}, fleece ${n + 1}`); el.replaceChildren(c);
   });
   const on = v.querySelector('#rv-sheet .pick [aria-pressed="true"]'), pk = on && on.parentElement;
   if (pk && on.offsetTop + on.offsetHeight > pk.clientHeight - 24) pk.scrollTop = Math.max(0, Math.floor((on.offsetTop - pk.clientHeight / 3) / on.offsetHeight) * on.offsetHeight);
@@ -897,7 +982,7 @@ function buildCsv() {
   const lines = [head.join(',')];
   for (const sh of S.sheets) {
     const r = resultOf(sh), fl = flagsOf(sh);
-    const row = [sh.name, r.score, r.total, r.off, fl.need, fl.audit];
+    const row = [sh.name, r.score, r.total, r.off, toConfirm(fl), fl.audit];
     for (let i = 0; i < S.n; i++) row.push(r.fleeces[i] && r.fleeces[i].graded ? r.fleeces[i].off : '');
     lines.push(row.map(csvEscape).join(','));
   }
@@ -916,7 +1001,7 @@ function renderResults() {
   const bars = offs.map((x) => `<i class="${x === null ? 'n' : x === 0 ? 'z' : ''}" style="--off:${most ? ((x || 0) / most).toFixed(3) : 0}"></i>`).join('');
   const sheetRows = S.sheets.map((s) => {
     const r = resultOf(s), f = flagsOf(s);
-    const flags = !f.need && !f.audit ? 'none' : [f.need ? f.need + ' confirm' : '', f.audit ? f.audit + ' check' : ''].filter(Boolean).join(', ');
+    const flags = !toConfirm(f) && !f.audit ? 'none' : [toConfirm(f) ? toConfirm(f) + ' confirm' : '', f.audit ? f.audit + ' check' : ''].filter(Boolean).join(', ');
     return `<li><button type="button" class="sh${s.id === sh.id ? ' is-on' : ''}" data-sheet="${s.id}"${s.id === sh.id ? ' aria-current="true"' : ''}><span class="sh-n">${escapeHtml(s.name)}</span><span class="sh-f">Flags: ${escapeHtml(flags)}</span><span class="sh-s">${r.score} / ${r.total}<small>${r.off} off</small></span></button></li>`;
   }).join('');
   const detail = !S.detail ? '' : `<div class="dtw"><table><thead><tr><th>Fleece</th>${ORDER.map((f) => `<th>${escapeHtml(FIELD_NAMES[f])}</th>`).join('')}<th>Points</th></tr></thead><tbody>${Array.from({ length: S.n }, (_, i) => {
@@ -938,6 +1023,7 @@ function renderResults() {
       ${detail}
       ${keyed ? '' : '<button type="button" class="nt" data-act="goto-session"><span class="nt-r"><span>No official key entered. Set the key in Session.</span><b>Session</b></span></button>'}
       ${fl.need ? `<button type="button" class="nt" data-act="review" data-id="${sh.id}"><span class="nt-r"><span>${plural(fl.need, 'answer')} still need confirming in Review. Unconfirmed reads count as blank.</span><b>Review</b></span></button>` : ''}
+      ${fl.wd ? `<button type="button" class="nt" data-act="review" data-id="${sh.id}"><span class="nt-r"><span>${plural(fl.wd, 'yield')} where the Written digits differ from the bubbles. The bubbles count unless you change them.</span><b>Review</b></span></button>` : ''}
       ${fl.audit ? `<p class="nt">${plural(fl.audit, 'field')} where the grader slash disagrees with the key.</p>` : ''}
     </div>
     <div class="sheet">
@@ -1019,7 +1105,7 @@ function onClick(e) {
     case 'edit': S.edit = { row, field: f }; rerender(); focusPhoto(); break;
     case 'focus-row': {
       const sh = sheetById(S.reviewId); if (!sh) break;
-      const hit = ORDER.find((x) => { const fi = fieldInfo(sh, row, x); return fi.need || fi.audit; });
+      const hit = ORDER.find((x) => { const fi = fieldInfo(sh, row, x); return fi.need || fi.audit || fi.wd; });
       const cur = S.edit && S.edit.row === row ? S.edit.field : null;
       S.edit = { row, field: cur || hit || (S.edit ? S.edit.field : 'grade') }; rerender(); focusPhoto(); break;
     }
@@ -1029,7 +1115,7 @@ function onClick(e) {
       const cur = S.edit;
       if (act === 'confirm-next' && cur) {
         const fi = fieldInfo(sh, cur.row, cur.field);
-        if (fi.need) setCorr(sh, cur.row, cur.field, fi.student);
+        if (fi.need || fi.wd) setCorr(sh, cur.row, cur.field, fi.student);
         save();
       }
       const nx = cur ? nextFlag(sh, cur) : firstFlag(sh);
@@ -1046,6 +1132,10 @@ function onClick(e) {
         setCorr(sh, row, 'yield', n);
       } else setCorr(sh, row, field, t.dataset.val === 'blank' ? null : Number(t.dataset.val));
       S.edit = { row, field }; save(); rerender(); break;
+    }
+    case 'use-written': {
+      const sh = sheetById(S.reviewId), fi = sh && fieldInfo(sh, row, 'yield'); if (!fi || fi.written == null) break;
+      setCorr(sh, row, 'yield', fi.written); S.edit = { row, field: 'yield' }; save(); rerender(); break;
     }
     case 'sheet-view': openSheetView(); break;
     case 'toggle-detail': S.detail = !S.detail; rerender(); break;
