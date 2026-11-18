@@ -1,0 +1,17 @@
+digits-net.bin - weights of the handwriting digit classifier used by digits.js
+==========================================================================
+
+Format: 5994 little-endian float32 (conv 5x5x8, conv 5x5x16, fully connected 256x10), the LeNet-style architecture of the
+ONNX Model Zoo "MNIST" (mnist-12) network.
+
+Provenance
+- Initialised from the ONNX Model Zoo mnist-12 model (https://github.com/onnx/models, vision/classification/mnist).
+  Licence: Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0). Copyright the ONNX Model Zoo contributors.
+- Fine-tuned (pure numpy, in this repo's tooling) on:
+  * the MNIST database of handwritten digits, Yann LeCun, Corinna Cortes and Christopher J.C. Burges
+    (http://yann.lecun.com/exdb/mnist/). MNIST is derived from NIST Special Databases 1 and 3 (US government work).
+    Attribution: LeCun et al., "Gradient-based learning applied to document recognition", Proc. IEEE 86(11), 1998.
+  * digit crops cut from this project's own scanned grading sheets (not redistributed; only the weights ship).
+
+The weights are a modified (fine-tuned) work derived from an Apache-2.0 model; this notice satisfies its attribution and
+change-notice terms. The weights carry no personal data.

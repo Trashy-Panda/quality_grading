@@ -1,7 +1,7 @@
 // omr.js - in-browser reader for the wool grading sheet. Requires OpenCV.js (loaded lazily from a pinned CDN).
 // v2: the sheet is registered on its ruled table lines (grid.js), not on the faint bubble outlines. See SPEC.md.
 import { GRID } from './template.js';
-import { findLattice, bubbles } from './grid.js';
+import { findLattice, bubbles, mapPoint } from './grid.js';
 
 export const FIELDS = ['grade', 'length', 'yieldTens', 'yieldOnes', 'purity', 'character'];
 export const OPENCV_URL = new URL('./vendor/opencv.js', import.meta.url).href; // self-hosted copy of @techstark/opencv-js 4.10.0-release.1
@@ -371,6 +371,41 @@ function shapeScore(A, b) {
 }
 function shapeSlash(A, bs) { return pickBest(bs.map(b => shapeScore(A, b)), OPTS.shapeMin, OPTS.shapeRatio, false); }
 
+
+// ---------- handwriting crops (read by digits.js) ----------
+// Per row: the Written digit that sits right of the written|tens and written|ones rules (it often runs into the first
+// bubble column), and the official yield in the right margin. Each crop is cut by the lattice (a perspective patch between
+// the rule lines, so tilt and curl of the row are followed) at the warp's own pixel scale:
+//   { canvas, rect: bounding box in warpedCanvas px, vlines: x of printed vertical rules inside the crop, masks: printed
+//     bubble ellipses {x, y, rx, ry} inside the crop (all in crop px) }
+export const HAND = { tens: [0.4530, 0.4960], ones: [0.6375, 0.6830], margin: [0.986, 1.19], v: [-0.05, 1.05], ringDx: 0.8, ringK: [1.15, 1.35] }; // ringDx/ringK: where the printed rings really sit vs the template ellipses, and how much to grow them
+function handCrops(cv, warp, L, W, geometry) {
+  const src = cv.imread(warp), out = [];
+  const cut = (r, u0, u1) => {
+    while (u1 > u0 + 0.02 && mapPoint(L, u1, r, HAND.v[0]).x > W - 2) u1 -= 0.005; // margin: stay inside the warp
+    const [v0, v1] = HAND.v;
+    const q = [mapPoint(L, u0, r, v0), mapPoint(L, u1, r, v0), mapPoint(L, u1, r, v1), mapPoint(L, u0, r, v1)];
+    const w = Math.max(8, Math.round((Math.hypot(q[1].x - q[0].x, q[1].y - q[0].y) + Math.hypot(q[2].x - q[3].x, q[2].y - q[3].y)) / 2));
+    const h = Math.max(8, Math.round((Math.hypot(q[3].x - q[0].x, q[3].y - q[0].y) + Math.hypot(q[2].x - q[1].x, q[2].y - q[1].y)) / 2));
+    const s = cv.matFromArray(4, 1, cv.CV_32FC2, q.flatMap(p => [p.x, p.y])), d = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, w, 0, w, h, 0, h]);
+    const M = cv.getPerspectiveTransform(s, d), dst = new cv.Mat(), m = M.data64F;
+    cv.warpPerspective(src, dst, M, new cv.Size(w, h), cv.INTER_LINEAR, cv.BORDER_REPLICATE);
+    const canvas = document.createElement('canvas'); canvas.width = w; canvas.height = h; cv.imshow(canvas, dst);
+    const dd = dst.data, nc = dst.channels(), g = new Uint8Array(w * h); // grey copy so digits.js need not read the canvas back
+    for (let i = 0; i < g.length; i++) g[i] = nc === 1 ? dd[i] : (0.299 * dd[i * nc] + 0.587 * dd[i * nc + 1] + 0.114 * dd[i * nc + 2] + 0.5) | 0;
+    const to = (x, y) => { const k = m[6] * x + m[7] * y + m[8]; return { x: (m[0] * x + m[1] * y + m[2]) / k, y: (m[3] * x + m[4] * y + m[5]) / k }; };
+    const vlines = [];
+    for (const u of GRID.cols) if (u > u0 - 0.002 && u < u1 + 0.002) { const p = mapPoint(L, u, r, 0.5), t = to(p.x, p.y); vlines.push(+t.x.toFixed(1)); }
+    const masks = [];
+    for (const f of FIELDS) for (const b of geometry[r][f]) { const t = to(b.x + HAND.ringDx * b.rx, b.y); if (t.x > -b.rx && t.x < w + b.rx && t.y > -b.ry && t.y < h + b.ry) masks.push({ x: +t.x.toFixed(1), y: +t.y.toFixed(1), rx: +(b.rx * HAND.ringK[0]).toFixed(1), ry: +(b.ry * HAND.ringK[1]).toFixed(1) }); }
+    [s, d, M, dst].forEach(mm => mm.delete());
+    const xs = q.map(p => p.x), ys = q.map(p => p.y), x = Math.min(...xs), y = Math.min(...ys);
+    return { canvas, g, w, h, rect: { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y }, vlines, masks };
+  };
+  try { for (let r = 0; r < 20; r++) out.push({ tens: cut(r, ...HAND.tens), ones: cut(r, ...HAND.ones), margin: cut(r, ...HAND.margin) }); } finally { src.delete(); }
+  return out;
+}
+
 // ---------- main ----------
 function rotateCanvas90(c) {
   const o = document.createElement('canvas'); o.width = c.height; o.height = c.width; const g = o.getContext('2d');
@@ -434,7 +469,7 @@ export async function readSheetWithCorners(imageSource, corners, opts = {}) {
   // view box of the table inside the warp (for cropped overlays)
   const last = GRID.cols.length - 1, bx = [L.colX(0, L.rowY(0, 0)), L.colX(0, L.rowY(20, 0)), L.colX(last, L.rowY(0, A.W)), L.colX(last, L.rowY(20, A.W))];
   const view = { x0: Math.max(0, Math.min(bx[0], bx[1]) - 50), x1: Math.min(A.W, Math.max(bx[2], bx[3]) + 12), y0: Math.max(0, Math.min(L.rowY(0, 0), L.rowY(0, A.W)) - 12), y1: Math.min(A.H, Math.max(L.rowY(20, 0), L.rowY(20, A.W)) + 12) };
-  return { ok: true, warpedCanvas: warp, corners, rows, warnings, geometry, lattice: L.q, levels: { pencil: lv.pencil, pencilDigits: lv.pencilDigits }, view, marginCrops: opts.marginCrops ? marginCrops : null, grayPhoto: A.grayPhoto };
+  return { ok: true, warpedCanvas: warp, corners, rows, warnings, geometry, lattice: L.q, levels: { pencil: lv.pencil, pencilDigits: lv.pencilDigits }, view, marginCrops: opts.marginCrops ? marginCrops : null, grayPhoto: A.grayPhoto, hand: opts.hand ? handCrops(cv, warp, L, A.W, geometry) : null };
 }
 
 // ---------- overlay ----------
