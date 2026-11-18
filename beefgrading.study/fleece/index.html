@@ -16,6 +16,7 @@
 <link rel="preload" href="fonts/red-hat-text-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/red-hat-display-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="rails.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -37,6 +38,7 @@
       <button type="button" class="tab" role="tab" id="tab-scan" data-tab="scan" aria-controls="view-scan" aria-selected="false" tabindex="-1">Scan</button>
       <button type="button" class="tab" role="tab" id="tab-review" data-tab="review" aria-controls="view-review" aria-selected="false" tabindex="-1">Review</button>
       <button type="button" class="tab" role="tab" id="tab-results" data-tab="results" aria-controls="view-results" aria-selected="false" tabindex="-1">Results</button>
+      <button type="button" class="tab" role="tab" id="tab-rails" data-tab="rails" aria-controls="view-rails" aria-selected="false" tabindex="-1">Rails</button>
     </div>
   </header>
   <aside id="a2hs" class="a2hs" aria-label="Add Fleece Grader to your home screen" hidden>
@@ -51,6 +53,7 @@
     <section id="view-scan" class="view" role="tabpanel" aria-labelledby="tab-scan" hidden></section>
     <section id="view-review" class="view" role="tabpanel" aria-labelledby="tab-review" hidden></section>
     <section id="view-results" class="view" role="tabpanel" aria-labelledby="tab-results" hidden></section>
+    <section id="view-rails" class="view" role="tabpanel" aria-labelledby="tab-rails" hidden></section>
   </main>
 </div>
 <div id="busy" class="busy" role="status" aria-live="polite" hidden>

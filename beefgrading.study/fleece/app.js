@@ -5,6 +5,8 @@ import { scoreSheet, scoreField, fieldFromRead, yieldFromDigits, FIELDS as SCORE
 import { initDigits, readDigit, readMarginYield, DIGITS } from './digits.js';
 import { readListKey, LIST } from './listkey.js';
 import { keyFromScan, detectKeyMode } from './consensus.js';
+import { mountRails, officialIdFromSearch, onlineMessage } from './railsview.js';
+import { getOfficial } from './online.js';
 
 const LABELS = {
   grade: ['70s', '64s', '62s', '60s', '58s', '56s', '54s', '50s', '48s', '46s'],
@@ -73,17 +75,22 @@ function refocus(sel) { if (!sel) return; const el = document.querySelector('mai
 function scrollTo(el, block) { if (el) el.scrollIntoView({ block: block || 'nearest', behavior: reduceMq.matches ? 'auto' : 'smooth' }); }
 
 // ---------- persistence ----------
-function save() {
+// The session object that is persisted (and handed to the Rails dashboard).
+function sessionData() {
   const sheets = S.sheets.map((s) => ({
     id: s.id, name: s.name, file: s.file, corr: s.corr,
     saved: { answers: answersOf(s), flags: flagsOf(s), hand: handRows(s) },
   }));
-  lsSet(STORE, JSON.stringify({ name: S.name, n: S.n, key: S.key, auto: S.auto, keySrc: S.keySrc, sheets, nextId: S.nextId }));
+  return { name: S.name, n: S.n, key: S.key, auto: S.auto, keySrc: S.keySrc, sheets, nextId: S.nextId };
 }
+function save() { lsSet(STORE, JSON.stringify(sessionData())); }
 function load() {
   const raw = lsGet(STORE); if (!raw) return;
-  try {
-    const d = JSON.parse(raw);
+  try { applySaved(JSON.parse(raw)); } catch (e) { /* ignore corrupt */ }
+}
+// Fill S from a saved session object (the shape save() writes). Fields that are absent keep their value.
+function applySaved(d) {
+  {
     if (typeof d.name === 'string') S.name = d.name;
     if (Number.isInteger(d.n) && d.n >= 1 && d.n <= 20) S.n = d.n;
     if (Array.isArray(d.key)) S.key = Array.from({ length: 20 }, (_, i) => ({ ...emptyFleece(), ...(d.key[i] || {}) }));
@@ -98,7 +105,7 @@ function load() {
     });
     if (Array.isArray(d.sheets)) S.sheets = d.sheets.map((s) => ({ id: s.id, name: String(s.name || ''), file: s.file || '', corr: s.corr || {}, saved: s.saved || null, res: null, src: null, hr: null }));
     S.nextId = d.nextId || S.sheets.length + 1;
-  } catch (e) { /* ignore corrupt */ }
+  }
 }
 
 // ---------- answers, flags ----------
@@ -206,7 +213,10 @@ function handDone(sh) {
 }
 
 // ---------- nav ----------
-const VIEWS = { session: renderSession, scan: renderScan, review: renderReview, results: renderResults };
+// Rails: saved classes and posted officials (railsview.js). Mounted on first show, refreshed on every show after.
+let railsCtl = null;
+function renderRails() { if (railsCtl) railsCtl.refresh(); else railsCtl = mountRails($('view-rails'), RAILS_HOST); }
+const VIEWS = { session: renderSession, scan: renderScan, review: renderReview, results: renderResults, rails: renderRails };
 function setTab(t) {
   S.tab = t;
   document.querySelectorAll('.tab').forEach((b) => {
@@ -220,6 +230,41 @@ function setTab(t) {
   }
   VIEWS[t]();
   window.scrollTo(0, 0);
+}
+// ---------- Rails host ----------
+function resetSession() {
+  S.name = ''; S.n = 20;
+  S.key = Array.from({ length: 20 }, emptyFleece); S.auto = Array.from({ length: 20 }, emptyAuto); S.keySrc = Array.from({ length: 20 }, () => ({})); S.ks = null;
+  S.sheets = []; S.nextId = 1; S.cornerId = S.reviewId = S.resultId = null;
+  S.edit = null; S.onlyFlags = false; S.adjust = false; S.detail = false; S.kField = 'grade';
+}
+const RAILS_HOST = {
+  getSession: sessionData,
+  // Replace the whole session with a saved rail (shape from rails.toSession), then show the key.
+  loadSession(d) {
+    resetSession(); applySaved(d);
+    S.kRow = firstIncomplete(); save(); setTab('session');
+  },
+  // Key only: sheets stay. Purity and Character blanks take the usual autofill defaults.
+  loadKey(fleeces, n, title) {
+    S.key = Array.from({ length: 20 }, (_, i) => ({ ...emptyFleece(), ...((Array.isArray(fleeces) && fleeces[i]) || {}) }));
+    S.n = Number.isInteger(n) && n >= 1 && n <= 20 ? n : 20;
+    S.auto = Array.from({ length: 20 }, emptyAuto); S.keySrc = Array.from({ length: 20 }, () => ({})); S.ks = null;
+    for (let i = 0; i < S.n; i++) autofillPC(i);
+    if (!S.name && title) S.name = String(title).slice(0, 80);
+    S.kField = 'grade'; S.kRow = firstIncomplete();
+    save(); setTab('session');
+  },
+  toast, escapeHtml,
+};
+// A shared link (?official=<id>): fetch it, open the Rails tab and offer it. Quiet when offline or not allowed.
+async function openSharedOfficial() {
+  const id = officialIdFromSearch(location.search); if (!id) return;
+  try { const u = new URL(location.href); u.searchParams.delete('official'); history.replaceState(null, '', u.pathname + u.search + u.hash); } catch (e) { /* keep the url */ }
+  const res = await getOfficial(id);
+  if (!res.ok) { toast(`Could not open the shared key. ${onlineMessage(res.error)}`); return; }
+  setTab('rails');
+  await railsCtl.useOfficial(res.official);
 }
 function rerender() { const y = window.scrollY, fk = focusKey(); VIEWS[S.tab](); window.scrollTo(0, y); refocus(fk); }
 function openReview(id) { S.reviewId = id; const sh = sheetById(id); S.edit = sh && sh.res ? firstFlag(sh) : null; setTab('review'); }
@@ -1198,6 +1243,7 @@ function init() {
   const main = $('main');
   main.addEventListener('click', (e) => {
     const tr = e.target.closest('[data-sheet]');
+    if (e.target.closest('#view-rails')) return; // the Rails view handles its own clicks
     if (tr && S.tab === 'results') { S.resultId = Number(tr.dataset.sheet); rerender(); return; }
     onClick(e);
   });
@@ -1224,6 +1270,7 @@ function init() {
   $('sv').addEventListener('click', onSheetViewClick);
   wideMq.addEventListener('change', () => { if (S.tab === 'review') rerender(); });
   setTab('session');
+  openSharedOfficial();
   setupInstall();
   registerSW();
 }

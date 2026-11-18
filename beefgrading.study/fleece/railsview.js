@@ -1,5 +1,5 @@
 // Rails dashboard: save the current rail, organize saved rails, post and use officials online.
-// Self-contained view. mountRails(el, host) renders into el and returns { refresh, destroy }.
+// Self-contained view. mountRails(el, host) renders into el and returns { refresh, destroy, useOfficial(o) }.
 //   host = {
 //     getSession(),                  // the object app.js save() persists: { name, n, key, auto, sheets:[{name, saved:{answers,flags}}] }
 //     loadSession(session),          // replace the whole session (session shape as above, from rails.toSession)
@@ -296,6 +296,16 @@ export function mountRails(el, host) {
   }
   const linkFor = (id) => shareUrl(id, location.href);
 
+  // Load an official's key into the session (confirm first when a key is already there).
+  async function useOfficial(o) {
+    if (keyedRows(session().key, session().n)) {
+      const ok = await ask({ title: 'Replace the current key?', body: `The session already has an official key. Using “${o.title}” replaces it. Scanned sheets stay.`, ok: 'Use this key', danger: true });
+      if (!ok) return;
+    }
+    host.loadKey(o.fleeces, o.n, o.title);
+    toast(`Loaded ${o.title}.`);
+  }
+
   // ----- actions -----
   const ACTS = {
     toggle(id) { st.openId = st.openId === id ? null : id; renderList(); },
@@ -378,15 +388,7 @@ export function mountRails(el, host) {
       if (r && r.postedId) return copy(linkFor(r.postedId), 'Share link copied.');
       return undefined;
     },
-    async use(_, b) {
-      const o = off.items.find((x) => x.id === b.dataset.oid); if (!o) return;
-      if (keyedRows(session().key, session().n)) {
-        const ok = await ask({ title: 'Replace the current key?', body: `The session already has an official key. Using “${o.title}” replaces it. Scanned sheets stay.`, ok: 'Use this key', danger: true });
-        if (!ok) return;
-      }
-      host.loadKey(o.fleeces, o.n, o.title);
-      toast(`Loaded ${o.title}.`);
-    },
+    use(_, b) { const o = off.items.find((x) => x.id === b.dataset.oid); return o ? useOfficial(o) : undefined; },
     ocopy(_, b) { return copy(linkFor(b.dataset.oid), 'Share link copied.'); },
     async odel(_, b) {
       const o = off.items.find((x) => x.id === b.dataset.oid); if (!o) return;
@@ -424,6 +426,8 @@ export function mountRails(el, host) {
 
   return {
     // Call when the Rails tab is shown: re-reads the session and the saved rails.
+    // Offer one official (from a share link): same confirm and load as the Use button. The Rails tab must be showing.
+    useOfficial,
     refresh() { if (destroyed) return; renderSave(); renderList(); if (off.state === 'err') loadOfficials(); },
     destroy() {
       destroyed = true; closeAsk(null);
