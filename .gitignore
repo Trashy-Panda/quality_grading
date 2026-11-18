@@ -33,6 +33,7 @@ desktop.ini
 # Scanned student sheets (handwritten names and scores): local test data only
 fleece-grader/assets/test/real/
 fleece-grader/assets/test/excluded/
+fleece-grader/assets/test/keys/
 
 # Design scratch screenshots
 .hallmark/**/*.png
