@@ -15,6 +15,8 @@ For each contest file it reads `sourceUrl` (a judgingcard Team.aspx URL), then:
 Usage:
     python ingest_scorecards.py american-royal2026-senior.json
     python ingest_scorecards.py *2026*.json --delay 0.5
+    python ingest_scorecards.py international2026-senior.json --no-alt-events
+      (International alternates have no reasons scored, so they are left out)
 
 Files are updated in place. Requires: requests, beautifulsoup4.
 """
@@ -235,9 +237,11 @@ def rank_by_score(items, score_of, set_place):
         set_place(p, place)
 
 
-def enrich(doc, delay=0.4):
+def enrich(doc, delay=0.4, with_alts=True):
     """Add `individuals` and per-team `splits` to a contest doc in place.
 
+    with_alts=False skips the sibling alt events (the International: its
+    alternates have no reasons scored, so their totals are not comparable).
     Returns a list of problems (teams whose totals could not be reproduced).
     Raises on a missing sourceUrl or a changed page layout.
     """
@@ -246,7 +250,7 @@ def enrich(doc, delay=0.4):
     if not m:
         raise ValueError("no judgingcard sourceUrl")
     contest_id, main_eid = m.group(1), m.group(2)
-    alt_eids = alt_events(contest_id, main_eid, delay)
+    alt_eids = alt_events(contest_id, main_eid, delay) if with_alts else []
 
     people = {}
     for eid in [main_eid] + alt_eids:
@@ -324,10 +328,10 @@ def enrich(doc, delay=0.4):
     return problems
 
 
-def process(path, delay):
+def process(path, delay, with_alts=True):
     doc = json.loads(Path(path).read_text(encoding="utf-8"))
     log(f"{path}:")
-    problems = enrich(doc, delay)
+    problems = enrich(doc, delay, with_alts)
     Path(path).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return not problems
 
@@ -336,11 +340,13 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="+")
     ap.add_argument("--delay", type=float, default=0.4, help="seconds between requests")
+    ap.add_argument("--no-alt-events", action="store_true",
+                    help="skip sibling alt events (use for the International: alternates' reasons are unscored)")
     args = ap.parse_args()
     ok = True
     for p in args.paths:
         try:
-            ok = process(p, args.delay) and ok
+            ok = process(p, args.delay, not args.no_alt_events) and ok
         except Exception as e:  # keep going so one bad contest doesn't stop the batch
             ok = False
             print(f"{p}: FAILED {e}")

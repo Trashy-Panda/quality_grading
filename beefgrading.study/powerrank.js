@@ -537,8 +537,8 @@ function prIndividualContests(contests, meta) {
   const out = [];
   contests.forEach((c) => {
     if (!c || !Array.isArray(c.individuals) || c.individuals.length === 0) return;
-    // The International is scored on a different format; left out for now.
-    if (typeof c.weight === 'number' && c.weight >= 2) return;
+    // International individuals are main-contest only: its alternates have no
+    // reasons scored, so ingest_scorecards.py --no-alt-events leaves them out.
     const results = [];
     c.individuals.forEach((p) => {
       if (!p || typeof p.name !== 'string' || !p.name.trim() ||
@@ -1081,7 +1081,7 @@ function _prIsTestMode() {
 const PR_LOCAL_FILES = [
   'american-royal2026-junior', 'american-royal2026-senior', 'eastern-national2026-senior',
   'high-plains2026-junior', 'high-plains2026-senior', 'houston2026-junior', 'houston2026-senior',
-  'nwss2026-junior', 'nwss2026-senior', 'south-plains2026-junior', 'south-plains2026-senior',
+  'international2026-senior', 'nwss2026-junior', 'nwss2026-senior', 'south-plains2026-junior', 'south-plains2026-senior',
   'southwestern2026-junior', 'southwestern2026-senior',
 ];
 

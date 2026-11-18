@@ -7,9 +7,9 @@ Auth) is the only backend.
 
 This whole folder is the project — everything for beefgrading.study lives here, as a
 single unit sibling to `.claude/`/`.agents/` (shared tooling across other projects, not
-part of this one) at the true repo root. `CLAUDE.md` is the one exception, staying at
+part of this one) at the true repo root. `CLAUDE.md` is an exception, staying at
 repo root itself since Claude Code auto-loads project instructions from the working
-directory.
+directory. The repo-root `README.md` is the GitHub landing page for the whole project.
 
 ## Where things live
 
@@ -30,7 +30,7 @@ project, together as a VS Code multi-root workspace).
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole app — grading drill, auth, weekly challenge, leaderboard, and Power Rankings (dev-only, not yet linked live) are all sections within this one page. |
+| `index.html` | The whole app — grading drill, auth, weekly challenge, leaderboard, and Power Rankings (linked from the site nav) are all sections within this one page. |
 | `admin.html` | Admin panel (manage community carcasses, review crowd votes, weekly challenges, Power Rankings contest data). |
 | `app.js` / `data.js` / `auth.js` / `weekly.js` / `leaderboard.js` / `powerrank.js` / `admin.js` | Corresponding logic for each area (`powerrank.js` = collegiate meat judging Power Rankings engine + section). |
 | `style.css` / `premium.css` / `auth.css` / `weekly.css` / `leaderboard.css` / `powerrank.css` / `fieldguide.css` / `admin.css` | Styling, split by area. |

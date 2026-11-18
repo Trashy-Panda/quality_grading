@@ -12,6 +12,7 @@ Firestore + Auth. Live at beefgrading.study.
   data.js, weekly.js, leaderboard.js, powerrank.js, admin.js, scroll.js, assets/, fleece/,
   CNAME, firestore.rules. auth/weekly/leaderboard .html are reference docs in docs/.
 - Fleece grader (offline PWA) ships from `fleece/`; its dev pages, tests and private scanned sheets stay in repo-root `fleece-grader/`, never under the published folder. Dev server `python ../fleece-grader/dev/devserver.py 8012`; tests `node --test fleece-grader/tests/*.test.mjs` from repo root. Bump the cache version in `fleece/sw.js` on every fleece release.
+- Repo-root `README.md` is the GitHub landing page for the whole project.
 - Design tokens: `style.css` `:root` is the single source of truth.
 
 ## Branches and deploy
