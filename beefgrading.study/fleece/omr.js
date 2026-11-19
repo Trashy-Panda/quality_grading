@@ -32,18 +32,38 @@ export function loadCV() {
   return cvPromise;
 }
 
-async function toCanvas(src) {
-  if (typeof src === 'string') {
-    src = await new Promise((res, rej) => { const i = new Image(); i.addEventListener('load', () => res(i)); i.addEventListener('error', () => rej(new Error('image load failed'))); i.src = src; });
-  } else if (typeof Blob !== 'undefined' && src instanceof Blob) {
-    src = await createImageBitmap(src, { imageOrientation: 'from-image' });
-  }
-  const w = src.naturalWidth || src.videoWidth || src.width, h = src.naturalHeight || src.videoHeight || src.height;
-  const k = Math.min(1, MAX_SRC_EDGE / Math.max(w, h)); // a 12MP photo is more than the reader can use
-  const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
-  const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, c.width, c.height);
-  return c;
+// One decoder for every photo path (student sheets, key scan, handwritten list). A Blob or url goes through an <img>
+// (every browser applies the EXIF turn when it draws one, and iOS Safari opens big HEIC/JPEG photos this way), with
+// createImageBitmap only as a fallback. The result is drawn at most maxEdge on its long side, which also keeps it far
+// under the iOS canvas limit (about 16.7M pixels). Returns { canvas, w, h } (w, h = the decoded photo before the downscale).
+export class PhotoOpenError extends Error { constructor(why) { super('photo could not be opened' + (why ? ': ' + why : '')); this.name = 'PhotoOpenError'; this.code = 'decode'; } }
+export const PHOTO_OPEN_MSG = "That photo couldn't be opened. Try taking it again, choose a different photo, or take a screenshot of it and add that.";
+const loadImg = url => new Promise((res, rej) => { const i = new Image(); i.addEventListener('load', () => res(i)); i.addEventListener('error', () => rej(new Error('image load failed'))); i.src = url; });
+export async function decodeImage(src, maxEdge = MAX_SRC_EDGE, ctxOpts) {
+  const isBlob = typeof Blob !== 'undefined' && src instanceof Blob, url = isBlob ? URL.createObjectURL(src) : null;
+  let bmp = null;
+  try {
+    if (typeof src === 'string' || isBlob) {
+      try { src = await loadImg(url || src); }
+      catch (e) {
+        if (isBlob && typeof createImageBitmap === 'function') { try { src = bmp = await createImageBitmap(src); } catch (e2) { /* falls through */ } }
+        if (!bmp) throw new PhotoOpenError(e.message);
+      }
+    }
+    const w = src.naturalWidth || src.videoWidth || src.width, h = src.naturalHeight || src.videoHeight || src.height;
+    if (!w || !h) throw new PhotoOpenError('empty image');
+    for (let edge = maxEdge, tries = 0; tries < 3; tries++, edge = Math.round(edge * 0.7)) {
+      const k = Math.min(1, edge / Math.max(w, h)), c = document.createElement('canvas'); // a 12MP photo is more than the reader can use
+      c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+      const g = c.getContext('2d', ctxOpts); if (!g) continue; // iOS hands back no context when it is short of canvas memory: try smaller
+      g.imageSmoothingQuality = 'high';
+      try { g.drawImage(src, 0, 0, c.width, c.height); } catch (e) { continue; }
+      return { canvas: c, w, h };
+    }
+    throw new PhotoOpenError('no canvas');
+  } finally { if (url) URL.revokeObjectURL(url); if (bmp && bmp.close) bmp.close(); }
 }
+const toCanvas = async src => (await decodeImage(src)).canvas;
 
 function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 function orderCorners(pts) {

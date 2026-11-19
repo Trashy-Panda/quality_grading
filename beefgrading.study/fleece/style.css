@@ -83,6 +83,8 @@ button:disabled { cursor: default; }
 .app { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; background: var(--ui-ground); padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px); }
 .top { position: sticky; top: 0; z-index: 100; padding-top: env(safe-area-inset-top, 0px); background: var(--ui-ground); border-bottom: 1px solid var(--ui-edge); }
 .brand { padding: 10px 20px 0; font: 600 15px/1.2 var(--font-ui); letter-spacing: 0; }
+.off-st { position: absolute; inset: calc(env(safe-area-inset-top, 0px) + 10px) 20px auto auto; display: flex; align-items: center; gap: 4px; font-size: 13px; line-height: 1.2; color: var(--ink-soft); --ic-sw: 2; }
+.off-st.is-ready .ic { color: var(--ui-ok); }
 .tabs { display: flex; padding: 0 12px; }
 .tab { flex: 1; min-width: 0; min-height: 48px; padding: 0 2px; text-align: center; font-size: 14px; font-weight: 500; color: var(--ink-soft); border-bottom: 2px solid transparent; }
 .tab[aria-selected="true"] { color: var(--ink); font-weight: 600; border-bottom-color: var(--ink-rule); }
@@ -229,10 +231,11 @@ main:focus-visible { outline-offset: -2px; }
 .vf-tag--warn { background: var(--ui-warn); color: var(--ink); }
 .vf-hint { position: absolute; inset: auto 0 0 0; padding: 10px 20px; background: var(--ui-scrim); color: var(--on-ink); font-size: 14px; pointer-events: none; }
 .vf--empty { align-items: center; min-height: 52vh; min-height: 52dvh; }
-.vf-guide { position: absolute; inset: 14% 16% 18%; width: auto; height: auto; }
-.vf-guide path { fill: none; stroke: var(--on-ink); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; opacity: 0.7; }
-.vf-msg { position: relative; padding: 0 40px; text-align: center; color: var(--on-ink); font: 600 20px/1.25 var(--font-display); letter-spacing: var(--track-display); }
-.vf-msg span { display: block; margin-top: 6px; font: 400 14px/1.4 var(--font-ui); letter-spacing: 0; opacity: 0.85; }
+.vf-msg { position: relative; padding: 0 40px; text-align: center; color: var(--ink); font: 600 20px/1.25 var(--font-display); letter-spacing: var(--track-display); }
+.vf-msg span { display: block; max-width: 32ch; margin: 6px auto 0; font: 400 14px/1.4 var(--font-ui); letter-spacing: 0; color: var(--ink-soft); }
+/* Nothing to judge yet: a plain light panel, not a viewfinder. */
+.vf--empty { background: none; }
+.vf--empty .vf-hint { background: none; color: var(--ink-soft); text-align: center; }
 .h { position: absolute; width: 44px; height: 44px; min-height: 0; margin: -22px 0 0 -22px; padding: 0; border-radius: var(--ui-r-round); border: 2px solid var(--on-ink); background: oklch(18% 0.006 60 / 0.3); box-shadow: 0 0 0 1px oklch(18% 0.006 60 / 0.6); touch-action: none; cursor: grab; }
 .h::after { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px; border-radius: var(--ui-r-round); background: var(--on-ink); }
 .stack { display: flex; gap: 8px; padding: 12px 20px 8px; overflow-x: auto; scrollbar-width: none; }
@@ -248,13 +251,6 @@ main:focus-visible { outline-offset: -2px; }
 .s-st.is-err { padding: 6px 10px; border-radius: var(--ui-r-inner); background: var(--ui-warn-wash); color: var(--ink); }
 .s-acts { display: flex; align-items: center; gap: 0 4px; padding: 0 12px; }
 .s-acts .go { margin-inline-start: auto; }
-.cap { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 16px; }
-.cap .tbtn { flex: 1; padding: 0; justify-content: flex-start; }
-.cap .sp { flex: 1; }
-.shutter { flex: none; display: grid; place-items: center; width: 76px; height: 76px; padding: 0; border-radius: var(--ui-r-round); border: 3px solid var(--ink-rule); }
-.shutter span { width: 58px; height: 58px; border-radius: var(--ui-r-round); background: var(--red); transition: transform var(--dur-fast) var(--ease-out); }
-.shutter:active span { transform: scale(0.94); }
-@media (hover: hover) { .shutter:hover { background: none; } .shutter:hover span { background-color: var(--red-deep); } }
 
 /* ---------- review ---------- */
 .rv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 20px 4px; }
@@ -409,6 +405,7 @@ dialog.sv .legend { flex: none; padding-block: 8px; border-top: 1px solid var(--
   .app { width: min(1200px, 100% - 32px); margin-inline: auto; border-inline: 1px solid var(--ui-edge); padding-inline: 0; }
   .top { display: flex; align-items: center; gap: 24px; padding-inline: 32px; }
   .brand { padding: 0; }
+  .off-st { position: static; }
   .tabs { flex: 0 1 460px; margin-inline-start: auto; padding: 0; }
   .view { display: grid; grid-template-columns: minmax(0, 1fr) var(--rail); align-content: stretch; align-items: start; }
   .stage { border-inline-end: 1px solid var(--ui-edge); min-height: calc(100vh - var(--top-h)); min-height: calc(100dvh - var(--top-h)); }
@@ -456,8 +453,7 @@ dialog.sv .legend { flex: none; padding-block: 8px; border-top: 1px solid var(--
 }
 
 @media (prefers-reduced-motion: reduce) {
-  button, .sw-t i, .prog i, .dt .ic, .shutter span { transition: none; }
+  button, .sw-t i, .prog i, .dt .ic { transition: none; }
   .progbar i { animation: none; width: 100%; opacity: 0.6; }
   .spin { animation: none; border-top-color: var(--ink-faint); }
-  .shutter:active span { transform: none; }
 }

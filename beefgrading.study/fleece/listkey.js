@@ -15,6 +15,7 @@
 //     | { ok:false, error:'nolist', lines, warnings, ms }
 //   source = url string | Blob | <img>/<canvas>/ImageBitmap | { g, w, h } (grey) | { data, width, height } (grey or RGBA).
 //   rect/rects are in the source image's pixel space. grade/length are the app's indexes (GRADES 0..9, Staple/French/Clothing).
+import { decodeImage } from './omr.js';
 import { DIGITS, greyOf, inkMap, groupGlyphs, splitGlyph, glyphTensor, cnnNet, softmax, NET_URL } from './digits.js';
 
 export const LIST = {
@@ -125,14 +126,7 @@ const probsOf = t => softmax(NET(t), DIGITS.temp);
 
 async function loadGrey(src, o) {
   if (src && (src.g || src.data) && !src.getContext) { const g = greyOf(src); return { ...g, k: 1 }; }
-  // A Blob goes through an <img> like a url does: an ImageBitmap decode resamples a little differently and lost the last line of the key photo.
-  const isBlob = typeof Blob !== 'undefined' && src instanceof Blob, blobUrl = isBlob ? URL.createObjectURL(src) : null;
-  if (typeof src === 'string' || isBlob) {
-    try { src = await new Promise((res, rej) => { const i = new Image(); i.addEventListener('load', () => res(i)); i.addEventListener('error', () => rej(new Error('image load failed'))); i.src = blobUrl || src; }); } finally { if (blobUrl) URL.revokeObjectURL(blobUrl); }
-  }
-  const W = src.naturalWidth || src.videoWidth || src.width, H = src.naturalHeight || src.videoHeight || src.height, k = Math.min(1, o.maxEdge / Math.max(W, H));
-  const c = document.createElement('canvas'); c.width = Math.round(W * k); c.height = Math.round(H * k);
-  const g = c.getContext('2d', { willReadFrequently: true }); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, c.width, c.height);
+  const { canvas: c, w: W } = await decodeImage(src, o.maxEdge, { willReadFrequently: true });
   return { ...greyOf(c), k: W / c.width };
 }
 
