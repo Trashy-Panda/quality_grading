@@ -108,7 +108,7 @@ self.addEventListener('fetch', (event) => {
       if (hit) return hit;
       try {
         const res = await fetch(req);
-        if (res.ok && res.status === 200 && HEAVY.some((u) => abs(u) === req.url)) cache.put(req, res.clone());
+        if (res.ok && res.status === 200 && HEAVY.some((u) => abs(u) === req.url)) cache.put(req, res.clone()).catch(() => { /* quota: warm() retries later */ });
         return res;
       } catch (e) {
         if (req.mode === 'navigate') { const page = await cache.match('./'); if (page) return page; }
