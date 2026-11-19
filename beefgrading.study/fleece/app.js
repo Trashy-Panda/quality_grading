@@ -1,6 +1,6 @@
 // Fleece Grader UI. Vanilla ES module; state in memory + localStorage.
 // Markup follows docs/DESIGN.md v3 (comp A fleece screens): a stage plus one sheet per screen.
-import { loadCV, readSheet, readSheetWithCorners } from './omr.js';
+import { loadCV, readSheet, readSheetWithCorners, decodeImage, PHOTO_OPEN_MSG } from './omr.js';
 import { scoreSheet, scoreField, fieldFromRead, yieldFromDigits, FIELDS as SCORE_FIELDS } from './scoring.js';
 import { initDigits, readDigit, readMarginYield, DIGITS } from './digits.js';
 import { readListKey, LIST } from './listkey.js';
@@ -474,15 +474,9 @@ const MODE_NOTES = {
   list: 'One fleece per line: grade, length, yield. Values the reader was unsure of are marked to check.',
 };
 const KEY_MODES = ['graded', 'bubbled', 'list'];
-const MAX_KEY_EDGE = 3200; // same cap omr.js uses, so corners stay in one coordinate space
-async function fileCanvas(file) {
-  const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
-  const k = Math.min(1, MAX_KEY_EDGE / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
-  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
-  const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(bmp, 0, 0, c.width, c.height);
-  if (bmp.close) bmp.close();
-  return c;
-}
+const fileCanvas = async (file) => (await decodeImage(file)).canvas; // the same decoder and 3200 cap omr.js uses, so corners stay in one coordinate space
+// A photo that would not decode gets plain advice; anything else keeps its own message.
+const readErr = (e, lead) => (e && e.code === 'decode' ? PHOTO_OPEN_MSG : lead + e.message);
 // Read the printed table (and the handwriting beside it). Returns true when a table was found.
 async function readKeyTable(ks, corners) {
   const res = corners ? await readSheetWithCorners(ks.src, corners, { hand: true }) : await readSheet(ks.src, { hand: true });
@@ -525,7 +519,7 @@ async function scanKey(file) {
       if (await readKeyList(ks)) { ks.mode = 'list'; applyKeyScan(); }
       else { renderKeyScan(); toast('Could not read a key from that photo. No grading table or handwritten list was found. Adjust the corners and re-read, or tap the key in below.'); }
     }
-  } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+  } catch (e) { toast(readErr(e, 'Key scan failed: ')); } finally { busy(); }
 }
 async function ksMode(m) {
   const ks = S.ks; if (!ks || !KEY_MODES.includes(m) || ks.mode === m) return;
@@ -534,7 +528,7 @@ async function ksMode(m) {
     if (m === 'list') { if (!(await readKeyList(ks))) { toast('No handwritten list found in that photo.'); return; } }
     else if (!ks.res) { toast('No grading table found in that photo. Adjust the corners and re-read.'); return; }
     ks.mode = m; ks.manual = true; applyKeyScan();
-  } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+  } catch (e) { toast(readErr(e, 'Key scan failed: ')); } finally { busy(); }
 }
 async function ksReread() {
   const ks = S.ks; if (!ks) return;
@@ -544,7 +538,7 @@ async function ksReread() {
       if (!(ks.manual && ks.mode !== 'list')) { ks.mode = ks.detect.mode; ks.manual = false; }
       ks.adjust = false; applyKeyScan(); toast('Re-read done.');
     } else { renderKeyScan(); toast(ks.err); }
-  } catch (e) { toast('Key scan failed: ' + e.message); } finally { busy(); }
+  } catch (e) { toast(readErr(e, 'Key scan failed: ')); } finally { busy(); }
 }
 function renderKeyScan() {
   const slot = $('key-scan'); if (!slot) return;
@@ -586,7 +580,7 @@ async function addFiles(files) {
         sh.res = res; sh.corners = res.corners; sh.warnings = res.warnings || [];
       }
       else { sh.err = (res.warnings && res.warnings[0]) || 'Could not find the grading table. Drag the corners and re-read.'; if (sh.src) sh.corners = defaultCorners(sh.src); }
-    } catch (e) { sh.err = 'Read failed: ' + e.message; }
+    } catch (e) { sh.err = readErr(e, 'Read failed: '); }
   }
   busy(); S.cornerId = lastId; S.adjust = false; save();
   if (S.tab !== 'scan') setTab('scan'); else rerender();
@@ -602,19 +596,18 @@ function scanSel() { return sheetById(S.cornerId) || S.sheets[S.sheets.length - 
 function thumbOf(sh) {
   if (!sh.src) return '';
   if (!sh.thumb) {
-    const s = 128 / Math.max(sh.src.width, sh.src.height), c = document.createElement('canvas');
+    const s = 192 / Math.max(sh.src.width, sh.src.height), c = document.createElement('canvas');
     c.width = Math.max(1, Math.round(sh.src.width * s)); c.height = Math.max(1, Math.round(sh.src.height * s));
-    c.getContext('2d').drawImage(sh.src, 0, 0, c.width, c.height);
+    const tg = c.getContext('2d'); tg.imageSmoothingQuality = 'high'; tg.drawImage(sh.src, 0, 0, c.width, c.height);
     sh.thumb = c.toDataURL('image/jpeg', 0.6);
   }
   return sh.thumb;
 }
 function emptyFinder(sel) {
-  const msg = sel ? ['Photo not kept', 'Scores are saved. Scan this sheet again to review it.'] : ['No sheets yet', 'Take a photo or upload photos, one per sheet.'];
+  const msg = sel ? ['Photo not kept', 'Scores are saved. Add this sheet again to review it.'] : ['No sheets yet', 'Add photos of your sheets, one photo per sheet. Take one now or choose from your library.'];
   return `<div class="vf vf--empty">
-    <svg class="vf-guide" viewBox="0 0 100 130" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 22V0h22M78 0h22v22M100 108v22H78M22 130H0v-22"/></svg>
     <p class="vf-msg">${escapeHtml(msg[0])}<span>${escapeHtml(msg[1])}</span></p>
-    <p class="vf-hint">One photo per sheet, flat, with the whole table in frame.</p></div>`;
+    <p class="vf-hint">Lay the sheet flat with the whole table in frame.</p></div>`;
 }
 function renderScan() {
   const v = $('view-scan'), sel = scanSel();
@@ -639,11 +632,7 @@ function renderScan() {
     <div class="stage"><div id="corner-slot"></div></div>
     <div class="sheet">
       ${stack}${info}${acts}
-      <div class="cap">
-        <button type="button" class="tbtn tbtn--q" data-act="pick-up">${ic('up')}Upload photos</button>
-        <button type="button" class="shutter" data-act="pick-cam" aria-label="Take photo"><span></span></button>
-        <span class="sp" aria-hidden="true"></span>
-      </div>
+      <button type="button" class="cta" data-act="pick-up"><span>Add photos</span><span class="cta-s">Camera or library${ic('up')}</span></button>
     </div>`;
   if (sel && sel.src) mountCorners($('corner-slot'), sel); else $('corner-slot').innerHTML = emptyFinder(sel);
 }
@@ -662,7 +651,7 @@ function mountCorners(slot, sh, o = {}) {
   const box = slot.querySelector('.vf-box');
   const c = document.createElement('canvas');
   c.width = Math.round(W * scale); c.height = Math.round(H * scale);
-  c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+  const pg = c.getContext('2d'); pg.imageSmoothingQuality = 'high'; pg.drawImage(src, 0, 0, c.width, c.height);
   c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Photo of ' + sh.name);
   box.appendChild(c);
   if (o.plain && !adjust) return;
@@ -722,7 +711,7 @@ async function reread(sh) {
       toast('Re-read done.');
     }
     else { sh.err = (res.warnings && res.warnings[0]) || 'Read failed. Adjust corners.'; }
-  } catch (e) { sh.err = 'Read failed: ' + e.message; }
+  } catch (e) { sh.err = readErr(e, 'Read failed: '); }
   busy(); save(); rerender(); ensureHand(sh);
 }
 
@@ -1091,9 +1080,9 @@ function renderResults() {
 
 // ---------- events ----------
 const inputs = {};
-function makeInput(id, capture, multiple) {
+function makeInput(id, multiple) {
   const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*'; i.hidden = true; i.id = id;
-  if (capture) i.setAttribute('capture', 'environment'); if (multiple) i.multiple = true;
+  if (multiple) i.multiple = true; // no camera-only attribute: iOS then offers Take Photo, Photo Library and Choose File
   i.addEventListener('change', () => { const f = Array.from(i.files); i.value = ''; if (id === 'f-key') { if (f[0]) scanKey(f[0]); } else addFiles(f); });
   document.body.appendChild(i); inputs[id] = i;
 }
@@ -1139,7 +1128,6 @@ function onClick(e) {
     case 'goto-scan': setTab('scan'); break;
     case 'goto-results': setTab('results'); break;
     case 'goto-session': setTab('session'); break;
-    case 'pick-cam': inputs['f-cam'].click(); break;
     case 'pick-up': inputs['f-up'].click(); break;
     case 'select-sheet': S.cornerId = Number(t.dataset.id); S.adjust = false; rerender(); break;
     case 'corners': S.cornerId = Number(t.dataset.id); S.adjust = !S.adjust; rerender(); break;
@@ -1236,13 +1224,29 @@ function registerSW() {
   if (!('serviceWorker' in navigator)) return;
   const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   if (local && new URLSearchParams(location.search).get('sw') !== '1') return;
-  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => { /* offline mode is optional */ }); });
+  // A quiet status next to the title, so the user can see the app is saved before switching to airplane mode.
+  const st = $('offline-st'), heavy = new URL('vendor/opencv.js', location.href).href;
+  let done = false, poll = null;
+  const show = (ready) => {
+    done = ready; st.hidden = false; st.classList.toggle('is-ready', ready);
+    st.innerHTML = ready ? `${ic('check')}Ready offline` : 'Saving for offline use…';
+    if (ready && poll) { clearInterval(poll); poll = null; }
+  };
+  const check = () => (window.caches ? caches.match(heavy) : Promise.resolve(null)).then((m) => { if (!done) show(!!m); }).catch(() => { /* status only */ });
+  navigator.serviceWorker.addEventListener('message', (e) => { if (e.data && e.data.type === 'offline-ready') show(true); });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => { /* offline mode is optional */ });
+    navigator.serviceWorker.ready.then((r) => {
+      if (r.active) r.active.postMessage('warm'); // resume the OpenCV download if an earlier visit was cut short
+      check(); poll = setInterval(check, 4000); // the message can miss a page that is not yet controlled, so also look at the cache
+    });
+  });
 }
 
 function init() {
   load();
   S.kRow = firstIncomplete();
-  makeInput('f-cam', true, false); makeInput('f-up', false, true); makeInput('f-key', false, false);
+  makeInput('f-up', true); makeInput('f-key', false);
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('.tab'); if (b) setTab(b.dataset.tab); });
   $('tabs').addEventListener('keydown', tabKeys);
   const main = $('main');

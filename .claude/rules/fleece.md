@@ -10,6 +10,8 @@ paths:
   the `keys/` sample rail's truth lives in dev/keyscan-check.js.
 - Regression drivers (run via `.claude/tools/cdp-shot.mjs`): dev/eval.html (bubbles),
   hand-eval.html, list-eval.html, keyscan-check.js, hand-review-check.js, rails-app-check.js.
+  Node: offline-check.js (SW boot offline; live first install can take minutes, budget 5),
+  photo-decode-check.js (+ make-big-photo.py: 8064x6048 EXIF-6, the iPhone 48 MP case).
   Re-run the ones your change could touch and compare numbers with the last commit message.
 - UI hooks: manual key buttons use `data-act="key"`; the service worker registers on
   localhost only with `?sw=1` (needed for offline checks).
